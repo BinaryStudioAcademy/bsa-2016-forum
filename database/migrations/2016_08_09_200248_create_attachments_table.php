@@ -12,7 +12,13 @@ class CreateAttachmentsTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('attachments', function(Blueprint $table) {
+            $table->increments('id');
+            $table->string('value');
+            $table->string('type')->nullable(); //WTF?
+            $table->integer('sort')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +28,6 @@ class CreateAttachmentsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('attachments');
     }
 }

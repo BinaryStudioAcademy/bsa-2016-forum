@@ -12,7 +12,14 @@ class CreateNotificationsTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('notifications', function(Blueprint $table) {
+            $table->increments('id');
+
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +29,6 @@ class CreateNotificationsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('attachmenttables');
     }
 }

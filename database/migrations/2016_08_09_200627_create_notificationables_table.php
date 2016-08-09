@@ -12,7 +12,19 @@ class CreateNotificationablesTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('notificationtables', function(Blueprint $table) {
+            $table->increments('id');
+
+            $table->integer('notification_id')->unsigned();
+            $table->foreign('notification_id')->references('id')->on('notifications')->onDelete('cascade');
+
+            $table->integer('notificationtable_id')->unsigned();
+            $table->foreign('notificationtable_id')->references('id')->on('notificationtables')->onDelete('cascade');
+
+            $table->string('notification_type');
+
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +34,6 @@ class CreateNotificationablesTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('notificationtables');
     }
 }

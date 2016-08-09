@@ -12,7 +12,17 @@ class CreateCommentLineablesTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('comment_lineabbles', function(Blueprint $table) {
+            $table->increments('id');
+
+            $table->integer('comment_id')->unsigned();
+            $table->foreign('comment_id')->references('id')->on('comments')->onDelete('cascade');
+
+            $table->integer('comment_lineabble_id')->unsigned();
+            $table->foreign('comment_lineabble_id')->references('id')->on('comment_lineabbles')->onDelete('cascade');
+            $table->string('comment_type');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +32,6 @@ class CreateCommentLineablesTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('comment_lineabbles');
     }
 }

@@ -12,7 +12,12 @@ class CreateBlackListTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('black_list', function(Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +27,6 @@ class CreateBlackListTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('black_list');
     }
 }

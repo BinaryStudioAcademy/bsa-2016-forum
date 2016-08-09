@@ -12,7 +12,16 @@ class CreateTopicsTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('topics', function(Blueprint $table) {
+            $table->increments('id');
+            $table->integer('reviewed_number')->default(0);
+            $table->string('name')->unique();
+            $table->text('description')->nullable();
+            $table->integer('rating')->default(0);
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +31,6 @@ class CreateTopicsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('topics');
     }
 }

@@ -12,7 +12,14 @@ class CreateSubscribeRssTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('subscribe_rss', function(Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('topic_id')->unsigned();
+            $table->foreign('topic_id')->references('id')->on('topics')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +29,6 @@ class CreateSubscribeRssTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('subscribe_rss');
     }
 }

@@ -12,7 +12,18 @@ class CreateAttachmenttablesTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('attachmenttables', function(Blueprint $table) {
+            $table->increments('id');
+
+            $table->integer('attachment_id')->unsigned();
+            $table->foreign('attachment_id')->references('id')->on('attachments')->onDelete('cascade');
+
+            $table->integer('attachmenttable_id')->unsigned();
+            $table->foreign('attachmenttable_id')->references('id')->on('attachmenttables')->onDelete('cascade');
+
+            $table->string('attachmenttable_type');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +33,6 @@ class CreateAttachmenttablesTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('attachmenttables');
     }
 }
