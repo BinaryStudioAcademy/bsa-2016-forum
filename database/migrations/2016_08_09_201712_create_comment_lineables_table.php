@@ -32,6 +32,10 @@ class CreateCommentLineablesTable extends Migration
      */
     public function down()
     {
+        Schema::table('comment_lineabbles', function(Blueprint $table) {
+            $table->dropForeign('comment_lineabbles_comment_id_foreign');
+            $table->dropForeign('comment_lineabbles_comment_lineabble_id_foreign');
+        });
         Schema::drop('comment_lineabbles');
     }
 }

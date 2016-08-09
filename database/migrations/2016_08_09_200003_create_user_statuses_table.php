@@ -31,7 +31,7 @@ class CreateUserStatusesTable extends Migration
     public function down()
     {
         Schema::table('users', function(Blueprint $table) {
-            $table->dropForeign('status_id');
+            $table->dropForeign('users_status_id_foreign');
         });
 
         Schema::drop('user_statuses');

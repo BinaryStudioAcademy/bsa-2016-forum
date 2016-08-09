@@ -34,6 +34,11 @@ class CreateNotificationablesTable extends Migration
      */
     public function down()
     {
+        Schema::table('notificationtables', function(Blueprint $table) {
+            $table->dropForeign('notificationtables_notification_id_foreign');
+            $table->dropForeign('notificationtables_notificationtable_id_foreign');
+        });
+
         Schema::drop('notificationtables');
     }
 }

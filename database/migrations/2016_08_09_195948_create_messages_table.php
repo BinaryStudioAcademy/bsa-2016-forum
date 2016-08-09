@@ -14,14 +14,15 @@ class CreateMessagesTable extends Migration
     {
         Schema::create('messages', function(Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id_from')->unsigned();
-            $table->integer('user_id_to')->unsigned();
+            $table->integer('user_from_id')->unsigned();
+            $table->integer('user_to_id')->unsigned();
             $table->text('message');
             $table->boolean('is_read')->default(0);
-            $table->foreign('user_id_from')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('user_id_to')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_from_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_to_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
+
     }
 
     /**
@@ -31,6 +32,10 @@ class CreateMessagesTable extends Migration
      */
     public function down()
     {
+        Schema::table('messages', function(Blueprint $table) {
+            $table->dropForeign('messages_user_from_id_foreign');
+            $table->dropForeign('messages_user_to_id_foreign');
+        });
         Schema::drop('messages');
     }
 }

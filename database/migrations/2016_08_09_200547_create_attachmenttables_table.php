@@ -33,6 +33,11 @@ class CreateAttachmenttablesTable extends Migration
      */
     public function down()
     {
+        Schema::table('attachmenttables', function(Blueprint $table) {
+            $table->dropForeign('attachmenttables_attachment_id_foreign');
+            $table->dropForeign('attachmenttables_attachmenttable_id_foreign');
+        });
+
         Schema::drop('attachmenttables');
     }
 }

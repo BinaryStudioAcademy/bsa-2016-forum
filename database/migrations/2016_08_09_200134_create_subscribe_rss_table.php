@@ -29,6 +29,11 @@ class CreateSubscribeRssTable extends Migration
      */
     public function down()
     {
+        Schema::table('subscribe_rss', function(Blueprint $table) {
+            $table->dropForeign('subscribe_rss_user_id_foreign');
+            $table->dropForeign('subscribe_rss_topic_id_foreign');
+        });
+
         Schema::drop('subscribe_rss');
     }
 }

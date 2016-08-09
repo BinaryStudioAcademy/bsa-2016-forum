@@ -34,6 +34,11 @@ class CreateVotePermissionsTable extends Migration
      */
     public function down()
     {
+        Schema::table('vote_permissions', function(Blueprint $table) {
+            $table->dropForeign('vote_permissions_vote_id_foreign');
+            $table->dropForeign('vote_permissions_user_id_foreign');
+        });
+
         Schema::drop('vote_permissions');
     }
 }

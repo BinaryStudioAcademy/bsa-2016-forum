@@ -27,6 +27,10 @@ class CreateBlackListTable extends Migration
      */
     public function down()
     {
+        Schema::table('black_list', function(Blueprint $table) {
+            $table->dropForeign('black_list_user_id_foreign');
+        });
+        
         Schema::drop('black_list');
     }
 }

@@ -30,6 +30,11 @@ class CreateVoteItemsTable extends Migration
      */
     public function down()
     {
+        Schema::table('vote_items', function(Blueprint $table) {
+            $table->dropForeign('vote_items_vote_id_foreign');
+            $table->dropForeign('vote_items_user_id_foreign');
+        });
+
         Schema::drop('vote_items');
     }
 }

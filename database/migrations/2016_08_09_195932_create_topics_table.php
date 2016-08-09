@@ -31,6 +31,9 @@ class CreateTopicsTable extends Migration
      */
     public function down()
     {
+        Schema::table('topics', function(Blueprint $table) {
+            $table->dropForeign('topics_user_id_foreign');
+        });
         Schema::drop('topics');
     }
 }
