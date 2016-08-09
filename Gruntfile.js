@@ -78,6 +78,6 @@ module.exports = function (grunt) {
     grunt.registerTask('stage', ['handlebars', 'browserify:dev', 'concat:dev']);
     grunt.registerTask('prod', ['handlebars', 'browserify:prod', 'uglify', 'concat:prod', 'cssmin']);
 
-    grunt.registerTask('default', ['browserify:dev', 'jst:dev', 'concat:dev']);
+    grunt.registerTask('default', ['stage']);
     grunt.registerTask('w', ['watch']);
 };
