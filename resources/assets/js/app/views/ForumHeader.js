@@ -1,8 +1,8 @@
 var Helper = require('../controllers/Helper.js');
 var Marionette = require('backbone.marionette');
 
-Helper.templateCache('header-template', 'header.tpl');
+Helper.templateCache('forum-header-template', 'ForumHeader.tpl');
 
 module.exports = Marionette.ItemView.extend({
-    template: '#header-template'
+    template: '#forum-header-template'
 });

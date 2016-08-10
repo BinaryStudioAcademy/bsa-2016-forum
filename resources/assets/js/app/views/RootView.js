@@ -1,6 +1,5 @@
-Marionette = require('backbone.marionette');
-Handlebars = require('handlebars');
-templates = require('../templates.js')(Handlebars);
+var Marionette = require('backbone.marionette');
+var Handlebars = require('handlebars');
 
 var RootView = Marionette.LayoutView.extend({
     el: 'body'
@@ -9,8 +8,9 @@ var RootView = Marionette.LayoutView.extend({
 var rw = new RootView();
 
 rw.addRegions({
-    main: '#content',
-    header: '#header'
+    content: '#content',
+    header: '#header',
+    subheader: '#subheader'
 });
 
 module.exports = rw;

@@ -43,7 +43,7 @@ module.exports = function (grunt) {
         },
         concat: {
             prod: {
-                src: 'resources/assets/css/*.css',
+                src: ['resources/assets/css/header-styles.css', 'resources/assets/css/style.css'],
                 dest: 'resources/assets/css/concated/css-concat.css'
             },
             dev: {

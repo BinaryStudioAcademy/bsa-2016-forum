@@ -1,10 +1,9 @@
-app = require('./app.js');
-_ = require('underscore');
-Backbone = require('backbone');
-Marionette = require('backbone.marionette');
+var app = require('./app.js');
+var _ = require('underscore');
+var Backbone = require('backbone');
+var Marionette = require('backbone.marionette');
 
 var Router = require('./router.js');
-var RouterController = require('./controllers/Router.js');
 
 var RootView = require('./views/RootView.js');
 var headerView = require('./views/Header.js');
@@ -21,9 +20,7 @@ app.getCurrentRoute = function () {
 
 app.on('start', function () {
 
-    new Router({
-        controller: RouterController
-    });
+    new Router();
 
     app.RootView = RootView;
     app.RootView.header.show(new headerView());
@@ -31,7 +28,7 @@ app.on('start', function () {
     Backbone.history.start();
 
     if (this.getCurrentRoute() === "") {
-        Backbone.history.navigate('', {
+        Backbone.history.navigate('forum', {
             trigger: true
         });
     }
