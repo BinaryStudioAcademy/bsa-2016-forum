@@ -12,14 +12,14 @@ class CreateTaggablesTable extends Migration
      */
     public function up()
     {
-        Schema::create('taggables', function(Blueprint $table) {
+        Schema::create('taggable', function(Blueprint $table) {
             $table->increments('id');
 
             $table->integer('tag_id')->unsigned();
             $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
 
             $table->integer('taggable_id')->unsigned();
-            $table->foreign('taggable_id')->references('id')->on('taggables')->onDelete('cascade');
+            $table->foreign('taggable_id')->references('id')->on('taggable')->onDelete('cascade');
 
             $table->string('taggable_type');
             $table->softDeletes();
@@ -35,8 +35,8 @@ class CreateTaggablesTable extends Migration
     public function down()
     {
         Schema::table('taggables', function(Blueprint $table) {
-            $table->dropForeign('taggables_tag_id_foreign');
-            $table->dropForeign('taggables_taggable_id_foreign');
+            $table->dropForeign('taggable_tag_id_foreign');
+            $table->dropForeign('taggable_taggable_id_foreign');
         });
 
         Schema::drop('taggables');
