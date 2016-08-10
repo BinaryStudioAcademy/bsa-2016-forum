@@ -8,3 +8,7 @@ Homestead.json
 composer.phar
 composer.lock
 /nbproject/
+/public/css/
+/public/js/
+/resources/assets/js/bundle.js
+/resources/assets/js/app/templates.js

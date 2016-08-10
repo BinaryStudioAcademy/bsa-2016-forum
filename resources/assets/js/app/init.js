@@ -1,19 +1,14 @@
-app = require('./app');
+app = require('./app.js');
 _ = require('underscore');
 Backbone = require('backbone');
 Marionette = require('backbone.marionette');
-Handlebars = require('handlebars');
-Templates = require('./templates.js')(Handlebars);
 
-var Router = require('./routes.js');
-var RouterApi = require('./router_api.js');
+var Router = require('./router.js');
+var RouterController = require('./controllers/Router.js');
 
+var RootView = require('./views/RootView.js');
 var headerView = require('./views/Header.js');
 
-app.addRegions({
-    main: '#main',
-    header: '#header'
-});
 
 app.navigate = function (route, options) {
     options || (options = {});
@@ -27,14 +22,16 @@ app.getCurrentRoute = function () {
 app.on('start', function () {
 
     new Router({
-        controller: RouterApi
+        controller: RouterController
     });
-    app.header.show(new headerView());
-    //console.log('App init at ' + moment().locale('en').format('LLL'));
+
+    app.RootView = RootView;
+    app.RootView.header.show(new headerView());
+
     Backbone.history.start();
 
     if (this.getCurrentRoute() === "") {
-        Backbone.history.navigate('user', {
+        Backbone.history.navigate('', {
             trigger: true
         });
     }

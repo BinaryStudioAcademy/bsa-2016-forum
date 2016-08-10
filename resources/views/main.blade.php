@@ -6,17 +6,9 @@
     <title>Title</title>
 </head>
 <body>
+<div id="header"></div>
+<div id="content"></div>
 
-<div class="container">
-    <div id="header">
-    </div>
-    <div id="main">
-
-    </div>
-
-    <script src="js/bundle.js"></script>
-
-    <script type="application/javascript">
-    </script>
+<script src="js/bundle.js"></script>
 </body>
 </html>
