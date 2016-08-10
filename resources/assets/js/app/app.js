@@ -1,5 +1,11 @@
-var Marionette = require('backbone.marionette');
 
-app = new Marionette.Application();
+var config = require('./config/config');
 
-module.exports = app;
+config.setEnv('debug');
+
+//console.log(config.getConfig(), config);
+var appInstance = require('./initializers/app');
+
+var App = new appInstance();
+
+App.start(config.getConfig());

@@ -9,7 +9,7 @@ module.exports = function (grunt) {
 
             },
             dev: {
-                src: 'resources/assets/js/app/init.js',
+                src: 'resources/assets/js/app/app.js',
                 dest: 'public/js/bundle.js'
             }
         },
@@ -63,6 +63,21 @@ module.exports = function (grunt) {
                     'public/css/styles-min.css': ['resources/assets/css/concated/css-concat.css']
                 }
             }
+        },
+
+        sass: {
+            dist: {
+                options: {
+                    style: 'expanded'
+                },
+                files: [{
+                    expand: true,
+                    cwd: 'resources/assets/sass',
+                    src: ['**/*.scss'],
+                    dest: 'public/css',
+                    ext: '.css'
+                }]
+            }
         }
 
     });
@@ -73,6 +88,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-handlebars');
+    grunt.loadNpmTasks('grunt-contrib-sass');
 
     grunt.registerTask('dev', ['handlebars', 'browserify:dev', 'concat:dev', 'watch']);
     grunt.registerTask('stage', ['handlebars', 'browserify:dev', 'concat:dev']);

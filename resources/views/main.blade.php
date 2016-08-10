@@ -8,7 +8,7 @@
 </head>
 <body>
 <div id="header"></div>
-<div id="subheader"></div>
+<div id="navigationMenu"></div>
 <div id="content"></div>
 
 <script src="js/bundle.js"></script>

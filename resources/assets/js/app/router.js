@@ -1,20 +1,11 @@
-var app = require('./app.js');
 var Marionette = require('backbone.marionette');
-var ForumRouterController = require('./controllers/ForumRouter.js');
-var IdeaHubRouterController = require('./controllers/IdeaHubRouter.js');
+var ForumController = require('./controllers/ForumController.js');
+var IdeaHubController = require('./controllers/IdeaHubController.js');
+var logger = require('./instances/logger');
 
-module.exports = Marionette.AppRouter.extend(
-    {
-        controller: ForumRouterController,
-        appRoutes: {
-            'forum': 'index'
-        }
-    },
-    {
-        controller: IdeaHubRouterController,
-        appRoutes: {
-            
-        }
+module.exports = Marionette.AppRouter.extend({
+    onRoute: function (name, path, arguments) {
+       logger('route ' + name + ' start');
     }
-);
+});
 

@@ -2,11 +2,13 @@
   "devDependencies": {
     "backbone": "^1.3.3",
     "backbone.marionette": "^2.4.7",
+    "backbone.radio": "^1.0.5",
     "grunt": "^1.0.1",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-cssmin": "^1.0.1",
     "grunt-contrib-handlebars": "^1.0.0",
+    "grunt-contrib-sass": "^1.0.0",
     "grunt-contrib-uglify": "^2.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "handlebars": "^4.0.5",
