@@ -1,28 +1,32 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class VoteResult extends Model
+class VoteItem extends Model
 {
+
     use SoftDeletes;
+    
+    //TODO     const RULES = ['name'  => 'required'];
+
+    protected $fillable = ['name'];
 
     public function user()
     {
         return $this->belongsTo('App\User');
     }
-    //TODO user has many VoteResult
+    //TODO user has many VoteItem
     public function vote()
     {
         return $this->belongsTo('App\Vote');
     }
 
-    public function voteItem()
+    public function voteResult()
     {
-        return $this->belongsTo('App\VoteItem');
+        return $this->hasMany('App\VoteResult');
     }
-
 }

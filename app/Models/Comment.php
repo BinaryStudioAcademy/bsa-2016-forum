@@ -1,16 +1,18 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Notification extends Model
+class Comment extends Model
 {
-    protected $fillable = ['user_id'];
+    protected $fillable = ['content_origin','rating','user_id','content_generated'];
 
     protected $dates = ['deleted_at'];
 
     private $rules = array(
+        'content_origin' => 'require',
+        'content_generated' =>'require'
         // .. more rules here ..
     );
 
@@ -22,7 +24,7 @@ class Notification extends Model
         return $v->passes();
     }
 
-    public function user()
+    public function notification()
     {
         return $this->belongsTo('App\User');
     }
