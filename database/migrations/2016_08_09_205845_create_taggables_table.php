@@ -34,11 +34,11 @@ class CreateTaggablesTable extends Migration
      */
     public function down()
     {
-        Schema::table('taggables', function(Blueprint $table) {
+        Schema::table('taggable', function(Blueprint $table) {
             $table->dropForeign('taggable_tag_id_foreign');
             $table->dropForeign('taggable_taggable_id_foreign');
         });
 
-        Schema::drop('taggables');
+        Schema::drop('taggable');
     }
 }
