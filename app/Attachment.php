@@ -16,13 +16,20 @@ class Attachment extends Model
     protected $fillable = ['name', 'description'];
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+
+    /**
      * Get all of the topics that have this attachment
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
     public function topics()
     {
-        return $this->morphedByMany('App\Topic', 'attachmenttable');
+        return $this->morphedByMany(Topic::class, 'attachmenttable');
     }
 
     /**
@@ -32,7 +39,7 @@ class Attachment extends Model
      */
     public function votes()
     {
-        return $this->morphedByMany('App\Vote', 'attachmenttable');
+        return $this->morphedByMany(Vote::class, 'attachmenttable');
     }
 
     /**
@@ -42,7 +49,7 @@ class Attachment extends Model
      */
     public function comments()
     {
-        return $this->morphedByMany('App\Comment', 'attachmenttable');
+        return $this->morphedByMany(Comment::class, 'attachmenttable');
     }
 
     /**
@@ -52,7 +59,7 @@ class Attachment extends Model
      */
     public function messages()
     {
-        return $this->morphedByMany('App\Message', 'attachmenttable');
+        return $this->morphedByMany(Message::class, 'attachmenttable');
     }
 
 }
