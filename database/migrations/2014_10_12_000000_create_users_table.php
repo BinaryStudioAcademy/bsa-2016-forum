@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAttachmentsTable extends Migration
+class CreateUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,12 @@ class CreateAttachmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('attachments', function(Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('value');
-            $table->string('type')->nullable(); //WTF?
-            $table->softDeletes();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateAttachmentsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('attachments');
+        Schema::drop('users');
     }
 }
