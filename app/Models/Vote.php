@@ -61,6 +61,6 @@ class Vote extends Model
 
     public function notifications()
     {
-        return $this->morphToMany(Notification::class, 'notificationableable');
+        return $this->morphToMany(Notification::class, 'notificationable');
     }
 }
