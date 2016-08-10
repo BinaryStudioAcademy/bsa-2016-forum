@@ -19,7 +19,6 @@ class CreateAttachmenttablesTable extends Migration
             $table->foreign('attachment_id')->references('id')->on('attachments')->onDelete('cascade');
 
             $table->integer('attachmenttable_id')->unsigned();
-            $table->foreign('attachmenttable_id')->references('id')->on('attachmenttables')->onDelete('cascade');
 
             $table->string('attachmenttable_type');
             $table->timestamps();
@@ -35,7 +34,6 @@ class CreateAttachmenttablesTable extends Migration
     {
         Schema::table('attachmenttables', function(Blueprint $table) {
             $table->dropForeign('attachmenttables_attachment_id_foreign');
-            $table->dropForeign('attachmenttables_attachmenttable_id_foreign');
         });
 
         Schema::drop('attachmenttables');

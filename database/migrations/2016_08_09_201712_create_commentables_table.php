@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCommentLineablesTable extends Migration
+class CreateCommentablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,14 +12,13 @@ class CreateCommentLineablesTable extends Migration
      */
     public function up()
     {
-        Schema::create('comment_lineabbles', function(Blueprint $table) {
+        Schema::create('commentables', function(Blueprint $table) {
             $table->increments('id');
 
             $table->integer('comment_id')->unsigned();
             $table->foreign('comment_id')->references('id')->on('comments')->onDelete('cascade');
 
-            $table->integer('comment_lineabble_id')->unsigned();
-            $table->foreign('comment_lineabble_id')->references('id')->on('comment_lineabbles')->onDelete('cascade');
+            $table->integer('commentable_id')->unsigned();
             $table->string('comment_type');
             $table->timestamps();
         });
@@ -32,10 +31,9 @@ class CreateCommentLineablesTable extends Migration
      */
     public function down()
     {
-        Schema::table('comment_lineabbles', function(Blueprint $table) {
-            $table->dropForeign('comment_lineabbles_comment_id_foreign');
-            $table->dropForeign('comment_lineabbles_comment_lineabble_id_foreign');
+        Schema::table('commentables', function(Blueprint $table) {
+            $table->dropForeign('commentables_comment_id_foreign');
         });
-        Schema::drop('comment_lineabbles');
+        Schema::drop('commentables');
     }
 }

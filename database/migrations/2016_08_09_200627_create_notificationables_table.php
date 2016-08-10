@@ -19,7 +19,6 @@ class CreateNotificationablesTable extends Migration
             $table->foreign('notification_id')->references('id')->on('notifications')->onDelete('cascade');
 
             $table->integer('notificationtable_id')->unsigned();
-            $table->foreign('notificationtable_id')->references('id')->on('notificationtables')->onDelete('cascade');
 
             $table->string('notification_type');
 
@@ -36,7 +35,6 @@ class CreateNotificationablesTable extends Migration
     {
         Schema::table('notificationtables', function(Blueprint $table) {
             $table->dropForeign('notificationtables_notification_id_foreign');
-            $table->dropForeign('notificationtables_notificationtable_id_foreign');
         });
 
         Schema::drop('notificationtables');

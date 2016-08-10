@@ -18,6 +18,7 @@ class CreateVotesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('title');
             $table->dateTime('finished_at');
+            $table->boolean('isSingle')->default(1);
             $table->timestamps();
         });
     }
