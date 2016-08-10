@@ -22,6 +22,7 @@ class CreateTagablesTable extends Migration
             $table->foreign('tagable_id')->references('id')->on('tagables')->onDelete('cascade');
 
             $table->string('tagable_type');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

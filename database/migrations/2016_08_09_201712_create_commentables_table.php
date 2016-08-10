@@ -20,6 +20,7 @@ class CreateCommentablesTable extends Migration
 
             $table->integer('commentable_id')->unsigned();
             $table->string('comment_type');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -22,6 +22,7 @@ class CreateCommentsTable extends Migration
 
 
             $table->text('content_generated')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -35,8 +36,6 @@ class CreateCommentsTable extends Migration
     {
         Schema::table('comments', function(Blueprint $table) {
             $table->dropForeign('comments_user_id_foreign');
-            $table->dropForeign('comments_topic_id_foreign');
-            $table->dropForeign('comments_comment_id_foreign');
         });
         Schema::drop('comments');
     }

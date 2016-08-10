@@ -21,6 +21,7 @@ class CreateAttachmenttablesTable extends Migration
             $table->integer('attachmenttable_id')->unsigned();
 
             $table->string('attachmenttable_type');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('hash_password')->nullable();
             $table->string('token')->nullable();
             $table->dateTime('last_visit_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

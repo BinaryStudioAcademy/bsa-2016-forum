@@ -22,7 +22,7 @@ class CreateVotePermissionsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->boolean('grant');
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -21,7 +21,7 @@ class CreateNotificationablesTable extends Migration
             $table->integer('notificationtable_id')->unsigned();
 
             $table->string('notification_type');
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

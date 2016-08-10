@@ -19,6 +19,7 @@ class CreateVotesTable extends Migration
             $table->string('title');
             $table->dateTime('finished_at');
             $table->boolean('isSingle')->default(1);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

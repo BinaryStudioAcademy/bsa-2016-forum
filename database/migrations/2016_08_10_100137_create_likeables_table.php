@@ -19,6 +19,7 @@ class CreateLikeablesTable extends Migration
 
             $table->integer('likeable_id')->unsigned();
             $table->string('likeable_type');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
