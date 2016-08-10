@@ -45,16 +45,16 @@ var app = Marionette.Application.extend({
 
         appInstance.setInstance(this);
 
-        // вот так работает
-        var r = Routers.getRouters();
-        r = r[0];
-
-        var MyRouter = Marionette.AppRouter.extend({
-            controller: r.controller,
-            appRoutes: r.appRoutes
-        });
-
-        new MyRouter();
+        //// вот так работает
+        //var r = Routers.getRouters();
+        //r = r[0];
+        //
+        //var MyRouter = Marionette.AppRouter.extend({
+        //    controller: r.controller,
+        //    appRoutes: r.appRoutes
+        //});
+        //
+        //new MyRouter();
 
         logger('start application');
 
