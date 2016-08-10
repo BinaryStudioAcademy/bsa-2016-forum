@@ -16,7 +16,6 @@ class CreateAttachmentsTable extends Migration
             $table->increments('id');
             $table->string('value');
             $table->string('type')->nullable(); //WTF?
-            $table->integer('sort')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
