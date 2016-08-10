@@ -10,19 +10,22 @@ class VoteResult extends Model
 {
     use SoftDeletes;
 
+    protected $dates = ['deleted_at'];
+
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
     //TODO user has many VoteResult
+    
     public function vote()
     {
-        return $this->belongsTo('App\Vote');
+        return $this->belongsTo(Vote::class);
     }
 
     public function voteItem()
     {
-        return $this->belongsTo('App\VoteItem');
+        return $this->belongsTo(VoteItem::class);
     }
 
 }

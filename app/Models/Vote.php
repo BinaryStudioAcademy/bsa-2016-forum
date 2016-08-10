@@ -15,24 +15,52 @@ class Vote extends Model
 
     protected $fillable = ['title'];
 
+    protected $dates = ['deleted_at'];
+
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
+   
     //TODO user has many Vote
+   
     public function voteItem()
     {
-        return $this->hasMany('App\VoteItem');
+        return $this->hasMany(VoteItem::Class);
     }
 
     public function votePermission()
     {
-        return $this->hasMany('App\VotePermission');
+        return $this->hasMany(VotePermission::Class);
     }
 
     public function voteResult()
     {
-        return $this->hasMany('App\VoteResult');
+        return $this->hasMany(VoteResult::class);
     }
 
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function attachments()
+    {
+        return $this->morphToMany(Tag::class, 'attachmenttable');
+    }
+
+    public function likes()
+    {
+        return $this->morphToMany(Like::class, 'likeable');
+    }
+
+    public function comments()
+    {
+        return $this->morphToMany(Comment::class, 'commentable');
+    }
+
+    public function notifications()
+    {
+        return $this->morphToMany(Notification::class, 'notificationableable');
+    }
 }
