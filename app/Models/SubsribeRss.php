@@ -1,25 +1,25 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class VotePermission extends Model
-{
+class Vote extends Model
 
+{
     use SoftDeletes;
 
     public function user()
     {
         return $this->belongsTo('App\User');
     }
-    //TODO user has many VotePermission
 
-    public function vote()
+    public function topic()
     {
-        return $this->belongsTo('App\Vote');
+        return $this->belongsTo('App\Topic');
     }
 
 }
+

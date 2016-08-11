@@ -1,16 +1,18 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Notification extends Model
+class Comment extends Model
 {
-    protected $fillable = ['user_id'];
+    protected $fillable = ['content_origin','rating','user_id','content_generated'];
 
     protected $dates = ['deleted_at'];
 
     private $rules = array(
+        'content_origin' => 'require',
+        'content_generated' =>'require'
         // .. more rules here ..
     );
 
@@ -28,26 +30,27 @@ class Notification extends Model
     }
 
     /**
-     * Get all of the topics that are assigned this notification.
+     * Get all of the topics that are assigned this comment.
      */
     public function topics()
     {
-        return $this->morphedByMany(App/Topic::class, 'notificationable');
+        return $this->morphedByMany(App/Topic::class, 'commentable');
     }
 
     /**
-     * Get all of the votes that are assigned this notification.
+     * Get all of the votes that are assigned this comment.
      */
     public function votes()
     {
-        return $this->morphedByMany(App/Vote::class, 'notificationable');
+        return $this->morphedByMany(App/Vote::class, 'commentable');
     }
 
     /**
-     * Get all of the comments that are assigned this notification.
+     * Get all of the comments that are assigned this comment.
      */
     public function comments()
     {
-        return $this->morphedByMany(App/Comment::class, 'notificationable');
+        return $this->morphedByMany(App/Comment::class, 'commentable');
     }
+
 }
