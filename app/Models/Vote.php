@@ -22,16 +22,14 @@ class Vote extends Model
         return $this->belongsTo(User::class);
     }
    
-    //TODO user has many Vote
-   
     public function voteItem()
     {
-        return $this->hasMany(VoteItem::Class);
+        return $this->hasMany(VoteItem::class);
     }
 
     public function votePermission()
     {
-        return $this->hasMany(VotePermission::Class);
+        return $this->hasMany(VotePermission::class);
     }
 
     public function voteResult()

@@ -16,7 +16,6 @@ class VotePermission extends Model
     {
         return $this->belongsTo(User::class);
     }
-    //TODO user has many VotePermission
 
     public function vote()
     {
