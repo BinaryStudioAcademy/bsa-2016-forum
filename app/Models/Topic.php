@@ -38,4 +38,30 @@ class Topic extends Model
         return $this->belongsToMany(User::class, 'bookmarks', 'topic_id', 'user_id');
     }
 
+    public function attachments()
+    {
+        return $this->morphToMany(Attachment::class, 'attachmenttable');
+    }
+
+    public function likes()
+    {
+        return $this->morphToMany(Like::class, 'likeable');
+    }
+
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function comments()
+    {
+        return $this->morphToMany(Comment::class, 'commentable');
+    }
+
+    public function notifications()
+    {
+        return $this->morphToMany(Notification::class, 'notificationable');
+    }
+
+
 }
