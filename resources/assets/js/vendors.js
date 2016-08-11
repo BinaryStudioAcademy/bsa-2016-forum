@@ -1,3 +1,5 @@
-/**
- * Created by petka on 11.08.16.
- */
+$ = require('jquery');
+_ = require('underscore');
+Backbone = require('backbone');
+Marionette = require('backbone.marionette');
+Handlebars = require('handlebars'); 
