@@ -42,12 +42,13 @@ module.exports = function (grunt) {
         },
 
         concat: {
-            css: {
-                src: ['public/css/styles.css', 'resources/assets/css/*.css'],
+            vendors_css: {
+                src: ['node_modules/bootstrap/dist/css/bootstrap.css', 'public/css/styles.css'],
                 dest: 'public/css/styles.css'
             },
-            vendors_css: {
-                // css вендоров пока нету
+            css: {
+                src: ['resources/assets/css/**/*.css', 'public/css/styles.css'],
+                dest: 'public/css/styles.css'
             },
             js: {
                 src: [
@@ -66,7 +67,7 @@ module.exports = function (grunt) {
                     //loadPath: 'node_modules/bootstrap-sass/assets/stylesheets'
                 },
                 files: {
-                    'public/css/styles.css': 'resources/assets/sass/**/*.scss',
+                    'public/css/style.css': 'resources/assets/sass/app.scss'
                 }
             }
         },
@@ -88,15 +89,15 @@ module.exports = function (grunt) {
 
     });
 
+    grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-handlebars');
-    grunt.loadNpmTasks('grunt-contrib-sass');
 
-    grunt.registerTask('stage', ['browserify', 'handlebars', 'sass', 'concat']);
+    grunt.registerTask('stage', ['handlebars', 'browserify', 'sass', 'concat']);
     grunt.registerTask('dev', ['stage', 'watch']);
     grunt.registerTask('prod', ['stage', 'uglify', 'cssmin']);
 
