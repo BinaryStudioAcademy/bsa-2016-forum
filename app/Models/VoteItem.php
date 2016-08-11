@@ -10,8 +10,6 @@ class VoteItem extends Model
 {
 
     use SoftDeletes;
-    
-    //TODO     const RULES = ['name'  => 'required'];
 
     protected $fillable = ['name', 'vote_id', 'user_id'];
     
@@ -19,7 +17,7 @@ class VoteItem extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::сlass);
+        return $this->belongsTo(User::class);
     }
 
     public function vote()
