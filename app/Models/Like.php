@@ -20,4 +20,9 @@ class Like extends Model
     {
         return $this->morphedByMany('App\Comment', 'likeable');
     }
+    
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }
