@@ -1,5 +1,3 @@
-var Marionette = require('backbone.marionette');
-var Handlebars = require('handlebars');
 var Templates = require('../templates.js')(Handlebars);
 
 module.exports = {

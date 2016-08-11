@@ -1,6 +1,6 @@
 var config = require('./config/config');
 
-var appInstance = require('./initializers/app');
+var appInstance = require('./initializers/App');
 
 var App = new appInstance();
 

@@ -4,12 +4,11 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         browserify: {
-            prod: {
-                src: 'resources/assets/js/app/app.js',
-                dest: 'public/js/bundle.js'
-
+            vendors: {
+                src: 'resources/assets/js/vendors.js',
+                dest: 'public/js/vendors.js'
             },
-            dev: {
+            app: {
                 src: 'resources/assets/js/app/app.js',
                 dest: 'public/js/bundle.js'
             }
@@ -45,24 +44,8 @@ module.exports = function (grunt) {
             }
         },
 
-        sass: {
-            dist: {
-                options: {
-                    style: 'expanded',
-                    sourcemap: 'none',
-                },
-                files: [{
-                    expand: true,
-                    cwd: 'resources/assets/sass',
-                    src: ['**/*.scss'],
-                    dest: 'resources/assets/css/',
-                    ext: '.css'
-                }]
-            }
-        },
-
         concat: {
-            dev: {
+            css: {
                 src: [
                     'resources/assets/css/header-styles.css',
                     'resources/assets/css/style.css',
@@ -70,14 +53,19 @@ module.exports = function (grunt) {
                 ],
                 dest: 'public/css/styles-min.css'
             },
-            prod: {
-                src: 'resources/assets/css/**/*.css',
-                dest: 'public/css/styles-min.css'
+            vendors_css: {
+            },
+            js: {
+
             }
         },
 
         uglify: {
-            javascript: {
+            vendors: {
+                src: 'public/js/vendors.js',
+                dest: 'public/js/vendors.js'
+            },
+            app: {
                 src: 'public/js/bundle.js',
                 dest: 'public/js/bundle.js'
             }
@@ -86,10 +74,24 @@ module.exports = function (grunt) {
         cssmin: {
             dist: {
                 files: {
-                    'public/css/styles-min.css': ['public/css/styles-min.css']
+                    'public/css/styles-min.css': ['resources/assets/css/concated/css-concat.css'],
+                    'public/css/vendors-min.css': ['public/css/vendors-min.css']
                 }
             }
         },
+
+        sass: {
+            dist: {
+                options: {
+                    style: 'expanded',
+                      sourcemap: 'none',
+                      loadPath: 'node_modules/bootstrap-sass/assets/stylesheets'
+                },
+                files: {
+                    'public/css/vendors.css': 'resources/assets/sass/vendors.scss'
+                }
+            }
+        }
 
     });
 
@@ -101,9 +103,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-handlebars');
     grunt.loadNpmTasks('grunt-contrib-sass');
 
-    grunt.registerTask('stage', ['handlebars', 'browserify:dev', 'sass', 'concat:dev']);
+    grunt.registerTask('stage', ['handlebars', 'browserify', 'concat', 'sass']);
     grunt.registerTask('dev', ['stage', 'watch']);
-    grunt.registerTask('prod', ['handlebars', 'browserify:prod', 'sass', 'concat:prod', 'uglify', 'cssmin']);
+    grunt.registerTask('prod', ['stage', 'uglify', 'cssmin']);
+
     grunt.registerTask('w', ['watch']);
     grunt.registerTask('default', ['stage']);
 };
