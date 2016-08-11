@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class VotePermission extends Model
 {
+    protected $fillable = ['vote_id', 'user_id', 'grant'];
     protected $dates = ['deleted_at'];
     
     use SoftDeletes;
