@@ -11,6 +11,7 @@
 <div id="navigationMenu"></div>
 <div id="content"></div>
 
+<script src="js/vendors.js"></script>
 <script src="js/bundle.js"></script>
 </body>
 </html>
