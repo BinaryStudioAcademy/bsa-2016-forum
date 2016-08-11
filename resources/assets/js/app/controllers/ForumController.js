@@ -1,11 +1,10 @@
 var app = require('../instances/appInstance');
-var ForumHeader = require('../views/ForumHeader.js');
 var Topics = require('../views/topics/topics.js');
+var Marionette = require('backbone.marionette');
 
-module.exports = {
+module.exports = Marionette.Object.extend({
+
     index: function () {
-        console.log(app);
-        app.getInstance().RootView.navigationMenu.show(new ForumHeader());
         app.getInstance().RootView.content.show(new Topics());
     }
-};
+});

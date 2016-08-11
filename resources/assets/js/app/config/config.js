@@ -2,7 +2,7 @@ var debug = require('./debug/config');
 var prod = require('./prod/config');
 
 var config = {
-  env: null,
+  env: 'debug',
 
   setEnv: function (env) {
     this.env = env;
@@ -13,9 +13,8 @@ var config = {
   },
 
   getConfig: function () {
-
     return this.env === 'debug' ? debug : prod;
   }
 };
 
-module.exports = config;
+module.exports = config.env === 'debug' ? debug : prod;

@@ -1,8 +1,8 @@
 var Helper = require('../instances/Helper.js');
 var Marionette = require('backbone.marionette');
 
-Helper.templateCache('header-template', 'header.tpl');
+Helper.templateCache('navigation-menu', 'navigationMenu.tpl');
 
 module.exports = Marionette.ItemView.extend({
-    template: '#header-template'
+    template: '#navigation-menu'
 });

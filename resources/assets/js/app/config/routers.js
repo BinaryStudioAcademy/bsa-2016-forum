@@ -5,14 +5,14 @@ var routers = {
 
   routers: [
     {
-      controller: ForumController,
+      controller: new ForumController(),
       appRoutes: {
         '': 'index'
       },
     },
 
     {
-      controller: IdeaHubController,
+      controller: new IdeaHubController(),
       appRoutes: {
         'ideahub': 'index'
       },
