@@ -3,12 +3,11 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         browserify: {
-            prod: {
-                src: 'resources/assets/js/app/init.js',
-                dest: 'resources/assets/js/bundle.js'
-
+            vendors: {
+                src: 'resources/assets/js/vendors.js',
+                dest: 'public/js/vendors.js'
             },
-            dev: {
+            app: {
                 src: 'resources/assets/js/app/app.js',
                 dest: 'public/js/bundle.js'
             }
@@ -52,8 +51,12 @@ module.exports = function (grunt) {
             }
         },
         uglify: {
-            javascript: {
-                src: 'resources/assets/js/bundle.js',
+            vendors: {
+                src: 'public/js/vendors.js',
+                dest: 'public/js/vendors.js'
+            },
+            app: {
+                src: 'public/js/bundle.js',
                 dest: 'public/js/bundle.js'
             }
         },
@@ -88,9 +91,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-handlebars');
     grunt.loadNpmTasks('grunt-contrib-sass');
 
-    grunt.registerTask('dev', ['handlebars', 'browserify:dev', 'concat:dev', 'watch']);
-    grunt.registerTask('stage', ['handlebars', 'browserify:dev', 'concat:dev', 'sass']);
-    grunt.registerTask('prod', ['handlebars', 'browserify:prod', 'uglify', 'concat:prod', 'cssmin']);
+    grunt.registerTask('dev', ['handlebars', 'browserify', 'concat:dev', 'watch']);
+    grunt.registerTask('stage', ['handlebars', 'browserify', 'concat:dev', 'sass']);
+    grunt.registerTask('prod', ['handlebars', 'browserify', 'uglify', 'concat:prod', 'cssmin']);
 
     grunt.registerTask('default', ['stage']);
     grunt.registerTask('w', ['watch']);
