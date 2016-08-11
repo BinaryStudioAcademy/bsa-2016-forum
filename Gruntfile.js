@@ -18,11 +18,15 @@ module.exports = function (grunt) {
             },
             css: {
                 files: 'resources/assets/css/**/*.css',
-                tasks: 'concat:dev'
+                tasks: 'concat:css'
             },
             templates: {
                 files: 'resources/assets/templates/**/*.tpl',
                 tasks: 'handlebars'
+            },
+            sass: {
+                files: 'resources/assets/sass/**/*.scss',
+                tasks: ['sass:dest', 'concat:css']
             }
         },
 
@@ -42,10 +46,15 @@ module.exports = function (grunt) {
         },
 
         concat: {
+            sass: {
+                src: ['resources/assets/sass/styles/**/*.sass'],
+                dest: 'public/css/concat-styles.css'
+            },
             css: {
                 src: [
                     'public/css/bootstrap.css',
                     'public/css/styles.css',
+                    'public/css/concat-styles.css',
                     'public/css/header.css'
                 ],
                 dest: 'public/css/styles.css'
@@ -131,7 +140,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('stage', ['handlebars', 'browserify', 'sass', 'concat', 'copy']);
+    grunt.registerTask('stage', ['handlebars', 'browserify', 'concat:sass', 'sass', 'concat:css', 'concat:js', 'copy']);
     grunt.registerTask('dev', ['stage', 'watch']);
     grunt.registerTask('prod', ['stage', 'uglify', 'cssmin']);
 
