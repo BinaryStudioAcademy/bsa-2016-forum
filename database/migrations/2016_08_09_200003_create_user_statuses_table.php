@@ -20,7 +20,7 @@ class CreateUserStatusesTable extends Migration
         });
 
         Schema::table('users', function(Blueprint $table) {
-            $table->foreign('status_id')->references('id')->on('user_statuses')->onDelete('cascade');
+            $table->foreign('status_id')->references('id')->on('user_statuses');
         });
     }
 

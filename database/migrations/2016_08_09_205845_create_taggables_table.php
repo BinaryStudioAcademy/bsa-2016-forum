@@ -16,10 +16,10 @@ class CreateTaggablesTable extends Migration
             $table->increments('id');
 
             $table->integer('tag_id')->unsigned();
-            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
+            $table->foreign('tag_id')->references('id')->on('tags');
 
             $table->integer('taggable_id')->unsigned();
-            $table->foreign('taggable_id')->references('id')->on('taggable')->onDelete('cascade');
+            $table->foreign('taggable_id')->references('id')->on('taggable');
 
             $table->string('taggable_type');
             $table->softDeletes();

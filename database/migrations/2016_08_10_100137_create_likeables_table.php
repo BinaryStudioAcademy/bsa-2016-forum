@@ -15,7 +15,7 @@ class CreateLikeablesTable extends Migration
         Schema::create('likeables', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('like_id')->unsigned();
-            $table->foreign('like_id')->references('id')->on('likes')->onDelete('cascade');
+            $table->foreign('like_id')->references('id')->on('likes');
 
             $table->integer('likeable_id')->unsigned();
             $table->string('likeable_type');

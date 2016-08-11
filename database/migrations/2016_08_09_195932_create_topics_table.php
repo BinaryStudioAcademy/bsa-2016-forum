@@ -19,7 +19,7 @@ class CreateTopicsTable extends Migration
             $table->text('description')->nullable();
             $table->integer('rating')->default(0);
             $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();
             $table->timestamps();
         });
