@@ -42,7 +42,11 @@ module.exports = function (grunt) {
         },
         concat: {
             prod: {
-                src: ['resources/assets/css/header-styles.css', 'resources/assets/css/style.css'],
+                src: [
+                    'resources/assets/css/header-styles.css',
+                    'resources/assets/css/style.css',
+                    'resources/assets/css/vendors.css'
+                ],
                 dest: 'resources/assets/css/concated/css-concat.css'
             },
             dev: {
@@ -76,7 +80,7 @@ module.exports = function (grunt) {
                     loadPath: 'node_modules/bootstrap-sass/assets/stylesheets'
                 },
                 files: {
-                    'public/css/vendors.css': 'resources/assets/sass/vendors.scss'
+                    'resources/assets/css/vendors.css': 'resources/assets/sass/vendors.scss'
                 }
             }
         }
@@ -92,7 +96,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
 
     grunt.registerTask('dev', ['handlebars', 'browserify', 'concat:dev', 'watch']);
-    grunt.registerTask('stage', ['handlebars', 'browserify', 'concat:dev', 'sass']);
+    grunt.registerTask('stage', ['handlebars', 'browserify', 'sass', 'concat:dev']);
     grunt.registerTask('prod', ['handlebars', 'browserify', 'uglify', 'concat:prod', 'cssmin']);
 
     grunt.registerTask('default', ['stage']);
