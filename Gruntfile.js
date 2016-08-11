@@ -60,7 +60,8 @@ module.exports = function (grunt) {
         cssmin: {
             dist: {
                 files: {
-                    'public/css/styles-min.css': ['resources/assets/css/concated/css-concat.css']
+                    'public/css/styles-min.css': ['resources/assets/css/concated/css-concat.css'],
+                    'public/css/vendors-min.css': ['public/css/vendors-min.css']
                 }
             }
         },
@@ -68,15 +69,12 @@ module.exports = function (grunt) {
         sass: {
             dist: {
                 options: {
-                    style: 'expanded'
+                    style: 'expanded',
+                    loadPath: 'node_modules/bootstrap-sass/assets/stylesheets'
                 },
-                files: [{
-                    expand: true,
-                    cwd: 'resources/assets/sass',
-                    src: ['**/*.scss'],
-                    dest: 'public/css',
-                    ext: '.css'
-                }]
+                files: {
+                    'public/css/vendors.css': 'resources/assets/sass/vendors.scss'
+                }
             }
         }
 
@@ -91,7 +89,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
 
     grunt.registerTask('dev', ['handlebars', 'browserify:dev', 'concat:dev', 'watch']);
-    grunt.registerTask('stage', ['handlebars', 'browserify:dev', 'concat:dev']);
+    grunt.registerTask('stage', ['handlebars', 'browserify:dev', 'concat:dev', 'sass']);
     grunt.registerTask('prod', ['handlebars', 'browserify:prod', 'uglify', 'concat:prod', 'cssmin']);
 
     grunt.registerTask('default', ['stage']);
