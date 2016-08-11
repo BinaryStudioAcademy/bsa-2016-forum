@@ -43,16 +43,17 @@ module.exports = function (grunt) {
 
         concat: {
             css: {
-                src: ['resources/assets/**/*.css'],
-                dest: 'public/css/style.css'
+                src: ['public/css/styles.css', 'resources/assets/css/*.css'],
+                dest: 'public/css/styles.css'
             },
             vendors_css: {
                 // css вендоров пока нету
             },
             js: {
                 src: [
-                    'node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js',
                     'node_modules/jquery/dist/jquery.min.js',
+                    'node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js',
+                    'public/js/bundle.js'
                 ],
                 dest: 'public/js/bundle.js'
             }
@@ -62,19 +63,15 @@ module.exports = function (grunt) {
             dist: {
                 options: {
                     style: 'expanded',
-                    loadPath: 'node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss'
+                    //loadPath: 'node_modules/bootstrap-sass/assets/stylesheets'
                 },
                 files: {
-                    'public/css/style.css': 'resources/assets/sass/*.scss'
+                    'public/css/styles.css': 'resources/assets/sass/**/*.scss',
                 }
             }
         },
 
         uglify: {
-            vendors: {
-                src: 'public/js/vendors.js',
-                dest: 'public/js/vendors.min.js'
-            },
             app: {
                 src: 'public/js/bundle.js',
                 dest: 'public/js/bundle.min.js'
@@ -84,8 +81,7 @@ module.exports = function (grunt) {
         cssmin: {
             dist: {
                 files: {
-                    'public/css/styles.min.css': ['public/css/styles.css'],
-                    'public/css/vendors.min.css': ['public/css/vendors.css']
+                    'public/css/styles.css': ['public/css/styles.css'],
                 }
             }
         },

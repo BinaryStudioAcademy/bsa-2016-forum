@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link type="text/css" rel="stylesheet" href="css/style.css">
+    @if (env('DEV'))
+        <link type="text/css" rel="stylesheet" href="css/styles.css?v={{ time() }}">
+    @else
+        <link type="text/css" rel="stylesheet" href="css/styles.css?v={{ env('APP_VER') }}">
+    @endif
     <title>Title</title>
 </head>
 <body>
@@ -21,6 +25,10 @@
 <div class="footer"></div>
 
 
-<script src="js/bundle.js"></script>
+@if (env('DEV'))
+    <script src="js/bundle.js?v={{ time() }}"></script>
+@else
+    <script src="js/bundle.js?v={{ env('APP_VER') }}"></script>
+@endif
 </body>
 </html>
