@@ -13,7 +13,7 @@ class VoteItem extends Model
     
     //TODO     const RULES = ['name'  => 'required'];
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'vote_id', 'user_id'];
     
     protected $dates = ['deleted_at'];
 
