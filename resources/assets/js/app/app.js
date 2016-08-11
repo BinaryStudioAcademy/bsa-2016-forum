@@ -1,5 +1,7 @@
-var Marionette = require('backbone.marionette');
+var config = require('./config/config');
 
-app = new Marionette.Application();
+var appInstance = require('./initializers/App');
 
-module.exports = app;
+var App = new appInstance();
+
+App.start(config);
