@@ -11,22 +11,25 @@ npm install
 
 2) install Ruby (for sass dependency)
 
-Linux
+*Ubuntu*
 ```
 sudo apt-get install ruby-full
 ```
 
-Windows.
+*Windows*
 Go to http://rubyinstaller.org/downloads/ and download stable version
 
 3) install sass package from rubygems.org
 
-Ubuntu
+*Ubuntu*
 ```
 sudo gem install sass
 ```
 
-Use "gem install sass" on Windows.
+*Windows*
+```
+gem install sass
+```
 
 4) compile all resources
 ```
