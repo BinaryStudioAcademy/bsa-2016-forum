@@ -11,11 +11,51 @@
 |
 */
 
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->name,
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
+        'display_name' => $faker->unique()->userName,
         'email' => $faker->safeEmail,
-        'password' => bcrypt(str_random(10)),
-        'remember_token' => str_random(10),
+        'reputation' => $faker->numberBetween(0,1000),
+        'status_id' => App\Models\Status::all()->random(1)->id,
+        'hash_password' => bcrypt(str_random(10)),
+        'token' => $faker->md5,
+        'last_visit_at' => $faker->dateTimeThisYear,
+    ];
+});
+
+$factory->define(App\Models\Topic::class, function (Faker\Generator $faker) {
+    return [
+        'reviewed_number' => $faker->numberBetween(0,1000),
+        'name' => $faker->unique()->word,
+        'description' => $faker->word,
+        'rating' => $faker->numberBetween(0,1000),
+        'user_id' => App\Models\User::all()->random(1)->id,
+    ];
+});
+
+$factory->define(App\Models\Comment::class, function (Faker\Generator $faker) {
+    return [
+        'content_origin' => $faker->text,
+        'rating' => $faker->numberBetween(0,1000),
+        'user_id' => App\Models\User::all()->random(1)->id,
+        'content_generated' => $faker->text,
+    ];
+});
+
+$factory->define(App\Models\Message::class, function (Faker\Generator $faker) {
+    $from_id = App\Models\User::all()->random(1)->id;
+    $to_id = $from_id;
+
+    while ($to_id == $from_id) {
+        $to_id = App\Models\User::all()->random(1)->id;
+    }
+
+    return [
+        'user_from_id' => $from_id,
+        'user_to_id' => $to_id,
+        'message' => $faker->text,
+        'is_read' => $faker->numberBetween(0,1),
     ];
 });
