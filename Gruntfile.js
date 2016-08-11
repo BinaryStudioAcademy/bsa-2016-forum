@@ -44,9 +44,9 @@ module.exports = function (grunt) {
         concat: {
             css: {
                 src: [
-                    'public/css/styles.css',
-                    'resources/assets/css/*.css',
-                    'public/css/bootstrap.css'
+                    'public/css/bootstrap.css',
+                    'resources/assets/sass/*.css',
+                    'public/css/styles.css'
                 ],
                 dest: 'public/css/styles.css'
             },
