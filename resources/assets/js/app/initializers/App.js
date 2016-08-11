@@ -1,6 +1,3 @@
-var Backbone = require('backbone');
-var Marionette = require('backbone.marionette');
-
 //var Router = require('./router.js');
 
 var Routers = require('../config/routers');
