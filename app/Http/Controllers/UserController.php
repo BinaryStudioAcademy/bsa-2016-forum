@@ -16,7 +16,7 @@ class UserController extends ApiController
     public function index()
     {
         $users = User::all();
-        return $this->setStatusCode(200)->respond($users->toArray());
+        return $this->setStatusCode(200)->respond($users);
     }
 
     /**
@@ -28,7 +28,7 @@ class UserController extends ApiController
     public function store(Request $request)
     {
         //if validation fail
-//          return $this->setStatusCode(422)->respondWithError('Request is not valid');
+//          return $this->setStatusCode(422)->respond($user);
 
         $user = User::create($request->all());
 
@@ -45,7 +45,7 @@ class UserController extends ApiController
     {
         $user = User::find($id);
         if (!$user) {
-            return $this->setStatusCode(404)->respondWithError('User does not exist');
+            return $this->setStatusCode(404)->respond();
         }
         $user->books;
         return $this->setStatusCode(200)->respond($user);
@@ -66,7 +66,7 @@ class UserController extends ApiController
 
         $user = User::find($id);
         if(!$user){
-            return $this->setStatusCode(404)->respondWithError('User does not exist');
+            return $this->setStatusCode(404)->respond();
         }
         $user->update($request->all());
 
@@ -86,10 +86,10 @@ class UserController extends ApiController
 
         $user = User::find($id);
         if(!$user){
-            return $this->setStatusCode(404)->respondWithError('User does not exist');
+            return $this->setStatusCode(404)->respond();
         }
         $user->delete();
-        return $this->setStatusCode(204)->respond([]);
+        return $this->setStatusCode(204)->respond();
 
     }
 }
