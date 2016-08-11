@@ -13,7 +13,7 @@ class Vote extends Model
 
     //TODO     const RULES = ['title'  => 'required'];
 
-    protected $fillable = ['title'];
+    protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at'];
 
     protected $dates = ['deleted_at'];
 
@@ -22,16 +22,14 @@ class Vote extends Model
         return $this->belongsTo(User::class);
     }
    
-    //TODO user has many Vote
-   
     public function voteItem()
     {
-        return $this->hasMany(VoteItem::Class);
+        return $this->hasMany(VoteItem::class);
     }
 
     public function votePermission()
     {
-        return $this->hasMany(VotePermission::Class);
+        return $this->hasMany(VotePermission::class);
     }
 
     public function voteResult()
@@ -46,7 +44,7 @@ class Vote extends Model
 
     public function attachments()
     {
-        return $this->morphToMany(Tag::class, 'attachmenttable');
+        return $this->morphToMany(Attachment::class, 'attachmenttable');
     }
 
     public function likes()

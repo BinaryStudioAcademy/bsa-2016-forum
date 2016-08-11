@@ -13,16 +13,14 @@ class VoteItem extends Model
     
     //TODO     const RULES = ['name'  => 'required'];
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'vote_id', 'user_id'];
     
     protected $dates = ['deleted_at'];
 
     public function user()
     {
-        return $this->belongsTo(User::Class);
+        return $this->belongsTo(User::сlass);
     }
-
-    //TODO user has many VoteItem
 
     public function vote()
     {
@@ -41,7 +39,7 @@ class VoteItem extends Model
 
     public function attachments()
     {
-        return $this->morphToMany(Tag::class, 'attachmenttable');
+        return $this->morphToMany(Attachment::class, 'attachmenttable');
     }
 
     public function likes()
