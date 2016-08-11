@@ -5,9 +5,9 @@ Route::group(['middleware'=>'api', 'prefix'=>'api/v1'], function (){
         return 'Welcome to REST API v1';
     });
 
-    Route::resource('user','UserController');
-    Route::resource('topic','TopicController');
-    Route::resource('vote','VoteController');
+    Route::resource('users','UserController');
+    Route::resource('topics','TopicController');
+    Route::resource('votes','VoteController');
 
 
 });
