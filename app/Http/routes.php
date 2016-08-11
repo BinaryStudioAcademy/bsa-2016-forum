@@ -1,7 +1,6 @@
 <?php
 
-if ($e instanceof NotFoundHttpException)
-    return response(404);
+
 
 Route::group(['middleware'=>'api', 'prefix'=>'api/v1'], function (){
 
@@ -9,10 +8,49 @@ Route::group(['middleware'=>'api', 'prefix'=>'api/v1'], function (){
         return 'Welcome to REST API v1';
     });
 
-    Route::resource('users','UserController')->name('users');
-    Route::resource('topics','TopicController')->name('topics');
-    Route::resource('votes','VoteController')->name('votes');
-    Route::resource('users/{user}/messages','MessageController')->name('messages');
+    Route::resource('users', 'UserController', [
+        'except' => ['edit','create'],
+        'names' => [
+            'index' => 'users.index',
+            'store' => 'users.store',
+            'show' => 'users.show',
+            'update' => 'users.update',
+            'destroy' => 'users.destroy',
+        ],
+    ]);
+
+    Route::resource('topics', 'TopicController', [
+        'except' => ['edit','create'],
+        'names' => [
+            'index' => 'topics.index',
+            'store' => 'topics.store',
+            'show' => 'topics.show',
+            'update' => 'topics.update',
+            'destroy' => 'topics.destroy',
+        ],
+    ]);
+
+    Route::resource('votes', 'VoteController', [
+        'except' => ['edit','create'],
+        'names' => [
+            'index' => 'votes.index',
+            'store' => 'votes.store',
+            'show' => 'votes.show',
+            'update' => 'votes.update',
+            'destroy' => 'votes.destroy',
+        ],
+    ]);
+
+    Route::resource('users/{user}/messages', 'MessageController', [
+        'except' => ['edit','create'],
+        'names' => [
+            'index' => 'messages.index',
+            'store' => 'messages.store',
+            'show' => 'messages.show',
+            'update' => 'messages.update',
+            'destroy' => 'messages.destroy',
+        ],
+    ]);
 
     /*Routes for Topic tags*/
     Route::get('topics/{topic}/tags','TagController@getTopicTags')->name('topicTags');
