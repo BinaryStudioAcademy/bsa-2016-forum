@@ -1,10 +1,7 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\Models\Topic;
-use App\Models\User;
-use App\Models\Vote;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model

@@ -1,11 +1,7 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\Models\Topic;
-use App\Models\User;
-use App\Models\Vote;
-use App\Models\Comment;
 use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
