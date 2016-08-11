@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
+var $ = require('jquery');
 
 var routers = require('../config/routers');
 var appRouter = require('../router');
@@ -11,6 +12,9 @@ var navigationView = require('../views/navigationMenu.js');
 var appInstance = require('../instances/appInstance');
 
 var logger = require('../instances/logger');
+
+var Handlebars = require('handlebars');
+var Templates = require('../templates.js')(Handlebars);
 
 var app = Marionette.Application.extend({
     initialize: function(options) {
@@ -40,9 +44,18 @@ var app = Marionette.Application.extend({
 
         logger('start application');
 
+        // кешируем шаблоны
+
+        $.each(Templates, function (key, value) {
+            var templateCache = new Marionette.TemplateCache('#' + key);
+            templateCache.compiledTemplate = value;
+            Marionette.TemplateCache.templateCaches['#' + key] = templateCache;
+        });
+
         // сразу рендерим хедер и меню навигации
         this.RootView.header.show(new headerView());
         this.RootView.navigationMenu.show(new navigationView());
+
 
         if (Backbone.history) {
             Backbone.history.start();
