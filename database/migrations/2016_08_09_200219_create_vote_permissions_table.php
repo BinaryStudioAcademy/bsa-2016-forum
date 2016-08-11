@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class CreateVotePermissionsTable extends Migration
 {
@@ -16,10 +17,10 @@ class CreateVotePermissionsTable extends Migration
             $table->increments('id');
 
             $table->integer('vote_id')->unsigned();
-            $table->foreign('vote_id')->references('id')->on('votes')->onDelete('cascade');
+            $table->foreign('vote_id')->references('id')->on('votes');
 
             $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users');
 
             $table->boolean('grant')->default(1);
             $table->softDeletes();
