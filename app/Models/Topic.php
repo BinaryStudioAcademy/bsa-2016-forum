@@ -33,4 +33,9 @@ class Topic extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function bookmarks()
+    {
+        return $this->belongsToMany(User::class, 'bookmarks', 'topic_id', 'user_id');
+    }
+
 }
