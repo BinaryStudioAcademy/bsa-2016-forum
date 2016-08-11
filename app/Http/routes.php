@@ -14,3 +14,11 @@
 Route::get('/', function () {
     return view('main');
 });
+
+Route::get('api/tags', function() {
+    echo 111;
+//    return;
+    $tags = factory('tags', 50)->make();
+
+    return response()->json($tags);
+});

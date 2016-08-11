@@ -4,6 +4,16 @@ var prod = require('./prod/config');
 var config = {
   env: 'debug',
 
+  apiVersion: 'v1',
+
+  setApiVersion: function (version) {
+    this.apiVersion = version;
+  },
+
+  getApiVersion: function () {
+    return this.apiVersion;
+  },
+
   setEnv: function (env) {
     this.env = env;
   },

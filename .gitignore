@@ -12,5 +12,6 @@ composer.lock
 /public/js/
 /resources/assets/js/bundle.js
 /resources/assets/js/app/templates.js
-**/.sass-cache
 **/.sass-cache/*
+.sass-cache
+/public/fonts/

@@ -1,10 +1,13 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700");
+
 body {
   margin: 0;
 }
+
 body * {
   font-family: Open Sans;
 }
+
 .hdr-header {
   z-index: 3;
   position: relative;
@@ -25,15 +28,18 @@ body * {
   top: 0;
   padding: 5px 15px 5px 15px;
 }
+
 .hdr-header .hdr-logo {
   height: 100%;
   cursor: pointer;
   padding: 5px;
 }
+
 .hdr-header .hdr-searchBtn {
   border-radius: 0 5px 5px 0;
   border: none;
 }
+
 .hdr-header .hdr-buttons {
   margin-right: 4px;
   -webkit-align-self: center;
@@ -48,35 +54,43 @@ body * {
   -ms-flex-align: center;
   align-items: center;
 }
+
 .hdr-header .hdr-avatar {
   height: 100%;
   border: 1px solid transparent;
   border-radius: 3px;
 }
+
 .hdr-header #avatar {
   height: 35px;
   width: 35px;
 }
+
 .hdr-header .hdr-appsLogo {
   width: 100%;
 }
+
 .hdr-header .hdr-noTextDecoration {
   color: #000;
   text-decoration: none;
   margin-left: 0;
 }
+
 .hdr-header .hdr-noTextDecoration:hover {
   color: #000;
   text-decoration: none;
 }
+
 .hdr-header .hdr-noTextDecoration:active {
   color: #000;
   text-decoration: none;
 }
+
 .hdr-header .hdr-noTextDecoration:visited {
   color: #000;
   text-decoration: none;
 }
+
 #searchBar {
   height: 35px;
   border: none;
@@ -84,6 +98,7 @@ body * {
   padding-left: 10px;
   padding-right: 10px;
 }
+
 #userName {
   margin-left: 10px;
   margin-right: 10px;
@@ -94,6 +109,7 @@ body * {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 #userProfile {
   padding-right: 10px;
   display: -webkit-box;
@@ -118,6 +134,7 @@ body * {
   background: #6a6f79;
   max-width: 180px;
 }
+
 #appsBtn {
   padding: 3px;
   border: none;
@@ -129,9 +146,11 @@ body * {
   cursor: pointer;
   margin-left: 10px;
 }
+
 #main {
   overflow: hidden;
 }
+
 #notificationBtn {
   padding: 3px;
   border: none;
@@ -143,6 +162,7 @@ body * {
   margin-left: 10px;
   outline: none;
 }
+
 #notificationBlock {
   padding-top: 12px;
   z-index: 3;
@@ -151,13 +171,14 @@ body * {
   width: 300px;
   border: 1px solid #e0ddda;
   border-radius: 3px;
-  box-shadow: 0 0 2px rgba(0,0,0,0.2);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
   right: 5px;
   position: absolute;
   -webkit-transition: 0.2s;
   transition: 0.2s;
   padding-bottom: 7px;
 }
+
 #notificationBlock:before {
   width: 0;
   height: 0;
@@ -169,16 +190,20 @@ body * {
   margin-left: 250px;
   position: absolute;
 }
+
 #notificationBlock ::-webkit-scrollbar {
   width: 10px;
 }
+
 #notificationBlock ::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
+
 #notificationBlock ::-webkit-scrollbar-thumb {
   background-color: #c3bebe;
   outline: 1px solid #828b93;
 }
+
 #appsList {
   display: -webkit-box;
   display: -webkit-flex;
@@ -204,6 +229,7 @@ body * {
   -ms-flex-line-pack: distribute;
   align-content: space-around;
 }
+
 #appsBlock {
   z-index: 3;
   padding: 10px;
@@ -212,13 +238,14 @@ body * {
   width: 265px;
   border-radius: 3px;
   border: 1px solid #e0ddda;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   right: 5px;
   top: 65px;
   position: absolute;
   -webkit-transition: 0.2s;
   transition: 0.2s;
 }
+
 #appsBlock:before {
   width: 0;
   height: 0;
@@ -230,20 +257,24 @@ body * {
   margin-left: 165px;
   position: absolute;
 }
+
 .hdr-invisible {
   max-height: 0px;
   overflow: hidden;
   display: none !important;
 }
+
 .hdr-button {
   cursor: pointer;
   -webkit-transition: all 0.1s linear;
   transition: all 0.1s linear;
 }
+
 .hdr-button:active {
   -webkit-transform: translateY(3px);
   transform: translateY(3px);
 }
+
 #notificationList {
   padding-left: 0px;
   height: 380px;
@@ -251,6 +282,7 @@ body * {
   overflow: auto;
   overflow-x: hidden;
 }
+
 .hdr-liNotification {
   margin-top: 5px;
   list-style-type: none;
@@ -262,6 +294,7 @@ body * {
   padding: 5px;
   margin-bottom: 0px;
 }
+
 .hdr-notification {
   display: -webkit-box;
   display: -webkit-flex;
@@ -269,12 +302,14 @@ body * {
   display: flex;
   margin-top: 10px;
 }
+
 .hdr-imgApp {
   -webkit-align-self: center;
   -ms-flex-item-align: center;
   align-self: center;
   min-width: 50px;
 }
+
 .hdr-appButton {
   border-radius: 7px;
   background: transparent;
@@ -282,6 +317,7 @@ body * {
   padding: 5px;
   outline: none;
 }
+
 .hdr-serviceItem {
   width: 80px;
   height: 80px;
@@ -318,22 +354,27 @@ body * {
   justify-content: center;
   cursor: pointer;
 }
+
 .hdr-serviceItem:hover {
   background: #f1f1f1;
 }
+
 .hdr-serviceItem img {
   width: 40px;
   height: 40px;
 }
+
 .hdr-appName {
   text-align: center;
   color: #404040;
 }
+
 #search {
   position: absolute;
   background: #fff;
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
+
 .hdr-searchItem {
   padding-right: 10px;
   padding-left: 10px;
@@ -359,18 +400,22 @@ body * {
   z-index: 1;
   position: relative;
 }
+
 .hdr-searchItem:hover {
   background-color: #f1f1f1;
 }
+
 .hdr-searchItem span {
   padding-left: 5px;
 }
+
 .hdr-searchItem img {
   max-width: 25px;
   height: 25px !important;
   width: 25px;
   border-radius: 20px;
 }
+
 .hdr-textBlockNotification {
   display: -webkit-box;
   display: -webkit-flex;
@@ -391,6 +436,7 @@ body * {
   align-items: flex-end;
   padding: 0 10px;
 }
+
 .hdr-titleNotification {
   font-weight: 600;
   width: 100%;
@@ -398,6 +444,7 @@ body * {
   margin-top: 3px;
   color: #2196f3;
 }
+
 .hdr-textNotification {
   display: block;
   display: -webkit-box;
@@ -409,6 +456,7 @@ body * {
   margin: 10px 0;
   -webkit-box-orient: vertical;
 }
+
 .hdr-dateNotificationInBox {
   font-family: verdana;
   font-weight: 600;
@@ -416,41 +464,51 @@ body * {
   padding: 0 5px;
   color: #444;
 }
+
 .services-settings {
   border: none;
   border-radius: 0;
   background: #f1f1f1;
   margin-bottom: 5px;
 }
+
 .services-settings img {
   width: 75px;
 }
+
 .services-settings span {
   margin-left: 5px;
   text-transform: uppercase;
   font-size: 12px;
   font-weight: bold;
 }
+
 .services-settings-wrapper {
   padding-top: 5px;
   padding-bottom: 5px;
 }
+
 .notifications-list-wrapper {
   margin-top: 25px;
 }
+
 .service-name-filter {
   padding-left: 5px;
 }
+
 .filters-by-app {
   overflow: hidden;
 }
+
 @media only screen and (max-width: 640px) {
   #userProfile {
     padding-right: 0px;
   }
+
   #userName {
     display: none;
   }
+
   #profileBarArrDwn {
     display: none;
   }
@@ -462,15 +520,19 @@ body * {
     -ms-flex-pack: end;
     justify-content: flex-end;
   }
+
   #searchBar {
     padding-left: 10px;
   }
+
   #userProfile {
     padding-right: 0px;
   }
+
   #userName {
     display: none;
   }
+
   .hdr-logo {
     display: none;
   }
@@ -503,13 +565,15 @@ body * {
   margin-left: -10px;
   margin-right: -15px;
   color: #383838;
-  color: rgba(56,56,56,0.74);
+  color: rgba(56, 56, 56, 0.74);
   font-weight: bold;
 }
+
 #searchblockAdminApp {
   margin-top: 25px;
   margin-bottom: 25px;
 }
+
 .hdr-notifButton {
   margin-left: 10px;
   margin-right: 10px;
@@ -522,24 +586,29 @@ body * {
   -webkit-transition: 0.2s;
   transition: 0.2s;
 }
+
 .hdr-notifButton:hover {
   background: #fff;
   font-size: 20px;
 }
+
 .hdr-specialNotifBtn {
   margin: 10px;
   opacity: 0.5;
   -webkit-transition: all 0.2s linear;
   transition: all 0.2s linear;
 }
+
 .hdr-specialNotifBtn:hover {
   opacity: 1;
 }
+
 .hdr-headerElements .hdr-userprofileAndLogoutImg {
   height: 100%;
   height: 30px;
   padding: 8px 5px 8px 0;
 }
+
 .hdr-headerElements .hdr-logOutButtons {
   -webkit-box-align: center;
   -webkit-align-items: center;
@@ -559,6 +628,7 @@ body * {
   display: -ms-flexbox;
   display: flex;
 }
+
 .hdr-headerElements .hdr-userprofileAndLogoutBtn {
   padding: 3px;
   border: none;
@@ -581,9 +651,11 @@ body * {
   align-items: center;
   outline: none;
 }
+
 .hdr-headerElements .hdr-userprofileAndLogoutBtn:hover {
   background: #f1f1f1;
 }
+
 #logOutBox {
   margin-top: 0px;
   display: -webkit-box;
@@ -612,8 +684,9 @@ body * {
   -webkit-justify-content: space-around;
   -ms-flex-pack: distribute;
   justify-content: space-around;
-  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
 }
+
 #userProfileInBoxBtn {
   padding: 3px;
   border: none;
@@ -636,9 +709,11 @@ body * {
   -ms-flex-align: center;
   align-items: center;
 }
+
 #userProfileInBoxBtn:hover {
   background: #f1f1f1;
 }
+
 #notificationCounter {
   background-color: #f00;
   position: absolute;
@@ -651,11 +726,15 @@ body * {
   height: 22px;
   text-align: center;
 }
+
 .hdr-notRead {
   background-color: #dcf4ff;
 }
+
 @media all and (max-width: 510px) {
   #BSheaderLogo {
     display: none;
   }
 }
+
+/*# sourceMappingURL=header.css.map */

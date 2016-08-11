@@ -8,7 +8,7 @@ module.exports = function (grunt) {
             app: {
                 src: 'resources/assets/js/app/app.js',
                 dest: 'public/js/bundle.js'
-            },
+            }
         },
 
         watch: {
@@ -18,11 +18,15 @@ module.exports = function (grunt) {
             },
             css: {
                 files: 'resources/assets/css/**/*.css',
-                tasks: 'concat:dev'
+                tasks: 'concat:css'
             },
             templates: {
                 files: 'resources/assets/templates/**/*.tpl',
                 tasks: 'handlebars'
+            },
+            sass: {
+                files: 'resources/assets/sass/**/*.scss',
+                tasks: ['sass:dest', 'concat:css']
             }
         },
 
@@ -42,12 +46,12 @@ module.exports = function (grunt) {
         },
 
         concat: {
-            vendors_css: {
-                src: ['node_modules/bootstrap/dist/css/bootstrap.css', 'public/css/styles.css'],
-                dest: 'public/css/styles.css'
-            },
             css: {
-                src: ['resources/assets/css/**/*.css', 'public/css/styles.css'],
+                src: [
+                    'public/css/bootstrap.css',
+                    'resources/assets/css/*.css',
+                    'public/css/styles.css',
+                ],
                 dest: 'public/css/styles.css'
             },
             js: {
@@ -61,13 +65,21 @@ module.exports = function (grunt) {
         },
 
         sass: {
-            dist: {
+            bootstrap: {
                 options: {
                     style: 'expanded',
-                    //loadPath: 'node_modules/bootstrap-sass/assets/stylesheets'
+                    loadPath: 'node_modules/bootstrap-sass/assets/stylesheets'
                 },
                 files: {
-                    'public/css/style.css': 'resources/assets/sass/app.scss'
+                    'public/css/bootstrap.css': 'resources/assets/sass/vendors.scss'
+                }
+            },
+            dest: {
+                options: {
+                    style: 'expanded'
+                },
+                files: {
+                    'public/css/styles.css': 'resources/assets/sass/styles.scss'
                 }
             }
         },
@@ -82,11 +94,29 @@ module.exports = function (grunt) {
         cssmin: {
             dist: {
                 files: {
-                    'public/css/styles.css': ['public/css/styles.css'],
+                    'public/css/styles.css': ['public/css/styles.css']
                 }
             }
         },
 
+        copy: {
+            bootstrap_fonts: {
+                files: [
+                    // includes files within path and its sub-directories
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: [
+                            'node_modules/bootstrap-sass/assets/fonts/**/*.woff2',
+                            'node_modules/bootstrap-sass/assets/fonts/**/*.woff',
+                            'node_modules/bootstrap-sass/assets/fonts/**/*.ttf',
+
+                        ],
+                        dest: 'public/fonts/bootstrap'
+                    }
+                ]
+            }
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-sass');
@@ -96,8 +126,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-handlebars');
+    grunt.loadNpmTasks('grunt-contrib-sass');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('stage', ['handlebars', 'browserify', 'sass', 'concat']);
+    grunt.registerTask('stage', ['handlebars', 'browserify', 'sass', 'concat', 'copy']);
     grunt.registerTask('dev', ['stage', 'watch']);
     grunt.registerTask('prod', ['stage', 'uglify', 'cssmin']);
 
