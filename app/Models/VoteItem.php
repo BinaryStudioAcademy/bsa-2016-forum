@@ -19,10 +19,8 @@ class VoteItem extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::Class);
+        return $this->belongsTo(User::сlass);
     }
-
-    //TODO user has many VoteItem
 
     public function vote()
     {
@@ -41,7 +39,7 @@ class VoteItem extends Model
 
     public function attachments()
     {
-        return $this->morphToMany(Tag::class, 'attachmenttable');
+        return $this->morphToMany(Attachment::class, 'attachmenttable');
     }
 
     public function likes()

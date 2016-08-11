@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class VoteResult extends Model
+
 {
     use SoftDeletes;
 
@@ -16,7 +17,6 @@ class VoteResult extends Model
     {
         return $this->belongsTo(User::class);
     }
-    //TODO user has many VoteResult
     
     public function vote()
     {
