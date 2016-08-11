@@ -30,7 +30,7 @@ class Commentables extends Model
 
     public function comment()
     {
-        return $this->belongsTo('App\Comment');
+        return $this->belongsTo(Comment::class);
     }
 
     //https://laravel.com/docs/5.1/eloquent-relationships#polymorphic-relations
@@ -41,6 +41,6 @@ class Commentables extends Model
      */
     /*    public function commentable()
         {
-            return $this->morphToMany(App/Comment::class, 'commentable');
+            return $this->morphToMany(Comment::class, 'commentable');
         }*/
 }

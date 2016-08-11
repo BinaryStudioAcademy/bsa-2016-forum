@@ -26,7 +26,7 @@ class Notificationable extends Model
 
     public function notification()
     {
-        return $this->belongsTo(App/Notification::class);
+        return $this->belongsTo(Notification::class);
     }
 
     //https://laravel.com/docs/5.1/eloquent-relationships#polymorphic-relations
@@ -37,6 +37,6 @@ class Notificationable extends Model
      */
 /*    public function notificationable()
     {
-        return $this->morphToMany(App/Notification::class, 'notificationable');
+        return $this->morphToMany(Notification::class, 'notificationable');
     }*/
 }

@@ -2,6 +2,10 @@
 
 namespace App;
 
+use App\Models\Topic;
+use App\Models\User;
+use App\Models\Vote;
+use App\Models\Comment;
 use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
@@ -24,7 +28,7 @@ class Notification extends Model
 
     public function user()
     {
-        return $this->belongsTo(App/User::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -32,7 +36,7 @@ class Notification extends Model
      */
     public function topics()
     {
-        return $this->morphedByMany(App/Topic::class, 'notificationable');
+        return $this->morphedByMany(Topic::class, 'notificationable');
     }
 
     /**
@@ -40,7 +44,7 @@ class Notification extends Model
      */
     public function votes()
     {
-        return $this->morphedByMany(App/Vote::class, 'notificationable');
+        return $this->morphedByMany(Vote::class, 'notificationable');
     }
 
     /**
@@ -48,6 +52,6 @@ class Notification extends Model
      */
     public function comments()
     {
-        return $this->morphedByMany(App/Comment::class, 'notificationable');
+        return $this->morphedByMany(Comment::class, 'notificationable');
     }
 }

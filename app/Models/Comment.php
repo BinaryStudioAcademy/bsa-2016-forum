@@ -2,6 +2,9 @@
 
 namespace App;
 
+use App\Models\Topic;
+use App\Models\User;
+use App\Models\Vote;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
@@ -26,7 +29,7 @@ class Comment extends Model
 
     public function user()
     {
-        return $this->belongsTo(App/User::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -34,7 +37,7 @@ class Comment extends Model
      */
     public function topics()
     {
-        return $this->morphedByMany(App/Topic::class, 'commentable');
+        return $this->morphedByMany(Topic::class, 'commentable');
     }
 
     /**
@@ -42,7 +45,7 @@ class Comment extends Model
      */
     public function votes()
     {
-        return $this->morphedByMany(App/Vote::class, 'commentable');
+        return $this->morphedByMany(Vote::class, 'commentable');
     }
 
     /**
@@ -50,7 +53,7 @@ class Comment extends Model
      */
     public function comments()
     {
-        return $this->morphedByMany(App/Comment::class, 'commentable');
+        return $this->morphedByMany(Comment::class, 'commentable');
     }
 
 }
