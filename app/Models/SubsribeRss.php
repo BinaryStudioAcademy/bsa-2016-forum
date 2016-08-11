@@ -1,24 +1,26 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class Vote extends Model
+class SubscribeRss extends Model
 
 {
     use SoftDeletes;
 
+    protected $dates = ['deleted_at'];
+
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
 
     public function topic()
     {
-        return $this->belongsTo('App\Topic');
+        return $this->belongsTo(Topic::class);
     }
 
 }

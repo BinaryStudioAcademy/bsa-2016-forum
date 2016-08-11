@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Like extends Model
+class Tag extends Model
 {
     public function topics()
     {
@@ -14,10 +14,5 @@ class Like extends Model
     public function votes()
     {
         return $this->morphedByMany('App\Vote', 'taggable');
-    }
-    
-    public function comments()
-    {
-        return $this->morphedByMany('App\Comment', 'taggable');
     }
 }

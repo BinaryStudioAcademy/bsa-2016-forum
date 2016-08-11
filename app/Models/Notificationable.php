@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,33 +24,19 @@ class Notificationable extends Model
         return $v->passes();
     }
 
-    public function notificationableable()
-    {
-        return $this->morphTo();
-    }
-
     public function notification()
     {
-        return $this->belongsTo('App\Notification');
+        return $this->belongsTo(Notification::class);
     }
 
     //https://laravel.com/docs/5.1/eloquent-relationships#polymorphic-relations
 
-    //to do in comments
-/*    public function notificationableables()
+    //to do in comments, topics, votes
+    /**
+     * Get all of the notifications for the comment or topic or vote.
+     */
+/*    public function notificationable()
     {
-        return $this->morphMany('App\Notificationable', 'notificationableable');
-    }*/
-
-    //to do in topics
-/*    public function notificationableables()
-    {
-        return $this->morphMany('App\Notificationable', 'notificationableable');
-    }*/
-
-    //to do in votes
-/*    public function notificationableables()
-    {
-        return $this->morphMany('App\Notificationable', 'notificationableable');
+        return $this->morphToMany(Notification::class, 'notificationable');
     }*/
 }
