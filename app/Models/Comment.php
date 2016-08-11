@@ -53,4 +53,61 @@ class Comment extends Model
         return $this->morphedByMany(Comment::class, 'commentable');
     }
 
+    /**
+     * Get all of the tags that are assigned this comment.
+     */
+    public function tags()
+    {
+        return $this->morphedByMany(Attachment::class, 'commentable');
+    }
+
+    /**
+     * Get all of the attachments that are assigned this comment.
+     */
+    public function attachments()
+    {
+        return $this->morphedByMany(Tag::class, 'commentable');
+    }
+
+    /**
+     * Get all of the attachments that are assigned this comment.
+     */
+    public function likes()
+    {
+        return $this->morphedByMany(Like::class, 'commentable');
+    }
+
+    /**
+     * Get all of the notifications that are assigned this comment.
+     */
+    public function notifications()
+    {
+        return $this->morphedByMany(Notification::class, 'commentable');
+    }
+    /////////////
+
+    public function tags_rel()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function attachments_rel()
+    {
+        return $this->morphToMany(Attachment::class, 'attachmenttable');
+    }
+
+    public function likes_rel()
+    {
+        return $this->morphToMany(Like::class, 'likeable');
+    }
+
+    public function comments_rel()
+    {
+        return $this->morphToMany(Comment::class, 'commentable');
+    }
+
+    public function notifications_rel()
+    {
+        return $this->morphToMany(Notification::class, 'notificationable');
+    }
 }
