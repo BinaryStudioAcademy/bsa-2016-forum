@@ -24,8 +24,33 @@ class Comment extends Model
         return $v->passes();
     }
 
-    public function notification()
+    public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(App/User::class);
     }
+
+    /**
+     * Get all of the topics that are assigned this comment.
+     */
+    public function topics()
+    {
+        return $this->morphedByMany(App/Topic::class, 'commentable');
+    }
+
+    /**
+     * Get all of the votes that are assigned this comment.
+     */
+    public function votes()
+    {
+        return $this->morphedByMany(App/Vote::class, 'commentable');
+    }
+
+    /**
+     * Get all of the comments that are assigned this comment.
+     */
+    public function comments()
+    {
+        return $this->morphedByMany(App/Comment::class, 'commentable');
+    }
+
 }

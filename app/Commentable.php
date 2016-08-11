@@ -35,21 +35,12 @@ class Commentables extends Model
 
     //https://laravel.com/docs/5.1/eloquent-relationships#polymorphic-relations
 
-    //to do in comments
-    /*    public function commentables()
+    //to do in comments, topics, votes
+    /**
+     * Get all of the comments for the comment or topic or vote.
+     */
+    /*    public function commentable()
         {
-            return $this->morphMany('App\Commentable', 'commentable');
-        }*/
-
-    //to do in topics
-    /*    public function commentables()
-        {
-            return $this->morphMany('App\Commentable', 'commentable');
-        }*/
-
-    //to do in votes
-    /*    public function commentables()
-        {
-            return $this->morphMany('App\Commentable', 'commentable');
+            return $this->morphToMany(App/Comment::class, 'commentable');
         }*/
 }
