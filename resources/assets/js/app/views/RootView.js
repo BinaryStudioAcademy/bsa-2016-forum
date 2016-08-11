@@ -1,3 +1,5 @@
+var Marionette = require('backbone.marionette');
+
 var RootView = Marionette.LayoutView.extend({
     el: 'body',
     regions: {

@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link type="text/css" rel="stylesheet" href="css/vendors-min.css">
-    <link type="text/css" rel="stylesheet" href="css/styles-min.css">
+    <link type="text/css" rel="stylesheet" href="css/style.css">
     <title>Title</title>
 </head>
 <body>
@@ -21,7 +20,7 @@
 </div>
 <div class="footer"></div>
 
-<script src="js/vendors.js"></script>
+
 <script src="js/bundle.js"></script>
 </body>
 </html>
