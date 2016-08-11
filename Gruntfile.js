@@ -45,8 +45,8 @@ module.exports = function (grunt) {
             css: {
                 src: [
                     'public/css/bootstrap.css',
-                    'resources/assets/sass/*.css',
-                    'public/css/styles.css'
+                    'public/css/styles.css',
+                    'public/css/header.css'
                 ],
                 dest: 'public/css/styles.css'
             },
@@ -61,6 +61,14 @@ module.exports = function (grunt) {
         },
 
         sass: {
+            header: {
+                options: {
+                    style: 'expanded'
+                },
+                files: {
+                    'public/css/header.css': 'resources/assets/sass/header.scss'
+                }
+            },
             bootstrap: {
                 options: {
                     style: 'expanded',
