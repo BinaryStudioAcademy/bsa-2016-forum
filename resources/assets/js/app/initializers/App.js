@@ -39,9 +39,9 @@ var app = Marionette.Application.extend({
     templateCashing: function () {
         // кешируем шаблоны
         $.each(Templates, function (key, value) {
-            var templateCache = new Marionette.TemplateCache('#' + key);
+            var templateCache = new Marionette.TemplateCache(key);
             templateCache.compiledTemplate = value;
-            Marionette.TemplateCache.templateCaches[key.split('.')[0]] = templateCache;
+            Marionette.TemplateCache.templateCaches[key] = templateCache;
         });
     },
     onStart: function (config) {

@@ -21,7 +21,7 @@ module.exports = function (grunt) {
                 tasks: 'concat:css'
             },
             templates: {
-                files: 'resources/assets/templates/**/*.tpl',
+                files: 'resources/assets/templates/**/*.hbs',
                 tasks: 'handlebars'
             },
             sass: {
@@ -34,7 +34,7 @@ module.exports = function (grunt) {
             options: {
                 processName: function (filepath) {
                     var name = filepath.split('/');
-                    return name[name.length - 1];
+                    return name[name.length - 1].split('.')[0];
                 },
                 commonjs: true
             },
