@@ -45,23 +45,13 @@ module.exports = function (grunt) {
             }
         },
 
-        concat: {
-            css: {
-                src: [
-                    'public/css/index.css',
-                    'public/css/header.css'
-                ],
-                dest: 'public/css/styles.css'
-            }
-        },
-
         sass: {
             index: {
                 options: {
                     loadPath: 'node_modules/bootstrap-sass/assets/stylesheets'
                 },
                 files: {
-                    'public/css/index.css': 'resources/assets/sass/index.scss'
+                    'public/css/styles.css': 'resources/assets/sass/index.scss'
                 }
             },
             header: {
@@ -106,7 +96,6 @@ module.exports = function (grunt) {
     });
 
     grunt.loadNpmTasks('grunt-contrib-sass');
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -115,7 +104,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('stage', ['handlebars', 'browserify', 'sass', 'concat', 'copy']);
+    grunt.registerTask('stage', ['handlebars', 'browserify', 'sass', 'copy']);
     grunt.registerTask('dev', ['stage', 'watch']);
     grunt.registerTask('prod', ['stage', 'uglify', 'cssmin']);
 
