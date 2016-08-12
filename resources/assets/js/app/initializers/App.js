@@ -5,7 +5,6 @@ var $ = require('jquery');
 var routers = require('../config/routers');
 var appRouter = require('../router');
 
-var RootLayoutView = require('../views/RootLayoutView');
 var mainLayoutView = require('../views/mainLayout');
 
 var appInstance = require('../instances/appInstance');
@@ -25,10 +24,8 @@ var app = Marionette.Application.extend({
     },
 
     showRootLayout: function () {
-        var rootView = new RootLayoutView();
-        var mainView = new mainLayoutView();
-        rootView.main.show(mainView);
-        this.setRootLayout(mainView);
+        this.RootView.render();
+        this.RootView.showRegions();
     },
 
     setRouting: function () {
@@ -54,6 +51,9 @@ var app = Marionette.Application.extend({
 
         this.setRouting();
         this.templateCashing();
+
+        //var mainView = new mainLayoutView();
+        this.setRootLayout(new mainLayoutView());
         this.showRootLayout();
 
         logger('start application');

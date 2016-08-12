@@ -15,31 +15,6 @@ Route::get('/', function () {
     return view('main');
 });
 
-
-Route::get('messages', function() {
-    $data = factory(App\Models\Message::class, 10)->make();
-
-    return response()->json($data);
-});
-
-Route::get('topics', function() {
-    $data = factory(App\Models\Topic::class, 10)->make();
-
-    return response()->json($data);
-});
-
-Route::get('users', function() {
-    $data = factory(App\Models\User::class, 10)->make();
-
-    return response()->json($data);
-});
-
-Route::get('comments', function() {
-    $data = factory(App\Models\Comment::class, 10)->make();
-
-    return response()->json($data);
-});
-//
 //if ($e instanceof NotFoundHttpException)
 //    return response(404);
 //
