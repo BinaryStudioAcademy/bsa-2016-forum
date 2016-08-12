@@ -25,7 +25,7 @@ class User extends Authenticatable implements HasRoleAndPermissionContract
         'hash_password', 'token',
     ];
 
-    public function message()
+    public function messages()
     {
         return $this->hasMany(Message::class, 'user_from_id');
     }
