@@ -48,38 +48,25 @@ module.exports = function (grunt) {
         concat: {
             css: {
                 src: [
-                    'public/css/bootstrap.css',
-                    'resources/assets/css/*.css',
-                    'public/css/styles.css',
+                    'public/css/index.css',
+                    'public/css/header.css'
                 ],
                 dest: 'public/css/styles.css'
-            },
-            js: {
-                src: [
-                    'node_modules/jquery/dist/jquery.min.js',
-                    'node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js',
-                    'public/js/bundle.js'
-                ],
-                dest: 'public/js/bundle.js'
             }
         },
 
         sass: {
-            bootstrap: {
+            index: {
                 options: {
-                    style: 'expanded',
                     loadPath: 'node_modules/bootstrap-sass/assets/stylesheets'
                 },
                 files: {
-                    'public/css/bootstrap.css': 'resources/assets/sass/vendors.scss'
+                    'public/css/index.css': 'resources/assets/sass/index.scss'
                 }
             },
-            dest: {
-                options: {
-                    style: 'expanded'
-                },
+            header: {
                 files: {
-                    'public/css/styles.css': 'resources/assets/sass/styles.scss'
+                    'public/css/header.css': 'resources/assets/sass/header.scss'
                 }
             }
         },
@@ -102,7 +89,6 @@ module.exports = function (grunt) {
         copy: {
             bootstrap_fonts: {
                 files: [
-                    // includes files within path and its sub-directories
                     {
                         expand: true,
                         flatten: true,
