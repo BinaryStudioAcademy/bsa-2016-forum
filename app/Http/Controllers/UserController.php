@@ -27,12 +27,10 @@ class UserController extends ApiController
      */
     public function store(Request $request)
     {
-        //if validation fail
-//          return $this->setStatusCode(422)->respond($user);
 
         $user = User::create($request->all());
 
-        return $this->setStatusCode(200)->respond($user);
+        return $this->setStatusCode(201)->respond();
     }
 
     /**
@@ -43,11 +41,8 @@ class UserController extends ApiController
      */
     public function show($id)
     {
-        $user = User::find($id);
-        if (!$user) {
-            return $this->setStatusCode(404)->respond();
-        }
-        $user->books;
+        $user = User::findOrFail($id);
+
         return $this->setStatusCode(200)->respond($user);
     }
 
@@ -61,13 +56,9 @@ class UserController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        //if validation fail
-//          return $this->setStatusCode(422)->respondWithError('Request is not valid');
 
-        $user = User::find($id);
-        if(!$user){
-            return $this->setStatusCode(404)->respond();
-        }
+        $user = User::findOrFail($id);
+
         $user->update($request->all());
 
         return $this->setStatusCode(200)->respond($user);
@@ -81,13 +72,9 @@ class UserController extends ApiController
      */
     public function destroy($id)
     {
-        //if validation fail
-//          return $this->setStatusCode(422)->respondWithError('Request is not valid');
 
-        $user = User::find($id);
-        if(!$user){
-            return $this->setStatusCode(404)->respond();
-        }
+        $user = User::findOrFail($id);
+
         $user->delete();
         return $this->setStatusCode(204)->respond();
 
