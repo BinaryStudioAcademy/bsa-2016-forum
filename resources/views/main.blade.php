@@ -11,19 +11,7 @@
 </head>
 <body>
 
-<div id="header"></div>
-<div id="navigationMenu"></div>
-<div class="container">
-    <div class="breadcrumbs-container" id="breadcrumbs">
-        <ol class="breadcrumb">
-            <li><a href="#">Главная</a></li>
-            <li><a href="#">Библиотека</a></li>
-            <li class="active">Данные</li>
-        </ol>
-    </div>
-    <div id="content"></div>
-</div>
-<div class="footer"></div>
+<div id="main"></div>
 
 @if (env('DEV'))
     <script src="js/bundle.js?v={{ time() }}"></script>

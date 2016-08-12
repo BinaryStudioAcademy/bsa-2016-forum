@@ -1,5 +1,5 @@
-var TopicController = require('../controllers/TopicController.js');
-var IdeaHubController = require('../controllers/IdeaHubController.js');
+var TopicController = require('../controllers/TopicController');
+var IdeaHubController = require('../controllers/IdeaHubController');
 
 var routers = {
 

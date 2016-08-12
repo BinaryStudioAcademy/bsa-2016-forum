@@ -5,24 +5,30 @@ var $ = require('jquery');
 var routers = require('../config/routers');
 var appRouter = require('../router');
 
-var RootView = require('../views/RootView.js');
-var headerView = require('../views/Header.js');
-var navigationView = require('../views/navigationMenu.js');
+var RootLayoutView = require('../views/RootLayoutView');
+var mainLayoutView = require('../views/mainLayout');
 
 var appInstance = require('../instances/appInstance');
 
 var logger = require('../instances/logger');
 
 var Handlebars = require('handlebars');
-var Templates = require('../templates.js')(Handlebars);
+var Templates = require('../templates')(Handlebars);
 
 var app = Marionette.Application.extend({
     initialize: function(options) {
         logger('My app has initialized');
     },
 
-    setRootLayout: function () {
-        this.RootView = new RootView();
+    setRootLayout: function (layout) {
+        this.RootView = layout;
+    },
+
+    showRootLayout: function () {
+        var rootView = new RootLayoutView();
+        var mainView = new mainLayoutView();
+        rootView.main.show(mainView);
+        this.setRootLayout(mainView);
     },
 
     setRouting: function () {
@@ -48,14 +54,9 @@ var app = Marionette.Application.extend({
 
         this.setRouting();
         this.templateCashing();
-        this.setRootLayout();
+        this.showRootLayout();
 
         logger('start application');
-
-        // сразу рендерим хедер и меню навигации
-        this.RootView.header.show(new headerView());
-        this.RootView.navigationMenu.show(new navigationView());
-
 
         if (Backbone.history) {
             Backbone.history.start();
