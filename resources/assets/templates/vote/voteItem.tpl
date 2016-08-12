@@ -6,7 +6,7 @@
     </div>
     <div class="votes-item-body">
         <div class="votes-item-title">
-            <span>Vote title</span>
+            <span>{{ title }}</span>
         </div>
         <div class="votes-item-details">
             <a>0 Comments</a><a>0 Votes</a><a>0 Views</a>

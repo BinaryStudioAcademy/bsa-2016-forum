@@ -15,7 +15,7 @@ var Handlebars = require('handlebars');
 var Templates = require('../templates')(Handlebars);
 
 var app = Marionette.Application.extend({
-    initialize: function(options) {
+    initialize: function (options) {
         logger('My app has initialized');
     },
 
