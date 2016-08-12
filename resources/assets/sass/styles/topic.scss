@@ -1,0 +1,86 @@
+/*
+NEW TOPIC VIEW STYLES
+*/
+
+.topic-new {
+  width: 100%;
+  padding: 20px;
+  background: #fff;
+}
+
+.topic-new > div {
+  width: 100%;
+  margin: 5px 0 15px;
+}
+
+.topic-new-head h4{
+  margin: 0 0 15px;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.topic-new-title input {
+  width: 100%;
+  padding: 10px 15px;
+  background-color: #E9E9E9;
+  border: none;
+  color: #555;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.topic-new-body textarea {
+  resize: vertical;
+  width: 100%;
+  margin: 5px 0 5px;
+  padding: 10px 15px;
+  background-color: #E9E9E9;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.topic-new-body a {
+  float: right;
+}
+
+.topic-new-attachment {
+  width: 100%;
+  overflow: hidden;
+}
+
+.topic-new-control {
+  border-top: #ddd 1px solid;
+  padding: 15px 0 15px;
+}
+
+.topic-new-notification {
+  display: inline-block;
+  float: left;
+}
+
+.topic-new-notification label {
+  color: #555;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.topic-new-submit {
+  display: inline-block;
+  float: right;
+}
+
+.topic-new-submit input {
+  padding: 5px 35px;
+  border-radius: 0;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  font-weight: 800;
+  background-color: #ffd992;
+}
+
+.topic-new-submit input:hover {
+  background-color: #f9c172;
+}
