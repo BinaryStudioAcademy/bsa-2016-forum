@@ -54,11 +54,6 @@ module.exports = function (grunt) {
                     'public/css/styles.css': 'resources/assets/sass/index.scss'
                 }
             },
-            header: {
-                files: {
-                    'public/css/header.css': 'resources/assets/sass/header.scss'
-                }
-            }
         },
 
         uglify: {
