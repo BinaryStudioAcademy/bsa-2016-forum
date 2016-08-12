@@ -4,7 +4,7 @@ var prod = require('./prod/config');
 var config = {
   env: 'debug',
 
-  apiVersion: 'v1',
+  apiVersion: 'api/v1',
 
   setApiVersion: function (version) {
     this.apiVersion = version;

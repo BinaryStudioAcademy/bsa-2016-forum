@@ -1,11 +1,11 @@
-var ForumController = require('../controllers/ForumController.js');
+var TopicController = require('../controllers/TopicController.js');
 var IdeaHubController = require('../controllers/IdeaHubController.js');
 
 var routers = {
 
   routers: [
     {
-      controller: new ForumController(),
+      controller: new TopicController(),
       appRoutes: {
         '': 'index'
       },

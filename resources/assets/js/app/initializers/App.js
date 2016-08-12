@@ -47,12 +47,10 @@ var app = Marionette.Application.extend({
         appInstance.setInstance(this);
 
         this.setRouting();
-
+        this.templateCashing();
         this.setRootLayout();
 
         logger('start application');
-
-        this.templateCashing();
 
         // сразу рендерим хедер и меню навигации
         this.RootView.header.show(new headerView());
