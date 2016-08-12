@@ -1,6 +1,6 @@
 var Marionette = require('backbone.marionette');
-var headerView = require('../views/headers/Header.js');
-var navigationView = require('../views/headers/navigationMenu.js');
+var headerView = require('../views/headers/Header');
+var navigationView = require('../views/headers/navigationMenu.');
 
 var mainLayoutView = Marionette.LayoutView.extend({
   el: 'body',
