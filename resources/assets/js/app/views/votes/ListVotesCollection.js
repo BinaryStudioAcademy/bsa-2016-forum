@@ -1,6 +1,6 @@
-var Marionette = require('backbone.require');
+var Marionette = require('backbone.marionette');
 var ListVotesItem = require('./ListVotesItem');
 
 module.exports = Marionette.CollectionView.extend({
-    itemView : ListVotesItem
+    childView : ListVotesItem
 });

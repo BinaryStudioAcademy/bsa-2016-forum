@@ -244,4 +244,16 @@ module.exports = {
         "content_generated": "Non velit quis sed totam tempora. Voluptas rerum dolorem fugiat maxime asperiores in. Quasi vitae doloribus explicabo tenetur eligendi vero."
     }],
 
+  votes: [{
+    'title': 'title1'},
+    {'title': 'title2'},
+    {'title': 'title3'},
+    {'title': 'title4'},
+    {'title': 'title5'},
+    {'title': 'title6'},
+    {'title': 'title7'},
+    {'title': 'title8'},
+    {'title': 'title9'}
+  ],
+
 };
