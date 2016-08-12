@@ -30,7 +30,7 @@ module.exports = function (grunt) {
             options: {
                 processName: function (filepath) {
                     var name = filepath.split('/');
-                    return name[name.length - 1];
+                    return name[name.length - 1].split('.')[0];
                 },
                 commonjs: true
             },
