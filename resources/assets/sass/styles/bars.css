@@ -1,169 +1,85 @@
 /*
-VOTE DETAIL
+BOOKMARKS BAR
 */
-.vote {
-  padding: 25px 15px 15px 0;
-  background-color: #fff;
-  display: flex; }
 
-.vote-bar {
-  padding: 0 15px;
-  display: inline-block;
-  float: left; }
-
-.vote-avatar {
-  margin: 0 auto; }
-
-.vote-avatar img {
-  width: 70px;
-  height: 70px;
-  border-radius: 35px; }
-
-.vote-body {
-  /* width: calc(100% - 80px); */
-  display: inline-block; }
-
-.vote-header h3 {
-  margin-top: 0; }
-
-.vote-header h5 {
-  color: #999999; }
-
-.vote-tags span {
-  background: #ffec96;
-  border: #ffc761 1px solid;
-  font-size: 12px;
-  padding: 2px;
-  border-radius: 4px;
-  margin-right: 10px;
-  display: inline-block; }
-
-.vote-control {
-  margin: 5px 0; }
-
-.vote-control a {
-  color: #999999;
-  margin-right: 20px; }
-
-.vote-attachment {
-  float: right;
-  padding: 5px; }
-
-.vote-attachment a {
-  padding: 5px; }
-
-.vote-comments {
-  margin-top: 40px; }
-
-.vote-comments > h4 {
-  font-weight: 600; }
-
-.vote-comment-avatar {
-  width: 60px;
-  display: inline-block;
-  float: left; }
-
-.vote-comment, .vote-comment-add {
+.bookmarks {
+  background: #fff;
+  width: 300px;
   margin-bottom: 20px;
-  margin-left: 10px; }
+}
 
-.vote-comment-avatar img {
-  width: 50px;
-  height: 50px;
-  border-radius: 25px; }
+.bookmarks-head {
+  padding: 15px;
+  font-weight: 600;
+  font-size: 16px;
+}
 
-.vote-comment-body {
-  width: calc(100% - 60px);
-  display: inline-block; }
+.bookmarks-item {
+  padding: 15px;
+  border-top: #d9d9d9 1px solid;
+  font-size: 16px;
+}
 
-.vote-comment-body h4 {
-  margin-top: 0; }
+.bookmarks-item:hover {
+  background: #e9e9e9;
+}
 
-.vote-comment-body span {
-  color: #999999;
-  font-size: 90%; }
-
-.vote-comment-body button {
+.bookmarks-item img {
+  width: 40px;
+  height: 40px;
   float: right;
-  margin-top: 5px; }
+}
 
 /*
-VOTE INDEX
+FORUM STATS
 */
-.votes-item-add a {
-  text-transform: capitalize;
-  display: block;
-  width: 100%;
-  padding: 15px 0 15px;
-  text-align: center;
-  background-color: #ffffff;
-  border-bottom: #dddddd 1px solid;
-  font-weight: 600;
-  font-size: 18px;
-  color: #999999; }
 
-.votes-item-add a:hover {
-  text-decoration: none;
-  background-color: #ffd992;
-  color: #777777;
-  cursor: pointer; }
+.forum-stats {
+    background: #fff;
+    width: 300px;
+}
 
-.votes-item {
-  background-color: #ffffff;
-  border-bottom: #dddddd 1px solid;
-  padding: 10px;
-  display: flex; }
+.forum-stats-head {
+    padding: 15px;
+    font-weight: 600;
+    font-size: 16px;
+}
 
-.votes-item:hover {
-  background-color: papayawhip;
-  cursor: pointer; }
+.forum-stats-container {
+    display: flex;
+}
 
-.votes-item-bar {
-  padding-right: 15px;
-  display: inline-block;
-  float: left; }
+.forum-stats-border {
+    border-left: #d9d9d9 1px solid;
+    border-right: #d9d9d9 1px solid;
+}
 
-.votes-item-avatar img {
-  width: 70px;
-  height: 70px;
-  border-radius: 35px; }
+.forum-stats-item {
+    width: 100px;
+    padding: 15px;
+    border-top: #d9d9d9 1px solid;
+    font-size: 16px;
+    text-align: center;
+}
 
-.votes-item-body {
-  width: 100%;
-  display: inline-block; }
+.forum-stats-item:hover {
+    background: #e9e9e9;
+}
 
-.votes-item-title {
-  width: 100%;
-  margin: 0 0 5px; }
+.forum-stats-item img {
+    width: 30px;
+    height: 30px;
+}
 
-.votes-item-title span {
-  font-weight: 600;
-  font-size: 16px; }
+.forum-stats-item p {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 0;
+}
 
-.votes-item-tags span {
-  background: #ffec96;
-  border: #ffc761 1px solid;
-  font-size: 12px;
-  padding: 2px;
-  border-radius: 4px;
-  margin-right: 10px;
-  margin-top: 10px;
-  display: inline-block; }
-
-.votes-item-details a {
-  color: #999999;
-  font-size: 14px;
-  font-weight: 500;
-  margin-right: 20px; }
-
-.votes-item-details a:hover {
-  text-decoration: none;
-  color: #777777;
-  cursor: pointer; }
-
-.votes-item-time {
-  float: right;
-  font-size: 12px;
-  color: #999999; }
-
-/*# sourceMappingURL=bar.css.map */
+.forum-stats-item span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 0;
+}
