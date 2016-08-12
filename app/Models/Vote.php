@@ -11,8 +11,6 @@ class Vote extends Model
 {
     use SoftDeletes;
 
-    //TODO     const RULES = ['title'  => 'required'];
-
     protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at'];
 
     protected $dates = ['deleted_at'];

@@ -13,21 +13,21 @@ class Like extends Model
     
     public function topics()
     {
-        return $this->morphedByMany('App\Topic', 'likeable');
+        return $this->morphedByMany(Topic::class, 'likeable');
     }
 
     public function votes()
     {
-        return $this->morphedByMany('App\Vote', 'likeable');
+        return $this->morphedByMany(Vote::class, 'likeable');
     }
     
     public function comments()
     {
-        return $this->morphedByMany('App\Comment', 'likeable');
+        return $this->morphedByMany(Comment::class, 'likeable');
     }
     
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
 }

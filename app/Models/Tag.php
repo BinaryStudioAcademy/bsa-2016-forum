@@ -13,11 +13,11 @@ class Tag extends Model
     
     public function topics()
     {
-        return $this->morphedByMany('App\Topic', 'taggable');
+        return $this->morphedByMany(Topic::class, 'taggable');
     }
 
     public function votes()
     {
-        return $this->morphedByMany('App\Vote', 'taggable');
+        return $this->morphedByMany(Vote::class, 'taggable');
     }
 }
