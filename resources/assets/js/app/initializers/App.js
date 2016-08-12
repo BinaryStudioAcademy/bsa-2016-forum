@@ -41,7 +41,7 @@ var app = Marionette.Application.extend({
         $.each(Templates, function (key, value) {
             var templateCache = new Marionette.TemplateCache('#' + key);
             templateCache.compiledTemplate = value;
-            Marionette.TemplateCache.templateCaches['#' + key] = templateCache;
+            Marionette.TemplateCache.templateCaches[key.split('.')[0]] = templateCache;
         });
     },
     onStart: function (config) {

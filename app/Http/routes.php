@@ -11,6 +11,10 @@
 |
 */
 
+Route::get('/', function () {
+    return view('main');
+});
+
 Route::group(['middleware'=>'api', 'prefix'=>'api/v1'], function (){
 
     Route::get('/', function (){

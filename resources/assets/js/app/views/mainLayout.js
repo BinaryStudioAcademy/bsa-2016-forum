@@ -4,7 +4,7 @@ var navigationView = require('../views/headers/navigationMenu.js');
 
 var mainLayoutView = Marionette.LayoutView.extend({
   el: 'body',
-  template: '#mainLayout.tpl',
+  template: 'mainLayout',
   regions: {
       header: '#header',
       navigationMenu: '#navigationMenu',

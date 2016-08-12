@@ -40,7 +40,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    'resources/assets/js/app/templates.js': ['resources/assets/templates/**/*.tpl']
+                    'resources/assets/js/app/templates.js': ['resources/assets/templates/**/*.hbs']
                 }
             }
         },
