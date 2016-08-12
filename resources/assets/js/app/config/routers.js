@@ -8,14 +8,14 @@ var routers = {
       controller: new TopicController(),
       appRoutes: {
         '': 'index'
-      },
+      }
     },
 
     {
       controller: new IdeaHubController(),
       appRoutes: {
         'ideahub': 'index'
-      },
+      }
     }
   ],
 
