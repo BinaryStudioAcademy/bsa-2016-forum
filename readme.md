@@ -19,7 +19,6 @@ If you do not have yet, please refer to https://www.mysql.com/
 ```
 path/to/project/$ sudo composer install
 ```
-
 3) Check file .env in the root directory and put database settings
 ```
 DB_CONNECTION = mysql
@@ -30,22 +29,15 @@ DB_USERNAME = "user_name"
 DB_PASSWORD = "password"
 ```
 
-4) Make migration
+4) Make migration and fill database by data
 ```
-path/to/project/$ php artisan migrate
+path/to/project/$ php artisan migrate; path/to/project/$ php artisan db:seed
 ```
-
-5) Fill database by data
-```
-path/to/project/$ php artisan db:seed
-```
-
-6) Run local php server
+5) Run local php server
 ```
 path/to/project/$ php artisan serve
 ```
-
-7) You can find project on
+6) You can find project on
 ```
 http://localhost:8000/
 ```
