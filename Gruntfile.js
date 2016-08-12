@@ -16,17 +16,13 @@ module.exports = function (grunt) {
                 files: 'resources/assets/js/**/*.js',
                 tasks: 'browserify:app'
             },
-            css: {
-                files: 'resources/assets/css/**/*.css',
-                tasks: 'concat:css'
-            },
             templates: {
-                files: 'resources/assets/templates/**/*.tpl',
+                files: 'resources/assets/templates/**/*.hbs',
                 tasks: 'handlebars'
             },
             sass: {
                 files: 'resources/assets/sass/**/*.scss',
-                tasks: ['sass:dest', 'concat:css']
+                tasks: 'sass:dest'
             }
         },
 
