@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Topic;
-use Illuminate\Http\Request;
+use App\Http\Requests\TopicRequest;
 
-use App\Http\Requests;
 
 class TopicController extends ApiController
 {
@@ -27,9 +26,11 @@ class TopicController extends ApiController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TopicRequest $request)
     {
-        //
+        $topic = Topic::create($request->all());
+
+        return $this->setStatusCode(201)->respond($topic);
     }
 
     /**
@@ -52,9 +53,12 @@ class TopicController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TopicRequest $request, $id)
     {
-        //
+        $topic = Topic::findOrFail($id);
+        $topic->update($request->all());
+
+        return $this->setStatusCode(201)->respond($topic);
     }
 
     /**
