@@ -15,7 +15,10 @@ class UsersTableSeeder extends Seeder
     {
         DB::table('users')->delete();
         $count_users = 3;
-
+        
         factory(App\Models\User::class, $count_users)->create();
+
+        $user = \App\Models\User::first();
+        $user->attachRole(1);
     }
 }
