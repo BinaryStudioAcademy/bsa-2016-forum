@@ -3,6 +3,7 @@ var headerView = require('../views/headers/Header.js');
 var navigationView = require('../views/headers/navigationMenu.js');
 
 var mainLayoutView = Marionette.LayoutView.extend({
+  el: 'body',
   template: '#mainLayout.tpl',
   regions: {
       header: '#header',
@@ -17,10 +18,11 @@ var mainLayoutView = Marionette.LayoutView.extend({
     //});
   },
 
-  onBeforeShow: function() {
+  showRegions: function() {
     this.getRegion('header').show(new headerView());
     this.getRegion('navigationMenu').show(new navigationView());
   }
+
 });
 
 module.exports = mainLayoutView;

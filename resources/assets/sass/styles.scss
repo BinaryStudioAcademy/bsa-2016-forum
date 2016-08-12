@@ -11,7 +11,11 @@ body {
 }
 .menu-container {
   background: #fff;
+  margin-bottom: 20px;
   color: #000;
+}
+.menu-container nav {
+  margin-bottom: 0;
 }
 .menu-container li a {
   color: #545861;
@@ -23,7 +27,7 @@ body {
 }
 .menu-container li.active a {
   border-color: #ffa500;
-  background-color: #eee;
+  //background-color: #eee;
 }
 .post-head {
   padding: 15px;

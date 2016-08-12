@@ -6,8 +6,8 @@ Error: File to import not found or unreadable: bootstrap.
 2: @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 3: @import 'header';
 4: @import 'styles';
-5: @import 'styles/first_style';
-6: @import 'styles/second_style';
+5: @import 'styles/topic';
+6: @import 'styles/vote';
 
 Backtrace:
 index.scss:1
@@ -53,4 +53,4 @@ C:/Ruby23-x64/bin/scss:23:in `<main>'
 body:before {
   white-space: pre;
   font-family: monospace;
-  content: "Error: File to import not found or unreadable: bootstrap.\A         on line 1 of index.scss\A \A 1: @import 'bootstrap';\A 2: @import url('https://fonts.googleapis.com/css?family=Open+Sans');\A 3: @import 'header';\A 4: @import 'styles';\A 5: @import 'styles/first_style';\A 6: @import 'styles/second_style';"; }
+  content: "Error: File to import not found or unreadable: bootstrap.\A         on line 1 of index.scss\A \A 1: @import 'bootstrap';\A 2: @import url('https://fonts.googleapis.com/css?family=Open+Sans');\A 3: @import 'header';\A 4: @import 'styles';\A 5: @import 'styles/topic';\A 6: @import 'styles/vote';"; }
