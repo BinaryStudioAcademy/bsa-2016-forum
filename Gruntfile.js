@@ -14,7 +14,7 @@ module.exports = function (grunt) {
         watch: {
             js: {
                 files: 'resources/assets/js/**/*.js',
-                tasks: 'browserify:dev'
+                tasks: 'browserify:app'
             },
             css: {
                 files: 'resources/assets/css/**/*.css',
@@ -95,7 +95,8 @@ module.exports = function (grunt) {
                         src: [
                             'node_modules/bootstrap-sass/assets/fonts/**/*.woff2',
                             'node_modules/bootstrap-sass/assets/fonts/**/*.woff',
-                            'node_modules/bootstrap-sass/assets/fonts/**/*.ttf'
+                            'node_modules/bootstrap-sass/assets/fonts/**/*.ttf',
+
                         ],
                         dest: 'public/fonts/bootstrap'
                     }
@@ -104,6 +105,7 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');

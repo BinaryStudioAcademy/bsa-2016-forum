@@ -8,9 +8,14 @@ Homestead.json
 composer.phar
 composer.lock
 /nbproject/
+<<<<<<< HEAD
 /public/css/
 /public/js/
 /resources/assets/js/bundle.js
 /resources/assets/js/app/templates.js
+**/.sass-cache/*
 .sass-cache
 /public/fonts/
+=======
+storage/debugbar/
+>>>>>>> df079604bb0fe8ab51eae23867c487720bffb805
