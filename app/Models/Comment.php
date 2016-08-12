@@ -44,7 +44,7 @@ class Comment extends Model
      */
     public function tags()
     {
-        return $this->morphedByMany(Attachment::class, 'commentable');
+        return $this->morphedByMany(Tag::class, 'commentable');
     }
 
     /**
@@ -52,7 +52,7 @@ class Comment extends Model
      */
     public function attachments()
     {
-        return $this->morphedByMany(Tag::class, 'commentable');
+        return $this->morphedByMany(Attachment::class, 'commentable');
     }
 
     /**
