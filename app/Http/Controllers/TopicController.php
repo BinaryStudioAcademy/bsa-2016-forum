@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Topic;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -15,7 +16,9 @@ class TopicController extends ApiController
      */
     public function index()
     {
-        //
+        $topics = Topic::all();
+
+        return $this->setStatusCode(200)->respond($topics);
     }
 
     /**
@@ -37,7 +40,9 @@ class TopicController extends ApiController
      */
     public function show($id)
     {
-        //
+        $topic = Topic::findOrFail($id);
+
+        return $this->setStatusCode(200)->respond($topic);
     }
 
     /**
@@ -60,6 +65,10 @@ class TopicController extends ApiController
      */
     public function destroy($id)
     {
-        //
+        $topic = Topic::findOrFail($id);
+
+        $topic->delete();
+
+        return $this->setStatusCode(200)->respond();
     }
 }
