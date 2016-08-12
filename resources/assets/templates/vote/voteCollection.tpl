@@ -1,4 +1,5 @@
 <div class="votes">
+    {{ showasd }}
     <div class="votes-item-add">
         <a href="#">add new vote</a>
     </div>
