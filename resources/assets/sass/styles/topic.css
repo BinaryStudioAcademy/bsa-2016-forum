@@ -72,3 +72,172 @@ NEW TOPIC VIEW STYLES
 .topic-new-submit input:hover {
     background-color: #f9c172;
 }
+
+/*
+TOPIC DETAILS
+*/
+
+.topic {
+    width: 100%;
+    padding: 0 15px;
+}
+
+.topic-comment {
+    background: #FFF;
+    margin-bottom: 20px;
+}
+
+.topic-comment-flex {
+    padding: 15px;
+    display: flex;
+    border-bottom: #d9d9d9 1px solid;
+}
+
+.topic-bar {
+    width: 80px;
+    padding: 0 5px;
+    margin-top: 10px;
+    margin-right: 15px;
+    display: inline-block;
+    float: left;
+}
+
+.topic-avatar {
+    margin: 0 auto;
+    padding-bottom: 10px;
+}
+
+.topic-avatar-border {
+    border-bottom: #d9d9d9 1px solid;
+}
+
+.topic-avatar img {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+}
+
+.topic-body {
+    width: 100%;
+    display: inline-block;
+}
+
+.topic-body textarea{
+    width: 100%;
+}
+
+.topic-attachment {
+    float: right;
+    padding: 5px;
+}
+
+.topic-attachment a {
+    padding: 5px;
+}
+
+.topic-header h4 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.topic-msg {
+    color: #777;
+    margin-top: 10px;
+}
+
+
+.topic-msg .topic-comment {
+    border: #DDD 1px solid;
+}
+
+.topic-msg .topic-control-btn {
+    display: none;
+}
+
+.topic-msg .topic-bar {
+    display: none;
+}
+
+.topic-msg .topic-comment-flex {
+    padding-top: 5px;
+    padding-bottom: 0;
+    padding-right: 5px;
+}
+
+.topic-msg .topic-msg {
+    margin-top: 0;
+}
+
+.topic-msg .topic-history-margin {
+    display: none;
+}
+
+.topic-tags span {
+    background: #ffec96;
+    border: #ffc761 1px solid;
+    font-size: 12px;
+    padding: 2px;
+    border-radius: 4px;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.topic-control {
+    padding: 0 15px;
+    overflow: hidden;
+}
+
+.topic-history-margin {
+    width: 80px;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.topic-history {
+    margin: 10px 0;
+    display: inline-block;
+    color: #AAA;
+}
+
+.topic-control-btn {
+    display: inline-block;
+    float: right;
+}
+
+.topic-control-btn a {
+    padding: 10px;
+    vertical-align: middle;
+    display: inline-block;
+    height: 100%;
+}
+
+.topic-control-btn a:hover {
+    cursor: pointer;
+    text-decoration: none;
+    background: #ddd;
+}
+
+.topic-control-add {
+    padding: 15px;
+}
+
+.topic-more {
+    background: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    color: #999;
+    display: block;
+    padding: 10px;
+    width: 100%;
+    height: auto;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.topic-more:hover {
+    color: #999;
+    cursor: pointer;
+    text-decoration: none;
+    background: #ddd;
+    animation-duration: 1s;
+}
