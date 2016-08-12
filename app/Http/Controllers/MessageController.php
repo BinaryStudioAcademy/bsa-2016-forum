@@ -92,8 +92,7 @@ class MessageController extends ApiController
         if (!$message) {
             return $this->setStatusCode(204)->respond();
         }
-        $message->user()->dissociate();
-        $message->save();
+        $message->delete();
         return $this->setStatusCode(204)->respond();
     }
 }
