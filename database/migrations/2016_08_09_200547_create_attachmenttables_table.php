@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class CreateAttachmenttablesTable extends Migration
 {
@@ -16,7 +17,7 @@ class CreateAttachmenttablesTable extends Migration
             $table->increments('id');
 
             $table->integer('attachment_id')->unsigned();
-            $table->foreign('attachment_id')->references('id')->on('attachments')->onDelete('cascade');
+            $table->foreign('attachment_id')->references('id')->on('attachments');
 
             $table->integer('attachmenttable_id')->unsigned();
 

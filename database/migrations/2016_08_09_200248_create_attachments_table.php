@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class CreateAttachmentsTable extends Migration
 {
@@ -15,7 +16,7 @@ class CreateAttachmentsTable extends Migration
         Schema::create('attachments', function(Blueprint $table) {
             $table->increments('id');
             $table->string('value');
-            $table->string('type')->nullable(); //WTF?
+            $table->string('type')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

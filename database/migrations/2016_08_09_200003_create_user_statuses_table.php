@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class CreateUserStatusesTable extends Migration
 {
@@ -20,7 +21,7 @@ class CreateUserStatusesTable extends Migration
         });
 
         Schema::table('users', function(Blueprint $table) {
-            $table->foreign('status_id')->references('id')->on('user_statuses')->onDelete('cascade');
+            $table->foreign('status_id')->references('id')->on('user_statuses');
         });
     }
 
