@@ -1,0 +1,62 @@
+body {
+  background: #f7f7f7;
+}
+.posts > div {
+  border-bottom: 1px solid #EEEEEE;
+  height: 80px;
+  overflow: hidden;
+  background: #fff;
+  padding: 15px;
+  margin: 10px 0;
+}
+.menu-container {
+  background: #fff;
+  margin-bottom: 20px;
+  color: #000;
+}
+.menu-container nav {
+  margin-bottom: 0;
+}
+.menu-container li a {
+  color: #545861;
+  border-bottom: 4px solid transparent;
+  transition: all .25s ease;
+}
+.menu-container li a:hover {
+  border-color: #ffa500;
+}
+.menu-container li.active a {
+  border-color: #ffa500;
+  //background-color: #eee;
+}
+.post-head {
+  padding: 15px;
+  background: #545861;
+  margin-top: 15px;
+  color: #fff;
+  text-transform: uppercase;
+}
+.post-title {
+  text-align: left;
+  color: #ffa500;
+  font-weight: bold;
+}
+
+.content-container {
+  padding: 0;
+  margin: 15px auto;
+  display: flex;
+}
+
+.content-container-main {
+  width: 100%;
+}
+
+.content-container-bar {
+  margin-left: 20px;
+}
+
+.dashboard-container {
+  padding: 0;
+  margin: 15px auto;
+}
