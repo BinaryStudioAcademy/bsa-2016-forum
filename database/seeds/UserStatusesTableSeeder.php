@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class UserStatusesTableSeeder extends Seeder
 {
@@ -13,15 +12,13 @@ class UserStatusesTableSeeder extends Seeder
 
     public function run()
     {
-        DB::table('user_statuses')->delete();
-
-        DB::table('user_statuses')->insert([
+        \DB::table('user_statuses')->insert([
             'name' => 'online',
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
         ]);
 
-        DB::table('user_statuses')->insert([
+        \DB::table('user_statuses')->insert([
             'name' => 'offline',
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
