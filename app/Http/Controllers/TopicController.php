@@ -73,6 +73,6 @@ class TopicController extends ApiController
 
         $topic->delete();
 
-        return $this->setStatusCode(200)->respond();
+        return $this->setStatusCode(204)->respond();
     }
 }
