@@ -63,13 +63,23 @@ class UserTest extends TestCase
         $this->seeInDatabase('topics', $topicArray);
     }
 
-    public function testUserCreateComment ()
+    public function testUserCreateCommentForTopic ()
     {
         Model::unguard();
         $comment = factory(App\Models\Comment::class)->make();
         $commentArray = $comment->toArray();
         $topic = \App\Models\Topic::all()->random(1);
         $comment = $topic->comments()->save($comment);
+        Model::reguard();
+        $this->seeInDatabase('comments', $commentArray);
+    }
+    public function testUserCreateCommentForVote ()
+    {
+        Model::unguard();
+        $comment = factory(App\Models\Comment::class)->make();
+        $commentArray = $comment->toArray();
+        $vote = \App\Models\Vote::all()->random(1);
+        $comment = $vote->comments()->save($comment);
         Model::reguard();
         $this->seeInDatabase('comments', $commentArray);
     }
