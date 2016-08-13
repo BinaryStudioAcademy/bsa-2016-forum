@@ -13,31 +13,36 @@ class MessageController extends ApiController
     /**
      * Display a listing of the resource.
      *
+     * @param $userId
      * @return \Illuminate\Http\Response
      */
     public function index($userId)
     {
-        $user = User::findOrFail($userId);
-        $messages = $user->messages;
+        $userFrom = User::findOrFail($userId);
+
+        $messages = $userFrom->messages()->get();
         if(!$messages){
             return $this->setStatusCode(404)->respond();
         }
+        $usersToIds = $messages->pluck('user_to_id');
+        $usersTo = User::whereIn('id', $usersToIds)->get();
 
-        return $this->setStatusCode(200)->respond($messages);
+        return $this->setStatusCode(200)->respond($messages, ['user_from' => $userFrom, 'users_to' => $usersTo]);
     }
 
 
     /**
      * Store a newly created resource in storage.
      *
+     * @param $userId
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store($userId, Request $request)
     {
-        $user = User::findOrFail($userId);
+        $userFrom = User::findOrFail($userId);
         $message = new Message($request->all());
-        $message->user()->associate($user);
+        $message->user()->associate($userFrom);
         $message->save();
 
         $this->setStatusCode(201)->respond($message);
@@ -47,19 +52,21 @@ class MessageController extends ApiController
     /**
      * Display the specified resource.
      *
+     * @param $userId
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($userId, $id)
     {
-        User::findOrFail($userId);      //need for checking if user exist
+        $userFrom = User::findOrFail($userId);      //need for checking if user exist
 
         $message = Message::where('id',$id)->where('user_from_id', $userId)->first();
         if(!$message){
             return $this->setStatusCode(404)->respond();
         }
+        $userTo = User::findOrFail($message->user_to_id);
 
-        return $this->setStatusCode(200)->respond($message);
+        return $this->setStatusCode(200)->respond($message, ['user_from' => $userFrom, 'user_to' => $userTo]);
     }
 
     /**
