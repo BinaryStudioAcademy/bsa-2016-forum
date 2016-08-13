@@ -2,7 +2,7 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var App = require('../instances/appInstance');
 
-module.exports = Backbone.Collection.extend({
+module.exports = Backbone.Model.extend({
 
   _getRequestUrl: function () {
     return App.getBaseUrl() + (_.result(this, 'url') || _.result(this, 'urlRoot') || _.result(this.collection, 'url'));
