@@ -7,6 +7,10 @@ var appInstance = {
 
   getInstance: function () {
     return this.instance;
+  },
+
+  getBaseUrl: function() {
+    return this.instance.config.baseUrl;
   }
 };
 

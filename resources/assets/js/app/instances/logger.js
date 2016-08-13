@@ -1,5 +1,5 @@
 var appInstance = require('./appInstance');
-var config = require('../config/config');
+var config = require('../config');
 
 var Logger = function () {
 

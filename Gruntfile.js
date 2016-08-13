@@ -4,17 +4,23 @@ module.exports = function (grunt) {
 
         pkg: grunt.file.readJSON('package.json'),
 
+        env: 'debug',
+
         browserify: {
+            config: {
+                src: 'resources/assets/js/app/config/<%= env %>/config.js',
+                dest: 'resources/assets/js/app/config.js'
+            },
             app: {
                 src: 'resources/assets/js/app/app.js',
                 dest: 'public/js/bundle.js'
-            }
+            },
         },
 
         watch: {
             js: {
                 files: 'resources/assets/js/**/*.js',
-                tasks: 'browserify:app'
+                tasks: 'browserify:dev'
             },
             templates: {
                 files: 'resources/assets/templates/**/*.hbs',

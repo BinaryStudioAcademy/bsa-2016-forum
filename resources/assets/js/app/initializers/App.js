@@ -1,5 +1,14 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
+var Radio = require('backbone.radio');
 var Marionette = require('backbone.marionette');
+
+// инитим channels на сам инстанс марионета
+Marionette.Application.prototype._initChannel = function () {
+    this.channelName = _.result(this, 'channelName') || 'global';
+    this.channel = _.result(this, 'channel') || Radio.channel(this.channelName);
+};
+
 var $ = require('jquery');
 
 var routers = require('../config/routers');
