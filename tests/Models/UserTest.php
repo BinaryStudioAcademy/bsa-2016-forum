@@ -54,23 +54,52 @@ class UserTest extends TestCase
 
     public function testUserCreateTopic ()
     {
-        Model::unguard();
         $user = \App\Models\User::all()->first();
-        $topicArray = (factory(App\Models\Topic::class)->make())->toArray();
-        unset($topicArray['user_id']);
-        $user->topics()->create($topicArray);
-        Model::reguard();
-        $this->seeInDatabase('topics', $topicArray);
+        $topic = factory(App\Models\Topic::class)->create();
+        $user->topics()->save($topic);
+        $this->seeInDatabase('topics', $topic->toArray());
+    }
+    public function testUserCreateVote ()
+    {
+        $user = \App\Models\User::all()->first();
+        $vote = factory(App\Models\Vote::class)->create();
+        $user->votes()->save($vote);
+        $this->seeInDatabase('votes', $vote->toArray());
     }
 
-    public function testUserCreateComment ()
+    public function testUserCreateCommentForTopic ()
     {
-        Model::unguard();
         $comment = factory(App\Models\Comment::class)->make();
         $commentArray = $comment->toArray();
         $topic = \App\Models\Topic::all()->random(1);
         $comment = $topic->comments()->save($comment);
-        Model::reguard();
         $this->seeInDatabase('comments', $commentArray);
+    }
+
+    public function testUserCreateCommentForVote ()
+    {
+        $comment = factory(App\Models\Comment::class)->make();
+        $commentArray = $comment->toArray();
+        $vote = \App\Models\Vote::all()->random(1);
+        $comment = $vote->comments()->save($comment);
+        $this->seeInDatabase('comments', $commentArray);
+    }
+
+    public function testUserCreateBookmark ()
+    {
+        $user = \App\Models\User::all()->random(1);
+        $topic = \App\Models\Topic::all()->random(1);
+        $user->bookmarks()->attach($topic->id);
+        $this->seeInDatabase('bookmarks', ['topic_id'=>$topic->id, 'user_id'=>$user->id]);
+    }
+
+    public function testUserCreateVoteItem ()
+    {
+
+        $user = \App\Models\User::all()->random(1);
+        $vote = \App\Models\Vote::all()->random(1);
+        $voteItem = new \App\Models\VoteItem(['name'=>factory(App\Models\Topic::class)->make()->name,'vote_id'=>$vote->id]);
+        $user->voteItems()->save($voteItem);
+        $this->seeInDatabase('vote_items', ['vote_id'=>$vote->id, 'user_id'=>$user->id]);
     }
 }

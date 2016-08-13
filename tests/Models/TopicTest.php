@@ -46,8 +46,14 @@ class TopicTest extends TestCase
         $topic->delete();
         $this->seeInDatabase('topics', ['id'=>$topicId])
             ->notSeeInDatabase('topics', ['id'=>$topicId, 'deleted_at'=>null]);
-        
+    }
 
+    public function testTopicCreateBookmark ()
+    {
+        $user = \App\Models\User::all()->random(1);
+        $topic = \App\Models\Topic::all()->random(1);
+        $topic->bookmarks()->attach($user->id);
+        $this->seeInDatabase('bookmarks', ['topic_id'=>$topic->id, 'user_id'=>$user->id]);
     }
     
 }
