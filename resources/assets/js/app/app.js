@@ -2,7 +2,7 @@ $ = require('jquery');
 jQuery = $;
 require('bootstrap-sass');
 
-var config = require('./config');
+var config = require('config');
 
 var appInstance = require('./initializers/App');
 

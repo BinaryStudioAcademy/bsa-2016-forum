@@ -4,17 +4,25 @@ module.exports = function (grunt) {
 
         pkg: grunt.file.readJSON('package.json'),
 
-        env: 'debug',
-
         browserify: {
-            config: {
-                src: 'resources/assets/js/app/config/<%= env %>/config.js',
-                dest: 'resources/assets/js/app/config.js'
-            },
-            app: {
+            dev: {
+                options: {
+                    alias: {
+                        'config': './resources/assets/js/app/config/debug/config.js'
+                    }
+                },
                 src: 'resources/assets/js/app/app.js',
-                dest: 'public/js/bundle.js'
+                dest: 'public/js/bundle.js',
             },
+            prod: {
+                options: {
+                    alias: {
+                        'config': './resources/assets/js/app/config/prod/config.js'
+                    }
+                },
+                src: 'resources/assets/js/app/app.js',
+                dest: 'public/js/bundle.js',
+            }
         },
 
         watch: {
@@ -28,7 +36,7 @@ module.exports = function (grunt) {
             },
             sass: {
                 files: 'resources/assets/sass/**/*.scss',
-                tasks: 'sass:dest'
+                tasks: 'sass:index'
             }
         },
 
@@ -99,10 +107,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('stage', ['handlebars', 'browserify', 'sass', 'copy']);
-    grunt.registerTask('dev', ['stage', 'watch']);
-    grunt.registerTask('prod', ['stage', 'uglify', 'cssmin']);
+    grunt.registerTask('stage', ['handlebars', 'sass', 'copy']);
+    grunt.registerTask('dev', ['stage', 'browserify:dev', 'watch']);
+    grunt.registerTask('prod', ['stage', 'browserify:prod', 'uglify', 'cssmin']);
 
     grunt.registerTask('w', ['watch']);
-    grunt.registerTask('default', ['stage']);
+    grunt.registerTask('default', ['stage', 'browserify:dev']);
 };

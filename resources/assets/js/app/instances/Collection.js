@@ -1,12 +1,11 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 var App = require('../instances/appInstance');
-var config = require('../config');
 
 module.exports = Backbone.Collection.extend({
 
   _getRequestUrl: function () {
-    return config.baseUrl;
+    return App.getBaseUrl() + _.result(this, 'url');
   },
 
   sync: function (method, collection, options) {
