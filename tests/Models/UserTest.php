@@ -62,4 +62,15 @@ class UserTest extends TestCase
         Model::reguard();
         $this->seeInDatabase('topics', $topicArray);
     }
+
+    public function testUserCreateComment ()
+    {
+        Model::unguard();
+        $user = \App\Models\User::all()->first();
+        $topicArray = (factory(App\Models\Topic::class)->make())->toArray();
+        unset($topicArray['user_id']);
+        $user->topics()->create($topicArray);
+        Model::reguard();
+        $this->seeInDatabase('topics', $topicArray);
+    }
 }
