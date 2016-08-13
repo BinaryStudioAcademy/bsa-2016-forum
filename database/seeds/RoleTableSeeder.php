@@ -11,8 +11,6 @@ class RoleTableSeeder extends Seeder
      */
     public function run()
     {
-        \DB::table('roles')->delete();
-        
         \DB::table('roles')->insert([
             'name' => 'Admin',
             'slug' =>  'admin',
