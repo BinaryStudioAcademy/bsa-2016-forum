@@ -7,7 +7,7 @@ var routers = {
     {
       controller: new TopicController(),
       appRoutes: {
-        '': "index"
+        '': 'index'
       }
     },
 
