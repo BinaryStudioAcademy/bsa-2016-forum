@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Topic;
 use App\Http\Requests\TopicRequest;
+use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
 class TopicController extends ApiController
@@ -74,5 +76,25 @@ class TopicController extends ApiController
         $topic->delete();
 
         return $this->setStatusCode(204)->respond();
+    }
+    public function getUserTopics($userId)
+    {
+        $user = User::findOrFail($userId);
+        $topics = $user->topics()->get();
+        if(!$topics){
+            return $this->setStatusCode(200)->respond();
+        }
+        return $this->setStatusCode(200)->respond($topics, ['user' => $user]);
+    }
+    public function getUserTopic($userId, $topicId)
+    {
+        $user = User::findOrFail($userId);
+        $topic = $user->topics()->where('id',$topicId)->first();
+        if(!$topic){
+            throw (new ModelNotFoundException)->setModel(Topic::class);
+        }
+
+        return $this->setStatusCode(200)->respond($topic, ['user' => $user]);
+
     }
 }
