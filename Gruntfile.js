@@ -82,8 +82,7 @@ module.exports = function (grunt) {
                         src: [
                             'node_modules/bootstrap-sass/assets/fonts/**/*.woff2',
                             'node_modules/bootstrap-sass/assets/fonts/**/*.woff',
-                            'node_modules/bootstrap-sass/assets/fonts/**/*.ttf',
-
+                            'node_modules/bootstrap-sass/assets/fonts/**/*.ttf'
                         ],
                         dest: 'public/fonts/bootstrap'
                     }
@@ -92,7 +91,6 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-uglify');
