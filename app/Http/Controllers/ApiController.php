@@ -28,14 +28,21 @@ class ApiController extends Controller
     }
 
     /**
-     * @param $data
+     * @param array $data
+     * @param array $meta
      * @param array $headers
      * @return \Illuminate\Http\JsonResponse
      */
-    public function respond($data = [], $headers = [])
+    public function respond($data = [], $meta = [], $headers = [])
     {
-        return response()->json($data, $this->getStatusCode(), $headers);
-
+        return response()->json(
+            [
+                'data' => $data,
+                '_meta' => $meta
+            ],
+            $this->getStatusCode(),
+            $headers
+        );
     }
 
 }

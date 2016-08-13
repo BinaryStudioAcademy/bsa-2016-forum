@@ -24,6 +24,13 @@ class Topic extends Model
     protected $dates = ['deleted_at'];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['deleted_at'];
+
+    /**
      * Get topic's user
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

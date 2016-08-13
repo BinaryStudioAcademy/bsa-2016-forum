@@ -157,8 +157,9 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         /**
-         * Third-party
+         * External providers
          */
+        DCN\RBAC\RBACServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 
     ],
