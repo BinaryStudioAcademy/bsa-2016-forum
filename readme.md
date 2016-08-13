@@ -79,5 +79,5 @@ gem install sass
 
 4) compile all resources
 ```
-grunt
+grunt dev
 ```
