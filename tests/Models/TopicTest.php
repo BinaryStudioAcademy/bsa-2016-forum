@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Eloquent\Model;
 
 class TopicTest extends TestCase
 {
@@ -39,11 +40,13 @@ class TopicTest extends TestCase
 
     public function testSoftDelete()
     {
+        
         $topic = App\Models\Topic::all()->first();
         $topicId = $topic->id;
         $topic->delete();
         $this->seeInDatabase('topics', ['id'=>$topicId])
             ->notSeeInDatabase('topics', ['id'=>$topicId, 'deleted_at'=>null]);
+        
 
     }
     

@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Database\Eloquent\Model;
 
 class UserTest extends TestCase
 {
@@ -50,5 +50,16 @@ class UserTest extends TestCase
         $this->seeInDatabase('users', ['id'=>$userId])
              ->notSeeInDatabase('users', ['id'=>$userId, 'deleted_at'=>null]);
 
+    }
+
+    public function testUserCreateTopic ()
+    {
+        Model::unguard();
+        $user = \App\Models\User::all()->first();
+        $topicArray = (factory(App\Models\Topic::class)->make())->toArray();
+        unset($topicArray['user_id']);
+        $user->topics()->create($topicArray);
+        Model::reguard();
+        $this->seeInDatabase('topics', $topicArray);
     }
 }

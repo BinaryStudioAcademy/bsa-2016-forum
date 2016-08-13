@@ -28,8 +28,8 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
 $factory->define(App\Models\Topic::class, function (Faker\Generator $faker) {
     return [
         'reviewed_number' => $faker->numberBetween(0, 1000),
-        'name' => $faker->unique()->word,
-        'description' => $faker->word,
+        'name' => $faker->unique()->sentence,
+        'description' => $faker->sentence,
         'rating' => $faker->numberBetween(0, 1000),
         'user_id' => App\Models\User::all()->random(1)->id,
     ];
