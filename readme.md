@@ -1,27 +1,43 @@
-# Laravel PHP Framework
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+### Backend part
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+#### Before run:
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+1) You need composer.
+If you do not have yet, please refer to https://getcomposer.org/
 
-## Official Documentation
+2) You need MySql database server.
+If you do not have yet, please refer to https://www.mysql.com/
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+3) Create database "database_name"
 
-## Contributing
+#### Run
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+1) Clone or download this repository
 
-## Security Vulnerabilities
+2) Install project dependencies
+```
+path/to/project/$ sudo composer install
+```
+3) Check file .env in the root directory and put database settings
+```
+DB_CONNECTION = mysql
+DB_HOST = your host
+DB_PORT=3306
+DB_DATABASE = "database_name"
+DB_USERNAME = "user_name"
+DB_PASSWORD = "password"
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+4) Make migration and fill database by data
+```
+path/to/project/$ php artisan migrate; path/to/project/$ php artisan db:seed
+```
+5) Run local php server
+```
+path/to/project/$ php artisan serve
+```
+6) You can find project on
+```
+http://localhost:8000/
+```
