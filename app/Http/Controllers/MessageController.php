@@ -56,7 +56,7 @@ class MessageController extends ApiController
 
         $message = Message::where('id',$id)->where('user_from_id', $userId)->first();
         if(!$message){
-            return $this->setStatusCode(204)->respond();
+            return $this->setStatusCode(404)->respond();
         }
 
         return $this->setStatusCode(200)->respond($message);
