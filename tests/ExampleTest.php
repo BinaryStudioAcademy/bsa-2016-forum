@@ -13,7 +13,7 @@ class ExampleTest extends TestCase
      */
     public function testBasicExample()
     {
-        $this->visit('/')
-             ->see('404');
+        $this->visit('/api/v1')
+             ->see('Welcome to REST API v1');
     }
 }
