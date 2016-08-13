@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Topic;
 use App\Http\Requests\TopicRequest;
+use App\Models\User;
 
 
 class TopicController extends ApiController
@@ -74,5 +75,14 @@ class TopicController extends ApiController
         $topic->delete();
 
         return $this->setStatusCode(204)->respond();
+    }
+    public function getUserTopics($userId)
+    {
+        $user = User::findOrFail($userId);  //check userId exist
+        $topics = Topic::where('user_id',$userId)->get();
+        if(!$topics){
+            return $this->setStatusCode(404)->respond();
+        }
+        return $this->setStatusCode(200)->respond($topics, ['user' => $user]);
     }
 }

@@ -64,7 +64,8 @@ Route::group(['middleware'=>'api', 'prefix'=>'api/v1'], function (){
             'destroy' => 'messages.destroy',
         ],
     ]);
-
+    /*Routes for users topics*/
+    Route::get('users/{user}/topics', 'TopicController@getUserTopics')->name('userTopics');
     /*Routes for Topic tags*/
     Route::get('topics/{topic}/tags','TagController@getTopicTags')->name('topicTags');
     Route::post('topics/{topic}/tags','TagController@storeTopicTag')->name('storeTopicTag');
