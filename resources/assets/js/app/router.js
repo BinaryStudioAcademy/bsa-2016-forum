@@ -9,7 +9,7 @@ module.exports = function (controller, appRoutes) {
     appRoutes: appRoutes,
 
     onRoute: function (name, path, arguments) {
-      logger('route ' + name + ' start');
+      logger('route #' + path + ' start with method ' + name);
     }
   });
 };

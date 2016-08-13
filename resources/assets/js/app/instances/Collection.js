@@ -15,4 +15,13 @@ module.exports = Backbone.Collection.extend({
 
     return Backbone.sync(method, collection, options);
   },
+
+  parse: function(response) {
+    //console.log('parent collection parse');
+
+    this._meta = response._meta;
+
+    return response.data;
+  }
+
 });
