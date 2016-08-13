@@ -21,6 +21,7 @@ class CreateVotesTable extends Migration
             $table->dateTime('finished_at');
             $table->boolean('is_single')->default(1);
             $table->boolean('is_public')->default(1);
+            $table->boolean('is_saved')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
