@@ -82,7 +82,7 @@ class TopicController extends ApiController
         $user = User::findOrFail($userId);
         $topics = $user->topics()->get();
         if(!$topics){
-            throw (new ModelNotFoundException)->setModel(Topic::class);
+            return $this->setStatusCode(200)->respond();
         }
         return $this->setStatusCode(200)->respond($topics, ['user' => $user]);
     }
