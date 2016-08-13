@@ -10,7 +10,13 @@ class Like extends Model
     use SoftDeletes;
     
     protected $fillable = ['user_id'];
-    
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['deleted_at'];
+
     public function topics()
     {
         return $this->morphedByMany(Topic::class, 'likeable');

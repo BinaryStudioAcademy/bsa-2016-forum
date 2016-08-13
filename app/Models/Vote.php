@@ -15,6 +15,13 @@ class Vote extends Model
 
     protected $dates = ['deleted_at'];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['deleted_at'];
+
     public function user()
     {
         return $this->belongsTo(User::class);

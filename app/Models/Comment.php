@@ -9,7 +9,14 @@ class Comment extends Model
     protected $fillable = ['content_origin','rating','user_id','content_generated'];
 
     protected $dates = ['deleted_at'];
-    
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['deleted_at'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -22,7 +29,6 @@ class Comment extends Model
     {
         return $this->morphedByMany(Topic::class, 'commentable');
     }
-
     /**
      * Get all of the votes that are assigned this comment.
      */
