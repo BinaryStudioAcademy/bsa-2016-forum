@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Message;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -21,8 +22,8 @@ class MessageController extends ApiController
         $userFrom = User::findOrFail($userId);
 
         $messages = $userFrom->messages()->get();
-        if(!$messages){
-            return $this->setStatusCode(404)->respond();
+        if (!$messages) {
+            return $this->setStatusCode(200)->respond();
         }
         $usersToIds = $messages->pluck('user_to_id');
         $usersTo = User::whereIn('id', $usersToIds)->get();
@@ -58,11 +59,10 @@ class MessageController extends ApiController
      */
     public function show($userId, $id)
     {
-        $userFrom = User::findOrFail($userId);      //need for checking if user exist
-
-        $message = Message::where('id',$id)->where('user_from_id', $userId)->first();
-        if(!$message){
-            return $this->setStatusCode(404)->respond();
+        $userFrom = User::findOrFail($userId);
+        $message = $userFrom->messages()->where('id',$id)->first();
+        if (!$message) {
+            throw (new ModelNotFoundException)->setModel(Message::class);
         }
         $userTo = User::findOrFail($message->user_to_id);
 
@@ -72,14 +72,18 @@ class MessageController extends ApiController
     /**
      * Update the specified resource in storage.
      *
+     * @param $userId
      * @param  \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update($userId, Request $request, $id)
     {
-        User::findOrFail($userId);
-        $message = Message::findOrFail($id);
+        $user = User::findOrFail($userId);
+        $message = $user->messages()->where('id',$id)->first();
+        if (!$message) {
+            throw (new ModelNotFoundException)->setModel(Message::class);
+        }
         $message->update($request->all());
         return $this->setStatusCode(200)->respond($message);
 
@@ -93,9 +97,8 @@ class MessageController extends ApiController
      */
     public function destroy($userId, $id)
     {
-        User::findOrFail($userId);
-
-        $message = Message::where('id',$id)->where('user_from_id', $userId)->first();
+        $user = User::findOrFail($userId);
+        $message = $user->messages()->where('user_from_id', $userId)->first();
         if (!$message) {
             return $this->setStatusCode(404)->respond();
         }
