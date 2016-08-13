@@ -28,7 +28,10 @@ class MessageController extends ApiController
         $usersToIds = $messages->pluck('user_to_id');
         $usersTo = User::whereIn('id', $usersToIds)->get();
 
-        return $this->setStatusCode(200)->respond($messages, ['user_from' => $userFrom, 'users_to' => $usersTo]);
+        return $this->setStatusCode(200)->respond(
+            $messages->makeHidden('created_at', 'updated_at'),
+            ['user_from' => $userFrom, 'users_to' => $usersTo]
+        );
     }
 
 
@@ -60,13 +63,16 @@ class MessageController extends ApiController
     public function show($userId, $id)
     {
         $userFrom = User::findOrFail($userId);
-        $message = $userFrom->messages()->where('id',$id)->first();
+        $message = $userFrom->messages()->where('id', $id)->first();
         if (!$message) {
             throw (new ModelNotFoundException)->setModel(Message::class);
         }
         $userTo = User::findOrFail($message->user_to_id);
 
-        return $this->setStatusCode(200)->respond($message, ['user_from' => $userFrom, 'user_to' => $userTo]);
+        return $this->setStatusCode(200)->respond(
+            $message->makeHidden('created_at', 'updated_at'),
+            ['user_from' => $userFrom, 'user_to' => $userTo]
+        );
     }
 
     /**
@@ -80,7 +86,7 @@ class MessageController extends ApiController
     public function update($userId, Request $request, $id)
     {
         $user = User::findOrFail($userId);
-        $message = $user->messages()->where('id',$id)->first();
+        $message = $user->messages()->where('id', $id)->first();
         if (!$message) {
             throw (new ModelNotFoundException)->setModel(Message::class);
         }
@@ -100,7 +106,7 @@ class MessageController extends ApiController
         $user = User::findOrFail($userId);
         $message = $user->messages()->where('user_from_id', $userId)->first();
         if (!$message) {
-            return $this->setStatusCode(404)->respond();
+            throw (new ModelNotFoundException)->setModel(Message::class);
         }
         $message->delete();
         return $this->setStatusCode(204)->respond();
