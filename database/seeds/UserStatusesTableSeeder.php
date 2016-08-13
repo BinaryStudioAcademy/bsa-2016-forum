@@ -9,6 +9,7 @@ class UserStatusesTableSeeder extends Seeder
      *
      * @return void
      */
+
     public function run()
     {
         \DB::table('user_statuses')->insert([

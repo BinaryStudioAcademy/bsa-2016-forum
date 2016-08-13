@@ -12,6 +12,12 @@ class SubscribeRss extends Model
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['deleted_at'];
 
     public function user()
     {

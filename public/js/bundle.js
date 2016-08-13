@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (process,__filename){
 /** vim: et:ts=4:sw=4:sts=4
  * @license amdefine 1.0.0 Copyright (c) 2011-2015, The Dojo Foundation All Rights Reserved.
@@ -303,7 +303,7 @@ function amdefine(module, requireFn) {
 module.exports = amdefine;
 
 }).call(this,require('_process'),"/node_modules\\amdefine\\amdefine.js")
-},{"_process":51,"path":50}],2:[function(require,module,exports){
+},{"_process":52,"path":51}],2:[function(require,module,exports){
 // Backbone.BabySitter
 // -------------------
 // v0.1.11
@@ -495,7 +495,7 @@ module.exports = amdefine;
 
 }));
 
-},{"backbone":5,"underscore":52}],3:[function(require,module,exports){
+},{"backbone":6,"underscore":53}],3:[function(require,module,exports){
 // MarionetteJS (Backbone.Marionette)
 // ----------------------------------
 // v2.4.7
@@ -4009,7 +4009,360 @@ module.exports = amdefine;
   return Marionette;
 }));
 
-},{"backbone":5,"backbone.babysitter":2,"backbone.wreqr":4,"underscore":52}],4:[function(require,module,exports){
+},{"backbone":6,"backbone.babysitter":2,"backbone.wreqr":5,"underscore":53}],4:[function(require,module,exports){
+// Backbone.Radio v1.0.4
+
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('underscore'), require('backbone')) :
+  typeof define === 'function' && define.amd ? define(['underscore', 'backbone'], factory) :
+  (global.Backbone = global.Backbone || {}, global.Backbone.Radio = factory(global._,global.Backbone));
+}(this, function (_,Backbone) { 'use strict';
+
+  _ = 'default' in _ ? _['default'] : _;
+  Backbone = 'default' in Backbone ? Backbone['default'] : Backbone;
+
+  var babelHelpers = {};
+  babelHelpers.typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+  };
+  babelHelpers;
+
+  var previousRadio = Backbone.Radio;
+
+  var Radio = Backbone.Radio = {};
+
+  Radio.VERSION = '1.0.4';
+
+  // This allows you to run multiple instances of Radio on the same
+  // webapp. After loading the new version, call `noConflict()` to
+  // get a reference to it. At the same time the old version will be
+  // returned to Backbone.Radio.
+  Radio.noConflict = function () {
+    Backbone.Radio = previousRadio;
+    return this;
+  };
+
+  // Whether or not we're in DEBUG mode or not. DEBUG mode helps you
+  // get around the issues of lack of warnings when events are mis-typed.
+  Radio.DEBUG = false;
+
+  // Format debug text.
+  Radio._debugText = function (warning, eventName, channelName) {
+    return warning + (channelName ? ' on the ' + channelName + ' channel' : '') + ': "' + eventName + '"';
+  };
+
+  // This is the method that's called when an unregistered event was called.
+  // By default, it logs warning to the console. By overriding this you could
+  // make it throw an Error, for instance. This would make firing a nonexistent event
+  // have the same consequence as firing a nonexistent method on an Object.
+  Radio.debugLog = function (warning, eventName, channelName) {
+    if (Radio.DEBUG && console && console.warn) {
+      console.warn(Radio._debugText(warning, eventName, channelName));
+    }
+  };
+
+  var eventSplitter = /\s+/;
+
+  // An internal method used to handle Radio's method overloading for Requests.
+  // It's borrowed from Backbone.Events. It differs from Backbone's overload
+  // API (which is used in Backbone.Events) in that it doesn't support space-separated
+  // event names.
+  Radio._eventsApi = function (obj, action, name, rest) {
+    if (!name) {
+      return false;
+    }
+
+    var results = {};
+
+    // Handle event maps.
+    if ((typeof name === 'undefined' ? 'undefined' : babelHelpers.typeof(name)) === 'object') {
+      for (var key in name) {
+        var result = obj[action].apply(obj, [key, name[key]].concat(rest));
+        eventSplitter.test(key) ? _.extend(results, result) : results[key] = result;
+      }
+      return results;
+    }
+
+    // Handle space separated event names.
+    if (eventSplitter.test(name)) {
+      var names = name.split(eventSplitter);
+      for (var i = 0, l = names.length; i < l; i++) {
+        results[names[i]] = obj[action].apply(obj, [names[i]].concat(rest));
+      }
+      return results;
+    }
+
+    return false;
+  };
+
+  // An optimized way to execute callbacks.
+  Radio._callHandler = function (callback, context, args) {
+    var a1 = args[0],
+        a2 = args[1],
+        a3 = args[2];
+    switch (args.length) {
+      case 0:
+        return callback.call(context);
+      case 1:
+        return callback.call(context, a1);
+      case 2:
+        return callback.call(context, a1, a2);
+      case 3:
+        return callback.call(context, a1, a2, a3);
+      default:
+        return callback.apply(context, args);
+    }
+  };
+
+  // A helper used by `off` methods to the handler from the store
+  function removeHandler(store, name, callback, context) {
+    var event = store[name];
+    if ((!callback || callback === event.callback || callback === event.callback._callback) && (!context || context === event.context)) {
+      delete store[name];
+      return true;
+    }
+  }
+
+  function removeHandlers(store, name, callback, context) {
+    store || (store = {});
+    var names = name ? [name] : _.keys(store);
+    var matched = false;
+
+    for (var i = 0, length = names.length; i < length; i++) {
+      name = names[i];
+
+      // If there's no event by this name, log it and continue
+      // with the loop
+      if (!store[name]) {
+        continue;
+      }
+
+      if (removeHandler(store, name, callback, context)) {
+        matched = true;
+      }
+    }
+
+    return matched;
+  }
+
+  /*
+   * tune-in
+   * -------
+   * Get console logs of a channel's activity
+   *
+   */
+
+  var _logs = {};
+
+  // This is to produce an identical function in both tuneIn and tuneOut,
+  // so that Backbone.Events unregisters it.
+  function _partial(channelName) {
+    return _logs[channelName] || (_logs[channelName] = _.bind(Radio.log, Radio, channelName));
+  }
+
+  _.extend(Radio, {
+
+    // Log information about the channel and event
+    log: function log(channelName, eventName) {
+      if (typeof console === 'undefined') {
+        return;
+      }
+      var args = _.toArray(arguments).slice(2);
+      console.log('[' + channelName + '] "' + eventName + '"', args);
+    },
+
+    // Logs all events on this channel to the console. It sets an
+    // internal value on the channel telling it we're listening,
+    // then sets a listener on the Backbone.Events
+    tuneIn: function tuneIn(channelName) {
+      var channel = Radio.channel(channelName);
+      channel._tunedIn = true;
+      channel.on('all', _partial(channelName));
+      return this;
+    },
+
+    // Stop logging all of the activities on this channel to the console
+    tuneOut: function tuneOut(channelName) {
+      var channel = Radio.channel(channelName);
+      channel._tunedIn = false;
+      channel.off('all', _partial(channelName));
+      delete _logs[channelName];
+      return this;
+    }
+  });
+
+  /*
+   * Backbone.Radio.Requests
+   * -----------------------
+   * A messaging system for requesting data.
+   *
+   */
+
+  function makeCallback(callback) {
+    return _.isFunction(callback) ? callback : function () {
+      return callback;
+    };
+  }
+
+  Radio.Requests = {
+
+    // Make a request
+    request: function request(name) {
+      var args = _.toArray(arguments).slice(1);
+      var results = Radio._eventsApi(this, 'request', name, args);
+      if (results) {
+        return results;
+      }
+      var channelName = this.channelName;
+      var requests = this._requests;
+
+      // Check if we should log the request, and if so, do it
+      if (channelName && this._tunedIn) {
+        Radio.log.apply(this, [channelName, name].concat(args));
+      }
+
+      // If the request isn't handled, log it in DEBUG mode and exit
+      if (requests && (requests[name] || requests['default'])) {
+        var handler = requests[name] || requests['default'];
+        args = requests[name] ? args : arguments;
+        return Radio._callHandler(handler.callback, handler.context, args);
+      } else {
+        Radio.debugLog('An unhandled request was fired', name, channelName);
+      }
+    },
+
+    // Set up a handler for a request
+    reply: function reply(name, callback, context) {
+      if (Radio._eventsApi(this, 'reply', name, [callback, context])) {
+        return this;
+      }
+
+      this._requests || (this._requests = {});
+
+      if (this._requests[name]) {
+        Radio.debugLog('A request was overwritten', name, this.channelName);
+      }
+
+      this._requests[name] = {
+        callback: makeCallback(callback),
+        context: context || this
+      };
+
+      return this;
+    },
+
+    // Set up a handler that can only be requested once
+    replyOnce: function replyOnce(name, callback, context) {
+      if (Radio._eventsApi(this, 'replyOnce', name, [callback, context])) {
+        return this;
+      }
+
+      var self = this;
+
+      var once = _.once(function () {
+        self.stopReplying(name);
+        return makeCallback(callback).apply(this, arguments);
+      });
+
+      return this.reply(name, once, context);
+    },
+
+    // Remove handler(s)
+    stopReplying: function stopReplying(name, callback, context) {
+      if (Radio._eventsApi(this, 'stopReplying', name)) {
+        return this;
+      }
+
+      // Remove everything if there are no arguments passed
+      if (!name && !callback && !context) {
+        delete this._requests;
+      } else if (!removeHandlers(this._requests, name, callback, context)) {
+        Radio.debugLog('Attempted to remove the unregistered request', name, this.channelName);
+      }
+
+      return this;
+    }
+  };
+
+  /*
+   * Backbone.Radio.channel
+   * ----------------------
+   * Get a reference to a channel by name.
+   *
+   */
+
+  Radio._channels = {};
+
+  Radio.channel = function (channelName) {
+    if (!channelName) {
+      throw new Error('You must provide a name for the channel.');
+    }
+
+    if (Radio._channels[channelName]) {
+      return Radio._channels[channelName];
+    } else {
+      return Radio._channels[channelName] = new Radio.Channel(channelName);
+    }
+  };
+
+  /*
+   * Backbone.Radio.Channel
+   * ----------------------
+   * A Channel is an object that extends from Backbone.Events,
+   * and Radio.Requests.
+   *
+   */
+
+  Radio.Channel = function (channelName) {
+    this.channelName = channelName;
+  };
+
+  _.extend(Radio.Channel.prototype, Backbone.Events, Radio.Requests, {
+
+    // Remove all handlers from the messaging systems of this channel
+    reset: function reset() {
+      this.off();
+      this.stopListening();
+      this.stopReplying();
+      return this;
+    }
+  });
+
+  /*
+   * Top-level API
+   * -------------
+   * Supplies the 'top-level API' for working with Channels directly
+   * from Backbone.Radio.
+   *
+   */
+
+  var channel;
+  var args;
+  var systems = [Backbone.Events, Radio.Requests];
+  _.each(systems, function (system) {
+    _.each(system, function (method, methodName) {
+      Radio[methodName] = function (channelName) {
+        args = _.toArray(arguments).slice(1);
+        channel = this.channel(channelName);
+        return channel[methodName].apply(channel, args);
+      };
+    });
+  });
+
+  Radio.reset = function (channelName) {
+    var channels = !channelName ? this._channels : [this._channels[channelName]];
+    _.each(channels, function (channel) {
+      channel.reset();
+    });
+  };
+
+  return Radio;
+
+}));
+
+},{"backbone":6,"underscore":53}],5:[function(require,module,exports){
 // Backbone.Wreqr (Backbone.Marionette)
 // ----------------------------------
 // v1.3.6
@@ -4446,7 +4799,7 @@ module.exports = amdefine;
 
 }));
 
-},{"backbone":5,"underscore":52}],5:[function(require,module,exports){
+},{"backbone":6,"underscore":53}],6:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.3.3
 
@@ -6370,7 +6723,7 @@ module.exports = amdefine;
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":49,"underscore":52}],6:[function(require,module,exports){
+},{"jquery":50,"underscore":53}],7:[function(require,module,exports){
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
  * Copyright 2011-2016 Twitter, Inc.
@@ -8749,9 +9102,9 @@ if (typeof jQuery === 'undefined') {
 
 }(jQuery);
 
-},{}],7:[function(require,module,exports){
-
 },{}],8:[function(require,module,exports){
+
+},{}],9:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -8818,7 +9171,7 @@ exports['default'] = inst;
 module.exports = exports['default'];
 
 
-},{"./handlebars.runtime":9,"./handlebars/compiler/ast":11,"./handlebars/compiler/base":12,"./handlebars/compiler/compiler":14,"./handlebars/compiler/javascript-compiler":16,"./handlebars/compiler/visitor":19,"./handlebars/no-conflict":33}],9:[function(require,module,exports){
+},{"./handlebars.runtime":10,"./handlebars/compiler/ast":12,"./handlebars/compiler/base":13,"./handlebars/compiler/compiler":15,"./handlebars/compiler/javascript-compiler":17,"./handlebars/compiler/visitor":20,"./handlebars/no-conflict":34}],10:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -8886,7 +9239,7 @@ exports['default'] = inst;
 module.exports = exports['default'];
 
 
-},{"./handlebars/base":10,"./handlebars/exception":23,"./handlebars/no-conflict":33,"./handlebars/runtime":34,"./handlebars/safe-string":35,"./handlebars/utils":36}],10:[function(require,module,exports){
+},{"./handlebars/base":11,"./handlebars/exception":24,"./handlebars/no-conflict":34,"./handlebars/runtime":35,"./handlebars/safe-string":36,"./handlebars/utils":37}],11:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -8992,7 +9345,7 @@ exports.createFrame = _utils.createFrame;
 exports.logger = _logger2['default'];
 
 
-},{"./decorators":21,"./exception":23,"./helpers":24,"./logger":32,"./utils":36}],11:[function(require,module,exports){
+},{"./decorators":22,"./exception":24,"./helpers":25,"./logger":33,"./utils":37}],12:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -9025,7 +9378,7 @@ exports['default'] = AST;
 module.exports = exports['default'];
 
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -9075,7 +9428,7 @@ function parse(input, options) {
 }
 
 
-},{"../utils":36,"./helpers":15,"./parser":17,"./whitespace-control":20}],13:[function(require,module,exports){
+},{"../utils":37,"./helpers":16,"./parser":18,"./whitespace-control":21}],14:[function(require,module,exports){
 /* global define */
 'use strict';
 
@@ -9243,7 +9596,7 @@ exports['default'] = CodeGen;
 module.exports = exports['default'];
 
 
-},{"../utils":36,"source-map":38}],14:[function(require,module,exports){
+},{"../utils":37,"source-map":39}],15:[function(require,module,exports){
 /* eslint-disable new-cap */
 
 'use strict';
@@ -9817,7 +10170,7 @@ function transformLiteralToPath(sexpr) {
 }
 
 
-},{"../exception":23,"../utils":36,"./ast":11}],15:[function(require,module,exports){
+},{"../exception":24,"../utils":37,"./ast":12}],16:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -10049,7 +10402,7 @@ function preparePartialBlock(open, program, close, locInfo) {
 }
 
 
-},{"../exception":23}],16:[function(require,module,exports){
+},{"../exception":24}],17:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -11177,7 +11530,7 @@ exports['default'] = JavaScriptCompiler;
 module.exports = exports['default'];
 
 
-},{"../base":10,"../exception":23,"../utils":36,"./code-gen":13}],17:[function(require,module,exports){
+},{"../base":11,"../exception":24,"../utils":37,"./code-gen":14}],18:[function(require,module,exports){
 /* istanbul ignore next */
 /* Jison generated parser */
 "use strict";
@@ -11917,7 +12270,7 @@ var handlebars = (function () {
 exports['default'] = handlebars;
 
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /* eslint-disable new-cap */
 'use strict';
 
@@ -12105,7 +12458,7 @@ PrintVisitor.prototype.HashPair = function (pair) {
 /* eslint-enable new-cap */
 
 
-},{"./visitor":19}],19:[function(require,module,exports){
+},{"./visitor":20}],20:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12247,7 +12600,7 @@ exports['default'] = Visitor;
 module.exports = exports['default'];
 
 
-},{"../exception":23}],20:[function(require,module,exports){
+},{"../exception":24}],21:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12470,7 +12823,7 @@ exports['default'] = WhitespaceControl;
 module.exports = exports['default'];
 
 
-},{"./visitor":19}],21:[function(require,module,exports){
+},{"./visitor":20}],22:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12488,7 +12841,7 @@ function registerDefaultDecorators(instance) {
 }
 
 
-},{"./decorators/inline":22}],22:[function(require,module,exports){
+},{"./decorators/inline":23}],23:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12519,7 +12872,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{"../utils":36}],23:[function(require,module,exports){
+},{"../utils":37}],24:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12561,7 +12914,7 @@ exports['default'] = Exception;
 module.exports = exports['default'];
 
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12609,7 +12962,7 @@ function registerDefaultHelpers(instance) {
 }
 
 
-},{"./helpers/block-helper-missing":25,"./helpers/each":26,"./helpers/helper-missing":27,"./helpers/if":28,"./helpers/log":29,"./helpers/lookup":30,"./helpers/with":31}],25:[function(require,module,exports){
+},{"./helpers/block-helper-missing":26,"./helpers/each":27,"./helpers/helper-missing":28,"./helpers/if":29,"./helpers/log":30,"./helpers/lookup":31,"./helpers/with":32}],26:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12650,7 +13003,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{"../utils":36}],26:[function(require,module,exports){
+},{"../utils":37}],27:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12746,7 +13099,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{"../exception":23,"../utils":36}],27:[function(require,module,exports){
+},{"../exception":24,"../utils":37}],28:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12773,7 +13126,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{"../exception":23}],28:[function(require,module,exports){
+},{"../exception":24}],29:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12804,7 +13157,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{"../utils":36}],29:[function(require,module,exports){
+},{"../utils":37}],30:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12832,7 +13185,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12846,7 +13199,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12881,7 +13234,7 @@ exports['default'] = function (instance) {
 module.exports = exports['default'];
 
 
-},{"../utils":36}],32:[function(require,module,exports){
+},{"../utils":37}],33:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12930,7 +13283,7 @@ exports['default'] = logger;
 module.exports = exports['default'];
 
 
-},{"./utils":36}],33:[function(require,module,exports){
+},{"./utils":37}],34:[function(require,module,exports){
 (function (global){
 /* global window */
 'use strict';
@@ -12954,7 +13307,7 @@ module.exports = exports['default'];
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -13248,7 +13601,7 @@ function executeDecorators(fn, prog, container, depths, data, blockParams) {
 }
 
 
-},{"./base":10,"./exception":23,"./utils":36}],35:[function(require,module,exports){
+},{"./base":11,"./exception":24,"./utils":37}],36:[function(require,module,exports){
 // Build out our basic SafeString type
 'use strict';
 
@@ -13265,7 +13618,7 @@ exports['default'] = SafeString;
 module.exports = exports['default'];
 
 
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -13391,7 +13744,7 @@ function appendContextPath(contextPath, id) {
 }
 
 
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 // USAGE:
 // var handlebars = require('handlebars');
 /* eslint-disable no-var */
@@ -13418,7 +13771,7 @@ if (typeof require !== 'undefined' && require.extensions) {
   require.extensions['.hbs'] = extension;
 }
 
-},{"../dist/cjs/handlebars":8,"../dist/cjs/handlebars/compiler/printer":18,"fs":7}],38:[function(require,module,exports){
+},{"../dist/cjs/handlebars":9,"../dist/cjs/handlebars/compiler/printer":19,"fs":8}],39:[function(require,module,exports){
 /*
  * Copyright 2009-2011 Mozilla Foundation and contributors
  * Licensed under the New BSD license. See LICENSE.txt or:
@@ -13428,7 +13781,7 @@ exports.SourceMapGenerator = require('./source-map/source-map-generator').Source
 exports.SourceMapConsumer = require('./source-map/source-map-consumer').SourceMapConsumer;
 exports.SourceNode = require('./source-map/source-node').SourceNode;
 
-},{"./source-map/source-map-consumer":45,"./source-map/source-map-generator":46,"./source-map/source-node":47}],39:[function(require,module,exports){
+},{"./source-map/source-map-consumer":46,"./source-map/source-map-generator":47,"./source-map/source-node":48}],40:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -13537,7 +13890,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"./util":48,"amdefine":1}],40:[function(require,module,exports){
+},{"./util":49,"amdefine":1}],41:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -13685,7 +14038,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"./base64":41,"amdefine":1}],41:[function(require,module,exports){
+},{"./base64":42,"amdefine":1}],42:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -13760,7 +14113,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"amdefine":1}],42:[function(require,module,exports){
+},{"amdefine":1}],43:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -13879,7 +14232,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"amdefine":1}],43:[function(require,module,exports){
+},{"amdefine":1}],44:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2014 Mozilla Foundation and contributors
@@ -13967,7 +14320,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"./util":48,"amdefine":1}],44:[function(require,module,exports){
+},{"./util":49,"amdefine":1}],45:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -14089,7 +14442,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"amdefine":1}],45:[function(require,module,exports){
+},{"amdefine":1}],46:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -15168,7 +15521,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"./array-set":39,"./base64-vlq":40,"./binary-search":42,"./quick-sort":44,"./util":48,"amdefine":1}],46:[function(require,module,exports){
+},{"./array-set":40,"./base64-vlq":41,"./binary-search":43,"./quick-sort":45,"./util":49,"amdefine":1}],47:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -15569,7 +15922,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"./array-set":39,"./base64-vlq":40,"./mapping-list":43,"./util":48,"amdefine":1}],47:[function(require,module,exports){
+},{"./array-set":40,"./base64-vlq":41,"./mapping-list":44,"./util":49,"amdefine":1}],48:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -15985,7 +16338,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"./source-map-generator":46,"./util":48,"amdefine":1}],48:[function(require,module,exports){
+},{"./source-map-generator":47,"./util":49,"amdefine":1}],49:[function(require,module,exports){
 /* -*- Mode: js; js-indent-level: 2; -*- */
 /*
  * Copyright 2011 Mozilla Foundation and contributors
@@ -16357,7 +16710,7 @@ define(function (require, exports, module) {
 
 });
 
-},{"amdefine":1}],49:[function(require,module,exports){
+},{"amdefine":1}],50:[function(require,module,exports){
 /*eslint-disable no-unused-vars*/
 /*!
  * jQuery JavaScript Library v3.1.0
@@ -26433,7 +26786,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -26661,7 +27014,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":51}],51:[function(require,module,exports){
+},{"_process":52}],52:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -26823,7 +27176,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],52:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -28373,12 +28726,12 @@ process.umask = function() { return 0; };
   }
 }.call(this));
 
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 $ = require('jquery');
 jQuery = $;
 require('bootstrap-sass');
 
-var config = require('./config/config');
+var config = require('config');
 
 var appInstance = require('./initializers/App');
 
@@ -28386,49 +28739,13 @@ var App = new appInstance();
 
 App.start(config);
 
-},{"./config/config":54,"./initializers/App":60,"bootstrap-sass":6,"jquery":49}],54:[function(require,module,exports){
-var debug = require('./debug/config');
-var prod = require('./prod/config');
+},{"./initializers/App":59,"bootstrap-sass":7,"config":"config","jquery":50}],55:[function(require,module,exports){
+var baseCollection = require('../instances/Collection');
 
-var config = {
-  env: 'debug',
-
-  apiVersion: '/api/v1',
-
-  setApiVersion: function (version) {
-    this.apiVersion = version;
-  },
-
-  getApiVersion: function () {
-    return this.apiVersion;
-  },
-
-  setEnv: function (env) {
-    this.env = env;
-  },
-
-  getEnv: function () {
-    return this.env;
-  },
-
-  getConfig: function () {
-    return this.env === 'debug' ? debug : prod;
-  }
-};
-
-module.exports = config.env === 'debug' ? debug : prod;
-},{"./debug/config":55,"./prod/config":56}],55:[function(require,module,exports){
-module.exports = {
-  debug: true,
-  baseUrl: '/api/v1'
-};
-},{}],56:[function(require,module,exports){
-module.exports = {
-  debug: false,
-  baseUrl: '/api/v1'
-};
-},{}],57:[function(require,module,exports){
-
+module.exports = baseCollection.extend({
+  url: '/topics'
+});
+},{"../instances/Collection":60}],56:[function(require,module,exports){
 var TopicController = require('../controllers/TopicController');
 var IdeaHubController = require('../controllers/IdeaHubController');
 
@@ -28438,8 +28755,7 @@ var routers = {
     {
       controller: new TopicController(),
       appRoutes: {
-        '': 'index',
-        'topic/create': 'create'
+        '': "index"
       }
     },
 
@@ -28459,7 +28775,7 @@ var routers = {
 module.exports = routers;
 
 
-},{"../controllers/IdeaHubController":58,"../controllers/TopicController":59}],58:[function(require,module,exports){
+},{"../controllers/IdeaHubController":57,"../controllers/TopicController":58}],57:[function(require,module,exports){
 var app = require('../instances/appInstance');
 var Marionette = require('backbone.marionette');
 
@@ -28469,19 +28785,29 @@ module.exports = Marionette.Object.extend({
 
     }
 });
-},{"../instances/appInstance":61,"backbone.marionette":3}],59:[function(require,module,exports){
-var app = require('../instances/appInstance');
+},{"../instances/appInstance":61,"backbone.marionette":3}],58:[function(require,module,exports){
 var Marionette = require('backbone.marionette');
-var TopicCreate = require('../views/topics/createTopic.js');
+var logger = require('../instances/logger');
+var mytopicCollection = require('../collections/topicCollection');
 
 module.exports = Marionette.Object.extend({
-    create: function () {
-        app.getInstance().RootView.content.show(new TopicCreate());
-    }
+
+  index: function () {
+      
+  }
 });
-},{"../instances/appInstance":61,"../views/topics/createTopic.js":69,"backbone.marionette":3}],60:[function(require,module,exports){
+},{"../collections/topicCollection":55,"../instances/logger":62,"backbone.marionette":3}],59:[function(require,module,exports){
 var Backbone = require('backbone');
+var _ = require('underscore');
+var Radio = require('backbone.radio');
 var Marionette = require('backbone.marionette');
+
+// инитим channels на сам инстанс марионета
+Marionette.Application.prototype._initChannel = function () {
+    this.channelName = _.result(this, 'channelName') || 'global';
+    this.channel = _.result(this, 'channel') || Radio.channel(this.channelName);
+};
+
 var $ = require('jquery');
 
 var routers = require('../config/routers');
@@ -28557,7 +28883,27 @@ app.getCurrentRoute = function () {
 
 module.exports = app;
 
-},{"../config/routers":57,"../instances/appInstance":61,"../instances/logger":62,"../router":64,"../templates":65,"../views/mainLayout":68,"backbone":5,"backbone.marionette":3,"handlebars":37,"jquery":49}],61:[function(require,module,exports){
+},{"../config/routers":56,"../instances/appInstance":61,"../instances/logger":62,"../router":63,"../templates":64,"../views/mainLayout":67,"backbone":6,"backbone.marionette":3,"backbone.radio":4,"handlebars":38,"jquery":50,"underscore":53}],60:[function(require,module,exports){
+var Backbone = require('backbone');
+var _ = require('underscore');
+var App = require('../instances/appInstance');
+
+module.exports = Backbone.Collection.extend({
+
+  _getRequestUrl: function () {
+    return App.getBaseUrl() + _.result(this, 'url');
+  },
+
+  sync: function (method, collection, options) {
+    if (!options.url) {
+      options.url = this._getRequestUrl(collection);
+    }
+
+    return Backbone.sync(method, collection, options);
+  },
+});
+
+},{"../instances/appInstance":61,"backbone":6,"underscore":53}],61:[function(require,module,exports){
 var appInstance = {
   instance: null,
 
@@ -28567,13 +28913,17 @@ var appInstance = {
 
   getInstance: function () {
     return this.instance;
+  },
+
+  getBaseUrl: function() {
+    return this.instance.config.baseUrl;
   }
 };
 
 module.exports = appInstance;
 },{}],62:[function(require,module,exports){
 var appInstance = require('./appInstance');
-var config = require('../config/config');
+var config = require('config');
 
 var Logger = function () {
 
@@ -28590,15 +28940,7 @@ var Logger = function () {
 };
 
 module.exports = Logger;
-},{"../config/config":54,"./appInstance":61}],63:[function(require,module,exports){
-var Backbone = require('backbone');
-
-var Topic = Backbone.Model.extend({
-    urlRoot: '/topics'
-});
-
-module.exports = Topic;
-},{"backbone":5}],64:[function(require,module,exports){
+},{"./appInstance":61,"config":"config"}],63:[function(require,module,exports){
 var Marionette = require('backbone.marionette');
 var logger = require('./instances/logger');
 
@@ -28616,7 +28958,7 @@ module.exports = function (controller, appRoutes) {
 };
 
 
-},{"./instances/logger":62,"backbone.marionette":3}],65:[function(require,module,exports){
+},{"./instances/logger":62,"backbone.marionette":3}],64:[function(require,module,exports){
 module.exports = function(Handlebars) {
 
 this["JST"] = this["JST"] || {};
@@ -28645,10 +28987,6 @@ this["JST"]["mainLayout"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main
     return "<div id=\"header\"></div>\r\n<div id=\"navigationMenu\"></div>\r\n<div class=\"container\">\r\n    <div class=\"breadcrumbs-container\" id=\"breadcrumbs\">\r\n        <ol class=\"breadcrumb\">\r\n            <li><a href=\"#\"></a></li>\r\n        </ol>\r\n    </div>\r\n    <div class=\"content-container\">\r\n        <div class=\"content-container-main\" id=\"main-content\">\r\n\r\n        </div>\r\n        <div class=\"content-container-bar hidden-xs\" id=\"bar-content\">\r\n\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"footer\"></div>\r\n\r\n";
 },"useData":true});
 
-this["JST"]["topicCollection"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "<div>\r\n    <div class=\"container-fluid\">\r\n        <div class=\"row\">\r\n            <div class=\"create-topic pull-right\">\r\n                <button class=\"btn btn-warning btn-lg\">\r\n                    <span class=\"hidden-xs\">Create topic</span>\r\n                    <span class=\"glyphicon glyphicon-plus\" aria-hidden=\"true\"></span>\r\n                </button>\r\n            </div>\r\n            <div class=\"clear\"></div>\r\n        </div>\r\n    </div>\r\n    <div class=\"post-head\">\r\n        <div class=\"\">\r\n            <div class=\"row\">\r\n                <div class=\"col-xs-6 col-sm-6 col-md-6 col-lg-6\">\r\n                    <div>Title</div>\r\n                </div>\r\n                <div class=\"col-sm-2 col-md-2 col-lg-2 hidden-xs\">\r\n                    <div class=\"text-center\">User</div>\r\n                </div>\r\n                <div class=\"col-sm-2 col-md-2 col-lg-2 hidden-xs\">\r\n                    <div class=\"text-center\">Views</div>\r\n                </div>\r\n                <div class=\"col-sm-1 col-md-1 col-lg-1 hidden-xs\">\r\n                    <div class=\"text-center\">Answers</div>\r\n                </div>\r\n                <div class=\"col-xs-1 col-sm-1 col-md-1 col-lg-1\">\r\n                    <div class=\"text-center\">Date</div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"posts\" id=\"posts\">\r\n\r\n    </div>\r\n</div>";
-},"useData":true});
-
 this["JST"]["topicComment"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "<div class=\"topic-comment\">\r\n    <div class=\"topic-comment-flex\">\r\n        <div class=\"topic-bar hidden-xs\">\r\n            <div class=\"topic-avatar\">\r\n                <img src=\"/images/user.png\">\r\n            </div>\r\n            <div class=\"topic-addition\">\r\n\r\n            </div>\r\n        </div>\r\n        <div class=\"topic-body\">\r\n            <div class=\"topic-msg\">\r\n                <div id=\"includedComment\">\r\n\r\n                </div>\r\n                <p>Even though a field is marked as 'editable=False' in the model, I would like the admin page to display it. Currently it hides the field altogether.. How can this be achieved ?</p>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"topic-control\">\r\n        <div class=\"topic-history-margin hidden-xs\"></div>\r\n        <div class=\"topic-history\">P: 21 Nov 9:43 U: usernik</div>\r\n        <div class=\"topic-control-btn\">\r\n            <a>Edit</a><a>Share</a><a>Reply</a><a>notification</a>\r\n        </div>\r\n    </div>\r\n</div>";
 },"useData":true});
@@ -28674,7 +29012,7 @@ this["JST"]["topicItem"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main"
 },"useData":true});
 
 this["JST"]["topicLayout"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "";
+    return "<div>\r\n    <div class=\"container-fluid\">\r\n        <div class=\"row\">\r\n            <div class=\"create-topic pull-right\">\r\n                <button class=\"btn btn-warning btn-lg\">\r\n                    <span class=\"hidden-xs\">Create topic</span>\r\n                    <span class=\"glyphicon glyphicon-plus\" aria-hidden=\"true\"></span>\r\n                </button>\r\n            </div>\r\n            <div class=\"clear\"></div>\r\n        </div>\r\n    </div>\r\n    <div class=\"post-head\">\r\n        <div class=\"\">\r\n            <div class=\"row\">\r\n                <div class=\"col-xs-6 col-sm-6 col-md-6 col-lg-6\">\r\n                    <div>Title</div>\r\n                </div>\r\n                <div class=\"col-sm-2 col-md-2 col-lg-2 hidden-xs\">\r\n                    <div class=\"text-center\">User</div>\r\n                </div>\r\n                <div class=\"col-sm-2 col-md-2 col-lg-2 hidden-xs\">\r\n                    <div class=\"text-center\">Views</div>\r\n                </div>\r\n                <div class=\"col-sm-1 col-md-1 col-lg-1 hidden-xs\">\r\n                    <div class=\"text-center\">Answers</div>\r\n                </div>\r\n                <div class=\"col-xs-1 col-sm-1 col-md-1 col-lg-1\">\r\n                    <div class=\"text-center\">Date</div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"posts\" id=\"posts\">\r\n\r\n    </div>\r\n</div>";
 },"useData":true});
 
 this["JST"]["voteCollection"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
@@ -28696,19 +29034,19 @@ this["JST"]["voteItem"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":
 return this["JST"];
 
 };
-},{}],66:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 var Marionette = require('backbone.marionette');
 
 module.exports = Marionette.ItemView.extend({
     template: 'header'
 });
-},{"backbone.marionette":3}],67:[function(require,module,exports){
+},{"backbone.marionette":3}],66:[function(require,module,exports){
 var Marionette = require('backbone.marionette');
 
 module.exports = Marionette.ItemView.extend({
     template: 'navigationMenu'
 });
-},{"backbone.marionette":3}],68:[function(require,module,exports){
+},{"backbone.marionette":3}],67:[function(require,module,exports){
 var Marionette = require('backbone.marionette');
 var headerView = require('../views/headers/Header');
 var navigationView = require('./headers/navigationMenu');
@@ -28737,30 +29075,9 @@ var mainLayoutView = Marionette.LayoutView.extend({
 });
 
 module.exports = mainLayoutView;
-},{"../views/headers/Header":66,"./headers/navigationMenu":67,"backbone.marionette":3}],69:[function(require,module,exports){
-var Marionette = require('backbone.marionette');
-var TopicModel = require('../../Models/TopicModel');
-
-module.exports = Marionette.ItemView.extend({
-    template: '#create.tpl',
-    model: new TopicModel(),
-    ui: {
-        name: '#topic-name',
-        description: '#topic-description',
-        createForm: '#create-form'
-    },
-    initialize: function() {
-        this.bindUIElements();
-    },
-    events: {
-        'submit @ui.createForm': function (e) {
-            e.preventDefault();
-            this.model.save({
-                name: this.ui.name.val(),
-                description: this.ui.description.val()
-            });
-            console.log(this.model);
-        }
-    }
-});
-},{"../../Models/TopicModel":63,"backbone.marionette":3}]},{},[53]);
+},{"../views/headers/Header":65,"./headers/navigationMenu":66,"backbone.marionette":3}],"config":[function(require,module,exports){
+module.exports = {
+  debug: true,
+  baseUrl: '/api/v1'
+};
+},{}]},{},[54]);
