@@ -1,17 +1,23 @@
 var appInstance = {
-  instance: null,
+    _instance: null,
+    RootView: null,
 
-  setInstance: function (instance) {
-    this.instance = instance;
-  },
+    setInstance: function (instance) {
+        this._instance = instance;
+        this.setRootView(instance.RootView);
+    },
 
-  getInstance: function () {
-    return this.instance;
-  },
+    setRootView: function (rootView) {
+        this.RootView = rootView;
+    },
 
-  getBaseUrl: function() {
-    return this.instance.config.baseUrl;
-  }
+    getInstance: function () {
+        return this._instance;
+    },
+
+    getBaseUrl: function() {
+        return this._instance.config.baseUrl;
+    }
 };
 
 module.exports = appInstance;

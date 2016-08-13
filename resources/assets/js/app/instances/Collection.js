@@ -7,7 +7,7 @@ module.exports = Backbone.Collection.extend({
   _getRequestUrl: function () {
     return App.getBaseUrl() + _.result(this, 'url');
   },
-
+//
   sync: function (method, collection, options) {
     if (!options.url) {
       options.url = this._getRequestUrl(collection);
@@ -15,4 +15,9 @@ module.exports = Backbone.Collection.extend({
 
     return Backbone.sync(method, collection, options);
   },
+
+  parse: function(response) {
+    this._meta = response._meta;
+    return response.data;
+  }
 });

@@ -14,7 +14,16 @@
 Route::get('/', function () {
     return view('main');
 });
-
+Route::resource('topics', 'TopicController', [
+    'except' => ['edit','create'],
+    'names' => [
+        'index' => 'topics.index',
+        'store' => 'topics.store',
+        'show' => 'topics.show',
+        'update' => 'topics.update',
+        'destroy' => 'topics.destroy',
+    ],
+]);
 Route::group(['middleware'=>'api', 'prefix'=>'api/v1'], function (){
 
     Route::get('/', function (){
@@ -32,16 +41,7 @@ Route::group(['middleware'=>'api', 'prefix'=>'api/v1'], function (){
         ],
     ]);
 
-    Route::resource('topics', 'TopicController', [
-        'except' => ['edit','create'],
-        'names' => [
-            'index' => 'topics.index',
-            'store' => 'topics.store',
-            'show' => 'topics.show',
-            'update' => 'topics.update',
-            'destroy' => 'topics.destroy',
-        ],
-    ]);
+
 
     Route::resource('votes', 'VoteController', [
         'except' => ['edit','create'],
