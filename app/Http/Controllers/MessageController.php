@@ -40,7 +40,7 @@ class MessageController extends ApiController
         $message->user()->associate($user);
         $message->save();
 
-        $this->setStatusCode(201)->respond();
+        $this->setStatusCode(201)->respond($message);
 
     }
 
