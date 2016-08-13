@@ -10,6 +10,12 @@ class Tag extends Model
     use SoftDeletes;
     
     protected $fillable = ['name'];
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['deleted_at'];
     
     public function topics()
     {

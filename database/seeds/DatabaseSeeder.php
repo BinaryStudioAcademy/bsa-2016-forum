@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TopicsTableSeeder::class);
         $this->call(CommentsTableSeeder::class);
         $this->call(MessagesTableSeeder::class);
+        $this->call(VoteTableSeeder::class);
 
         Model::reguard();
     }
