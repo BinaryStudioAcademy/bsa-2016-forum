@@ -30,6 +30,12 @@ class Comment extends Model
     {
         return $this->morphedByMany(Vote::class, 'commentable');
     }
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['deleted_at'];
 
     /**
      * Get all of the comments that are assigned this comment.

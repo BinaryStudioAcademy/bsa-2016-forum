@@ -22,7 +22,7 @@ class User extends Authenticatable implements HasRoleAndPermissionContract
      * @var array
      */
     protected $hidden = [
-        'hash_password', 'token',
+        'hash_password', 'token', 'deleted_at'
     ];
 
     public function messages()
