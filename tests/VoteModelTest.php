@@ -3,17 +3,18 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use DB;
 
-class ExampleTest extends TestCase
+class VoteModelTest extends TestCase
 {
     /**
      * A basic functional test example.
      *
      * @return void
      */
-    public function testBasicExample()
+    public function testVoteModel()
     {
-        //$this->visit('/')
-        //     ->see('Laravel 5');
+        $votes=factory(App\Models\User::class,2)->create();
+        var_dump($votes);
     }
 }
