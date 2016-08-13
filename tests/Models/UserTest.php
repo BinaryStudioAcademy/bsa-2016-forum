@@ -66,11 +66,11 @@ class UserTest extends TestCase
     public function testUserCreateComment ()
     {
         Model::unguard();
-        $user = \App\Models\User::all()->first();
-        $topicArray = (factory(App\Models\Topic::class)->make())->toArray();
-        unset($topicArray['user_id']);
-        $user->topics()->create($topicArray);
+        $comment = factory(App\Models\Comment::class)->make();
+        $commentArray = $comment->toArray();
+        $topic = \App\Models\Topic::all()->random(1);
+        $comment = $topic->comments()->save($comment);
         Model::reguard();
-        $this->seeInDatabase('topics', $topicArray);
+        $this->seeInDatabase('comments', $commentArray);
     }
 }
