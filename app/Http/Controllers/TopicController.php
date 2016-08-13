@@ -85,4 +85,14 @@ class TopicController extends ApiController
         }
         return $this->setStatusCode(200)->respond($topics, ['user' => $user]);
     }
+    public function getUserTopic($userId, $topicId)
+    {
+        $user = User::findOrFail($userId);      //need for checking if user exist
+        $topic = Topic::where('id',$topicId)->where('user_id',$userId)->first();
+        if(!$topic){
+            return $this->setStatusCode(404)->respond();
+        }
+        return $this->setStatusCode(200)->respond($topic,['user' => $user]);
+
+    }
 }
