@@ -58,7 +58,7 @@ class TopicController extends ApiController
         $topic = Topic::findOrFail($id);
         $topic->update($request->all());
 
-        return $this->setStatusCode(201)->respond($topic);
+        return $this->setStatusCode(200)->respond($topic);
     }
 
     /**
