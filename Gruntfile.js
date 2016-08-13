@@ -112,5 +112,5 @@ module.exports = function (grunt) {
     grunt.registerTask('prod', ['stage', 'browserify:prod', 'uglify', 'cssmin']);
 
     grunt.registerTask('w', ['watch']);
-    grunt.registerTask('default', ['stage', 'browserify:dev']);
+    grunt.registerTask('default', []);
 };
