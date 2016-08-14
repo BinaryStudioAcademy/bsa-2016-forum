@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class TopicsTableSeeder extends Seeder
 {
@@ -12,7 +11,6 @@ class TopicsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('topics')->delete();
         factory(App\Models\Topic::class, 10)->create();
     }
 }
