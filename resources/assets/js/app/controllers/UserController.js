@@ -10,7 +10,7 @@ module.exports = Marionette.Object.extend({
 
         users.fetch();
 
-        app.RootView.content.show(new UsersView({
+        app.render(new UsersView({
             collection: users
         }));
     }
