@@ -4,20 +4,24 @@ var App = require('../instances/appInstance');
 
 module.exports = Backbone.Collection.extend({
 
-  _getRequestUrl: function () {
-    return App.getBaseUrl() + (_.result(this, 'url') || _.result(this, 'urlRoot') || _.result(this.collection, 'url'));
-  },
+    _getRequestUrl: function () {
+        return App.getBaseUrl() + (_.result(this, 'url') || _.result(this, 'urlRoot') || _.result(this.collection, 'url'));
+    },
 
-  sync: function (method, collection, options) {
-    if (!options.url) {
-      options.url = this._getRequestUrl(collection);
+    sync: function (method, collection, options) {
+        if (!options.url) {
+            options.url = this._getRequestUrl(collection);
+        }
+
+        return Backbone.sync(method, collection, options);
+    },
+
+    parse: function (response, options) {
+        if (!options.collection) {
+            this._meta = response._meta;
+            return response.data;
+        } else {
+            return response;
+        }
     }
-
-    return Backbone.sync(method, collection, options);
-  },
-
-  parse: function(response) {
-    this._meta = response._meta;
-    return response.data;
-  }
 });
