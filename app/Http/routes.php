@@ -105,6 +105,13 @@ Route::group(['middleware'=>'api', 'prefix'=>'api/v1'], function (){
     Route::put('votes/{vote}/voteitem/{voteitem}/comments/{comment}','CommentController@updateVoteItemComment')->name('updateVoteItemComment');
     Route::delete('votes/{vote}/voteitem/{voteitem}/comments/{comment}','CommentController@destroyVoteItemComment')->name('deleteVoteItemComment');
 
+    /*Routes for Vote voteItems */
+    Route::get('vote/{vote}/voteitems', 'VoteItemController@getVoteVoteItems')->name('voteVoteItems');
+    Route::get('vote/{vote}/voteitems/{voteitem}','VoteItemController@getVoteVoteItem')->name('voteVoteItem');
+    Route::post('vote/{vote}/voteitems}','VoteItemController@storeVoteVoteItem')->name('storeVoteVoteItem');
+    Route::put('vote/{vote}/voteitems/{voteitem}','VoteItemController@updateVoteVoteItem')->name('updateVoteVoteItem');
+    Route::delete('vote/{vote}/voteitems/{voteitem}','VoteItemController@destroyVoteVoteItem')->name('deleteVoteVoteItem');
+
 
     Route::get('rss','rssController@index')->name('rss');
     Route::post('rss','rssController@subscribe')->name('rssSubscribe');
