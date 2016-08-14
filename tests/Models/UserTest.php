@@ -27,7 +27,7 @@ class UserTest extends TestCase
         $user->display_name .= 'Updated';
         $user->email .= 'up';
         $user->reputation += 1;
-        $user->status_id = 1;
+       // $user->status_id = 1;
 
         $user->save();
 
@@ -38,7 +38,7 @@ class UserTest extends TestCase
             'display_name'=>$user->display_name,
             'email'=>$user->email,
             'reputation'=>$user->reputation,
-            'status_id'=>$user->status_id
+          //  'status_id'=>$user->status_id
         ]);
     }
 
