@@ -106,7 +106,7 @@ Route::group(['middleware'=>'api', 'prefix'=>'api/v1'], function (){
     Route::delete('votes/{vote}/voteitem/{voteitem}/comments/{comment}','CommentController@destroyVoteItemComment')->name('deleteVoteItemComment');
 
     /*Routes for Vote voteItems */
-    Route::resource('vote/{vote}/voteitems', 'VoteItemController', [
+    Route::resource('votes/{vote}/voteitems', 'VoteItemController', [
         'except' => ['edit','create'],
         'names' => [
             'index' => 'voteItems.index',
