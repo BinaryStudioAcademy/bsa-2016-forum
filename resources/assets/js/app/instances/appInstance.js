@@ -2,7 +2,7 @@ var appInstance = {
     _instance: null,
     RootView: null,
 
-    setInstance: function (instance) {
+    setInstance: function (instance) {                  
         this._instance = instance;
         this.setRootView(instance.RootView);
     },
@@ -20,7 +20,7 @@ var appInstance = {
     },
 
     render: function(view) {
-        this.RootView.content.show(view);
+        this.RootView.getRegion('content').show(view);
     }
 };
 
