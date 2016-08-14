@@ -29,7 +29,7 @@ class MessageController extends ApiController
         $usersTo = User::whereIn('id', $usersToIds)->get();
 
         return $this->setStatusCode(200)->respond(
-            $messages->makeHidden(['created_at', 'updated_at']),
+            $messages,
             ['user_from' => $userFrom, 'users_to' => $usersTo]
         );
     }
@@ -70,7 +70,7 @@ class MessageController extends ApiController
         $userTo = User::findOrFail($message->user_to_id);
 
         return $this->setStatusCode(200)->respond(
-            $message->makeHidden(['created_at', 'updated_at']),
+            $message,
             ['user_from' => $userFrom, 'user_to' => $userTo]
         );
     }
