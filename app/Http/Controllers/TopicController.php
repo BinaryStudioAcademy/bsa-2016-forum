@@ -13,10 +13,18 @@ class TopicController extends ApiController
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param TopicRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(TopicRequest $request)
     {
+        // query - search topics with title or description like '%query%'
+        $searchQuery = $request->get('query');
+
+        // tag_ids - search topics that has tags with IDs that in tag_ids (example tag_ids=1,2,3,4)
+        $tagIds = $request->get('tag_ids');
+        $tagIdsArray = explode(',', $tagIds);
+
         $topics = Topic::all();
 
         return $this->setStatusCode(200)->respond($topics);
@@ -77,8 +85,24 @@ class TopicController extends ApiController
 
         return $this->setStatusCode(204)->respond();
     }
-    public function getUserTopics($userId)
+
+    /**
+     * Get all or filtering user's topics
+     *
+     * @param int $userId
+     * @param TopicRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUserTopics($userId, TopicRequest $request)
     {
+        // query - search topics with title or description like '%query%'
+        $searchQuery = $request->get('query');
+
+        // tag_ids - search topics that has tags with IDs that in tag_ids (example tag_ids=1,2,3,4)
+        $tagIds = $request->get('tag_ids');
+        $tagIdsArray = explode(',', $tagIds);
+
+
         $user = User::findOrFail($userId);
         $topics = $user->topics()->get();
         if(!$topics){
@@ -86,6 +110,14 @@ class TopicController extends ApiController
         }
         return $this->setStatusCode(200)->respond($topics, ['user' => $user]);
     }
+
+    /**
+     * Get selected user's topic
+     *
+     * @param int $userId
+     * @param int $topicId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getUserTopic($userId, $topicId)
     {
         $user = User::findOrFail($userId);
