@@ -11,10 +11,12 @@ Marionette.Application.prototype._initChannel = function () {
 
 var $ = require('jquery');
 
+var appRouter = require('../router');
+
 var mainLayoutView = require('../views/mainLayout');
 
 var appInstance = require('../instances/appInstance');
-var appRouter = require('../router');
+
 var logger = require('../instances/logger');
 
 var Handlebars = require('handlebars');
@@ -24,7 +26,6 @@ var app = Marionette.Application.extend({
     initialize: function (options) {
         logger('My app has initialized');
     },
-
 
     setRootLayout: function (layout) {
         this.RootView = layout;
@@ -46,6 +47,7 @@ var app = Marionette.Application.extend({
             var router = new myRouter();
         });
     },
+
     templateCashing: function () {
         // кешируем шаблоны
         $.each(Templates, function (key, value) {
@@ -55,16 +57,16 @@ var app = Marionette.Application.extend({
         });
     },
     onStart: function (config) {
-        console.log('start');
-
         this.config = config;
+
+
         this.templateCashing();
 
         appInstance.setInstance(this);
 
         this.setRootLayout(new mainLayoutView());
         this.showRootLayout();
-
+        this.setRouting();
         logger('start application');
 
         if (Backbone.history) {
