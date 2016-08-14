@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 
 module.exports = Marionette.ItemView.extend({
-    template: 'topicItem',
+    template: 'userItem',
+    tagName: 'div'
 });
