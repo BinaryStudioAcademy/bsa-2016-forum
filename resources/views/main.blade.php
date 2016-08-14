@@ -11,8 +11,6 @@
 </head>
 <body>
 
-<div id="main"></div>
-
 @if (env('APP_DEBUG'))
     <script src="js/bundle.js?v={{ time() }}"></script>
 @else

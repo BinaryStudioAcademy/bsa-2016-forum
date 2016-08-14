@@ -6,6 +6,6 @@ var config = require('config');
 
 var appInstance = require('./initializers/App');
 
-App = new appInstance();
+var App = new appInstance();
 
 App.start(config);

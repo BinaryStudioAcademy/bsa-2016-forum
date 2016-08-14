@@ -15,4 +15,9 @@ module.exports = Backbone.Collection.extend({
 
     return Backbone.sync(method, collection, options);
   },
+
+  parse: function(response) {
+    this._meta = response._meta;
+    return response.data;
+  }
 });
