@@ -8,13 +8,10 @@ module.exports = Marionette.Object.extend({
         var UsersView = require('../views/users/userCollection');
         var users = new Users();
 
-        users.fetch({
-            success: function (items) {
-                app.RootView.content.show(new UsersView({
-                   collection: items
-                }));
-            }
-        });
+        users.fetch();
 
+        app.RootView.content.show(new UsersView({
+            collection: users
+        }));
     }
 });
