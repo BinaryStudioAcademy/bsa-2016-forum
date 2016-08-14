@@ -4,11 +4,19 @@ var appInstance = {
 
   setInstance: function (instance) {
     this._instance = instance;
-    this.setRootView(instance.RootView);
   },
 
-  setRootView: function (rootView) {
+  setRootLayout: function (rootView) {
     this.RootView = rootView;
+  },
+
+  showRootLayout: function () {
+    this.RootView.render();
+    this.RootView.showRegions();
+  },
+
+  getRootView: function () {
+    return this.RootView;
   },
 
   getInstance: function () {
@@ -17,6 +25,10 @@ var appInstance = {
 
   getBaseUrl: function() {
     return this._instance.config.baseUrl;
+  },
+
+  render: function(view) {
+    this.RootView.getRegion('content').show(view);
   }
 };
 
