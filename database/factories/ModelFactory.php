@@ -74,3 +74,9 @@ $factory->define(App\Models\VoteItem::class, function (Faker\Generator $faker) {
         'name' => $faker->unique()->sentence,
     ];
 });
+
+$factory->define(App\Models\Tag::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->unique()->word,
+    ];
+});
