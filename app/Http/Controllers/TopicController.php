@@ -129,18 +129,34 @@ class TopicController extends ApiController
         return $this->setStatusCode(200)->respond($topic, ['user' => $user]);
 
     }
-    public function filterByTags($tagsId)
+    public function filterByTags($topics, $tagsId)
     {
-        $topics = Topic::all();
-        $topicsWithTags = $topics->whereHas('tags', function($q) use ($tagsId){
-            $q->whereIn('id',$tagsId);
-        })->get();
-        return $topicsWithTags;
+        if(!$topics){
+            return Topic::whereHas('tags', function($q) use ($tagsId){
+                $q->whereIn('id',$tagsId);
+            })->get();
+
+        } else {
+            return $topics->whereHas('tags', function($q) use ($tagsId){
+                $q->whereIn('id',$tagsId);
+            })->get();
+        }
+
     }
-    public function filterByQuery($query)
+    public function filterByName($topics, $query)
     {
-        $topics = Topic::all();
-        $topicsByNames = $topics->where('name','LIKE', '%'.$query.'%')->get();
-        return $topicsByNames;
+        if(!$topics){
+            return Topic::where('name','LIKE','%'.$query.'%')->get();
+        } else {
+            return $topics->where('name','LIKE','%'.$query.'%')->get();
+        }
+    }
+    public function filterByDescription($topics, $query)
+    {
+        if(!$topics){
+            return Topic::where('description','LIKE','%'.$query.'%')->get();
+        } else {
+            $topics->where('description','LIKE','%'.$query.'%')->get();
+        }
     }
 }
