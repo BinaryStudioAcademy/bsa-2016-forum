@@ -1,4 +1,3 @@
 var Marionette = require('backbone.marionette');
 
-module.exports = Marionette.CollectionView.extend({
-});
+module.exports = Marionette.CollectionView.extend({});

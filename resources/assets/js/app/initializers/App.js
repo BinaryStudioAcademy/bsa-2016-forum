@@ -11,10 +11,13 @@ Marionette.Application.prototype._initChannel = function () {
 
 var $ = require('jquery');
 
+var routers = require('../config/routers');
+var appRouter = require('../router');
+
 var mainLayoutView = require('../views/mainLayout');
 
 var appInstance = require('../instances/appInstance');
-var appRouter = require('../router');
+
 var logger = require('../instances/logger');
 
 var Handlebars = require('handlebars');
@@ -25,9 +28,18 @@ var app = Marionette.Application.extend({
         logger('My app has initialized');
     },
 
+    setRootLayout: function (layout) {
+        this.RootView = layout;
+    },
+
+    showRootLayout: function () {
+        this.RootView.render();
+        this.RootView.showRegions();
+    },
+
     setRouting: function () {
-        var routers = require('../config/routers');
         var myRoutes = routers.getRouters();
+
         myRoutes.forEach(function (item, index) {
             var myRouter = appRouter(item.controller, item.appRoutes);
             var router = new myRouter();
@@ -42,17 +54,15 @@ var app = Marionette.Application.extend({
         });
     },
     onStart: function (config) {
-        console.log('start');
-
         this.config = config;
-        this.templateCashing();
-
-        appInstance.setRootLayout(new mainLayoutView());
-        appInstance.showRootLayout();
-
-        appInstance.setInstance(this);
 
         this.setRouting();
+        this.templateCashing();
+
+        this.setRootLayout(new mainLayoutView());
+        this.showRootLayout();
+
+        appInstance.setInstance(this);
 
         logger('start application');
 
