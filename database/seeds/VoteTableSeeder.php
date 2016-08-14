@@ -18,7 +18,7 @@ class VoteTableSeeder extends Seeder
             $comment = factory(App\Models\Comment::class)->make();
             $comment = $vote->comments()->save($comment);
 
-            $tag = factory(App\Models\Tag::class , 3)->make();
+            $tag = factory(App\Models\Tag::class)->make();
             $comment = $vote->tags()->save($tag);
 
         });
