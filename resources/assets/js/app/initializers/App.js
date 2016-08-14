@@ -29,7 +29,6 @@ var app = Marionette.Application.extend({
     setRouting: function () {
         var routers = require('../config/routers');
         var myRoutes = routers.getRouters();
-        console.log('XX');
         myRoutes.forEach(function (item, index) {
             var myRouter = appRouter(item.controller, item.appRoutes);
             var router = new myRouter();
@@ -71,10 +70,6 @@ app.navigate = function (route, options) {
 
 app.getCurrentRoute = function () {
     return Backbone.history.fragment
-};
-
-app.render = function(view) {
-    this.RootView.content.show
 };
 
 module.exports = app;
