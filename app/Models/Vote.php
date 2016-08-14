@@ -27,17 +27,17 @@ class Vote extends Model
         return $this->belongsTo(User::class);
     }
    
-    public function voteItem()
+    public function voteItems()
     {
         return $this->hasMany(VoteItem::class);
     }
 
-    public function votePermission()
+    public function votePermissions()
     {
         return $this->hasMany(VotePermission::class);
     }
 
-    public function voteResult()
+    public function voteResults()
     {
         return $this->hasMany(VoteResult::class);
     }

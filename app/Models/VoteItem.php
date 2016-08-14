@@ -31,7 +31,7 @@ class VoteItem extends Model
         return $this->belongsTo(Vote::class);
     }
 
-    public function voteResult()
+    public function voteResults()
     {
         return $this->hasMany(VoteResult::class);
     }
