@@ -25,19 +25,11 @@ var app = Marionette.Application.extend({
         logger('My app has initialized');
     },
 
-    setRootLayout: function (layout) {
-        this.RootView = layout;
-    },
-
-    showRootLayout: function () {
-        this.RootView.render();
-        this.RootView.showRegions();
-    },
 
     setRouting: function () {
         var routers = require('../config/routers');
         var myRoutes = routers.getRouters();
-
+        console.log('XX');
         myRoutes.forEach(function (item, index) {
             var myRouter = appRouter(item.controller, item.appRoutes);
             var router = new myRouter();
@@ -57,8 +49,8 @@ var app = Marionette.Application.extend({
         this.config = config;
         this.templateCashing();
 
-        this.setRootLayout(new mainLayoutView());
-        this.showRootLayout();
+        appInstance.setRootLayout(new mainLayoutView());
+        appInstance.showRootLayout();
 
         appInstance.setInstance(this);
 
@@ -79,6 +71,10 @@ app.navigate = function (route, options) {
 
 app.getCurrentRoute = function () {
     return Backbone.history.fragment
+};
+
+app.render = function(view) {
+    this.RootView.content.show
 };
 
 module.exports = app;

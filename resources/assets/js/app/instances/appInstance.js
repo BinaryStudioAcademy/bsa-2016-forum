@@ -2,13 +2,21 @@ var appInstance = {
     _instance: null,
     RootView: null,
 
-    setInstance: function (instance) {                  
+    setInstance: function (instance) {
         this._instance = instance;
-        this.setRootView(instance.RootView);
     },
 
-    setRootView: function (rootView) {
+    setRootLayout: function (rootView) {
         this.RootView = rootView;
+    },
+
+    showRootLayout: function () {
+        this.RootView.render();
+        this.RootView.showRegions();
+    },
+
+    getRootView: function () {
+        return this.RootView;
     },
 
     getInstance: function () {
