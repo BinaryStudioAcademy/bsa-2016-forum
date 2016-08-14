@@ -12,9 +12,13 @@ class VoteTableSeeder extends Seeder
     public function run()
     {
       
-        $count_votes = 5;
+        $count_votes = 20;
 
-        factory(App\Models\Vote::class, $count_votes)->create();
+        factory(App\Models\Vote::class, $count_votes)->create()->each(function($vote) {
+            $comment = factory(App\Models\Comment::class)->make();
+            $comment = $vote->comments()->save($comment);
+
+        });
 
     }
 }

@@ -11,6 +11,6 @@ class VoteItemSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Models\VoteItem::class, 10)->create();
+        factory(App\Models\VoteItem::class, 30)->create();
     }
 }
