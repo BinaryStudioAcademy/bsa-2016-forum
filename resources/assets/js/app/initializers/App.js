@@ -21,10 +21,22 @@ var Handlebars = require('handlebars');
 var Templates = require('../templates')(Handlebars);
 
 var app = Marionette.Application.extend({
-    initialize: function(options) {
+    initialize: function (options) {
         logger('My app has initialized');
     },
 
+
+    setRootLayout: function (layout) {
+        this.RootView = layout;
+    },
+
+    getRootLayout: function () {
+        return this.RootView;
+    },
+    showRootLayout: function () {
+        this.RootView.render();
+        this.RootView.showRegions();
+    },
 
     setRouting: function () {
         var routers = require('../config/routers');
@@ -48,12 +60,10 @@ var app = Marionette.Application.extend({
         this.config = config;
         this.templateCashing();
 
-        appInstance.setRootLayout(new mainLayoutView());
-        appInstance.showRootLayout();
-
         appInstance.setInstance(this);
 
-        this.setRouting();
+        this.setRootLayout(new mainLayoutView());
+        this.showRootLayout();
 
         logger('start application');
 

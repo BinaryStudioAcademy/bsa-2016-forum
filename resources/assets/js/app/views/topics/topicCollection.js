@@ -9,3 +9,4 @@ module.exports = Marionette.CollectionView.extend({
     collection: topicCollections,
     childView: topicItem
 });
+

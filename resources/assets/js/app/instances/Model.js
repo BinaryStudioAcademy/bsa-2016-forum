@@ -12,12 +12,11 @@ module.exports = Backbone.Model.extend({
         if (!options.url) {
             options.url = this._getRequestUrl(collection);
         }
-
         return Backbone.sync(method, collection, options);
     },
 
 
-    parse: function(response, options) {
+    parse: function (response, options) {
         if (!options.collection) {
             this._meta = response._meta;
             return response.data;

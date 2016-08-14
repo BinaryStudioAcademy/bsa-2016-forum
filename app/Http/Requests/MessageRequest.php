@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class MessageRequest extends ApiRequest
 {
     /**
@@ -24,8 +22,8 @@ class MessageRequest extends ApiRequest
     public function rules()
     {
         return [
-            'user_from_id' => 'required|exists:users,id|integer',
-            'user_to_id' => 'required|exists:users,id|integer',
+            'user_from_id' => 'required|integer|is_current_user',
+            'user_to_id' => 'required|exists:users,id|integer|not_same_user',
             'message' => 'required',
             'is_read' => 'integer|size:1',
         ];
@@ -35,6 +33,8 @@ class MessageRequest extends ApiRequest
     {
         return [
             'user_from_id.required' => 'Sender ID is required',
+            'user_from_id.is_current_user' => 'User ID_from not is authorized',
+            'user_to_id.not_same_user' => 'User ID_to can not be the same as authorized',
             'user_to_id.required' => 'Receiver ID is required',
             'message.required' => 'Message is required',
         ];
