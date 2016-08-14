@@ -2,9 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-use Illuminate\Database\Eloquent\Model;
-
 class TopicRequest extends ApiRequest
 {
     /**
@@ -30,7 +27,7 @@ class TopicRequest extends ApiRequest
                 return [
                     'name' => 'required|unique:topics,name',
                     'description' => 'required',
-                    'user_id' => 'required|exists:users,id|integer',
+                    'user_id' => 'required|integer|is_current_user',
                 ];
 
                 break;
@@ -41,7 +38,7 @@ class TopicRequest extends ApiRequest
                 return [
                     'name' => 'required|unique:topics,name,' . $this->topics,
                     'description' => 'required',
-                    'user_id' => 'required|exists:users,id|integer',
+                    'user_id' => 'required|integer|is_current_user',
                 ];
 
                 break;
@@ -56,6 +53,7 @@ class TopicRequest extends ApiRequest
             'name.required' => 'Name is required',
             'description.required'  => 'Description is required',
             'user_id.required'  => 'User ID is required',
+            'user_id.is_current_user' => 'User not is authorized'
         ];
     }
 }
