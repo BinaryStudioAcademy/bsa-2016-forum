@@ -4,7 +4,7 @@ var mytopicCollection = require('../collections/topicCollection');
 
 module.exports = Marionette.Object.extend({
 
-  index: function () {
+    index: function () {
 
-  }
+    }
 });
