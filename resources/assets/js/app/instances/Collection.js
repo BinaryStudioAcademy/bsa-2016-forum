@@ -21,3 +21,4 @@ module.exports = Backbone.Collection.extend({
     return response.data;
   }
 });
+

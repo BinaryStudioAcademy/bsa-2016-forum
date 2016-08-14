@@ -1,9 +1,7 @@
 var baseCollection = require('../instances/Collection');
 var topicModel = require('../models/topicModel');
 
-var topicCollection = baseCollection.extend({
+module.exports = baseCollection.extend({
     url: '/topics',
-    // model: topicModel
-});//
-
-module.exports = topicCollection;
+//    model: topicModel
+});

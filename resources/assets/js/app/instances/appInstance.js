@@ -17,6 +17,10 @@ var appInstance = {
 
     getBaseUrl: function() {
         return this._instance.config.baseUrl;
+    },
+
+    render: function(view) {
+        this.RootView.content.show(view);
     }
 };
 

@@ -241,3 +241,21 @@ TOPIC DETAILS
   background: #ddd;
   animation-duration: 1s;
 }
+
+.topic-item {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.post-item {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #EEEEEE;
+  overflow: hidden;
+  background: #fff;
+  padding: 15px;
+}

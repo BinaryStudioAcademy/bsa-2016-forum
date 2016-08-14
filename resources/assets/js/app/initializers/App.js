@@ -11,13 +11,10 @@ Marionette.Application.prototype._initChannel = function () {
 
 var $ = require('jquery');
 
-var routers = require('../config/routers');
-var appRouter = require('../router');
-
 var mainLayoutView = require('../views/mainLayout');
 
 var appInstance = require('../instances/appInstance');
-
+var appRouter = require('../router');
 var logger = require('../instances/logger');
 
 var Handlebars = require('handlebars');
@@ -38,6 +35,7 @@ var app = Marionette.Application.extend({
     },
 
     setRouting: function () {
+        var routers = require('../config/routers');
         var myRoutes = routers.getRouters();
 
         myRoutes.forEach(function (item, index) {
@@ -54,15 +52,17 @@ var app = Marionette.Application.extend({
         });
     },
     onStart: function (config) {
-        this.config = config;
+        console.log('start');
 
-        this.setRouting();
+        this.config = config;
         this.templateCashing();
 
         this.setRootLayout(new mainLayoutView());
         this.showRootLayout();
 
         appInstance.setInstance(this);
+
+        this.setRouting();
 
         logger('start application');
 

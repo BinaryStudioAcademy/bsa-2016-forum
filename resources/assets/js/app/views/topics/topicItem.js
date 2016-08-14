@@ -3,5 +3,6 @@ var topicModel = require('../../Models/TopicModel');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicItem',
-    model: new topicModel()
+    className: 'row post-item',
+    tagName: 'div'
 });
