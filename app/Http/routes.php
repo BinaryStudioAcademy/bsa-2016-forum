@@ -106,12 +106,16 @@ Route::group(['middleware'=>'api', 'prefix'=>'api/v1'], function (){
     Route::delete('votes/{vote}/voteitem/{voteitem}/comments/{comment}','CommentController@destroyVoteItemComment')->name('deleteVoteItemComment');
 
     /*Routes for Vote voteItems */
-    Route::get('vote/{vote}/voteitems', 'VoteItemController@getVoteVoteItems')->name('voteVoteItems');
-    Route::get('vote/{vote}/voteitems/{voteitem}','VoteItemController@getVoteVoteItem')->name('voteVoteItem');
-    Route::post('vote/{vote}/voteitems}','VoteItemController@storeVoteVoteItem')->name('storeVoteVoteItem');
-    Route::put('vote/{vote}/voteitems/{voteitem}','VoteItemController@updateVoteVoteItem')->name('updateVoteVoteItem');
-    Route::delete('vote/{vote}/voteitems/{voteitem}','VoteItemController@destroyVoteVoteItem')->name('deleteVoteVoteItem');
-
+    Route::resource('vote/{vote}/voteitems', 'VoteItemController', [
+        'except' => ['edit','create'],
+        'names' => [
+            'index' => 'voteItems.index',
+            'store' => 'voteItems.store',
+            'show' => 'voteItems.show',
+            'update' => 'voteItems.update',
+            'destroy' => 'voteItems.destroy',
+        ],
+    ]);
 
     Route::get('rss','rssController@index')->name('rss');
     Route::post('rss','rssController@subscribe')->name('rssSubscribe');
