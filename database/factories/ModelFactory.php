@@ -66,3 +66,23 @@ $factory->define(App\Models\Vote::class, function (Faker\Generator $faker) {
         'finished_at' => date ('Y:m:d H:m:s', strtotime('+'.$faker->numberBetween(5, 15).' days'))
     ];
 });
+
+$factory->define(App\Models\VoteItem::class, function (Faker\Generator $faker) {
+    return [
+        'vote_id' => App\Models\Vote::all()->random(1)->id,
+        'user_id' => App\Models\User::all()->random(1)->id,
+        'name' => $faker->unique()->sentence,
+    ];
+});
+
+$factory->define(App\Models\Tag::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->unique()->word,
+    ];
+});
+
+$factory->define(App\Models\Like::class, function () {
+    return [
+        'user_id' => App\Models\User::all()->random(1)->id,
+    ];
+});

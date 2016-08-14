@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
-use Illuminate\Support\Facades\DB;
 
 class UsersTableSeeder extends Seeder
 {
@@ -13,12 +11,16 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->delete();
-        $count_users = 3;
-        
+        $count_users = 10;
+
         factory(App\Models\User::class, $count_users)->create();
 
         $user = \App\Models\User::first();
-        $user->attachRole(1);
+
+        /**
+         * Set right role for required users
+         */
+        $roleAdmin = \DB::table('roles')->where('name', 'Admin')->value('id');
+        $user->attachRole($roleAdmin);
     }
 }
