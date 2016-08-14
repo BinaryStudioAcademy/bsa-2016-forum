@@ -62,10 +62,10 @@ var app = Marionette.Application.extend({
         this.setRouting();
         this.templateCashing();
 
+        appInstance.setInstance(this);
+        
         this.setRootLayout(new mainLayoutView());
         this.showRootLayout();
-
-        appInstance.setInstance(this);
 
         logger('start application');
 
