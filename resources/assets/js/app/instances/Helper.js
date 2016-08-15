@@ -1,12 +1,24 @@
 var Handlebars = require('handlebars');
-var Templates = require('../templates')(Handlebars);
-var Marionette = require('backbone.marionette');
-var col = require('../collections/voteCollection');
-var mock = require('../instances/Mock');
+var app = require('../instances/appInstance');
+var Backbone = require('backbone');
 
 module.exports = {
-    retisterHelpers: function () {
-        Handlebars.registerHelper('showasd', function(context, options) {
+    register: function () {
+        this.registerHelpers();
+        this.registerAppEvents();
+    },
+    registerHelpers: function () {
+        Handlebars.registerHelper('helper1', function(context, options) {
+
         });
+    },
+    registerAppEvents: function () {
+        var inst = app.getInstance();
+        inst.on('show:vote', function (id) {
+            Backbone.history.navigate('votes/' + id, {
+                trigger: true
+            });
+        });
+
     }
 };

@@ -244,16 +244,16 @@ module.exports = {
         "content_generated": "Non velit quis sed totam tempora. Voluptas rerum dolorem fugiat maxime asperiores in. Quasi vitae doloribus explicabo tenetur eligendi vero."
     }],
 
-  votes: [{
-    'title': 'title1'},
-    {'title': 'title2'},
-    {'title': 'title3'},
-    {'title': 'title4'},
-    {'title': 'title5'},
-    {'title': 'title6'},
-    {'title': 'title7'},
-    {'title': 'title8'},
-    {'title': 'title9'}
+  votes: [
+    {'id': '1','title': 'title1'},
+    {'id': '2','title': 'title2'},
+    {'id': '3','title': 'title3'},
+    {'id': '4','title': 'title4'},
+    {'id': '5','title': 'title5'},
+    {'id': '6','title': 'title6'},
+    {'id': '7','title': 'title7'},
+    {'id': '8','title': 'title8'},
+    {'id': '9','title': 'title9'}
   ],
 
 };
