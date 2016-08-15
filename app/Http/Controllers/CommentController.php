@@ -15,7 +15,7 @@ class CommentController extends ApiController
 {
 
     /**********  TOPIC SECTION START **********/
-    
+
     /**
      * @param Topic $topic
      * @param Comment $comment
@@ -45,9 +45,9 @@ class CommentController extends ApiController
      */
     public function getTopicComment(Topic $topic, Comment $comment)
     {
-        if($this->isCommentBelongsToTopic($topic, $comment)){
+        if ($this->isCommentBelongsToTopic($topic, $comment)) {
             return $this->setStatusCode(200)->respond($comment);
-        }else{
+        } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
     }
@@ -72,10 +72,10 @@ class CommentController extends ApiController
      */
     public function updateTopicComment(Topic $topic, Comment $comment, CommentsRequest $request)
     {
-        if($this->isCommentBelongsToTopic($topic, $comment)){
+        if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comment->update($request->all());
             return $this->setStatusCode(200)->respond($comment);
-        }else{
+        } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
     }
@@ -88,10 +88,10 @@ class CommentController extends ApiController
      */
     public function destroyTopicComment(Topic $topic, Comment $comment)
     {
-        if($this->isCommentBelongsToTopic($topic, $comment)){
+        if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comment->delete();
             return $this->setStatusCode(204)->respond();
-        }else{
+        } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
     }
@@ -103,10 +103,10 @@ class CommentController extends ApiController
      */
     public function getTopicCommentChildren(Topic $topic, Comment $comment)
     {
-        if($this->isCommentBelongsToTopic($topic, $comment)){
+        if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comments = $comment->comments()->get();
             return $this->setStatusCode(200)->respond($comments);
-        }else{
+        } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
     }
@@ -142,9 +142,9 @@ class CommentController extends ApiController
      */
     public function getVoteComment(Vote $vote, Comment $comment)
     {
-        if($this->isCommentBelongsToVote($vote, $comment)){
+        if ($this->isCommentBelongsToVote($vote, $comment)) {
             return $this->setStatusCode(200)->respond($comment);
-        }else{
+        } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
     }
@@ -169,10 +169,10 @@ class CommentController extends ApiController
      */
     public function updateVoteComment(Vote $vote, Comment $comment, CommentsRequest $request)
     {
-        if($this->isCommentBelongsToVote($vote, $comment)){
+        if ($this->isCommentBelongsToVote($vote, $comment)) {
             $comment->update($request->all());
             return $this->setStatusCode(200)->respond($comment);
-        }else{
+        } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
     }
@@ -185,10 +185,10 @@ class CommentController extends ApiController
      */
     public function destroyVoteComment(Vote $vote, Comment $comment)
     {
-        if($this->isCommentBelongsToVote($vote, $comment)){
+        if ($this->isCommentBelongsToVote($vote, $comment)) {
             $comment->delete();
             return $this->setStatusCode(204)->respond();
-        }else{
+        } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
     }
@@ -200,10 +200,10 @@ class CommentController extends ApiController
      */
     public function getVoteCommentChildren(Vote $vote, Comment $comment)
     {
-        if($this->isCommentBelongsToVote($vote, $comment)){
+        if ($this->isCommentBelongsToVote($vote, $comment)) {
             $comments = $comment->comments()->get();
             return $this->setStatusCode(200)->respond($comments);
-        }else{
+        } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
     }
@@ -239,9 +239,9 @@ class CommentController extends ApiController
      */
     public function getVoteItemComment(VoteItem $voteItem, Comment $comment)
     {
-        if($this->isCommentBelongsToVoteItem($voteItem, $comment)){
+        if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
             return $this->setStatusCode(200)->respond($comment);
-        }else{
+        } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
     }
@@ -266,10 +266,10 @@ class CommentController extends ApiController
      */
     public function updateVoteItemComment(VoteItem $voteItem, Comment $comment, CommentsRequest $request)
     {
-        if($this->isCommentBelongsToVoteItem($voteItem, $comment)){
+        if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
             $comment->update($request->all());
             return $this->setStatusCode(200)->respond($comment);
-        }else{
+        } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
     }
@@ -282,10 +282,10 @@ class CommentController extends ApiController
      */
     public function destroyVoteItemComment(VoteItem $voteItem, Comment $comment)
     {
-        if($this->isCommentBelongsToVoteItem($voteItem, $comment)){
+        if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
             $comment->delete();
             return $this->setStatusCode(204)->respond();
-        }else{
+        } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
     }
