@@ -22,5 +22,6 @@ module.exports = Marionette.LayoutView.extend({
                 collection: this.votesCol
             })
         );
+        
     }
 });
