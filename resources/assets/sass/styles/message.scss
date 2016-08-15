@@ -58,3 +58,69 @@ MESSAGES LIST
   margin-bottom: 5px;
   font-size: 16px;
 }
+
+/*
+MESSAGE DIALOG
+*/
+
+.message-msg-container {
+  overflow: hidden;
+}
+
+.message-dialog {
+  padding: 15px;
+  background-color: #ffffff;
+}
+
+.message-msg-item {
+  display: flex;
+  padding: 5px 0;
+}
+
+.message-msg-avatar {
+  padding: 5px;
+}
+
+.message-msg-avatar img {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+.message-new {
+  padding: 10px 0;
+  border-top: #DDDDDD 1px solid;
+}
+
+.message-new textarea {
+  resize: vertical;
+  width: 100%;
+  margin: 5px 0 5px;
+  border-radius: 0;
+  padding: 10px 15px;
+  background-color: #E9E9E9;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.message-new-control {
+  padding-top: 5px;
+  overflow: hidden;
+}
+
+.message-new-control button {
+  float: right;
+  padding: 5px 15px;
+  border-radius: 0;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  font-weight: 800;
+  background-color: #ffd992;
+}
+
+.message-new-control button:hover {
+  background-color: #f9c172;
+}
