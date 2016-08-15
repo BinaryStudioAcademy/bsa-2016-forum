@@ -100,11 +100,6 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         if(!$vote){
             throw (new ModelNotFoundException)->setModel(Vote::class);
         }
-
-        if (!($user->allowed('view.votes', $vote))){
-            throw (new AuthorizationException);
-        }
-
         return $this->setStatusCode(200)->respond($vote, ['user' => $user]);
 
     }
