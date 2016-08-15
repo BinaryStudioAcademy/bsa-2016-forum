@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use DCN\RBAC\Traits\HasRoleAndPermission;
+use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
 
-class User extends Authenticatable
+
+
+class User extends Authenticatable implements HasRoleAndPermissionContract
 {
-    use SoftDeletes;
+    use HasRoleAndPermission, SoftDeletes;
 
     protected $table = 'users';
 
@@ -20,10 +24,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'hash_password', 'token',
+        'hash_password', 'token', 'deleted_at'
     ];
 
-    public function message()
+    public function messages()
     {
         return $this->hasMany(Message::class, 'user_from_id');
     }

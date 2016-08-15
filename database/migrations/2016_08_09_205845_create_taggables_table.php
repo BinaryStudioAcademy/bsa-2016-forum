@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTaggablesTable extends Migration
 {
@@ -12,14 +13,14 @@ class CreateTaggablesTable extends Migration
      */
     public function up()
     {
-        Schema::create('taggable', function(Blueprint $table) {
+        Schema::create('taggables', function(Blueprint $table) {
             $table->increments('id');
 
             $table->integer('tag_id')->unsigned();
-            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
+            $table->foreign('tag_id')->references('id')->on('tags');
 
             $table->integer('taggable_id')->unsigned();
-            $table->foreign('taggable_id')->references('id')->on('taggable')->onDelete('cascade');
+            $table->foreign('taggable_id')->references('id')->on('taggables');
 
             $table->string('taggable_type');
             $table->softDeletes();
@@ -34,11 +35,11 @@ class CreateTaggablesTable extends Migration
      */
     public function down()
     {
-        Schema::table('taggable', function(Blueprint $table) {
-            $table->dropForeign('taggable_tag_id_foreign');
-            $table->dropForeign('taggable_taggable_id_foreign');
+        Schema::table('taggables', function(Blueprint $table) {
+            $table->dropForeign('taggables_tag_id_foreign');
+            $table->dropForeign('taggables_taggable_id_foreign');
         });
 
-        Schema::drop('taggable');
+        Schema::drop('taggables');
     }
 }

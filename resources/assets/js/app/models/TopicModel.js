@@ -1,7 +1,5 @@
-var Backbone = require('backbone');
+var baseModel = require('../instances/Model');
 
-var Topic = Backbone.Model.extend({
+module.exports = baseModel.extend({
     urlRoot: '/topics'
 });
-
-module.exports = Topic;

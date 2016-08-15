@@ -1,4 +1,4 @@
 module.exports = {
-  debug: true,
-  baseUrl: ''
+    debug: true,
+    baseUrl: '/api/v1'
 };

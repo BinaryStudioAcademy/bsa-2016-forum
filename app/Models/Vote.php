@@ -11,28 +11,33 @@ class Vote extends Model
 {
     use SoftDeletes;
 
-    //TODO     const RULES = ['title'  => 'required'];
-
     protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at'];
 
     protected $dates = ['deleted_at'];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['deleted_at'];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
    
-    public function voteItem()
+    public function voteItems()
     {
         return $this->hasMany(VoteItem::class);
     }
 
-    public function votePermission()
+    public function votePermissions()
     {
         return $this->hasMany(VotePermission::class);
     }
 
-    public function voteResult()
+    public function voteResults()
     {
         return $this->hasMany(VoteResult::class);
     }

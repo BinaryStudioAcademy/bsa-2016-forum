@@ -1,61 +1,73 @@
 var Backbone = require('backbone');
+var _ = require('underscore');
+var Radio = require('backbone.radio');
 var Marionette = require('backbone.marionette');
+
+// инитим channels на сам инстанс марионета
+Marionette.Application.prototype._initChannel = function () {
+    this.channelName = _.result(this, 'channelName') || 'global';
+    this.channel = _.result(this, 'channel') || Radio.channel(this.channelName);
+};
+
 var $ = require('jquery');
 
-var routers = require('../config/routers');
 var appRouter = require('../router');
 
-var RootView = require('../views/RootView.js');
-var headerView = require('../views/Header.js');
-var navigationView = require('../views/navigationMenu.js');
+var mainLayoutView = require('../views/mainLayout');
 
 var appInstance = require('../instances/appInstance');
 
 var logger = require('../instances/logger');
 
 var Handlebars = require('handlebars');
-var Templates = require('../templates.js')(Handlebars);
+var Templates = require('../templates')(Handlebars);
 
 var app = Marionette.Application.extend({
-    initialize: function(options) {
+    initialize: function (options) {
         logger('My app has initialized');
     },
 
-    setRootLayout: function () {
-        this.RootView = new RootView();
+    setRootLayout: function (layout) {
+        this.RootView = layout;
+    },
+
+    getRootLayout: function () {
+        return this.RootView;
+    },
+    showRootLayout: function () {
+        this.RootView.render();
+        this.RootView.showRegions();
     },
 
     setRouting: function () {
+        var routers = require('../config/routers');
         var myRoutes = routers.getRouters();
-
         myRoutes.forEach(function (item, index) {
             var myRouter = appRouter(item.controller, item.appRoutes);
             var router = new myRouter();
         });
     },
+
+    templateCashing: function () {
+        // кешируем шаблоны
+        $.each(Templates, function (key, value) {
+            var templateCache = new Marionette.TemplateCache(key);
+            templateCache.compiledTemplate = value;
+            Marionette.TemplateCache.templateCaches[key] = templateCache;
+        });
+    },
     onStart: function (config) {
         this.config = config;
 
+
+        this.templateCashing();
+
         appInstance.setInstance(this);
 
+        this.setRootLayout(new mainLayoutView());
+        this.showRootLayout();
         this.setRouting();
-
-        this.setRootLayout();
-
         logger('start application');
-
-        // кешируем шаблоны
-
-        $.each(Templates, function (key, value) {
-            var templateCache = new Marionette.TemplateCache('#' + key);
-            templateCache.compiledTemplate = value;
-            Marionette.TemplateCache.templateCaches['#' + key] = templateCache;
-        });
-
-        // сразу рендерим хедер и меню навигации
-        this.RootView.header.show(new headerView());
-        this.RootView.navigationMenu.show(new navigationView());
-
 
         if (Backbone.history) {
             Backbone.history.start();

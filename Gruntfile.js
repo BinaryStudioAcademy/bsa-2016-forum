@@ -5,9 +5,23 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         browserify: {
-            app: {
+            dev: {
+                options: {
+                    alias: {
+                        'config': './resources/assets/js/app/config/debug/config.js'
+                    }
+                },
                 src: 'resources/assets/js/app/app.js',
-                dest: 'public/js/bundle.js'
+                dest: 'public/js/bundle.js',
+            },
+            prod: {
+                options: {
+                    alias: {
+                        'config': './resources/assets/js/app/config/prod/config.js'
+                    }
+                },
+                src: 'resources/assets/js/app/app.js',
+                dest: 'public/js/bundle.js',
             }
         },
 
@@ -16,13 +30,13 @@ module.exports = function (grunt) {
                 files: 'resources/assets/js/**/*.js',
                 tasks: 'browserify:dev'
             },
-            css: {
-                files: 'resources/assets/css/**/*.css',
-                tasks: 'concat:dev'
-            },
             templates: {
-                files: 'resources/assets/templates/**/*.tpl',
+                files: 'resources/assets/templates/**/*.hbs',
                 tasks: 'handlebars'
+            },
+            sass: {
+                files: 'resources/assets/sass/**/*.scss',
+                tasks: 'sass:index'
             }
         },
 
@@ -30,54 +44,26 @@ module.exports = function (grunt) {
             options: {
                 processName: function (filepath) {
                     var name = filepath.split('/');
-                    return name[name.length - 1];
+                    return name[name.length - 1].split('.')[0];
                 },
                 commonjs: true
             },
             dist: {
                 files: {
-                    'resources/assets/js/app/templates.js': ['resources/assets/templates/**/*.tpl']
+                    'resources/assets/js/app/templates.js': ['resources/assets/templates/**/*.hbs']
                 }
-            }
-        },
-
-        concat: {
-            css: {
-                src: [
-                    'public/css/bootstrap.css',
-                    'resources/assets/sass/*.css',
-                    'public/css/styles.css'
-                ],
-                dest: 'public/css/styles.css'
-            },
-            js: {
-                src: [
-                    'node_modules/jquery/dist/jquery.min.js',
-                    'node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js',
-                    'public/js/bundle.js'
-                ],
-                dest: 'public/js/bundle.js'
             }
         },
 
         sass: {
-            bootstrap: {
+            index: {
                 options: {
-                    style: 'expanded',
                     loadPath: 'node_modules/bootstrap-sass/assets/stylesheets'
                 },
                 files: {
-                    'public/css/bootstrap.css': 'resources/assets/sass/vendors.scss'
+                    'public/css/styles.css': 'resources/assets/sass/index.scss'
                 }
             },
-            dest: {
-                options: {
-                    style: 'expanded'
-                },
-                files: {
-                    'public/css/styles.css': 'resources/assets/sass/styles.scss'
-                }
-            }
         },
 
         uglify: {
@@ -98,7 +84,6 @@ module.exports = function (grunt) {
         copy: {
             bootstrap_fonts: {
                 files: [
-                    // includes files within path and its sub-directories
                     {
                         expand: true,
                         flatten: true,
@@ -114,7 +99,6 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -123,10 +107,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('stage', ['handlebars', 'browserify', 'sass', 'concat', 'copy']);
-    grunt.registerTask('dev', ['stage', 'watch']);
-    grunt.registerTask('prod', ['stage', 'uglify', 'cssmin']);
+    grunt.registerTask('stage', ['handlebars', 'sass', 'copy']);
+    grunt.registerTask('dev', ['stage', 'browserify:dev', 'watch']);
+    grunt.registerTask('prod', ['stage', 'browserify:prod', 'uglify', 'cssmin']);
 
     grunt.registerTask('w', ['watch']);
-    grunt.registerTask('default', ['stage']);
+    grunt.registerTask('default', []);
 };

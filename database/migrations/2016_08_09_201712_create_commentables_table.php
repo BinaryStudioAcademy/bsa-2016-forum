@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCommentablesTable extends Migration
 {
@@ -16,10 +17,10 @@ class CreateCommentablesTable extends Migration
             $table->increments('id');
 
             $table->integer('comment_id')->unsigned();
-            $table->foreign('comment_id')->references('id')->on('comments')->onDelete('cascade');
+            $table->foreign('comment_id')->references('id')->on('comments');
 
             $table->integer('commentable_id')->unsigned();
-            $table->string('comment_type');
+            $table->string('commentable_type');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -1,35 +1,36 @@
-var ForumController = require('../controllers/ForumController.js');
-var IdeaHubController = require('../controllers/IdeaHubController.js');
-var TopicController = require('../controllers/TopicController.js');
+var TopicController = require('../controllers/TopicController');
+var IdeaHubController = require('../controllers/IdeaHubController');
+var UserController = require('../controllers/UserController');
 
 var routers = {
 
-  routers: [
-    {
-      controller: new ForumController(),
-      appRoutes: {
-        '': 'index'
-      }
-    },
+    routers: [
+        {
+            controller: new TopicController(),
+            appRoutes: {
+                '': 'index',
+                'topic/create': 'create'
+            }
+        },
 
-    {
-      controller: new IdeaHubController(),
-      appRoutes: {
-        'ideahub': 'index'
-      }
-    },
+        {
+            controller: new IdeaHubController(),
+            appRoutes: {
+                'ideahub': 'index'
+            }
+        },
 
-    {
-      controller: new TopicController(),
-      appRoutes: {
-        'topic/create': 'create'
-      }
+        {
+            controller: new UserController(),
+            appRoutes: {
+                'users': 'index'
+            }
+        }
+    ],
+
+    getRouters: function () {
+        return this.routers;
     }
-  ],
-
-  getRouters: function () {
-    return this.routers;
-  }
 };
 
 module.exports = routers;

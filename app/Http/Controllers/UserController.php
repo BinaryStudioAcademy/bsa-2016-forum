@@ -6,8 +6,13 @@ use App\Models\User;
 
 use Illuminate\Http\Request;
 
-class UserController extends ApiController
+use DCN\RBAC\Traits\HasRoleAndPermission;
+use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
+
+class UserController extends ApiController implements HasRoleAndPermissionContract
 {
+    use HasRoleAndPermission;
+
     /**
      * Display a listing of the resource.
      *
@@ -16,18 +21,7 @@ class UserController extends ApiController
     public function index()
     {
         $users = User::all();
-        return response()->json($users, 200);
-//        return $this->setStatusCode(200)->respond($users->toArray());
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $this->setStatusCode(200)->respond($users);
     }
 
     /**
@@ -38,7 +32,10 @@ class UserController extends ApiController
      */
     public function store(Request $request)
     {
-        //
+
+        $user = User::create($request->all());
+
+        return $this->setStatusCode(201)->respond($user);
     }
 
     /**
@@ -49,19 +46,11 @@ class UserController extends ApiController
      */
     public function show($id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        return $this->setStatusCode(200)->respond($user);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -72,7 +61,12 @@ class UserController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $user = User::findOrFail($id);
+
+        $user->update($request->all());
+
+        return $this->setStatusCode(200)->respond($user);
     }
 
     /**
@@ -83,6 +77,11 @@ class UserController extends ApiController
      */
     public function destroy($id)
     {
-        //
+
+        $user = User::findOrFail($id);
+
+        $user->delete();
+        return $this->setStatusCode(204)->respond();
+
     }
 }

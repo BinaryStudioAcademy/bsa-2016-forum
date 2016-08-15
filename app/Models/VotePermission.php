@@ -8,10 +8,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class VotePermission extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = ['vote_id', 'user_id', 'grant'];
     protected $dates = ['deleted_at'];
-    
-    use SoftDeletes;
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['deleted_at'];
 
     public function user()
     {

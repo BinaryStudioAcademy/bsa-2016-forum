@@ -3,13 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
+    use SoftDeletes;
+    
     protected $fillable = ['content_origin','rating','user_id','content_generated'];
 
     protected $dates = ['deleted_at'];
-    
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['deleted_at'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -22,7 +32,6 @@ class Comment extends Model
     {
         return $this->morphedByMany(Topic::class, 'commentable');
     }
-
     /**
      * Get all of the votes that are assigned this comment.
      */
@@ -44,7 +53,7 @@ class Comment extends Model
      */
     public function tags()
     {
-        return $this->morphedByMany(Attachment::class, 'commentable');
+        return $this->morphedByMany(Tag::class, 'commentable');
     }
 
     /**
@@ -52,7 +61,7 @@ class Comment extends Model
      */
     public function attachments()
     {
-        return $this->morphedByMany(Tag::class, 'commentable');
+        return $this->morphedByMany(Attachment::class, 'commentable');
     }
 
     /**

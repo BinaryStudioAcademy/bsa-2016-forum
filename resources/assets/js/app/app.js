@@ -1,4 +1,8 @@
-var config = require('./config/config');
+$ = require('jquery');
+jQuery = $;
+require('bootstrap-sass');
+
+var config = require('config');
 
 var appInstance = require('./initializers/App');
 

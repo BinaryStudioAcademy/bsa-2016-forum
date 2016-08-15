@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class CreateNotificationablesTable extends Migration
 {
@@ -16,11 +17,11 @@ class CreateNotificationablesTable extends Migration
             $table->increments('id');
 
             $table->integer('notification_id')->unsigned();
-            $table->foreign('notification_id')->references('id')->on('notifications')->onDelete('cascade');
+            $table->foreign('notification_id')->references('id')->on('notifications');
 
             $table->integer('notificationtable_id')->unsigned();
 
-            $table->string('notification_type');
+            $table->string('notificationable_type');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class TopicsTableSeeder extends Seeder
 {
@@ -12,7 +11,16 @@ class TopicsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('topics')->delete();
-        factory(App\Models\Topic::class, 10)->create();
+        factory(App\Models\Topic::class, 20)->create()->each(function($topic) {
+            $comment = factory(App\Models\Comment::class)->make();
+            $comment = $topic->comments()->save($comment);
+            
+            $tag = factory(App\Models\Tag::class)->make();
+            $comment = $topic->tags()->save($tag);
+
+            $like = factory(App\Models\Like::class)->make();
+            $vote = $topic->likes()->save($like);
+            
+        });
     }
 }

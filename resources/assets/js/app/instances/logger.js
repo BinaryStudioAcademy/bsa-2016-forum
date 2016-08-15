@@ -1,17 +1,17 @@
 var appInstance = require('./appInstance');
-var config = require('../config/config');
+var config = require('config');
 
 var Logger = function () {
 
-  //console.log(config);
+    //console.log(config);
 
-  if (config.debug) {
+    if (config.debug) {
 
-    if (window.console && console.log) {
-      console.log.apply(this, arguments);
+        if (window.console && console.log) {
+            console.log.apply(this, arguments);
+        }
+
     }
-
-  }
 
 };
 

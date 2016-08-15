@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class CreateVotesTable extends Migration
 {
@@ -15,7 +16,7 @@ class CreateVotesTable extends Migration
         Schema::create('votes', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->string('title');
             $table->dateTime('finished_at');
             $table->boolean('is_single')->default(1);
