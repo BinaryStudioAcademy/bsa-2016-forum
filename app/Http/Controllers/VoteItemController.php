@@ -41,18 +41,13 @@ class VoteItemController extends ApiController
     {
         $vote = Vote::findOrFail($voteId);
         $voteItem = new VoteItem($request->all());
-//        $u = User::findOrFail($request->user_id);      // uncomment to test when there is no user login in
-//        Auth::login($u);
-        $user = \Auth::user();
-        if ($user->id != $request->user_id) {
-            throw (new ModelNotFoundException)->setModel(User::class);
-        }
+        $user = User::findOrFail($request->user_id);
 
         $voteItem->user()->associate($user);
         $voteItem->vote()->associate($vote);
         $voteItem->save();
 
-        return $this->setStatusCode(201)->respond($voteItem);
+        return $this->setStatusCode(201)->respond($voteItem->fresh());
 
     }
 
@@ -83,6 +78,7 @@ class VoteItemController extends ApiController
      */
     public function update($voteId, VoteItemRequest $request, $id)
     {
+
         $vote = Vote::findOrFail($voteId);
         $voteItem = $vote->voteItems()->where('id', $id)->get();
         if (!$voteItem) {
