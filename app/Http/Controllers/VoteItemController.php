@@ -7,12 +7,14 @@ use App\Models\User;
 use App\Models\Vote;
 use App\Models\VoteItem;
 use Auth;
+use Illuminate\Contracts\Validation\UnauthorizedException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Http\Requests;
 
 class VoteItemController extends ApiController
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -43,12 +45,14 @@ class VoteItemController extends ApiController
         $voteItem = new VoteItem($request->all());
         $user = User::findOrFail($request->user_id);
 
+        if (!$user->allowed('create.voteitems', $voteItem)) {
+            throw (new UnauthorizedException);
+        }
         $voteItem->user()->associate($user);
         $voteItem->vote()->associate($vote);
         $voteItem->save();
 
         return $this->setStatusCode(201)->respond($voteItem->fresh());
-
     }
 
     /**
@@ -64,8 +68,13 @@ class VoteItemController extends ApiController
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
+
+        if (!Auth::user()->allowed('view.voteitems', $voteItem)) {
+            throw (new UnauthorizedException);
+        }
         $user = $voteItem->user()->first();
         return $this->setStatusCode(200)->respond($voteItem, ['vote' => $vote, 'user' => $user]);
+
     }
 
     /**
@@ -80,9 +89,12 @@ class VoteItemController extends ApiController
     {
 
         $vote = Vote::findOrFail($voteId);
-        $voteItem = $vote->voteItems()->where('id', $id)->get();
+        $voteItem = $vote->voteItems()->where('id', $id)->first();
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
+        }
+        if (!Auth::user()->allowed('update.voteitems', $voteItem)) {
+            throw (new UnauthorizedException);
         }
         $voteItem->update($request->all());
         return $this->setStatusCode(200)->respond($voteItem, ['vote' => $vote]);
@@ -99,9 +111,12 @@ class VoteItemController extends ApiController
     public function destroy($voteId, $id)
     {
         $vote = Vote::findOrFail($voteId);
-        $voteItem = $vote->voteItems()->where('id', $id)->get();
+        $voteItem = $vote->voteItems()->where('id', $id)->first();
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
+        }
+        if (!Auth::user()->allowed('delete.voteitems', $voteItem)) {
+            throw (new UnauthorizedException);
         }
         $vote->delete();
         return $this->setStatusCode(204)->respond();
