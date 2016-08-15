@@ -15,7 +15,7 @@ class TopicTest extends TestCase
             'user_id' => $topic->user_id
         ]);
     }
-
+/*
     public function testUpdate()
     {
         $topic = App\Models\Topic::all()->last();
@@ -54,6 +54,6 @@ class TopicTest extends TestCase
         $topic = \App\Models\Topic::all()->random(1);
         $topic->bookmarks()->attach($user->id);
         $this->seeInDatabase('bookmarks', ['topic_id' => $topic->id, 'user_id' => $user->id]);
-    }
+    }*/
 
 }
