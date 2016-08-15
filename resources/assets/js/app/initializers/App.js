@@ -58,15 +58,12 @@ var app = Marionette.Application.extend({
     },
     onStart: function (config) {
         this.config = config;
-
-
         this.templateCashing();
-
-        appInstance.setInstance(this);
-
         this.setRootLayout(new mainLayoutView());
+        appInstance.setInstance(this);
         this.showRootLayout();
         this.setRouting();
+
         Helper.register();
         logger('start application');
 
