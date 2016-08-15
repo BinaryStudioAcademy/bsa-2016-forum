@@ -50,6 +50,6 @@ class VoteTest extends TestCase
         $voteId = $vote->id;
         $vote->delete();
         $this->seeInDatabase('votes', ['id'=>$voteId])
-            ->notSeeInDatabase('votes', ['id'=>$voteId, 'deleted_at'=>null]); 
+            ->notSeeInDatabase('votes', ['id'=>$voteId, 'deleted_at'=>null]);
     }
 }   

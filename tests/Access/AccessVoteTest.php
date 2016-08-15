@@ -5,8 +5,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Models\User;
 use App\Models\Vote;
-
-
+use App\DB;
 
 class AccessVoteTest extends TestCase
 {
@@ -15,84 +14,188 @@ class AccessVoteTest extends TestCase
      *
      * @return void
      */
-    public function testCreate()
+
+    public function roleUser()
     {
-     
+        return \DB::table('roles')->where('name', 'User')->value('id');
+    }
+    
+    public function roleAdmin(){
+        return \DB::table('roles')->where('name', 'Admin')->value('id');
+    }
+    
+    public function createVote($vote, $userId)
+    {
+        $vote->title = "Test title User";
+        $vote->is_public = 1;
+        $vote->is_saved = 0;
+        $vote->finished_at = date ('Y:m:d H:m:s', strtotime('+10 days'));
+        $vote->user_id = $userId;
+        $vote->save();
+        return $vote;
+    }
+    
+    public function testCreateByUser()
+    {
+        $vote = new Vote();
+        
+        $user = User::all()->random(1);
+        $user->detachAllRoles();
+        $user->attachRole($this->roleUser());
+
+        if ($user->allowed('create.votes', $vote)) {
+            $this->createVote($vote, $user->id);
+        }
+        $this->seeInDatabase('votes', ['user_id' => $user->id, 'title' => $vote->title]);
     }
 
-    public function testView()
+    public function testCreateByAdmin()
     {
-     
+        $vote = new Vote();
+
+        $user = User::all()->random(1);
+        $user->detachAllRoles();
+        $user->attachRole($this->roleAdmin());
+
+        if ($user->allowed('create.votes', $vote)) {
+            $this->createVote($vote, $user->id);
+        }
+        $this->seeInDatabase('votes', ['user_id' => $user->id, 'title' => $vote->title]);
+
+        $user->detachRole($this->roleAdmin());
+        $user->attachRole($this->roleUser());
     }
 
-    public function testUpdate()
+    public function testViewByUser()
     {
-        try {
-            $newTitleOwner = 'Title updated by owner';
-            $newTitleAdmin = 'Title updated by admin';
-            $newTitle = 'Title updated';
+        $vote = Vote::all()->random(1);
 
-            $vote = Vote::all()->random(1);
-            $userAdmin = User::all()->first();
-            $userOwner = User::findorFail($vote->user_id);
-            $user = User::where('id', '<>', $userAdmin->id)->where('id', '<>', $userOwner->id)->first();
+        $user = User::all()->random(1);
+        $user->detachAllRoles();
+        $user->attachRole($this->roleUser());
 
-            if ($user->allowed('edit.votes', $vote)) {
+        if ($user->allowed('view.votes', $vote)) {
+           
+            $voteTitle = Vote::findorFail($vote->id)->title;
+        }
+        $this->seeInDatabase('votes', ['title' => $voteTitle]);
+    }
+
+    public function testViewByAdmin()
+    {
+        $vote = Vote::all()->random(1);
+
+        $user = User::all()->random(1);
+        $user->detachAllRoles();
+        $user->attachRole($this->roleAdmin());
+
+        if ($user->allowed('view.votes', $vote)) {
+            
+            $voteTitle = Vote::findOrFail($vote->id)->title;
+        }
+        $this->seeInDatabase('votes', ['title' => $voteTitle]);
+        
+        $user->detachRole($this->roleAdmin());
+        $user->attachRole($this->roleUser());
+    }
+
+    public function testUpdateByUser()
+    {
+        $newTitle = 'Title updated by user';
+
+        $vote = Vote::all()->random(1);
+
+        $user = User::all()->random(1);
+        $user->detachAllRoles();
+        $user->attachRole($this->roleUser());
+        
+        if ($user->allowed('update.votes', $vote)) {
                 $vote->title = $newTitle;
-                $vote->save();
+                $vote->update();
             }
-            $this->assertNotEquals($newTitle, $vote->title);
+        $this->assertNotEquals($newTitle, $vote->title);
+    }
+    
+    public function testUpdateByOwner()
+    {
+        $newTitleOwner = 'Title updated by owner';
+        $vote = new Vote();
+        $user = User::all()->random(1);
+        $user->detachAllRoles();
+        $user->attachRole($this->roleUser());
+        $this->createVote($vote, $user->id);
 
-            if ($userOwner->allowed('edit.votes', $vote)) {
-                $vote->title = $newTitleOwner;
-                $vote->save();
-            }
-            $this->assertEquals($newTitleOwner, $vote->title);
-
-            if ($userAdmin->isAdmin()) {
-                $vote->title = $newTitleAdmin;
-                $vote->save();
-            }
-            $this->assertEquals($newTitleAdmin, $vote->title);
+        if ($user->allowed('update.votes', $vote)) {
+            $vote->title = $newTitleOwner;
+            $vote->save();
         }
-        catch (InvalidArgumentException $e){
-            echo 'Warning!!!! reseed database';
-        }
+        $this->assertEquals($newTitleOwner, $vote->title);
     }
 
-    public function testDelete()
+    public function testUpdateByAdmin()
     {
-        try {
-            $vote = Vote::all()->random(1);
-            $voteId = $vote->id;
+        $newTitleAdmin = 'Title updated by admin';
 
-            $userAdmin = User::all()->first();
-            $userOwner = User::findorFail($vote->user_id);
-            $user = User::where('id', '<>', $userAdmin->id)->where('id', '<>', $userOwner->id)->first();
+        $vote = Vote::all()->random(1);
 
-            if ($user->allowed('delete.votes', $vote)) {
-                $vote->delete();
-            }
-            $this->seeInDatabase('votes', ['id' => $voteId])
-                ->seeInDatabase('votes', ['id' => $voteId, 'deleted_at' => null]);
+        $user = User::all()->random(1);
+        $user->detachAllRoles();
+        $user->attachRole($this->roleAdmin());
 
-            if ($userOwner->allowed('delete.votes', $vote)) {
-                $vote->delete();
-            }
-            $this->seeInDatabase('votes', ['id' => $voteId])
-                ->notSeeInDatabase('votes', ['id' => $voteId, 'deleted_at' => null]);
-
-            $vote = Vote::all()->random(1);
-            $voteId = $vote->id;
-            if ($userAdmin->isAdmin()) {
-                $vote->delete();
-            }
-            $this->seeInDatabase('votes', ['id' => $voteId])
-                ->notSeeInDatabase('votes', ['id' => $voteId, 'deleted_at' => null]);
+        if ($user->allowed('update.votes', $vote)) {
+            $vote->title = $newTitleAdmin;
+            $vote->save();
         }
-        catch (InvalidArgumentException $e){
-            echo 'Warning!!!! reseed database';
-        }
+        $this->assertEquals($newTitleAdmin, $vote->title);
 
+        $user->detachRole($this->roleAdmin());
+        $user->attachRole($this->roleUser());
+    }
+
+    public function testDeleteByUser()
+    {
+        $vote = Vote::all()->random(1);
+        $voteId = $vote->id;
+        $user = User::all()->random(1);
+        $user->detachAllRoles();
+        $user->attachRole($this->roleUser());
+
+        if ($user->allowed('delete.votes', $vote)) {
+            $vote->delete();
+        }
+        $this->seeInDatabase('votes', ['id' => $voteId])
+            ->seeInDatabase('votes', ['id' => $voteId, 'deleted_at' => null]);
+    }
+
+   public function testDeleteByOwner()
+    {
+        $vote = new Vote();
+        $user = User::all()->random(1);
+        $user->detachAllRoles();
+        $user->attachRole($this->roleUser());
+        $this->createVote($vote, $user->id);
+        $voteId = $vote->id;
+
+        if ($user->allowed('delete.votes', $vote)) {
+            $vote->delete();
+        }
+        $this->seeInDatabase('votes', ['id' => $voteId])
+            ->notSeeInDatabase('votes', ['id' => $voteId, 'deleted_at' => null]);
+    }
+
+    public function testDeleteByAdmin()
+    {
+        $vote = Vote::all()->random(1);
+        $voteId = $vote->id;
+
+        $user = User::all()->random(1);
+        $user->detachAllRoles();
+        $user->attachRole($this->roleAdmin());
+        
+        if ($user->allowed('delete.votes', $vote)) {
+            $vote->delete();
+        }
+        $this->seeInDatabase('votes', ['id' => $voteId])
+            ->notSeeInDatabase('votes', ['id' => $voteId, 'deleted_at' => null]);
     }
 }

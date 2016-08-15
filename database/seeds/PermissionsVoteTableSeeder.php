@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use DCN\RBAC\Models\Permission;
+use DCN\RBAC\Models\Role;
 
 class PermissionsVoteTableSeeder extends Seeder
 {
@@ -12,9 +13,9 @@ class PermissionsVoteTableSeeder extends Seeder
      */
     public function run()
     {
-        $editVotePermission = Permission::create([
-            'name' => 'Edit votes',
-            'slug' => 'edit.votes',
+        $updateVotePermission = Permission::create([
+            'name' => 'Update votes',
+            'slug' => 'update.votes',
             'model' => 'App\Models\Vote',
         ]);
 
@@ -23,5 +24,27 @@ class PermissionsVoteTableSeeder extends Seeder
             'slug' => 'delete.votes',
             'model' => 'App\Models\Vote',
         ]);
+
+        $createVotePermission = Permission::create([
+            'name' => 'Create votes',
+            'slug' => 'create.votes',
+            'model' => 'App\Models\Vote',
+        ]);
+
+        $viewVotePermission = Permission::create([
+            'name' => 'View votes',
+            'slug' => 'view.votes',
+            'model' => 'App\Models\Vote',
+        ]);
+
+        $role = Role::where('name','=', 'User')->first();
+        $role->attachPermission($createVotePermission);
+        $role->attachPermission($viewVotePermission);
+
+        $role = Role::where('name','=', 'Admin')->first();
+        $role->attachPermission($createVotePermission);
+        $role->attachPermission($viewVotePermission);
+        $role->attachPermission($updateVotePermission);
+        $role->attachPermission($deleteVotePermission);
     }
 }
