@@ -19,8 +19,8 @@ body {
   margin-bottom: 0;
 }
 .menu-container li a {
-  color: #545861;
   border-bottom: 4px solid transparent;
+  color: #545861;
   transition: all .25s ease;
 }
 .menu-container li a:hover {
@@ -28,7 +28,6 @@ body {
 }
 .menu-container li.active a {
   border-color: #ffa500;
-  //background-color: #eee;
 }
 .post-head {
   padding: 15px;

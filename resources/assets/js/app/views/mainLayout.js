@@ -1,6 +1,6 @@
 var Marionette = require('backbone.marionette');
 var headerView = require('../views/headers/Header');
-var navigationView = require('./headers/navigationMenu');
+var navigationLayoutView = require('./headers/navigationLayout');
 
 var mainLayoutView = Marionette.LayoutView.extend({
     el: 'body',
@@ -18,9 +18,13 @@ var mainLayoutView = Marionette.LayoutView.extend({
         //});
     },
 
+    onRender: function () {
+      console.log('main layout render');
+    },
+
     showRegions: function () {
         this.getRegion('header').show(new headerView());
-        this.getRegion('navigationMenu').show(new navigationView());
+        this.getRegion('navigationMenu').show(new navigationLayoutView());
     }
 
 });
