@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\VoteItemRequest;
 use App\Models\User;
 use App\Models\Vote;
 use App\Models\VoteItem;
@@ -36,7 +37,7 @@ class VoteItemController extends ApiController
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store($voteId, Request $request)
+    public function store($voteId, VoteItemRequest $request)
     {
         $vote = Vote::findOrFail($voteId);
         $voteItem = new VoteItem($request->all());
@@ -79,7 +80,7 @@ class VoteItemController extends ApiController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update($voteId, Request $request, $id)
+    public function update($voteId, VoteItemRequest $request, $id)
     {
         $vote = Vote::findOrFail($voteId);
         $voteItem = $vote->voteItems()->where('id', $id)->get();
