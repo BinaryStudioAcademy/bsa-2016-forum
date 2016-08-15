@@ -4,6 +4,7 @@ use App\Models\Vote;
 use App\Models\User;
 use App\Http\Requests\VotesRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Auth\Access\AuthorizationException;
 use DCN\RBAC\Traits\HasRoleAndPermission;
@@ -13,6 +14,7 @@ use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
 class VoteController extends ApiController implements HasRoleAndPermissionContract
 {
     use HasRoleAndPermission;
+
     /**
      * Display a listing of the resource.
      *
@@ -71,10 +73,12 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $vote->delete();
         return $this->setStatusCode(204)->respond();
     }
+
     public function getUserVotes($userId)
     {
         $user = User::findOrFail($userId);
         $votes = $user->votes()->get();
+
         if(!$votes){
             return $this->setStatusCode(200)->respond();
         }
@@ -85,6 +89,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     {
         $user = User::findOrFail($userId);
         $vote = $user->votes()->where('id',$voteId)->first();
+
         if(!$vote){
             throw (new ModelNotFoundException)->setModel(Vote::class);
         }
