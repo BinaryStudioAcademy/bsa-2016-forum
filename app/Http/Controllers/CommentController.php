@@ -21,14 +21,11 @@ class CommentController extends ApiController
      * @param Comment $comment
      * @return bool
      */
-    public function isCommentBelongsToTopic(Topic $topic, Comment $comment)
+    protected function isCommentBelongsToTopic(Topic $topic, Comment $comment)
     {
         $topicWhichHasThisComment = $comment->topics()->get()->first();
 
-        if($topicWhichHasThisComment && $topicWhichHasThisComment->id === $topic->id){
-            return true;
-        }
-        return false;
+        return ($topicWhichHasThisComment && $topicWhichHasThisComment->id === $topic->id);
     }
 
     /**
@@ -121,14 +118,11 @@ class CommentController extends ApiController
      * @param Comment $comment
      * @return bool
      */
-    public function isCommentBelongsToVote(Vote $vote, Comment $comment)
+    protected function isCommentBelongsToVote(Vote $vote, Comment $comment)
     {
         $voteWhichHasThisComment = $comment->votes()->get()->first();
 
-        if($voteWhichHasThisComment && $voteWhichHasThisComment->id === $vote->id){
-            return true;
-        }
-        return false;
+        return ($voteWhichHasThisComment && $voteWhichHasThisComment->id === $vote->id);
     }
 
     /**
@@ -221,14 +215,11 @@ class CommentController extends ApiController
      * @param Comment $comment
      * @return bool
      */
-    public function isCommentBelongsToVoteItem(VoteItem $voteItem, Comment $comment)
+    protected function isCommentBelongsToVoteItem(VoteItem $voteItem, Comment $comment)
     {
         $voteItemWhichHasThisComment = $comment->voteItems()->get()->first();
 
-        if($voteItemWhichHasThisComment && $voteItemWhichHasThisComment->id === $voteItem->id){
-            return true;
-        }
-        return false;
+        return ($voteItemWhichHasThisComment && $voteItemWhichHasThisComment->id === $voteItem->id);
     }
 
     /**
