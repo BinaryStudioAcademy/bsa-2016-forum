@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-class VotesRequest extends ApiRequest
+class CommentsRequest extends ApiRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,21 +22,19 @@ class VotesRequest extends ApiRequest
     public function rules()
     {
         return [
+            'content_origin' => 'required',
             'user_id' => 'required|integer|is_current_user',
-            'title' => 'required|max:255',
-            'finished_at' => 'date',
-            'is_single' => 'integer|size:1',
-            'is_public' => 'integer|size:1',
-            'is_saved' => 'integer|size:1',
+            'rating' => 'integer|between:0,99999999999',
         ];
     }
 
     public function messages()
     {
         return [
+            'content_origin.required' => 'Content is required',
             'user_id.required' => 'User ID is required',
             'user_id.is_current_user' => 'User not is authorized',
-            'title.required'  => 'Title is required',
+            'rating.between' => 'The Ratings length must not be more than 11'
         ];
     }
 }

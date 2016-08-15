@@ -1,0 +1,79 @@
+/*
+USER LIST
+*/
+
+.users a:hover {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.users-item {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  margin-bottom: 20px;
+  background-color: #fff;
+}
+
+.users-item > div {
+  display: inline-block;
+}
+
+.users-item-avatar {
+  margin: 5px;
+  height: 70px;
+  width: 70px;
+  padding: 5px;
+}
+
+.users-item-avatar img {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+}
+
+.users-item-credential {
+  margin-top: 10px;
+  font-weight: 600;
+  width: 100%;
+}
+
+.users-item-name {
+  font-size: 22px;
+  color: #555555;
+}
+
+.users-item-email a{
+  font-size: 14px;
+  color: rgba(255, 136, 40, 0.7);
+}
+
+.users-item-msg {
+  float: right;
+  margin-right: 5px;
+}
+
+.users-item-msg a{
+  height: 100%;
+  display: flex;
+  padding: 20px;
+}
+
+.users-item-msg a:hover{
+  background-color: #ffd992;
+}
+
+.users-item-msg a img {
+  margin-right: 5px;
+  height: 40px;
+  width: 40px;
+}
+
+.users-item-msg a span {
+  color: #555555;
+  display: table-cell;
+  vertical-align: middle;
+  height: 40px;
+  font-size: 18px;
+  font-weight: 800;
+}
