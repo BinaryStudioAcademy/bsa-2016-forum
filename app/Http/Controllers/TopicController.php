@@ -30,7 +30,6 @@ class TopicController extends ApiController
      */
     public function store(TopicRequest $request)
     {
-    
         $topic = Topic::create($request->all());
 
         return $this->setStatusCode(201)->respond($topic);
