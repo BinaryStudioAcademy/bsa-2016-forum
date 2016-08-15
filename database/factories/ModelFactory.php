@@ -28,8 +28,8 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
 $factory->define(App\Models\Topic::class, function (Faker\Generator $faker) {
     return [
         'reviewed_number' => $faker->numberBetween(0, 1000),
-        'name' => $faker->unique()->word,
-        'description' => $faker->word,
+        'name' => $faker->unique()->sentence,
+        'description' => $faker->sentence,
         'rating' => $faker->numberBetween(0, 1000),
         'user_id' => App\Models\User::all()->random(1)->id,
     ];
@@ -54,5 +54,35 @@ $factory->define(App\Models\Message::class, function (Faker\Generator $faker) {
         'user_to_id' => $to_id,
         'message' => $faker->text,
         'is_read' => $faker->numberBetween(0, 1),
+    ];
+});
+
+$factory->define(App\Models\Vote::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->word,
+        'is_public' => $faker->numberBetween(0, 1),
+        'is_saved' => $faker->numberBetween(0, 1),
+        'user_id' => App\Models\User::all()->random(1)->id,
+        'finished_at' => date('Y:m:d H:m:s', strtotime('+' . $faker->numberBetween(5, 15) . ' days'))
+    ];
+});
+
+$factory->define(App\Models\VoteItem::class, function (Faker\Generator $faker) {
+    return [
+        'vote_id' => App\Models\Vote::all()->random(1)->id,
+        'user_id' => App\Models\User::all()->random(1)->id,
+        'name' => $faker->unique()->sentence,
+    ];
+});
+
+$factory->define(App\Models\Tag::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->unique()->word,
+    ];
+});
+
+$factory->define(App\Models\Like::class, function () {
+    return [
+        'user_id' => App\Models\User::all()->random(1)->id,
     ];
 });

@@ -20,7 +20,7 @@ class CreateCommentablesTable extends Migration
             $table->foreign('comment_id')->references('id')->on('comments');
 
             $table->integer('commentable_id')->unsigned();
-            $table->string('comment_type');
+            $table->string('commentable_type');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -21,12 +21,18 @@ class Attachment extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
-
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['deleted_at'];
     /**
      * Get all of the topics that have this attachment
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
+
     public function topics()
     {
         return $this->morphedByMany(Topic::class, 'attachmenttable');

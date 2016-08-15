@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use DCN\RBAC\Traits\HasRoleAndPermission;
 use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
 
+
+
 class User extends Authenticatable implements HasRoleAndPermissionContract
 {
     use HasRoleAndPermission, SoftDeletes;
@@ -22,7 +24,7 @@ class User extends Authenticatable implements HasRoleAndPermissionContract
      * @var array
      */
     protected $hidden = [
-        'hash_password', 'token',
+        'hash_password', 'token', 'deleted_at'
     ];
 
     public function messages()

@@ -11,11 +11,13 @@ class RoleTableSeeder extends Seeder
      */
     public function run()
     {
-        \DB::table('roles')->delete();
-        
         \DB::table('roles')->insert([
             'name' => 'Admin',
             'slug' =>  'admin',
+        ]);
+        \DB::table('roles')->insert([
+            'name' => 'User',
+            'slug' =>  'user',
         ]);
     }
 }

@@ -12,6 +12,12 @@ class Status extends Model
     protected $table = 'user_statuses';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['deleted_at'];
 
     public function users()
     {
