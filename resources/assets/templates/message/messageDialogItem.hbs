@@ -1,9 +1,13 @@
 <div class="message-msg-item">
-    <div class="message-msg-avatar">
-        <img src="/images/user.png">
-    </div>
-    <div class="message-msg-body">
-        <span>{{user_from}}</span>
-        <p>{{message}}</p>
+    <div class="message-item-container to">
+        <div class="message-msg-avatar">
+            <!-- message owner avatar -->
+            <img src="/images/user.png">
+        </div>
+        <div class="message-msg-body">
+            <p>{{message}}</p>
+            <span>{{data}}</span>
+            <a>Edit</a><a>Delete</a>
+        </div>
     </div>
 </div>
