@@ -17,7 +17,6 @@ module.exports = Backbone.Collection.extend({
         if (!options.url) {
             options.url = this._getRequestUrl(collection);
         }
-
         return Backbone.sync(method, collection, options);
     },
 
@@ -27,3 +26,4 @@ module.exports = Backbone.Collection.extend({
     }
 
 });
+

@@ -11,7 +11,6 @@ Marionette.Application.prototype._initChannel = function () {
 
 var $ = require('jquery');
 
-var routers = require('../config/routers');
 var appRouter = require('../router');
 
 var mainLayoutView = require('../views/mainLayout');
@@ -41,13 +40,14 @@ var app = Marionette.Application.extend({
     },
 
     setRouting: function () {
+        var routers = require('../config/routers');
         var myRoutes = routers.getRouters();
-
         myRoutes.forEach(function (item, index) {
             var myRouter = appRouter(item.controller, item.appRoutes);
             var router = new myRouter();
         });
     },
+
     templateCashing: function () {
         // кешируем шаблоны
         $.each(Templates, function (key, value) {
@@ -58,14 +58,11 @@ var app = Marionette.Application.extend({
     },
     onStart: function (config) {
         this.config = config;
-
-        this.setRouting();
         this.templateCashing();
-
         this.setRootLayout(new mainLayoutView());
-        this.showRootLayout();
-
         appInstance.setInstance(this);
+        this.showRootLayout();
+        this.setRouting();
 
         logger('start application');
 
