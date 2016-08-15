@@ -15,5 +15,9 @@ class RoleTableSeeder extends Seeder
             'name' => 'Admin',
             'slug' =>  'admin',
         ]);
+        \DB::table('roles')->insert([
+            'name' => 'User',
+            'slug' =>  'user',
+        ]);
     }
 }
