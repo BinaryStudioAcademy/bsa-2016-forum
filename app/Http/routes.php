@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -10,17 +9,13 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-
 Route::get('/', function () {
     return view('main');
 });
-
 Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
-
     Route::get('/', function () {
         return 'Welcome to REST API v1';
     });
-
     Route::resource('users', 'UserController', [
         'except' => ['edit', 'create'],
         'names' => [
@@ -31,7 +26,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
             'destroy' => 'users.destroy',
         ],
     ]);
-
     Route::resource('topics', 'TopicController', [
         'except' => ['edit', 'create'],
         'names' => [
@@ -42,7 +36,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
             'destroy' => 'topics.destroy',
         ],
     ]);
-
     Route::resource('votes', 'VoteController', [
         'except' => ['edit', 'create'],
         'names' => [
@@ -53,7 +46,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
             'destroy' => 'votes.destroy',
         ],
     ]);
-
     Route::resource('users/{user}/messages', 'MessageController', [
         'except' => ['edit', 'create'],
         'names' => [
@@ -69,13 +61,11 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::get('', 'TopicController@getUserTopics')->name('userTopics');
         Route::get('{topic}', 'TopicController@getUserTopic')->name('userTopic');
     });
-
     /*Routes for users votes*/
     Route::group(['prefix' => 'users/{user}/votes'], function () {
         Route::get('', 'VoteController@getUserVotes')->name('userVotes');
         Route::get('{vote}', 'VoteController@getUserVote')->name('userVote');
     });
-
     /*Routes for Topic tags*/
     Route::group(['prefix' => 'topics/{topic}/tags'], function () {
         Route::get('', 'TagController@getTopicTags')->name('topicTags');
@@ -84,7 +74,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::put('{tag}', 'TagController@updateTopicTag')->name('updateTopicTag');
         Route::delete('{tag}', 'TagController@destroyTopicTag')->name('deleteTopicTag');
     });
-
     /*Routes for Vote tags*/
     Route::group(['prefix' => 'votes/{vote}/tags'], function () {
         Route::get('', 'TagController@getVoteTags')->name('voteTags');
@@ -93,7 +82,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::put('{tag}', 'TagController@updateVoteTag')->name('updateVoteTag');
         Route::delete('{tag}', 'TagController@destroyVoteTag')->name('deleteVoteTag');
     });
-
     /*Routes for Topic comments*/
     Route::group(['prefix' => 'topics/{topic}/comments'], function () {
         Route::get('', 'CommentController@getTopicComments')->name('topicComments');
@@ -103,7 +91,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::delete('{comment}', 'CommentController@destroyTopicComment')->name('deleteTopicComment');
         Route::get('{comment}/comments', 'CommentController@getTopicCommentChildren')->name('topicCommentChildren');
     });
-
     /*Routes for Vote comments*/
     Route::group(['prefix' => 'votes/{vote}/comments'], function () {
         Route::get('', 'CommentController@getVoteComments')->name('voteComments');
@@ -113,7 +100,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::delete('{comment}', 'CommentController@destroyVoteComment')->name('deleteVoteComment');
         Route::get('{comment}/comments', 'CommentController@getVoteCommentChildren')->name('voteCommentChildren');
     });
-
     /*Routes for VoteItem comments*/
     Route::group(['prefix' => 'votes/{vote}/voteitem/{voteitem}/comments'], function () {
         Route::get('', 'CommentController@getVoteItemComments')->name('voteItemComments');
@@ -122,7 +108,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::put('{comment}', 'CommentController@updateVoteItemComment')->name('updateVoteItemComment');
         Route::delete('{comment}', 'CommentController@destroyVoteItemComment')->name('deleteVoteItemComment');
     });
-
     /*Routes for Topic attachments*/
     Route::group(['prefix' => 'topics/{topic}/attachments'], function () {
         Route::get('', 'AttachmentController@getAllTopicAttachments')->name('allTopicAttachments');
@@ -130,7 +115,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::post('{attachment}', 'AttachmentController@storeTopicAttachment')->name('storeTopicAttachment');
         Route::delete('{attachment}', 'AttachmentController@deleteTopicAttachment')->name('deleteTopicAttachment');
     });
-
     Route::get('rss', 'rssController@index')->name('rss');
     Route::post('rss', 'rssController@subscribe')->name('rssSubscribe');
 });
