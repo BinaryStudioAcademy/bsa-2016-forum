@@ -129,6 +129,11 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::delete('{attachment}', 'AttachmentController@deleteTopicAttachment')->name('deleteTopicAttachment');
     });
 
+    /*Routes for User permissions */
+    Route::group(['prefix' => 'users/{user}/permissions'], function () {
+        Route::put('{permission}', 'PermissionController@updatePermission')->name('updatePermission');
+    });
+
     Route::get('rss', 'rssController@index')->name('rss');
     Route::post('rss', 'rssController@subscribe')->name('rssSubscribe');
 });
