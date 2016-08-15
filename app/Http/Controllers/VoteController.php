@@ -49,7 +49,6 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function show($id)
     {
         $vote = Vote::findOrFail($id);
-
         return $this->setStatusCode(200)->respond($vote);
     }
     
@@ -65,7 +64,6 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $vote = Vote::findOrFail($id);
 
         $vote->update($request->all());
-
         return $this->setStatusCode(200)->respond($vote);
     }
 
