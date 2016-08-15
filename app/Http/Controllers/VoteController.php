@@ -22,8 +22,18 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
      */
     public function index()
     {
+        $data =[];
         $votes = Vote::all();
-        return $this->setStatusCode(200)->respond($votes);
+        $i = 0;
+        foreach ($votes as $vote) {
+            $data[$i]['data'] = $vote;
+            $data[$i]['_meta']['user'] = $vote->user()->first();
+            $data[$i]['_meta']['likes'] = $vote->likes()->count();
+            $data[$i]['_meta']['tags'] = $vote->tags()->count();
+            $data[$i]['_meta']['comments'] = $vote->comments()->count();
+            $i++;
+        }
+        return $this->setStatusCode(200)->respond($data);
     }
     /**
      * Store a newly created resource in storage.
@@ -45,7 +55,15 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function show($id)
     {
         $vote = Vote::findOrFail($id);
-        return $this->setStatusCode(200)->respond($vote);
+        $user = $vote->user()->first();
+        $likeCount = $vote->likes()->count();
+        $tagCount = $vote->tags()->count();
+        $commentCount = $vote->comments()->count();
+
+        return $this->setStatusCode(200)->respond($vote, ['user' => $user,
+            'likes' => $likeCount,
+            'tags' => $tagCount,
+            'comments' => $commentCount]);
     }
 
     /**

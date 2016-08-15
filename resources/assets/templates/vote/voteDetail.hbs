@@ -11,7 +11,7 @@
         <div class="vote-head">
             <div class="vote-header">
                 <h3>{{ title }}</h3>
-                <h5>@author   logs</h5>
+                <h5>{{ _meta.user.first_name }}{{ _meta.user.last_name }}</h5>
                 <div class="vote-tags">
                     <span>#movie</span><span>#Cinema</span>
                 </div>
@@ -57,7 +57,7 @@
             Attachments
         </div>
         <div class="vote-comments">
-            <h4>N Comments</h4>
+            <h4>{{ _meta.comments }} Comments</h4>
             <div class="vote-comment">
                 <div class="vote-comment-avatar">
                     <img src="/images/user.png">

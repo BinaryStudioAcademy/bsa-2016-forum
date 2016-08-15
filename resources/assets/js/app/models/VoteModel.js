@@ -8,7 +8,6 @@ module.exports = BaseModel.extend({
     parse: function (response, options) {
 
         this._meta = response._meta;
-        debugger;
         //if (!options.collection) {
         if (_.isObject(response.data)) {
             return response.data;

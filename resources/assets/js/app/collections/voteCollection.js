@@ -9,7 +9,6 @@ var collection = BaseCollection.extend({
     url: '/votes',
     parse: function (response) {
         this._meta = response._meta;
-        debugger;
         return response.data;
     }
 });

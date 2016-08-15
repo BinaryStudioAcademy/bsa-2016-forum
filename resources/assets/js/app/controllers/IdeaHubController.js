@@ -12,7 +12,6 @@ module.exports = Marionette.Object.extend({
         VotesCollection.reset();
         VotesCollection.fetch({
             success: function (data) {
-                debugger;
                 lw = new ListVotes({vc: data});
                 app.getInstance().RootView.content.show(lw); 
             }
