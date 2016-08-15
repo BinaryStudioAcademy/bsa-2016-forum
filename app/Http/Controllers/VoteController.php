@@ -87,7 +87,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         return $this->setStatusCode(204)->respond();
     }
 
-    public function getUserVotes($userId, VotesRequest $request)
+    public function getUserVotes($userId, Request $request)
     {
         $user = User::findOrFail($userId);
 
@@ -100,8 +100,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $votes = $this->filterByQuery($votes, $searchStr);
         $votes = $this->filterByTags($votes, $tagIdsArray);
         $votes = $votes->get();
-
-        if (!$votes) {
+        if (!$votes->all()) {
             return $this->setStatusCode(200)->respond();
         }
         return $this->setStatusCode(200)->respond($votes, ['user' => $user]);
