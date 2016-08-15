@@ -129,7 +129,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     {
         if (!empty($tagIds)) {
             $query = $query->whereHas('tags', function ($q) use ($tagIds) {
-                $q->whereIn('id', $tagIds);
+                $q->whereIn('tag_id', $tagIds);
             });
         }
 
