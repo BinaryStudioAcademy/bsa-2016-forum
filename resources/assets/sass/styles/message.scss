@@ -1,0 +1,59 @@
+/*
+ MESSAGES LIST
+ */
+
+.messages a:hover {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.messages-user-item {
+  width: 100%;
+  display: flex;
+  border-bottom: #DDD 1px solid;
+  background-color: #fff;
+}
+
+.messages-user-item > div {
+  display: inline-block;
+}
+
+.messages-msg-avatar {
+  margin: 5px;
+  height: 70px;
+  width: 70px;
+  padding: 5px;
+}
+
+.messages-msg-avatar img {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+}
+
+.messages-msg {
+  width: 100%;
+  padding: 10px 10px 10px 0;
+}
+
+.messages-msg > * {
+  display: block;
+}
+
+.messages-msg-body {
+  padding: 10px;
+}
+
+.messages-msg .messages-msg-body:hover,.messages-msg  .unread {
+  background-color: #fff4d2;
+}
+
+.messages-msg  .unread:hover {
+  background-color: #ffd992;
+}
+
+.messages-msg span {
+  margin-left: 5px;
+  margin-bottom: 5px;
+  font-size: 16px;
+}
