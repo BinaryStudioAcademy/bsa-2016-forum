@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use DCN\RBAC\Traits\HasRoleAndPermission;
 use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
+use Illuminate\Http\Request;
 
 
 class VoteController extends ApiController implements HasRoleAndPermissionContract
@@ -20,7 +21,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
      * @param VotesRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function index(VotesRequest $request)
+    public function index(Request $request)
     {
         $searchStr = $request->get('query');
         $tagIds = $request->get('tag_ids');
