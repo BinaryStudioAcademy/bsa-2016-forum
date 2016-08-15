@@ -27,7 +27,7 @@ class UserTest extends TestCase
         $user->display_name .= 'Updated';
         $user->email .= 'up';
         $user->reputation += 1;
-        $user->status_id = 1;
+        $user->status_id = App\Models\Status::all()->random(1)->id;
 
         $user->save();
 
