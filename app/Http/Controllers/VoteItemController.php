@@ -8,7 +8,6 @@ use App\Models\Vote;
 use App\Models\VoteItem;
 use Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
@@ -34,7 +33,8 @@ class VoteItemController extends ApiController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param $voteId
+     * @param VoteItemRequest|\Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store($voteId, VoteItemRequest $request)
@@ -44,7 +44,7 @@ class VoteItemController extends ApiController
 //        $u = User::findOrFail($request->user_id);      // uncomment to test when there is no user login in
 //        Auth::login($u);
         $user = \Auth::user();
-        if($user->id != $request->user_id){
+        if ($user->id != $request->user_id) {
             throw (new ModelNotFoundException)->setModel(User::class);
         }
 
@@ -76,7 +76,8 @@ class VoteItemController extends ApiController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param $voteId
+     * @param VoteItemRequest|\Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
@@ -95,6 +96,7 @@ class VoteItemController extends ApiController
     /**
      * Remove the specified resource from storage.
      *
+     * @param $voteId
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
