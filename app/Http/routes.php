@@ -70,6 +70,10 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::get('{topic}', 'TopicController@getUserTopic')->name('userTopic');
     });
 
+    /*Routes for users votes*/
+    Route::get('users/{user}/votes', 'VoteController@getUserVotes')->name('userVotes');
+    Route::get('users/{user}/votes/{vote}', 'VoteController@getUserVote')->name('userVote'); 
+
     /*Routes for Topic tags*/
     Route::group(['prefix' => 'topics/{topic}/tags'], function () {
         Route::get('', 'TagController@getTopicTags')->name('topicTags');
