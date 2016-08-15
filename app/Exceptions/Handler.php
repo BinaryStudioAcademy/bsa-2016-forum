@@ -66,7 +66,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof NotFoundHttpException){
-            return response(404);
+            return response('Object not found', 404);
         }
 
         return parent::render($request, $e);
