@@ -1,13 +1,13 @@
 /*
- MESSAGES LIST
- */
+MESSAGES LIST
+*/
 
 .messages a:hover {
   text-decoration: none;
   cursor: pointer;
 }
 
-.messages-user-item {
+.messages-user-item > a{
   width: 100%;
   display: flex;
   border-bottom: #DDD 1px solid;
@@ -19,7 +19,7 @@
 }
 
 .messages-msg-avatar {
-  margin: 5px;
+  margin: 5px 0 5px 5px;
   height: 70px;
   width: 70px;
   padding: 5px;
@@ -33,7 +33,7 @@
 
 .messages-msg {
   width: 100%;
-  padding: 10px 10px 10px 0;
+  padding: 10px 10px 10px 5px;
 }
 
 .messages-msg > * {
@@ -44,15 +44,16 @@
   padding: 10px;
 }
 
-.messages-msg .messages-msg-body:hover,.messages-msg  .unread {
+.messages-user-item:hover .messages-msg-body,.messages-user-item  .unread {
   background-color: #fff4d2;
 }
 
-.messages-msg  .unread:hover {
+.messages-user-item:hover  .unread{
   background-color: #ffd992;
 }
 
 .messages-msg span {
+  color: #555555;
   margin-left: 5px;
   margin-bottom: 5px;
   font-size: 16px;
