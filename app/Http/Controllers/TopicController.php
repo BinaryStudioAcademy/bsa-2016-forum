@@ -149,7 +149,7 @@ class TopicController extends ApiController
     {
         if (!empty($tagIds)) {
             $query = $query->whereHas('tags', function($q) use ($tagIds){
-                $q->whereIn('id', $tagIds);
+                $q->whereIn('tag_id', $tagIds);
             });
         }
 
