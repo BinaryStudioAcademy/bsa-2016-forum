@@ -20,7 +20,7 @@ class CreateTaggablesTable extends Migration
             $table->foreign('tag_id')->references('id')->on('tags');
 
             $table->integer('taggable_id')->unsigned();
-            $table->foreign('taggable_id')->references('id')->on('taggables');
+           // $table->foreign('taggable_id')->references('id')->on('taggables');
 
             $table->string('taggable_type');
             $table->softDeletes();
@@ -37,7 +37,7 @@ class CreateTaggablesTable extends Migration
     {
         Schema::table('taggables', function(Blueprint $table) {
             $table->dropForeign('taggables_tag_id_foreign');
-            $table->dropForeign('taggables_taggable_id_foreign');
+          //  $table->dropForeign('taggables_taggable_id_foreign');
         });
 
         Schema::drop('taggables');

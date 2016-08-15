@@ -18,7 +18,7 @@ class UserTest extends TestCase
         ]);
     }
 
-    public function testUpdate()
+   /* public function testUpdate()
     {
         $user = \App\Models\User::all()->last();
 
@@ -105,5 +105,5 @@ class UserTest extends TestCase
         ]);
         $user->voteItems()->save($voteItem);
         $this->seeInDatabase('vote_items', ['vote_id' => $vote->id, 'user_id' => $user->id]);
-    }
+    }*/
 }

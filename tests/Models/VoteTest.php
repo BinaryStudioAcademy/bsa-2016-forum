@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Models\Vote;
 
 
 class VoteTest extends TestCase
@@ -12,7 +13,7 @@ class VoteTest extends TestCase
      *
      * @return void
      */
-    public function testSave()
+  /*  public function testSave()
     {
         $vote = factory(App\Models\Vote::class)->create();
         $vote->is_single = 1;
@@ -51,5 +52,15 @@ class VoteTest extends TestCase
         $vote->delete();
         $this->seeInDatabase('votes', ['id'=>$voteId])
             ->notSeeInDatabase('votes', ['id'=>$voteId, 'deleted_at'=>null]);
+    }*/
+
+    public function testmodel(){
+        
+        $vote = Vote::all()->random(1);
+        var_dump($vote->id);
+        var_dump($vote->user()->get());
+        var_dump($vote->likes()->get());
+        var_dump($vote->tags()->get());
+        var_dump($vote->comments()->get());
     }
 }   
