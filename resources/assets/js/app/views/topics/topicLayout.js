@@ -7,7 +7,7 @@ module.exports = Marionette.LayoutView.extend({
     regions: {
         container: '#posts'
     },
-    onShow: function () {
+    onRender: function () {
         this.container.show(new topicCollection({
             collection: this.collection
         }));
