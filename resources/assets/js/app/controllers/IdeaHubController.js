@@ -24,7 +24,6 @@ module.exports = Marionette.Object.extend({
             model = VotesCollection.get(id);
             app.getInstance().RootView.content.show(new ShowVote({model: model}));
         } else {
-            console.log('else');
             model = new VoteModel({id: id}).fetch({success: function (data) {
                 app.getInstance().RootView.content.show(new ShowVote({model: data}));
             }});
