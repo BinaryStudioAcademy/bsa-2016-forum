@@ -6,10 +6,10 @@
     </div>
     <div class="votes-item-body">
         <div class="votes-item-title">
-            <span>{{ title }}</span> Opened by: <span> </span>
+            <span>{{ title }}</span> Opened by: <span> {{ _meta.user.first_name }} {{ _meta.user.last_name }} </span>
         </div>
         <div class="votes-item-details">
-            <a>0 Comments</a><a>0 likes</a><a>0 Views</a>
+            <a>{{ _meta.comments }} Comments</a><a>{{ _meta.likes }} likes</a>
         </div>
         <div class="votes-item-tags">
             <span>#Vote</span><span>#Votes</span><span>#Vote</span>

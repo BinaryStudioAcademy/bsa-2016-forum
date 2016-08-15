@@ -16,7 +16,7 @@ var routers = {
             controller: new IdeaHubController(),
             appRoutes: {
                 'votes': 'index',
-                'votes/:id': 'showVote'
+                'votes/:id': 'showVote' 
             }
         },
 

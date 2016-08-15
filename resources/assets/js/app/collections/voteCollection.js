@@ -6,7 +6,12 @@ var _ = require('underscore');
 
 var collection = BaseCollection.extend({
     model: VoteModel,
-    url: '/votes'
+    url: '/votes',
+    parse: function (response) {
+        this._meta = response._meta;
+        debugger;
+        return response.data;
+    }
 });
 
 module.exports = new collection();

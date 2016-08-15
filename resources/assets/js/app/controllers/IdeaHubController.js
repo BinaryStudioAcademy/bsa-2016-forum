@@ -14,7 +14,7 @@ module.exports = Marionette.Object.extend({
             success: function (data) {
                 debugger;
                 lw = new ListVotes({vc: data});
-                app.getInstance().RootView.content.show(lw);
+                app.getInstance().RootView.content.show(lw); 
             }
         });
     },

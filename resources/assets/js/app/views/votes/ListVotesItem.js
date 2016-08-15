@@ -7,5 +7,11 @@ module.exports = Marionette.ItemView.extend({
         'click': function () {
             app.getInstance().trigger('show:vote', this.model.get('id'));
         }
+    },
+    serializeData: function () {
+        var data = this.model.toJSON();
+        data._meta = this.model.getMeta();
+
+        return data;
     }
 });
