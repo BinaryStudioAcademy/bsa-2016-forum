@@ -1,7 +1,7 @@
 var baseCollection = require('../instances/Collection');
+var UserModel = require('../models/UserModel');
 
-var userCollection = baseCollection.extend({
+module.exports = baseCollection.extend({
     url: '/users',
+    model: UserModel
 });
-
-module.exports = userCollection;

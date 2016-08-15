@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class MessagesTableSeeder extends Seeder
+class VoteItemSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +11,6 @@ class MessagesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Models\Message::class, 10)->create();
+        factory(App\Models\VoteItem::class, 30)->create();
     }
 }

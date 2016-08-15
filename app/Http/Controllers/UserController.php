@@ -35,7 +35,7 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
 
         $user = User::create($request->all());
 
-        return $this->setStatusCode(201)->respond();
+        return $this->setStatusCode(201)->respond($user);
     }
 
     /**

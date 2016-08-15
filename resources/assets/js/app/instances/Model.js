@@ -3,23 +3,31 @@ var _ = require('underscore');
 var App = require('../instances/appInstance');
 
 module.exports = Backbone.Model.extend({
+    parentUrl: null,
 
-  _getRequestUrl: function () {
-    return App.getBaseUrl() + (_.result(this, 'url') || _.result(this, 'urlRoot') || _.result(this.collection, 'url'));
-  },
+    getEntityUrl: function () {
+        return (_.result(this, 'parentUrl') || '') + (_.result(this, 'url') || _.result(this, 'urlRoot'));
+    },
 
-  sync: function (method, collection, options) {
-    if (!options.url) {
-      options.url = this._getRequestUrl(collection);
+    _getRequestUrl: function () {
+        return App.getBaseUrl() + this.getEntityUrl();
+    },
+
+    sync: function (method, collection, options) {
+        if (!options.url) {
+            options.url = this._getRequestUrl(collection);
+        }
+
+        return Backbone.sync(method, collection, options);
+    },
+
+    parse: function (response, options) {
+        if (!options.collection) {
+            this._meta = response._meta;
+            return response.data;
+        } else {
+            return response;
+        }
     }
-
-    return Backbone.sync(method, collection, options);
-  },
-
-  parse: function(response) {
-    this._meta = response._meta;
-
-    return response.data;
-  }
 
 });
