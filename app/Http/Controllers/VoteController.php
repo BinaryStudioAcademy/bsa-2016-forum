@@ -1,12 +1,11 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\Models\Vote;
 use App\Models\User;
 use App\Http\Requests\VotesRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Auth\Access\AuthorizationException;
 use DCN\RBAC\Traits\HasRoleAndPermission;
 use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
 
@@ -18,17 +17,28 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     /**
      * Display a listing of the resource.
      *
+     * @param VotesRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(VotesRequest $request)
     {
-        $votes = Vote::all();
+        $searchStr = $request->get('query');
+        $tagIds = $request->get('tag_ids');
+        $tagIdsArray = ($tagIds) ? explode(',', $tagIds) : [];
+
+        $votes = (new Vote)->newQuery();
+
+        $votes = $this->filterByQuery($votes, $searchStr);
+        $votes = $this->filterByTags($votes, $tagIdsArray);
+        $votes = $votes->get();
+
         return $this->setStatusCode(200)->respond($votes);
     }
+
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param VotesRequest|\Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(VotesRequest $request)
@@ -36,6 +46,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $vote = Vote::create($request->all());
         return $this->setStatusCode(201)->respond($vote);
     }
+
     /**
      * Display the specified resource.
      *
@@ -51,7 +62,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param VotesRequest|\Illuminate\Http\VotesRequest $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
@@ -61,6 +72,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $vote->update($request->all());
         return $this->setStatusCode(200)->respond($vote);
     }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -74,12 +86,21 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         return $this->setStatusCode(204)->respond();
     }
 
-    public function getUserVotes($userId)
+    public function getUserVotes($userId, VotesRequest $request)
     {
         $user = User::findOrFail($userId);
-        $votes = $user->votes()->get();
 
-        if(!$votes){
+        $searchStr = $request->get('query');
+        $tagIds = $request->get('tag_ids');
+        $tagIdsArray = ($tagIds) ? explode(',', $tagIds) : [];
+
+        $votes = $user->votes()->getQuery();
+
+        $votes = $this->filterByQuery($votes, $searchStr);
+        $votes = $this->filterByTags($votes, $tagIdsArray);
+        $votes = $votes->get();
+
+        if (!$votes) {
             return $this->setStatusCode(200)->respond();
         }
         return $this->setStatusCode(200)->respond($votes, ['user' => $user]);
@@ -88,12 +109,46 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function getUserVote($userId, $voteId)
     {
         $user = User::findOrFail($userId);
-        $vote = $user->votes()->where('id',$voteId)->first();
+        $vote = $user->votes()->where('id', $voteId)->first();
 
-        if(!$vote){
+        if (!$vote) {
             throw (new ModelNotFoundException)->setModel(Vote::class);
         }
         return $this->setStatusCode(200)->respond($vote, ['user' => $user]);
+    }
+
+    /**
+     * Return Builder object with filter by tags
+     *
+     * @param Builder $query
+     * @param array $tagIds
+     * @return Builder
+     */
+    protected function filterByTags(Builder $query, array $tagIds)
+    {
+        if (!empty($tagIds)) {
+            $query = $query->whereHas('tags', function ($q) use ($tagIds) {
+                $q->whereIn('id', $tagIds);
+            });
+        }
+
+        return $query;
+    }
+
+    /**
+     * Return Builder object with filter by the vote's title
+     *
+     * @param Builder $query
+     * @param string|null $searchStr
+     * @return Builder
+     */
+    protected function filterByQuery(Builder $query, $searchStr)
+    {
+        if ($searchStr) {
+            $query = $query->where('title', 'LIKE', '%' . $searchStr . '%');
+        }
+
+        return $query;
     }
 }
 
