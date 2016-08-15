@@ -23,7 +23,6 @@ class TopicRequest extends ApiRequest
     {
        switch($this->method()) {
             case 'POST':
-            {
                 return [
                     'name' => 'required|unique:topics,name',
                     'description' => 'required',
@@ -31,10 +30,8 @@ class TopicRequest extends ApiRequest
                 ];
 
                 break;
-            }
             case 'PUT':
             case 'PATCH':
-            {
                 return [
                     'name' => 'required|unique:topics,name,' . $this->topics,
                     'description' => 'required',
@@ -42,8 +39,8 @@ class TopicRequest extends ApiRequest
                 ];
 
                 break;
-            }
-            default:break;
+            default:
+                return [];
         }
     }
 

@@ -14,13 +14,18 @@ class UsersTableSeeder extends Seeder
         $count_users = 10;
 
         factory(App\Models\User::class, $count_users)->create();
-
-        $user = \App\Models\User::first();
-
+        
+        $users = App\Models\User::all();
+        $roleUser = \DB::table('roles')->where('name', 'User')->value('id');
+        foreach ($users as $user){
+            $user->attachRole($roleUser); 
+        }
         /**
          * Set right role for required users
          */
+        $user = \App\Models\User::first();
         $roleAdmin = \DB::table('roles')->where('name', 'Admin')->value('id');
+        $user->detachRole($roleUser);
         $user->attachRole($roleAdmin);
     }
 }
