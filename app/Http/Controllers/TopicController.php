@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ApiRequest;
-use App\Http\Requests\Request;
 use App\Models\Topic;
 use App\Http\Requests\TopicRequest;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 
 
 class TopicController extends ApiController
@@ -20,14 +20,16 @@ class TopicController extends ApiController
      */
     public function index(TopicRequest $request)
     {
-        // query - search topics with title or description like '%query%'
-        $searchQuery = $request->get('query');
-
-        // tag_ids - search topics that has tags with IDs that in tag_ids (example tag_ids=1,2,3,4)
+        $searchStr = $request->get('query');
         $tagIds = $request->get('tag_ids');
-        $tagIdsArray = explode(',', $tagIds);
+        $tagIdsArray = ($tagIds) ? explode(',', $tagIds) : [];
 
-        $topics = Topic::all();
+        $topics = (new Topic())->newQuery();
+
+        $topics = $this->filterByQuery($topics, $searchStr);
+        $topics = $this->filterByTags($topics, $tagIdsArray);
+
+        $topics = $topics->get();
 
         return $this->setStatusCode(200)->respond($topics);
     }
@@ -97,22 +99,22 @@ class TopicController extends ApiController
      */
     public function getUserTopics($userId, TopicRequest $request)
     {
-
         $user = User::findOrFail($userId);
-        $topics = $user->topics()->get();
+
+        $searchStr = $request->get('query');
+        $tagIds = $request->get('tag_ids');
+        $tagIdsArray = ($tagIds) ? explode(',', $tagIds) : [];
+
+        $topics = $user->topics()->getQuery();
+
+        $topics = $this->filterByQuery($topics, $searchStr);
+        $topics = $this->filterByTags($topics, $tagIdsArray);
+
+        $topics = $topics->get();
+
         if(!$topics){
             return $this->setStatusCode(200)->respond();
         }
-        // query - search topics with title or description like '%query%'
-        $searchQuery = $request->get('query');
-        // tag_ids - search topics that has tags with IDs that in tag_ids (example tag_ids=1,2,3,4)
-        $tagIds = $request->get('tag_ids');
-        $tagIdsArray = explode(',', $tagIds);
-
-//        $topics = $this->filterByName([], $searchQuery);
-//        $topics = $this->filterByDescription($topics, $searchQuery);
-//        $topics = $this->filterByTags($topics, $tagIdsArray);
-        $topics = $this->filterByAll($tagIds, $searchQuery);
 
         return $this->setStatusCode(200)->respond($topics, ['user' => $user]);
     }
@@ -135,43 +137,40 @@ class TopicController extends ApiController
         return $this->setStatusCode(200)->respond($topic, ['user' => $user]);
 
     }
-    public function filterByTags($topics = [], $tagsId)
-    {
-        if(empty($topics)){
-            return Topic::whereHas('tags', function($q) use ($tagsId){
-                $q->whereIn('id',$tagsId);
-            })->get();
 
-        } else {
-            return $topics->whereHas('tags', function($q) use ($tagsId){
-                $q->whereIn('id',$tagsId);
-            })->get();
+    /**
+     * Return Builder object with filter by tags
+     *
+     * @param Builder $query
+     * @param array $tagIds
+     * @return Builder
+     */
+    protected function filterByTags(Builder $query, array $tagIds)
+    {
+        if (!empty($tagIds)) {
+            $query = $query->whereHas('tags', function($q) use ($tagIds){
+                $q->whereIn('id', $tagIds);
+            });
         }
 
+        return $query;
     }
-    public function filterByName($topics = [], $query)
-    {
-        if(empty($topics)){
-            return Topic::where('name','LIKE','%'.$query.'%')->get();
-        } else {
-            return $topics->where('name','LIKE','%'.$query.'%')->get();
-        }
-    }
-    public function filterByDescription($topics = [], $query)
-    {
 
-//        dd($topics);
-        if(empty($topics)){
-            return Topic::where('description','LIKE','%'.$query.'%')->get();
-        } else {
-            return $topics->where('description','LIKE','%'.$query.'%')->get();
-        }
-    }
-    public function filterByAll($tagsId, $query)
+    /**
+     * Return Builder object with filter by the topic's name and topic's description
+     *
+     * @param Builder $query
+     * @param string|null $searchStr
+     * @return Builder
+     */
+    protected function filterByQuery(Builder $query, $searchStr)
     {
-        return Topic::where('name','LIKE','%'.$query.'%')
-            ->where('description','LIKE','%'.$query.'%')->whereHas('tags', function($q) use ($tagsId){
-                $q->whereIn('id',$tagsId);
-            })->get();
+        if ($searchStr) {
+            $query = $query->where('name','LIKE','%'.$searchStr.'%')
+                ->orWhere('description','LIKE','%'.$searchStr.'%');
+        }
+
+        return $query;
     }
+
 }
