@@ -14,11 +14,6 @@ module.exports = Marionette.Object.extend({
         app.render(new topicLayout({collection: topicCollection}));
     },
 
-    create: function () {
-
-        app.render(new topicCreateView());
-    },
-
     show: function (id) {
         var topicModel = new TopicModel({id: id});
         topicModel.fetch({
