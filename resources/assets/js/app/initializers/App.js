@@ -24,7 +24,7 @@ var Templates = require('../templates')(Handlebars);
 
 var app = Marionette.Application.extend({
     initialize: function (options) {
-        logger('My app has initialized');
+        logger('My app has been initialized');
     },
 
     setRootLayout: function (layout) {

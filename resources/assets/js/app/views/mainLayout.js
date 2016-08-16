@@ -19,7 +19,7 @@ var mainLayoutView = Marionette.LayoutView.extend({
     },
 
     onRender: function () {
-      console.log('main layout render');
+      //console.log('main layout render');
     },
 
     showRegions: function () {
