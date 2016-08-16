@@ -2,6 +2,7 @@ var TopicController = require('../controllers/TopicController');
 var IdeaHubController = require('../controllers/IdeaHubController');
 var UserController = require('../controllers/UserController');
 var DashBoardController = require('../controllers/DashboardController');
+var BookMarkController = require('../controllers/BookMarkController');
 
 module.exports = {
 
@@ -16,7 +17,8 @@ module.exports = {
         {
             controller: new TopicController(),
             appRoutes: {
-                'topics': 'index'
+                'topics': 'index',
+                'topics/create': 'create'
             }
         },
 
@@ -32,7 +34,15 @@ module.exports = {
             appRoutes: {
                 'users': 'index'
             }
-        }
+        },
+
+        {
+            controller: new BookMarkController(),
+            appRoutes: {
+                'bookmarks': 'index'
+            }
+        },
+
     ],
 
     getRouters: function () {

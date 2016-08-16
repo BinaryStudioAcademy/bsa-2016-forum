@@ -4,6 +4,7 @@ var topicCollection = require('./topicCollection');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'topicLayout',
+
     regions: {
         container: '#posts'
     },
