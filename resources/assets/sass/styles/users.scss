@@ -56,7 +56,7 @@ USER LIST
 .users-item-msg a{
   height: 100%;
   display: flex;
-  padding: 20px;
+  padding: 20px 10px;
 }
 
 .users-item-msg a:hover{
@@ -76,4 +76,23 @@ USER LIST
   height: 40px;
   font-size: 18px;
   font-weight: 800;
+}
+
+.users-item-permission {
+  padding: 5px 0;
+}
+
+.users-item-permission select {
+  width: 150px;
+  margin: 5px 20px 5px 0;
+  padding: 5px;
+  background-color: #E9E9E9;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.users-item-permission select:hover {
+  background-color: #E0E0E0;
 }

@@ -205,3 +205,153 @@ VOTE INDEX
   font-size: 12px;
   color: #999999;
 }
+
+/*
+ NEW VOTE
+ */
+
+.vote-new {
+  width: 100%;
+  padding: 20px;
+  background: #fff;
+}
+
+.vote-new a:hover {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.vote-new > div {
+  width: 100%;
+  margin: 5px 0 5px;
+  padding: 5px 0 5px;
+  border-bottom: #DDD 1px solid;
+  overflow: hidden;
+}
+
+.vote-new-head h4{
+  margin: 0 0 15px;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.vote-new-addAnswer button {
+  width: 100%;
+  padding: 10px 35px;
+  border-radius: 0;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  font-weight: 800;
+  background-color: #ffd992;
+}
+
+.vote-new-addAnswer button:hover {
+  background-color: #f9c172;
+}
+
+.vote-new-date input {
+  width: 150px;
+  margin: 5px 20px 5px 0;
+  padding: 10px;
+  background-color: #E9E9E9;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.vote-new-users small {
+  font-size: 12px;
+  color: #777777;
+}
+
+.vote-new-users span{
+  margin: 0 10px 5px 0;
+  padding: 5px 15px;
+  border-radius: 0;
+  display: inline-block;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  font-weight: 800;
+  background-color: #ffd992;
+}
+
+.vote-new-users span:hover {
+  background-color: #f97871;
+}
+
+.vote-new-addUsers {
+  margin: 5px 0 5px;
+  display: flex;
+}
+
+.vote-new-addUsers input{
+  width: 100%;
+  padding: 10px 15px;
+  background-color: #E9E9E9;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  font-weight: 400;
+  display: inline-block;
+}
+
+.vote-new-addUsers button {
+  display: inline-block;
+  border: none;
+  width: 100px;
+  margin-left: 10px;
+  height: 40px;
+  background-color: #ffd992;
+  color: #555;
+}
+
+.vote-new-addUsers button:hover {
+  background-color: #f9c172;
+}
+
+.vote-new-attachment {
+  width: 100%;
+  overflow: hidden;
+}
+
+.vote-new-attachment a {
+  float: right;
+}
+
+.vote-new-control {
+  padding: 15px 0 15px;
+}
+
+.vote-new-notification {
+  display: inline-block;
+  float: left;
+}
+
+.vote-new-notification label {
+  color: #555;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.vote-new-submit {
+  display: inline-block;
+  margin: 5px 0;
+  float: right;
+}
+
+.vote-new-submit input {
+  padding: 5px 35px;
+  border-radius: 0;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  font-weight: 800;
+  background-color: #ffd992;
+}
+
+.vote-new-submit input:hover {
+  background-color: #f9c172;
+} 
