@@ -131,8 +131,18 @@ class CommentController extends ApiController
      */
     public function getVoteComments(Vote $vote)
     {
+        $data = [];
+        $i = 0;
+
         $comments = $vote->comments()->get();
-        return $this->setStatusCode(200)->respond($comments);
+
+        foreach ($comments as $comment) {
+            $data[$i]['data'] = $comment;
+            $data[$i]['_meta']['user'] = $vote->user()->first();
+            $i++;
+        }
+
+        return $this->setStatusCode(200)->respond($data);
     }
 
     /**
@@ -158,7 +168,8 @@ class CommentController extends ApiController
     {
         $comment = Comment::create($request->all());
         $comment = $vote->comments()->save($comment);
-        return $this->setStatusCode(201)->respond($comment);
+
+        return $this->setStatusCode(201)->respond($comment, ['user' => $comment->user()->first()]);
     }
 
     /**

@@ -10,10 +10,10 @@
     <div class="vote-body">
         <div class="vote-head">
             <div class="vote-header">
-                <h3>Question title</h3>
-                <h5>@author   logs</h5>
+                <h3>{{ title }}</h3>
+                <h5>Opened by: {{ _meta.user.first_name }}  {{ _meta.user.last_name }}</h5>
                 <div class="vote-tags">
-                    <span>#movie</span><span>#cinema</span>
+                    <span>#movie</span><span>#Cinema</span>
                 </div>
             </div>
             <div class="vote-control">
@@ -57,44 +57,26 @@
             Attachments
         </div>
         <div class="vote-comments">
-            <h4>N Comments</h4>
-            <div class="vote-comment">
-                <div class="vote-comment-avatar">
-                    <img src="/images/user.png">
-                </div>
-                <div class="vote-comment-body">
-                    <h4>User <span>3 hours ago</span></h4>
-                    <p class="vote-comment-text">This should activate links by clicking without any javascript functions needed and will also automatically activate each link as you scroll through the corresponding linked sections of the page which a js onclick() will not.</p>
-                </div>
+            <h4>{{ _meta.comments }} Comments</h4>
+            <div id="add-comment"></div>
+            <div id="comments">
+
+
             </div>
-            <div class="vote-comment">
-                <div class="vote-comment-avatar">
-                    <img src="/images/user.png">
-                </div>
-                <div class="vote-comment-body">
-                    <h4>User <span>3 hours ago</span></h4>
-                    <p class="vote-comment-text">This should activate links by clicking without any javascript functions needed and will also automatically activate each link as you scroll through the corresponding linked sections of the page which a js onclick() will not.</p>
-                </div>
-            </div>
-            <div class="vote-comment">
-                <div class="vote-comment-avatar">
-                    <img src="/images/user.png">
-                </div>
-                <div class="vote-comment-body">
-                    <h4>User <span>3 hours ago</span></h4>
-                    <p class="vote-comment-text">This should activate links by clicking without any javascript functions needed and will also automatically activate each link as you scroll through the corresponding linked sections of the page which a js onclick() will not.</p>
-                </div>
-            </div>
-            <div class="vote-comment-add">
-                <div class="vote-comment-avatar">
-                    <img src="/images/user.png">
-                </div>
-                <div class="vote-comment-body">
-                    <textarea class="form-control" rows="3" placeholder="Comment..."></textarea>
-                    <div class="vote-comment-attachment"><a>Attach</a></div>
-                    <button class="btn btn-default">Add comment</button>
-                </div>
-            </div>
+            <div id="add-comment"></div>
         </div>
     </div>
 </div>
+
+
+<!--<div class="vote-comment">-->
+<!--<div class="vote-comment-avatar">-->
+<!--<img src="/images/user.png">-->
+<!--</div>-->
+<!--<div class="vote-comment-body">-->
+<!--<h4>User <span>3 hours ago</span></h4>-->
+<!--<p class="vote-comment-text">This should activate links by clicking without any javascript-->
+<!--functions needed and will also automatically activate each link as you scroll through the-->
+<!--corresponding linked sections of the page which a js onclick() will not.</p>-->
+<!--</div>-->
+<!--</div>-->

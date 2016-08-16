@@ -21,7 +21,7 @@ var logger = require('../instances/logger');
 
 var Handlebars = require('handlebars');
 var Templates = require('../templates')(Handlebars);
-
+var Helper = require('../instances/Helper');
 var app = Marionette.Application.extend({
     initialize: function (options) {
         logger('My app has initialized');
@@ -58,15 +58,13 @@ var app = Marionette.Application.extend({
     },
     onStart: function (config) {
         this.config = config;
-
-
         this.templateCashing();
-
-        appInstance.setInstance(this);
-
         this.setRootLayout(new mainLayoutView());
+        appInstance.setInstance(this);
         this.showRootLayout();
         this.setRouting();
+
+        Helper.register();
         logger('start application');
 
         if (Backbone.history) {
