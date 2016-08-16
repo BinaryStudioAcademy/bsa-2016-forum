@@ -72,7 +72,7 @@ class VoteItemController extends ApiController
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
-        if (Auth::user()->allowed('view.voteitems', $voteItem)) {
+        if (!Auth::user()->allowed('view.voteitems', $voteItem)) {
             throw (new PermissionDeniedException('voteitems'));
         }
         $user = $voteItem->user()->first();
