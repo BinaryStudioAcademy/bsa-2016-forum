@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Topic;
 use App\Http\Requests\TopicRequest;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
@@ -24,12 +23,7 @@ class TopicController extends ApiController
         $tagIds = $request->get('tag_ids');
         $tagIdsArray = ($tagIds) ? explode(',', $tagIds) : [];
 
-        $topics = (new Topic())->newQuery();
-
-        $topics = $this->filterByQuery($topics, $searchStr);
-        $topics = $this->filterByTags($topics, $tagIdsArray);
-
-        $topics = $topics->get();
+        $topics = Topic::filterByQuery($searchStr)->filterByTags($tagIdsArray)->get();
 
         return $this->setStatusCode(200)->respond($topics);
     }
@@ -105,12 +99,11 @@ class TopicController extends ApiController
         $tagIds = $request->get('tag_ids');
         $tagIdsArray = ($tagIds) ? explode(',', $tagIds) : [];
 
-        $topics = $user->topics()->getQuery();
-
-        $topics = $this->filterByQuery($topics, $searchStr);
-        $topics = $this->filterByTags($topics, $tagIdsArray);
-
-        $topics = $topics->get();
+        $topics = $user->topics()
+            ->getQuery()
+            ->filterByQuery($searchStr)
+            ->filterByTags($tagIdsArray)
+            ->get();
 
         if(!$topics){
             return $this->setStatusCode(200)->respond();
@@ -137,40 +130,4 @@ class TopicController extends ApiController
         return $this->setStatusCode(200)->respond($topic, ['user' => $user]);
 
     }
-
-    /**
-     * Return Builder object with filter by tags
-     *
-     * @param Builder $query
-     * @param array $tagIds
-     * @return Builder
-     */
-    protected function filterByTags(Builder $query, array $tagIds)
-    {
-        if (!empty($tagIds)) {
-            $query = $query->whereHas('tags', function($q) use ($tagIds){
-                $q->whereIn('tag_id', $tagIds);
-            });
-        }
-
-        return $query;
-    }
-
-    /**
-     * Return Builder object with filter by the topic's name and topic's description
-     *
-     * @param Builder $query
-     * @param string|null $searchStr
-     * @return Builder
-     */
-    protected function filterByQuery(Builder $query, $searchStr)
-    {
-        if ($searchStr) {
-            $query = $query->where('name','LIKE','%'.$searchStr.'%')
-                ->orWhere('description','LIKE','%'.$searchStr.'%');
-        }
-
-        return $query;
-    }
-
 }
