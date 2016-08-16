@@ -45,8 +45,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function index()
     {
         $vote = new Vote();
-        $userAuth = Auth::user();
-        if (!($userAuth->allowed('view.votes', $vote)))
+        if (!(Auth::user()->allowed('view.votes', $vote)))
             throw new PermissionDeniedException('index');
 
         $votes = Vote::all();
@@ -62,8 +61,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function store(VotesRequest $request)
     {
         $vote = new Vote();
-        $userAuth = Auth::user();
-        if (!($userAuth->allowed('create.votes', $vote)))
+        if (!(Auth::user()->allowed('create.votes', $vote)))
             throw new PermissionDeniedException('create');
 
         $vote = Vote::create($request->all());
@@ -78,9 +76,8 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function show($id)
     {
         $vote = Vote::findOrFail($id);
-        $userAuth = Auth::user();
 
-        if (!($userAuth->allowed('view.votes', $vote)))
+        if (!(Auth::user()->allowed('view.votes', $vote)))
             throw new PermissionDeniedException('view');
 
         $user = $vote->user()->first();
@@ -104,9 +101,8 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function update(VotesRequest $request, $id)
     {
         $vote = Vote::findOrFail($id);
-        $userAuth = Auth::user();
 
-        if (!($userAuth->allowed('update.votes', $vote)))
+        if (!(Auth::user()->allowed('update.votes', $vote)))
             throw new PermissionDeniedException('update');
 
         $vote->update($request->all());
@@ -121,9 +117,8 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function destroy($id)
     {
         $vote = Vote::findOrFail($id);
-        $userAuth = Auth::user();
-
-        if (!($userAuth->allowed('delete.votes', $vote)))
+        
+        if (!(Auth::user()->allowed('delete.votes', $vote)))
             throw new PermissionDeniedException('delete');
 
         $vote->delete();
@@ -141,8 +136,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $votes = $user->votes()->get();
 
         $vote = $votes[0];
-        $userAuth = Auth::user();
-        if (!($userAuth->allowed('view.votes', $vote)))
+        if (!(Auth::user()->allowed('view.votes', $vote)))
             throw new PermissionDeniedException('index');
 
         if(!$votes){
@@ -155,9 +149,8 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     {
         $user = User::findOrFail($userId);
         $vote = $user->getVote($voteId);
-
-        $userAuth = Auth::user();
-        if (!($userAuth->allowed('view.votes', $vote)))
+        
+        if (!(Auth::user()->allowed('view.votes', $vote)))
             throw new PermissionDeniedException('view');
 
         if(!$vote){
