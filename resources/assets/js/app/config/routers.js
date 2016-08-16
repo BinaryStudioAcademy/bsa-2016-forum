@@ -18,7 +18,8 @@ module.exports = {
             controller: new TopicController(),
             appRoutes: {
                 'topics': 'index',
-                'topics/create': 'create'
+                'topics/create': 'create',
+                'topics/:id' : 'show'
             }
         },
 
