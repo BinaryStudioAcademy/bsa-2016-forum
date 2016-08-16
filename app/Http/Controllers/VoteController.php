@@ -105,7 +105,13 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     {
         $vote = Vote::findOrFail($id);
         $vote->delete();
-        return $this->setStatusCode(204)->respond();
+
+        if ($vote->trashed()) {
+            return $this->setStatusCode(204)->respond();
+        } else {
+            throw new \PDOException();
+        }
+
     }
 
     public function getUserVotes($userId)
@@ -122,7 +128,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function getUserVote($userId, $voteId)
     {
         $user = User::findOrFail($userId);
-        $vote = $user->votes()->where('id',$voteId)->first();
+        $vote = $user->getVote($voteId);
 
         if(!$vote){
             throw (new ModelNotFoundException)->setModel(Vote::class);
