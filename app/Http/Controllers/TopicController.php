@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ApiRequest;
 use App\Models\Topic;
 use App\Http\Requests\TopicRequest;
 use App\Models\User;
@@ -11,19 +12,29 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TopicController extends ApiController
 {
+    protected $searchStr = null;
+
+    protected $tagIds = [];
+
+    protected $request;
+
+    public function __construct(TopicRequest $request)
+    {
+        $this->request = $request;
+
+        $this->searchStr = $request->get('query');
+        $tagIds = $request->get('tag_ids');
+        $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @param TopicRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(TopicRequest $request)
+    public function index()
     {
-        $searchStr = $request->get('query');
-        $tagIds = $request->get('tag_ids');
-        $tagIdsArray = ($tagIds) ? explode(',', $tagIds) : [];
-
-        $topics = Topic::filterByQuery($searchStr)->filterByTags($tagIdsArray)->get();
+        $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
 
         return $this->setStatusCode(200)->respond($topics);
     }
@@ -31,12 +42,11 @@ class TopicController extends ApiController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TopicRequest $request)
+    public function store()
     {
-        $topic = Topic::create($request->all());
+        $topic = Topic::create($this->request->all());
 
         return $this->setStatusCode(201)->respond($topic);
     }
@@ -57,14 +67,13 @@ class TopicController extends ApiController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(TopicRequest $request, $id)
+    public function update($id)
     {
         $topic = Topic::findOrFail($id);
-        $topic->update($request->all());
+        $topic->update($this->request->all());
 
         return $this->setStatusCode(200)->respond($topic);
     }
@@ -88,21 +97,16 @@ class TopicController extends ApiController
      * Get all or filtering user's topics
      *
      * @param int $userId
-     * @param TopicRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getUserTopics($userId, TopicRequest $request)
+    public function getUserTopics($userId)
     {
         $user = User::findOrFail($userId);
 
-        $searchStr = $request->get('query');
-        $tagIds = $request->get('tag_ids');
-        $tagIdsArray = ($tagIds) ? explode(',', $tagIds) : [];
-
         $topics = $user->topics()
             ->getQuery()
-            ->filterByQuery($searchStr)
-            ->filterByTags($tagIdsArray)
+            ->filterByQuery($this->searchStr)
+            ->filterByTags($this->tagIds)
             ->get();
 
         if(!$topics){
