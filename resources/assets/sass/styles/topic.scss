@@ -82,9 +82,16 @@ TOPIC DETAILS
   padding: 0 15px;
 }
 
-.topic-comment {
+.topic-comment-item {
+  margin: 20px 0;
+}
+
+.topic-comment-main {
   background: #FFF;
-  margin-bottom: 20px;
+}
+
+.topic-comment-included {
+  padding-left: 60px;
 }
 
 .topic-comment-flex {
@@ -240,4 +247,23 @@ TOPIC DETAILS
   text-decoration: none;
   background: #ddd;
   animation-duration: 1s;
+}
+
+.topic-item {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.post-item {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #EEEEEE;
+  overflow: hidden;
+
+  text-decoration: none;
+  cursor: pointer;
 }
