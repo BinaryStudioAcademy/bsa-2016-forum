@@ -5,7 +5,6 @@ module.exports = function (controller, appRoutes) {
 
     return Marionette.AppRouter.extend({
         controller: controller,
-
         appRoutes: appRoutes,
 
         onRoute: function (name, path, arguments) {
