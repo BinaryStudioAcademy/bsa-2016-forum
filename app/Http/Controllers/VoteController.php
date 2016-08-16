@@ -15,18 +15,18 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
 {
     use HasRoleAndPermission;
 
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param $votes array
+     * @return $data array
      */
-    public function index()
+    private function getMetaData($votes)
     {
         $data =[];
-        $votes = Vote::all();
         $i = 0;
 
         foreach ($votes as $vote) {
+
             if ($vote->is_saved) {
                 $data[$i]['data'] = $vote;
                 $data[$i]['_meta']['user'] = $vote->user()->first();
@@ -36,7 +36,18 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
                 $i++;
             }
         }
+        return $data;
+    }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $votes = Vote::all();
+        $data = $this->getMetaData($votes);
         return $this->setStatusCode(200)->respond($data);
     }
     /**
