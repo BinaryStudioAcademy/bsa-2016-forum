@@ -97,4 +97,18 @@ class TopicController extends ApiController
         return $this->setStatusCode(200)->respond($topic, ['user' => $user]);
 
     }
+    public function filterByTags($tagsId)
+    {
+        $topics = Topic::all();
+        $topicsWithTags = $topics->whereHas('tags', function($q) use ($tagsId){
+            $q->whereIn('id',$tagsId);
+        })->get();
+        return $topicsWithTags;
+    }
+    public function filterByQuery($query)
+    {
+        $topics = Topic::all();
+        $topicsByNames = $topics->where('name','LIKE', '%'.$query.'%')->get();
+        return $topicsByNames;
+    }
 }
