@@ -84,8 +84,11 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
         $user = User::findOrFail($id);
 
         $user->delete();
-        return $this->setStatusCode(204)->respond();
-
+        if ($user->trashed()) {
+            return $this->setStatusCode(204)->respond();
+        } else {
+            throw new \PDOException();
+        }
     }
 
     /**
