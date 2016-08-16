@@ -16,9 +16,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
     Route::get('/', function () {
         return 'Welcome to REST API v1';
     });
-    Route::get('/upload', function () {
-        return view('uploadfile');
-    });
     Route::resource('users', 'UserController', [
         'except' => ['edit', 'create'],
         'names' => [
@@ -116,7 +113,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::get('', 'AttachmentController@getAllTopicAttachments')->name('allTopicAttachments');
         Route::get('{attachment}', 'AttachmentController@getTopicAttachment')->name('topicAttachment');
         Route::post('', 'AttachmentController@storeTopicAttachment')->name('storeTopicAttachment');
-        Route::delete('{attachment}', 'AttachmentController@deleteTopicAttachment')->name('deleteTopicAttachment');
+        Route::delete('{attachment}', 'AttachmentController@destroyTopicAttachment')->name('deleteTopicAttachment');
     });
 
     /*Routes for Vote attachments*/
@@ -124,7 +121,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::get('', 'AttachmentController@getAllVoteAttachments')->name('allVoteAttachments');
         Route::get('{attachment}', 'AttachmentController@getVoteAttachment')->name('voteAttachment');
         Route::post('', 'AttachmentController@storeVoteAttachment')->name('storeVoteAttachment');
-        Route::delete('{attachment}', 'AttachmentController@deleteVoteAttachment')->name('deleteVoteAttachment');
+        Route::delete('{attachment}', 'AttachmentController@destroyVoteAttachment')->name('deleteVoteAttachment');
     });
 
     /*Routes for Comment attachments*/
@@ -132,7 +129,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::get('', 'AttachmentController@getAllCommentAttachments')->name('allCommentAttachments');
         Route::get('{attachment}', 'AttachmentController@getCommentAttachment')->name('commentAttachment');
         Route::post('', 'AttachmentController@storeCommentAttachment')->name('storeCommentAttachment');
-        Route::delete('{attachment}', 'AttachmentController@deleteCommentAttachment')->name('deleteCommentAttachment');
+        Route::delete('{attachment}', 'AttachmentController@destroyCommentAttachment')->name('deleteCommentAttachment');
     });
 
     /*Routes for Message attachments*/
@@ -140,7 +137,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::get('', 'AttachmentController@getAllMessageAttachments')->name('allMessageAttachments');
         Route::get('{attachment}', 'AttachmentController@getMessageAttachment')->name('messageAttachment');
         Route::post('', 'AttachmentController@storeMessageAttachment')->name('storeMessageAttachment');
-        Route::delete('{attachment}', 'AttachmentController@deleteMessageAttachment')->name('deleteMessageAttachment');
+        Route::delete('{attachment}', 'AttachmentController@destroyMessageAttachment')->name('deleteMessageAttachment');
     });
 
     Route::get('rss', 'rssController@index')->name('rss');
