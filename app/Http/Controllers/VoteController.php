@@ -1,45 +1,59 @@
 <?php
 namespace App\Http\Controllers;
-
 use App\Models\Vote;
 use App\Models\User;
 use App\Http\Requests\VotesRequest;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Auth\Access\AuthorizationException;
 use DCN\RBAC\Traits\HasRoleAndPermission;
 use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
-use Illuminate\Http\Request;
 
 
 class VoteController extends ApiController implements HasRoleAndPermissionContract
 {
     use HasRoleAndPermission;
 
+
     /**
-     * Display a listing of the resource.
-     *
-     * @param VotesRequest $request
-     * @return \Illuminate\Http\Response
+     * @param $votes array
+     * @return $data array
      */
-    public function index(Request $request)
+    private function getMetaData($votes)
     {
-        $searchStr = $request->get('query');
-        $tagIds = $request->get('tag_ids');
-        $tagIdsArray = ($tagIds) ? explode(',', $tagIds) : [];
+        $data =[];
+        $i = 0;
 
-        $votes = (new Vote)->newQuery();
+        foreach ($votes as $vote) {
 
-        $votes = $this->filterByQuery($votes, $searchStr);
-        $votes = $this->filterByTags($votes, $tagIdsArray);
-        $votes = $votes->get();
-
-        return $this->setStatusCode(200)->respond($votes);
+            if ($vote->is_saved) {
+                $data[$i]['data'] = $vote;
+                $data[$i]['_meta']['user'] = $vote->user()->first();
+                $data[$i]['_meta']['likes'] = $vote->likes()->count();
+                $data[$i]['_meta']['tags'] = $vote->tags()->count();
+                $data[$i]['_meta']['comments'] = $vote->comments()->count();
+                $i++;
+            }
+        }
+        return $data;
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $votes = Vote::all();
+        $data = $this->getMetaData($votes);
+        return $this->setStatusCode(200)->respond($data);
+    }
+    /**
      * Store a newly created resource in storage.
      *
-     * @param VotesRequest|\Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(VotesRequest $request)
@@ -47,7 +61,6 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $vote = Vote::create($request->all());
         return $this->setStatusCode(201)->respond($vote);
     }
-
     /**
      * Display the specified resource.
      *
@@ -57,13 +70,22 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function show($id)
     {
         $vote = Vote::findOrFail($id);
-        return $this->setStatusCode(200)->respond($vote);
+
+        $user = $vote->user()->first();
+        $likeCount = $vote->likes()->count();
+        $tagCount = $vote->tags()->count();
+        $commentCount = $vote->comments()->count();
+
+        return $this->setStatusCode(200)->respond($vote, ['user' => $user,
+            'likes' => $likeCount,
+            'tags' => $tagCount,
+            'comments' => $commentCount]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param VotesRequest|\Illuminate\Http\VotesRequest $request
+     * @param  \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
@@ -73,7 +95,6 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $vote->update($request->all());
         return $this->setStatusCode(200)->respond($vote);
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -84,23 +105,21 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     {
         $vote = Vote::findOrFail($id);
         $vote->delete();
-        return $this->setStatusCode(204)->respond();
+
+        if ($vote->trashed()) {
+            return $this->setStatusCode(204)->respond();
+        } else {
+            throw new \PDOException();
+        }
+
     }
 
-    public function getUserVotes($userId, Request $request)
+    public function getUserVotes($userId)
     {
         $user = User::findOrFail($userId);
+        $votes = $user->votes()->get();
 
-        $searchStr = $request->get('query');
-        $tagIds = $request->get('tag_ids');
-        $tagIdsArray = ($tagIds) ? explode(',', $tagIds) : [];
-
-        $votes = $user->votes()->getQuery();
-
-        $votes = $this->filterByQuery($votes, $searchStr);
-        $votes = $this->filterByTags($votes, $tagIdsArray);
-        $votes = $votes->get();
-        if (!$votes->all()) {
+        if(!$votes){
             return $this->setStatusCode(200)->respond();
         }
         return $this->setStatusCode(200)->respond($votes, ['user' => $user]);
@@ -109,47 +128,11 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function getUserVote($userId, $voteId)
     {
         $user = User::findOrFail($userId);
-        $vote = $user->votes()->where('id', $voteId)->first();
+        $vote = $user->getVote($voteId);
 
-        if (!$vote) {
+        if(!$vote){
             throw (new ModelNotFoundException)->setModel(Vote::class);
         }
         return $this->setStatusCode(200)->respond($vote, ['user' => $user]);
     }
-
-    /**
-     * Return Builder object with filter by tags
-     *
-     * @param Builder $query
-     * @param array $tagIds
-     * @return Builder
-     */
-    protected function filterByTags(Builder $query, array $tagIds)
-    {
-        if (!empty($tagIds)) {
-            $query = $query->whereHas('tags', function ($q) use ($tagIds) {
-                $q->whereIn('tag_id', $tagIds);
-            });
-        }
-
-        return $query;
-    }
-
-    /**
-     * Return Builder object with filter by the vote's title
-     *
-     * @param Builder $query
-     * @param string|null $searchStr
-     * @return Builder
-     */
-    protected function filterByQuery(Builder $query, $searchStr)
-    {
-        if ($searchStr) {
-            $query = $query->where('title', 'LIKE', '%' . $searchStr . '%');
-        }
-
-        return $query;
-    }
 }
-
-
