@@ -140,7 +140,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::delete('{attachment}', 'AttachmentController@deleteMessageAttachment')->name('deleteMessageAttachment');
     });
 
-
     Route::get('rss', 'rssController@index')->name('rss');
     Route::post('rss', 'rssController@subscribe')->name('rssSubscribe');
 });
