@@ -27,6 +27,14 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
             'destroy' => 'users.destroy',
         ],
     ]);
+    /*Routes for users Role*/
+    Route::group(['prefix' => 'users/{user}/roles'], function () {
+        Route::get('', 'UserController@getUserRole')->name('userRole');
+        Route::put('{role}', 'UserController@updateRole')->name('updateRole');
+    });
+    /*Routes for roles*/
+    Route::get('roles', 'RoleController@index')->name('roles');
+
     Route::resource('topics', 'TopicController', [
         'except' => ['edit', 'create'],
         'names' => [
@@ -120,11 +128,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::get('{attachment}', 'AttachmentController@getTopicAttachment')->name('topicAttachment');
         Route::post('{attachment}', 'AttachmentController@storeTopicAttachment')->name('storeTopicAttachment');
         Route::delete('{attachment}', 'AttachmentController@deleteTopicAttachment')->name('deleteTopicAttachment');
-    });
-
-    /*Routes for User permissions */
-    Route::group(['prefix' => 'users/{user}/permissions'], function () {
-        Route::put('{permission}', 'PermissionController@updatePermission')->name('updatePermission');
     });
 
     Route::get('rss', 'rssController@index')->name('rss');
