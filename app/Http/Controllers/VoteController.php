@@ -133,7 +133,6 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         } else {
             throw new \PDOException();
         }
-
     }
 
     public function getUserVotes($userId)
