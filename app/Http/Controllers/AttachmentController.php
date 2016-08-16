@@ -30,6 +30,10 @@ class AttachmentController extends ApiController
         return ($topicWhichHasThisAttachment && $topicWhichHasThisAttachment->id === $topic->id);
     }
 
+    /**
+     * @param Topic $topic
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllTopicAttachments(Topic $topic)
     {
         $attachments = $topic->attachments()->get();
