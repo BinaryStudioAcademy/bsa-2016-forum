@@ -82,9 +82,16 @@ TOPIC DETAILS
   padding: 0 15px;
 }
 
-.topic-comment {
+.topic-comment-item {
+  margin: 20px 0;
+}
+
+.topic-comment-main {
   background: #FFF;
-  margin-bottom: 20px;
+}
+
+.topic-comment-included {
+  padding-left: 60px;
 }
 
 .topic-comment-flex {
