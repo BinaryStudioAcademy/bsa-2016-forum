@@ -6,16 +6,21 @@ use App\Http\Requests\VotesRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Auth\Access\AuthorizationException;
 use DCN\RBAC\Traits\HasRoleAndPermission;
+use DCN\RBAC\Exceptions\PermissionDeniedException;
 use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
 
 
 class VoteController extends ApiController implements HasRoleAndPermissionContract
 {
     use HasRoleAndPermission;
-
-
+    
+    #TODO: Delete this after the authorization implement
+    public function __construct()
+    {
+        $users = User::all();
+        Auth::login($users[1]);
+    }
     /**
      * @param $votes array
      * @return $data array
@@ -38,7 +43,6 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         }
         return $data;
     }
-
     /**
      * Display a listing of the resource.
      *
@@ -46,6 +50,10 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
      */
     public function index()
     {
+        $vote = new Vote();
+        if (!(Auth::user()->allowed('view.votes', $vote)))
+            throw new PermissionDeniedException('index');
+
         $votes = Vote::all();
         $data = $this->getMetaData($votes);
         return $this->setStatusCode(200)->respond($data);
@@ -58,6 +66,10 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
      */
     public function store(VotesRequest $request)
     {
+        $vote = new Vote();
+        if (!(Auth::user()->allowed('create.votes', $vote)))
+            throw new PermissionDeniedException('create');
+
         $vote = Vote::create($request->all());
         return $this->setStatusCode(201)->respond($vote);
     }
@@ -70,6 +82,9 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function show($id)
     {
         $vote = Vote::findOrFail($id);
+
+        if (!(Auth::user()->allowed('view.votes', $vote)))
+            throw new PermissionDeniedException('view');
 
         $user = $vote->user()->first();
         $likeCount = $vote->likes()->count();
@@ -92,6 +107,10 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function update(VotesRequest $request, $id)
     {
         $vote = Vote::findOrFail($id);
+
+        if (!(Auth::user()->allowed('update.votes', $vote)))
+            throw new PermissionDeniedException('update');
+
         $vote->update($request->all());
         return $this->setStatusCode(200)->respond($vote);
     }
@@ -104,6 +123,10 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function destroy($id)
     {
         $vote = Vote::findOrFail($id);
+
+        if (!(Auth::user()->allowed('delete.votes', $vote)))
+            throw new PermissionDeniedException('delete');
+
         $vote->delete();
 
         if ($vote->trashed()) {
@@ -111,13 +134,16 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         } else {
             throw new \PDOException();
         }
-
     }
 
     public function getUserVotes($userId)
     {
         $user = User::findOrFail($userId);
         $votes = $user->votes()->get();
+
+        $vote = $votes[0];
+        if (!(Auth::user()->allowed('view.votes', $vote)))
+            throw new PermissionDeniedException('index');
 
         if(!$votes){
             return $this->setStatusCode(200)->respond();
@@ -129,6 +155,9 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     {
         $user = User::findOrFail($userId);
         $vote = $user->getVote($voteId);
+
+        if (!(Auth::user()->allowed('view.votes', $vote)))
+            throw new PermissionDeniedException('view');
 
         if(!$vote){
             throw (new ModelNotFoundException)->setModel(Vote::class);
