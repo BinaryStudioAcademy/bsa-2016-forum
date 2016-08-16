@@ -14,9 +14,9 @@ module.exports = Marionette.Object.extend({
     show: function (id) {
         var topicModel = new TopicModel({id: id});
         topicModel.fetch({
-            wait: true,
-            async: false
+            success: function () {
+                app.render(new TopicDetailView({model: topicModel}));
+            }
         });
-        app.render(new TopicDetailView({model: topicModel}));
     }
 });
