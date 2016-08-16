@@ -16,6 +16,9 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
     Route::get('/', function () {
         return 'Welcome to REST API v1';
     });
+    Route::get('/upload', function () {
+        return view('uploadfile');
+    });
     Route::resource('users', 'UserController', [
         'except' => ['edit', 'create'],
         'names' => [
@@ -112,7 +115,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
     Route::group(['prefix' => 'topics/{topic}/attachments'], function () {
         Route::get('', 'AttachmentController@getAllTopicAttachments')->name('allTopicAttachments');
         Route::get('{attachment}', 'AttachmentController@getTopicAttachment')->name('topicAttachment');
-        Route::post('{attachment}', 'AttachmentController@storeTopicAttachment')->name('storeTopicAttachment');
+        Route::post('', 'AttachmentController@storeTopicAttachment')->name('storeTopicAttachment');
         Route::delete('{attachment}', 'AttachmentController@deleteTopicAttachment')->name('deleteTopicAttachment');
     });
 
@@ -120,7 +123,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
     Route::group(['prefix' => 'votes/{vote}/attachments'], function () {
         Route::get('', 'AttachmentController@getAllVoteAttachments')->name('allVoteAttachments');
         Route::get('{attachment}', 'AttachmentController@getVoteAttachment')->name('voteAttachment');
-        Route::post('{attachment}', 'AttachmentController@storeVoteAttachment')->name('storeVoteAttachment');
+        Route::post('', 'AttachmentController@storeVoteAttachment')->name('storeVoteAttachment');
         Route::delete('{attachment}', 'AttachmentController@deleteVoteAttachment')->name('deleteVoteAttachment');
     });
 
@@ -128,7 +131,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
     Route::group(['prefix' => 'comments/{comment}/attachments'], function () {
         Route::get('', 'AttachmentController@getAllCommentAttachments')->name('allCommentAttachments');
         Route::get('{attachment}', 'AttachmentController@getCommentAttachment')->name('commentAttachment');
-        Route::post('{attachment}', 'AttachmentController@storeCommentAttachment')->name('storeCommentAttachment');
+        Route::post('', 'AttachmentController@storeCommentAttachment')->name('storeCommentAttachment');
         Route::delete('{attachment}', 'AttachmentController@deleteCommentAttachment')->name('deleteCommentAttachment');
     });
 
@@ -136,7 +139,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
     Route::group(['prefix' => 'messages/{message}/attachments'], function () {
         Route::get('', 'AttachmentController@getAllMessageAttachments')->name('allMessageAttachments');
         Route::get('{attachment}', 'AttachmentController@getMessageAttachment')->name('messageAttachment');
-        Route::post('{attachment}', 'AttachmentController@storeMessageAttachment')->name('storeMessageAttachment');
+        Route::post('', 'AttachmentController@storeMessageAttachment')->name('storeMessageAttachment');
         Route::delete('{attachment}', 'AttachmentController@deleteMessageAttachment')->name('deleteMessageAttachment');
     });
 

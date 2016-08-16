@@ -59,8 +59,25 @@ class AttachmentController extends ApiController
      * @param AttachmentsRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeTopicAttachment(Topic $topic, AttachmentsRequest $request)
+    public function storeTopicAttachment(Topic $topic, Request $request)
     {
+        /*ToDo before deploying: move cloud config defining to .env file*/
+        \Cloudinary::config([
+            "cloud_name" => "dmxebkh7h",
+            "api_key" => "726481723843648",
+            "api_secret" => "PyBAFmxpaB3eJsgoOwOghF7ih9Q"
+        ]);
+
+        $tmp_file_path = $request->file('f')->getRealPath();
+        // we need to move tmp file with new real file name because of problems with file type defining on cloud server side
+        $new_tmp_file = sys_get_temp_dir().DIRECTORY_SEPARATOR.$request->file('f')->getClientOriginalName();
+        move_uploaded_file($tmp_file_path,$new_tmp_file);
+
+        $cloud_answer = \Cloudinary\Uploader::upload($new_tmp_file,['resource_type' => 'raw',"public_id" => time().'_'.$request->file('f')->getClientOriginalName()]);
+        unlink($new_tmp_file);
+        $attachment_data['cloud_public_id'] = $cloud_answer['public_id'];
+        $attachment_data['type'] = $cloud_answer['type'];
+        $attachment_data['url'] = $cloud_answer['url'];
         $attachment = Attachment::create($request->all());
         $attachment = $topic->attachments()->save($attachment);
         return $this->setStatusCode(201)->respond($attachment);

@@ -22,17 +22,16 @@ class AttachmentsRequest extends ApiRequest
     public function rules()
     {
         return [
-            'value' => 'required|max:255|file_isset',
-            'type' => 'required|max:255',
+            //'value' => 'required|max:255',
+            //'type' => 'required|max:255',
         ];
     }
 
     public function messages()
     {
         return [
-            'value.required' => 'Value is required',
-            'value.file_isset' => 'File not exist',
-            'type.required' => 'Type is required',
+            //'value.required' => 'Value is required',
+            //'type.required' => 'Type is required',
         ];
     }
 }
