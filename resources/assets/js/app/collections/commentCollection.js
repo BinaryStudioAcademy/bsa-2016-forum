@@ -6,9 +6,10 @@ module.exports = BaseCollection.extend({
     url: '/comments',
     initialize: function (options) {
         if (options) {
-            console.log(options);
-            console.log(options.parentUrl);
             this.parentUrl = options.parentUrl;
         }
+    },
+    comparator: function (model) {
+        return -model.get("id"); // Note the minus!
     }
 });

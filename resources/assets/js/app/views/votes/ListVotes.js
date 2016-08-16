@@ -12,11 +12,9 @@ module.exports = Marionette.LayoutView.extend({
         items: '#vote-items'
     },
     initialize: function (options) {
-        debugger;
         this.votesCol = options.vc;
     },
     onBeforeShow: function () {
-        debugger;
         this.getRegion('items').show(
             new VotesCollectionView({
                 collection: this.votesCol

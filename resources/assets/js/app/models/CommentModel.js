@@ -13,5 +13,20 @@ module.exports = BaseModel.extend({
         else {
             return response;
         }
+    },
+    initialize: function (options) {
+        if (options.parentUrl) {
+            this.parentUrl = options.parentUrl;
+        }
+    },
+    validate: function (attrs) {
+        var errors = {};
+        if (!attrs.content_origin) {
+            errors.content_origin = 'Write your comment';
+        }
+
+        if (!_.isEmpty(errors)) {
+            return errors;
+        }
     }
 });

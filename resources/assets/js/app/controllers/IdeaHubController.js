@@ -8,26 +8,25 @@ var VotesCollection = require('../collections/voteCollection');
 module.exports = Marionette.Object.extend({
 
     index: function () {
-
+        
         VotesCollection.reset();
-        VotesCollection.fetch({
-            success: function (data) {
-                lw = new ListVotes({vc: data});
-                app.getInstance().RootView.content.show(lw); 
-            }
-        });
-    },
+        VotesCollection.fetch();
+        lw = new ListVotes({vc: VotesCollection});
+        app.getInstance().RootView.content.show(lw);
+
+    }
+    ,
     showVote: function (id) {
         var model = undefined;
-        if(VotesCollection.get(id)) {
+        if (VotesCollection.get(id)) {
             model = VotesCollection.get(id);
             app.getInstance().RootView.content.show(new ShowVote({model: model}));
         } else {
-            model = new VoteModel({id: id}).fetch({success: function (data) {
-                app.getInstance().RootView.content.show(new ShowVote({model: data}));
-            }});
+            model = new VoteModel({id: id}).fetch({
+                success: function (data) {
+                    app.getInstance().RootView.content.show(new ShowVote({model: data}));
+                }
+            });
         }
-
-        //app.getInstance().RootView.content.show(new ShowVote());
     }
 });
