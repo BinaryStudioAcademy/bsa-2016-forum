@@ -54,7 +54,7 @@ class VoteControllerTest extends TestCase
 
             ])
             ->assertResponseStatus('403');
-
+        
         $response = $this->call('GET', '/api/v1/votes/' . $vote->id);
         $this->assertEquals(403, $response->status());
 

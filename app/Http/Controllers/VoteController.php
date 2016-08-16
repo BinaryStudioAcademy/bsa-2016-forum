@@ -15,6 +15,14 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
 {
     use HasRoleAndPermission;
 
+    public $userAuth;
+
+    #TODO: Delete this after the authorization implement
+    public function __construct()
+    {
+        $users = User::all();
+        Auth::login($users[1]);
+    }
     /**
      * @param $votes array
      * @return $data array
