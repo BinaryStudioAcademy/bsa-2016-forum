@@ -66,4 +66,5 @@ class Vote extends Model
     {
         return $this->morphToMany(Notification::class, 'notificationable');
     }
+    
 }

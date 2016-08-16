@@ -20,7 +20,8 @@ module.exports = Marionette.LayoutView.extend({
     initialize: function () {
         this.bindUIElements();
     },
-    onShow: function () {
+
+    onRender: function () {
         this.container.show(new topicCollection({
             collection: this.collection
         }));

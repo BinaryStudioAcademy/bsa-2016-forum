@@ -2,7 +2,6 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var Radio = require('backbone.radio');
 var Marionette = require('backbone.marionette');
-var BackboneValidation = require('backbone-validation');
 
 // инитим channels на сам инстанс марионета
 Marionette.Application.prototype._initChannel = function () {
@@ -85,24 +84,4 @@ app.getCurrentRoute = function () {
     return Backbone.history.fragment
 };
 
-Backbone.Validation.configure({
-    forceUpdate: true
-});
-
-_.extend(Backbone.Validation.callbacks, {
-    valid: function (view, attr, selector) {
-        var $el = view.$('[name=' + attr + ']'),
-            $group = $el.closest('.form-group');
-
-        $group.removeClass('has-error');
-        $group.find('.help-block').html('').addClass('hidden');
-    },
-    invalid: function (view, attr, error, selector) {
-        var $el = view.$('[name=' + attr + ']'),
-            $group = $el.closest('.form-group');
-
-        $group.addClass('has-error');
-        $group.find('.help-block').html(error).removeClass('hidden');
-    }
-});
 module.exports = app;

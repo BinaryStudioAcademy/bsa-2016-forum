@@ -1,7 +1,10 @@
+var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 var TopicModel = require('../../Models/TopicModel');
-var BackboneValidation = require('backbone-validation');
+var router = require('../../router');
+var _ = require('underscore');
 
+//
 module.exports = Marionette.ItemView.extend({
     template: 'topicCreateNew',
     model: new TopicModel(),
@@ -12,10 +15,14 @@ module.exports = Marionette.ItemView.extend({
     },
     initialize: function() {
         this.bindUIElements();
-        BackboneValidation.bind(this);
-        console.log(BackboneValidation);
     },
     events: {
+        'change @ui.name': function() {
+            this.model.set({name: this.ui.name.val()})
+        },
+        'change @ui.description': function() {
+            this.model.set({name: this.ui.description.val()})
+        },
         'submit @ui.createForm': function (e) {
             e.preventDefault();
 
@@ -23,8 +30,15 @@ module.exports = Marionette.ItemView.extend({
                 name: this.ui.name.val(),
                 description: this.ui.description.val(),
                 user_id: 2
+            },{
+                success: function(model, response) {
+                    Backbone.history.navigate('/', {trigger: true});
+                },
+                error: function(model, xhr, options) {
+                    var errors = JSON.parse(xhr.responseText);
+                    console.log(errors);
+                }
             });
-            console.log(this.model);
         }
     }
 });
