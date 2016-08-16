@@ -22,6 +22,10 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('not_same_user', function($attribute, $value, $parameters, $validator) {
             return $value != Auth::id();
         });
+
+        Validator::extend('file_isset', function($attribute, $value, $parameters, $validator) {
+            return file_exists($value);
+        });
     }
 
     /**
