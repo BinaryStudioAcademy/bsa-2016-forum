@@ -69,6 +69,11 @@ class Handler extends ExceptionHandler
             return response('Resource not found', 404);
         }
 
+        if ($e instanceof PermissionDeniedException){
+            return response($e->getMessage(), 403);
+        }
+
+
         return parent::render($request, $e);
     }
 }
