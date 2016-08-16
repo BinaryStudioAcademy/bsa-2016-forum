@@ -41,11 +41,14 @@ class AttachmentController extends ApiController
         move_uploaded_file($tmp_file_path, $new_tmp_file);
 
         $cloud_answer = \Cloudinary\Uploader::upload($new_tmp_file,
-            ['resource_type' => 'raw', "public_id" => time() . '_' . $request->file('f')->getClientOriginalName()]);
-        unlink($new_tmp_file);
+            ['resource_type' => 'auto',
+                'public_id' => time() . '_' . $request->file('f')->getClientOriginalName()
+            ]);
+
         $attachment_data['cloud_public_id'] = $cloud_answer['public_id'];
-        $attachment_data['type'] = $cloud_answer['type'];
+        $attachment_data['type'] = mime_content_type($new_tmp_file);
         $attachment_data['url'] = $cloud_answer['url'];
+        unlink($new_tmp_file);
 
         return $attachment_data;
     }
