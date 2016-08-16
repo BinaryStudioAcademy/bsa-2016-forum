@@ -14,6 +14,9 @@ use App\Http\Requests;
 
 class AttachmentController extends ApiController
 {
+    /**
+     *define Cloudinary config
+     */
     protected function defineCloud()
     {
         /*ToDo before deploying: move cloud config to .env file*/
@@ -130,6 +133,10 @@ class AttachmentController extends ApiController
         return ($voteWhichHasThisAttachment && $voteWhichHasThisAttachment->id === $vote->id);
     }
 
+    /**
+     * @param Vote $vote
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllVoteAttachments(Vote $vote)
     {
         $attachments = $vote->attachments()->get();
@@ -195,6 +202,10 @@ class AttachmentController extends ApiController
         return ($commentWhichHasThisAttachment && $commentWhichHasThisAttachment->id === $comment->id);
     }
 
+    /**
+     * @param Comment $comment
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllCommentAttachments(Comment $comment)
     {
         $attachments = $comment->attachments()->get();
@@ -260,6 +271,10 @@ class AttachmentController extends ApiController
         return ($messageWhichHasThisAttachment && $messageWhichHasThisAttachment->id === $message->id);
     }
 
+    /**
+     * @param Message $message
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllMessageAttachments(Message $message)
     {
         $attachments = $message->attachments()->get();
