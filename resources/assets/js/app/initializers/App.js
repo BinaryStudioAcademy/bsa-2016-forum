@@ -24,7 +24,7 @@ var Templates = require('../templates')(Handlebars);
 
 var app = Marionette.Application.extend({
     initialize: function (options) {
-        logger('My app has initialized');
+        logger('My app has been initialized');
     },
 
     setRootLayout: function (layout) {
@@ -58,15 +58,12 @@ var app = Marionette.Application.extend({
     },
     onStart: function (config) {
         this.config = config;
-
-
         this.templateCashing();
-
-        appInstance.setInstance(this);
-
         this.setRootLayout(new mainLayoutView());
+        appInstance.setInstance(this);
         this.showRootLayout();
         this.setRouting();
+
         logger('start application');
 
         if (Backbone.history) {

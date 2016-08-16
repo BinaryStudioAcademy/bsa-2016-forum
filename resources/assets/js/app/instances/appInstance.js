@@ -17,6 +17,7 @@ var appInstance = {
     render: function (view) {
         return this._instance.getRootLayout().getRegion('content').show(view);
     }
+
 };
 
 module.exports = appInstance;
