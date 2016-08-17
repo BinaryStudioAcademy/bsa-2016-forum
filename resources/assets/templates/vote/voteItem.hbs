@@ -6,7 +6,7 @@
     </div>
     <div class="votes-item-body">
         <div class="votes-item-title">
-            <span>{{ model.title }}</span> Opened by: <span> {{ meta.user.first_name}} {{ meta.user.last_name }} </span>
+            <span><a id="label">{{ model.title }}</a></span> Opened by: <span> {{ meta.user.first_name}} {{ meta.user.last_name }} </span>
         </div>
         <div class="votes-item-details">
             <a>{{ meta.comments}} Comments</a><a>{{ meta.likes }} likes</a>
@@ -14,6 +14,6 @@
         <div class="votes-item-tags">
             <span>#Vote</span><span>#Votes</span><span>#Vote</span>
         </div>
-        <span class="votes-item-time">Created at {{ created_at }}</span>
+        <span class="votes-item-time">Created at {{ model.created_at }}</span>
     </div>
 </div>

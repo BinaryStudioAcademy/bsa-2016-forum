@@ -171,7 +171,7 @@ class CommentController extends ApiController
         $comment = Comment::create($request->all());
         $comment = $vote->comments()->save($comment);
 
-        return $this->setStatusCode(201)->respond($comment, ['user' => $comment->user()->first()]);
+        return $this->setStatusCode(201)->respond($comment, ['user' => [$comment->id => $comment->user()->first()]]);
     }
 
     /**

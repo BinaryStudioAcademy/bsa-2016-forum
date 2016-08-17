@@ -72,9 +72,10 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $likeCount = $vote->likes()->count();
         $commentCount = $vote->comments()->count();
 
-        return $this->setStatusCode(200)->respond($vote, ['user' => $user,
-            'likes' => $likeCount,
-            'comments' => $commentCount]);
+        return $this->setStatusCode(200)->respond($vote,
+            ['user' => [$vote->id => $user],
+            'likes' => [$vote->id => $likeCount],
+            'comments' => [$vote->id => $commentCount]]);
     }
 
     /**

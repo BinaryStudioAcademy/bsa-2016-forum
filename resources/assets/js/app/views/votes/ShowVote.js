@@ -1,5 +1,5 @@
 var Marionette = require('backbone.marionette');
-
+var Radio = require('backbone.radio');
 var AddCommentView = require('./VoteCommentItemAdd');
 var CommentsCollectionView = require('../../views/votes/VoteCommentsCollection.js');
 module.exports = Marionette.LayoutView.extend({
@@ -7,6 +7,9 @@ module.exports = Marionette.LayoutView.extend({
     regions: {
         comments: '#comments',
         addcomment: '#add-comment'
+    },
+    ui: {
+        c_count: '#count'
     },
     serializeData: function () {
         var tempmeta = this.model.getMeta();
@@ -22,11 +25,12 @@ module.exports = Marionette.LayoutView.extend({
 
     },
     initialize: function (options) {
+
+        this.listenTo(Radio.channel('votesChannel'), 'setVotesCount', function (n) {
+            this.ui.c_count.text(n + ' Comments');
+        });
         if(options.collection) {
             this.CommentsCollection = options.collection;
-        }
-        if(options.addcommodel) {
-            this.CommentModel = options.addcommodel;
         }
     },
     onBeforeShow: function () {
@@ -38,18 +42,8 @@ module.exports = Marionette.LayoutView.extend({
         this.getRegion('addcomment').show(
             new AddCommentView({
                 collection: this.CommentsCollection,
-                model: this.CommentModel
+                parentId: this.model.get('id')
             })
         );
-
-        // var comcol = new CommentsCollection({parentUrl: '/votes/' + this.model.get('id')});
-        //
-        // comcol.fetch({
-        //     success: function (data) {
-        //         self.getRegion('comments').show(new CommentsCollectionView({collection: data}));
-        //     }
-        // });
-        //
-        // self.getRegion('addcomment').show(new AddCommentView({collection: comcol, model: new CommentModel({ parentUrl: '/votes/' + this.model.get('id') })}));
     }
 });

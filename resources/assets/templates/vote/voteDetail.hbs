@@ -10,8 +10,8 @@
     <div class="vote-body">
         <div class="vote-head">
             <div class="vote-header">
-                <h3>{{ title }}</h3>
-                <h5>Opened by: {{ _meta.user.first_name }}  {{ _meta.user.last_name }}</h5>
+                <h3>{{ model.title }}</h3>
+                <h5>Opened by: {{ meta.user.first_name }}  {{ meta.user.last_name }}</h5>
                 <div class="vote-tags">
                     <span>#movie</span><span>#Cinema</span>
                 </div>
@@ -57,7 +57,7 @@
             Attachments
         </div>
         <div class="vote-comments">
-            <h4>{{ _meta.comments }} Comments</h4>
+            <h4 id="count">{{ meta.comments }} Comments</h4>
             <div id="add-comment"></div>
             <div id="comments">
 
