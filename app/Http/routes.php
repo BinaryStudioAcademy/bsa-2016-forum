@@ -56,6 +56,18 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
             'destroy' => 'messages.destroy',
         ],
     ]);
+    /*Routes for Vote voteItems */
+    Route::resource('votes/{vote}/voteitems', 'VoteItemController', [
+        'except' => ['edit','create'],
+        'names' => [
+            'index' => 'voteItems.index',
+            'store' => 'voteItems.store',
+            'show' => 'voteItems.show',
+            'update' => 'voteItems.update',
+            'destroy' => 'voteItems.destroy',
+        ],
+    ]);
+
     /*Routes for users topics*/
     Route::group(['prefix' => 'users/{user}/topics'], function () {
         Route::get('', 'TopicController@getUserTopics')->name('userTopics');
