@@ -263,7 +263,10 @@ TOPIC DETAILS
   margin-bottom: 5px;
   border-bottom: 1px solid #EEEEEE;
   overflow: hidden;
-
   text-decoration: none;
   cursor: pointer;
+}
+
+.errors {
+  color:red;
 }
