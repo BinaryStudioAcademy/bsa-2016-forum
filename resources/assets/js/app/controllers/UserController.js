@@ -13,5 +13,11 @@ module.exports = Marionette.Object.extend({
         app.render(new UsersView({
             collection: users
         }));
+    },
+    mytopics: function () {
+        var topicCollection = new TopicCollection({ parentUrl: '/topics/' + 2 });
+        topicCollection.fetch();
+        console.log(topicCollection);
+        app.render(new topicLayout({collection: topicCollection}));
     }
 });

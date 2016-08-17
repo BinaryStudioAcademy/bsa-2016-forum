@@ -8,5 +8,7 @@ module.exports = Marionette.Object.extend({
         var topicCollection = new TopicCollection();
         topicCollection.fetch();
         app.render(new topicLayout({collection: topicCollection}));
-    }
+    },
+  
+
 });

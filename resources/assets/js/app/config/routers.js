@@ -16,7 +16,8 @@ module.exports = {
         {
             controller: new TopicController(),
             appRoutes: {
-                'topics': 'index'
+                'topics': 'index',
+
             }
         },
 
@@ -30,7 +31,8 @@ module.exports = {
         {
             controller: new UserController(),
             appRoutes: {
-                'users': 'index'
+                'users': 'index',
+                'mytopics': 'mytopics'
             }
         }
     ],
