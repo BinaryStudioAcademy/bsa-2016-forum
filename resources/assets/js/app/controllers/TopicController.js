@@ -2,7 +2,7 @@ var Marionette = require('backbone.marionette');
 var app = require('../instances/appInstance');
 var topicLayout = require('../views/topics/topicLayout');
 var TopicCollection = require('../collections/topicCollection');
-var TopicModel = require('../models/topicModel');
+var TopicModel = require('../models/TopicModel');
 var TopicDetailView = require('../views/topics/topicDetail');
 
 module.exports = Marionette.Object.extend({
