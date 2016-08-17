@@ -12,6 +12,18 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CommentController extends ApiController
 {
+    /**
+     * @param Comment $comment
+     * @return bool
+     */
+    protected function isCommentHasAnyChild(Comment $comment)
+    {
+        if ($comment->comments() - get()) {
+            return true;
+        }
+        return false;
+    }
+
     protected function isCommentChildBelongsToComment(Comment $comment, Comment $commentChild)
     {
         if ($comment->comments()->find($commentChild->id)) {
