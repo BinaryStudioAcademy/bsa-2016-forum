@@ -18,23 +18,26 @@ class AttachmentService
      */
     public function uploadAttachmentToCloud(Request $request)
     {
-        $tmp_file_path = $request->file('f')->getRealPath();
-        // we need to move tmp file with new real file name because of problems with file type defining on cloud server side
-        $new_tmp_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $request->file('f')->getClientOriginalName();
-        move_uploaded_file($tmp_file_path, $new_tmp_file);
+        if($request->file('f')){
+            $tmp_file_path = $request->file('f')->getRealPath();
+            // we need to move tmp file with new real file name because of problems with file type defining on cloud server side
+            $new_tmp_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $request->file('f')->getClientOriginalName();
+            move_uploaded_file($tmp_file_path, $new_tmp_file);
 
-        $cloud_answer = \Cloudinary\Uploader::upload($new_tmp_file,
-            [
-                'resource_type' => 'auto',
-                'public_id' => time() . '_' . $request->file('f')->getClientOriginalName()
-            ]);
+            $cloud_answer = \Cloudinary\Uploader::upload($new_tmp_file,
+                [
+                    'resource_type' => 'auto',
+                    'public_id' => time() . '_' . $request->file('f')->getClientOriginalName()
+                ]);
 
-        $attachment_data['cloud_public_id'] = $cloud_answer['public_id'];
-        $attachment_data['type'] = mime_content_type($new_tmp_file);
-        $attachment_data['url'] = $cloud_answer['url'];
-        unlink($new_tmp_file);
+            $attachment_data['cloud_public_id'] = $cloud_answer['public_id'];
+            $attachment_data['type'] = mime_content_type($new_tmp_file);
+            $attachment_data['url'] = $cloud_answer['url'];
+            unlink($new_tmp_file);
 
-        return $attachment_data;
+            return $attachment_data;
+        }
+
     }
 
 
@@ -43,6 +46,6 @@ class AttachmentService
      */
     public function deleteAttachmentFromCloud(string $cloud_public_id)
     {
-        
+        \Cloudinary\Uploader::destroy($cloud_public_id);
     }
 }
