@@ -125,24 +125,26 @@ class CommentController extends ApiController
         return ($voteWhichHasThisComment && $voteWhichHasThisComment->id === $vote->id);
     }
 
+    public function makeCommentsMeta($comments){
+        $meta = [];
+
+        foreach ($comments as $comment) {
+            $meta['user'][$comment->id] = $comment->user()->first();
+        }
+
+        return $meta;
+    }
+    
     /**
      * @param Vote $vote
      * @return \Illuminate\Http\JsonResponse
      */
     public function getVoteComments(Vote $vote)
     {
-        $data = [];
-        $i = 0;
-
         $comments = $vote->comments()->get();
+        $meta = $this->makeCommentsMeta($comments);
 
-        foreach ($comments as $comment) {
-            $data[$i]['data'] = $comment;
-            $data[$i]['_meta']['user'] = $vote->user()->first();
-            $i++;
-        }
-
-        return $this->setStatusCode(200)->respond($data);
+        return $this->setStatusCode(200)->respond($comments, $meta);
     }
 
     /**

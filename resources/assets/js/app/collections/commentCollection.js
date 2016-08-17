@@ -4,12 +4,12 @@ var model = require('../models/CommentModel');
 module.exports = BaseCollection.extend({
     model: model,
     url: '/comments',
-    initialize: function (options) {
+    initialize: function (models, options) {
         if (options) {
             this.parentUrl = options.parentUrl;
         }
     },
     comparator: function (model) {
-        return -model.get("id"); // Note the minus!
+        return -model.get("id");
     }
 });

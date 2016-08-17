@@ -4,10 +4,6 @@ var IdeaHubController = require('../../controllers/IdeaHubController');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'voteCollection',
-    ui: {
-        
-    },
-    events: {},
     regions: {
         items: '#vote-items'
     },

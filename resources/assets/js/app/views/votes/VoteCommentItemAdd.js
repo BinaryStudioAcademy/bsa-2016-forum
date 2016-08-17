@@ -1,5 +1,4 @@
 var Marionette = require('backbone.marionette');
-var CommentModel = require('../../models/CommentModel');
 
 module.exports = Marionette.ItemView.extend({
     template: 'VoteCommentAdd',
@@ -8,28 +7,34 @@ module.exports = Marionette.ItemView.extend({
         text: '.js-comment-text'
     },
     initialize: function (options) {
+        this.model.set('rating', 3);
+        this.model.set('user_id', 2);
+
         if (options.collection) {
-            this.storedColletion = options.collection;
-            console.log(this.storedColletion);
+            this.collection = options.collection;
         }
         if (options.parentId) {
             this.parentId = options.parentId;
-            console.log(this.parentId);
         }
+    },
+    modelEvents: {
+        'change:id': function() {this.ui.text.val('');}
     },
     events: {
         'click @ui.addButton': function () {
             var self = this;
-            var model = new CommentModel({ parentUrl: '/votes/' + this.parentId });
-            model.set('content_origin', this.ui.text.val());
-            model.set('rating', 3);
-            model.set('user_id', 2);
-            model.save({}, {
-                    success: function (data) {
-                        self.storedColletion.add(data);
-                        self.render();
-                    }
-                });
-        }
+            this.model.save({}, {
+                success: function (data) {
+                    self.collection.fetch();
+                    data.unset('content_origin');
+                    data.unset('id');
+                }
+            });
+        },
+        'change @ui.text': 'textChanged'
+    },
+    textChanged: function () {
+        this.model.set('content_origin', this.ui.text.val());
+        //console.log(this.model.get('content_origin'));
     }
 });

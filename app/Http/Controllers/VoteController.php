@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\Models\Vote;
 use App\Models\User;
 use App\Http\Requests\VotesRequest;
@@ -22,19 +23,13 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
      */
     private function getMetaData($votes)
     {
-        $data =[];
-        $i = 0;
+        $data = [];
 
         foreach ($votes as $vote) {
 
-            if ($vote->is_saved) {
-                $data[$i]['data'] = $vote;
-                $data[$i]['_meta']['user'] = $vote->user()->first();
-                $data[$i]['_meta']['likes'] = $vote->likes()->count();
-                $data[$i]['_meta']['tags'] = $vote->tags()->count();
-                $data[$i]['_meta']['comments'] = $vote->comments()->count();
-                $i++;
-            }
+            $data['user'][$vote->id] = $vote->user()->first();
+            $data['likes'][$vote->id] = $vote->likes()->count();
+            $data['comments'][$vote->id] = $vote->comments()->count();
         }
         return $data;
     }
@@ -47,9 +42,10 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function index()
     {
         $votes = Vote::all();
-        $data = $this->getMetaData($votes);
-        return $this->setStatusCode(200)->respond($data);
+        $meta = $this->getMetaData($votes);
+        return $this->setStatusCode(200)->respond($votes, $meta);
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -61,6 +57,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $vote = Vote::create($request->all());
         return $this->setStatusCode(201)->respond($vote);
     }
+
     /**
      * Display the specified resource.
      *
@@ -73,12 +70,10 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
 
         $user = $vote->user()->first();
         $likeCount = $vote->likes()->count();
-        $tagCount = $vote->tags()->count();
         $commentCount = $vote->comments()->count();
 
         return $this->setStatusCode(200)->respond($vote, ['user' => $user,
             'likes' => $likeCount,
-            'tags' => $tagCount,
             'comments' => $commentCount]);
     }
 
@@ -95,6 +90,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $vote->update($request->all());
         return $this->setStatusCode(200)->respond($vote);
     }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -119,7 +115,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $user = User::findOrFail($userId);
         $votes = $user->votes()->get();
 
-        if(!$votes){
+        if (!$votes) {
             return $this->setStatusCode(200)->respond();
         }
         return $this->setStatusCode(200)->respond($votes, ['user' => $user]);
@@ -130,7 +126,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $user = User::findOrFail($userId);
         $vote = $user->getVote($voteId);
 
-        if(!$vote){
+        if (!$vote) {
             throw (new ModelNotFoundException)->setModel(Vote::class);
         }
         return $this->setStatusCode(200)->respond($vote, ['user' => $user]);

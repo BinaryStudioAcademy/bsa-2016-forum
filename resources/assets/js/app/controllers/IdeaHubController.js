@@ -2,31 +2,21 @@ var app = require('../instances/appInstance');
 var Marionette = require('backbone.marionette');
 var VoteModel = require('../models/VoteModel');
 var ListVotes = require('../views/votes/ListVotes');
-var ShowVote = require('../views/votes/ShowVote');
 
-var VotesCollection = require('../collections/voteCollection');
+
+var Helper = require('../instances/Helper');
+
+var Votes = require('../instances/Votes');
 module.exports = Marionette.Object.extend({
 
     index: function () {
-        
-        VotesCollection.reset();
-        VotesCollection.fetch();
-        lw = new ListVotes({vc: VotesCollection});
-        app.getInstance().RootView.content.show(lw);
 
+        Votes.reset();
+        app.render(new ListVotes({vc: Votes}));
+        Votes.fetch();
     }
     ,
     showVote: function (id) {
-        var model = undefined;
-        if (VotesCollection.get(id)) {
-            model = VotesCollection.get(id);
-            app.getInstance().RootView.content.show(new ShowVote({model: model}));
-        } else {
-            model = new VoteModel({id: id}).fetch({
-                success: function (data) {
-                    app.getInstance().RootView.content.show(new ShowVote({model: data}));
-                }
-            });
-        }
+        Helper.showVote(id);
     }
 });

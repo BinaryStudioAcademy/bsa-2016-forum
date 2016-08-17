@@ -9,9 +9,15 @@ module.exports = Marionette.ItemView.extend({
         }
     },
     serializeData: function () {
-        var data = this.model.toJSON();
-        data._meta = this.model.getMeta();
-
-        return data;
+        var tempmeta = this.model.getMeta();
+        var id = this.model.get('id');
+        return {
+            model: this.model.toJSON(),
+            meta: {
+                user: tempmeta.user[id],
+                likes: tempmeta.likes[id],
+                comments: tempmeta.comments[id]
+            }
+        };
     }
 });

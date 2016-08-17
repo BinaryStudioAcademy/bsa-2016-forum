@@ -5,9 +5,12 @@ module.exports = Marionette.ItemView.extend({
     className: 'vote-comment',
     template: 'voteDetailComment',
     serializeData: function () {
-        var data = this.model.toJSON();
-        data._meta = this.model._meta;
-
-        return data;
+        var id = this.model.get('id');
+        return {
+            model: this.model.toJSON(),
+            meta: {
+                user: this.model.getMeta().user[id]
+            }
+        };
     }
 });
