@@ -9,7 +9,8 @@ var routers = {
             controller: new TopicController(),
             appRoutes: {
                 '': 'index',
-                'topics/:id' : 'show'
+                'topic/create': 'create',
+                'topics/:id': 'show'
             }
         },
 
