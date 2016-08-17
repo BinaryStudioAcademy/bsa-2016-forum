@@ -21,15 +21,15 @@ module.exports = Marionette.Object.extend({
         });
 
         topicModel.fetch({
-            wait: true,
-            async: false
+            success: function () {
+                var view = new TopicDetailView({ model: topicModel });
+                view.listenTo(Radio.channel('newComment'), 'showCommentForm', view.newCommentForm);
+                app.render(view);
+            },
+            error: function (response) {
+                logger(response.responseText);
+            }
         });
-
-        var view = new TopicDetailView({ model: topicModel });
-
-        view.listenTo(Radio.channel('newComment'), 'showCommentForm', view.newCommentForm);
-
-        app.render(view);
     },
 
     create: function () {

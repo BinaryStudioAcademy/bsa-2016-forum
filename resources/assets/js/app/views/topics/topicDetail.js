@@ -1,10 +1,10 @@
 var Marionette = require('backbone.marionette');
 var Backbone = require('backbone');
-var CommentsCollection = require('../../collections/CommentsCollection');
-var CommentsCollectionView = require('../comments/CommentsCollection');
+var CommentsCollection = require('../../collections/TopicCommentsCollection');
+var CommentsCollectionView = require('../comments/TopicCommentsCollection');
 var _ = require('underscore');
 var logger = require('../../instances/logger');
-var NewTopicCommentView = require('../comments/NewTopicComment');
+var NewTopicCommentView = require('../comments/TopicCommentNew');
 var Radio = require('backbone.radio');
 
 module.exports = Marionette.LayoutView.extend({
@@ -37,6 +37,7 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onRender: function () {
+        // fetch and show comments collection after topic layout is rendered
         var collection = new CommentsCollection();
         collection.parentUrl = _.result(this.model, 'url');
 

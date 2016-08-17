@@ -13,9 +13,7 @@ var mainLayoutView = Marionette.LayoutView.extend({
     },
 
     initialize: function () {
-        //Radio.channel('root').comply('set:content',function(contentView) {
-        //    this.getRegion('content').show(contentView);
-        //});
+
     },
 
     onRender: function () {
@@ -24,7 +22,9 @@ var mainLayoutView = Marionette.LayoutView.extend({
 
     showRegions: function () {
         this.getRegion('header').show(new headerView());
-        this.getRegion('navigationMenu').show(new navigationLayoutView());
+        this.getRegion('navigationMenu').show(new navigationLayoutView({
+            collection: this.collection
+        }));
     }
 
 });

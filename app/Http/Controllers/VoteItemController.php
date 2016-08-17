@@ -48,7 +48,7 @@ class VoteItemController extends ApiController
         $user = User::findOrFail($request->user_id);
 
         if (!$user->allowed('create.voteitems', $voteItem)) {
-            throw (new PermissionDeniedException);
+            throw (new PermissionDeniedException('voteitems'));
         }
         $voteItem->user()->associate($user);
         $voteItem->vote()->associate($vote);
@@ -72,9 +72,8 @@ class VoteItemController extends ApiController
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
-
         if (!Auth::user()->allowed('view.voteitems', $voteItem)) {
-            throw (new PermissionDeniedException);
+            throw (new PermissionDeniedException('voteitems'));
         }
         $user = $voteItem->user()->first();
         return $this->setStatusCode(200)->respond($voteItem, ['vote' => $vote, 'user' => $user]);
@@ -99,7 +98,7 @@ class VoteItemController extends ApiController
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
         if (!Auth::user()->allowed('update.voteitems', $voteItem)) {
-            throw (new PermissionDeniedException);
+            throw (new PermissionDeniedException('voteitems'));
         }
         $voteItem->update($request->all());
         return $this->setStatusCode(200)->respond($voteItem, ['vote' => $vote]);
@@ -122,7 +121,7 @@ class VoteItemController extends ApiController
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
         if (!Auth::user()->allowed('delete.voteitems', $voteItem)) {
-            throw (new PermissionDeniedException);
+            throw (new PermissionDeniedException('voteitems'));
         }
         $vote->delete();
         return $this->setStatusCode(204)->respond();
