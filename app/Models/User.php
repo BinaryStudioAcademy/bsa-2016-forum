@@ -90,4 +90,16 @@ class User extends Authenticatable implements HasRoleAndPermissionContract
     public function getVote($voteId){
         return $this->votes()->where('id',$voteId)->first();
     }
+    
+    public function messagesWith($withUserId)
+    {
+        $userId = $this->attributes['id'];
+        return Message::where(function ($msg) use ($userId, $withUserId) {
+            $msg->where('user_from_id', $userId)
+                ->where('user_to_id', $withUserId);
+        })->orWhere(function ($msg) use ($userId, $withUserId) {
+            $msg->where('user_to_id', $userId)
+                ->where('user_from_id', $withUserId);
+        });
+    }
 }

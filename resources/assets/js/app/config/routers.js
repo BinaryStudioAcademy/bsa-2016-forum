@@ -2,6 +2,7 @@ var TopicController = require('../controllers/TopicController');
 var IdeaHubController = require('../controllers/IdeaHubController');
 var UserController = require('../controllers/UserController');
 var DashBoardController = require('../controllers/DashboardController');
+var MessageController = require('../controllers/MessageController');
 
 module.exports = {
 
@@ -33,7 +34,16 @@ module.exports = {
             appRoutes: {
                 'users': 'index'
             }
+        },
+
+        {
+            controller: new MessageController(),
+            appRoutes: {
+                'messages': 'index',
+                'messages/user/:user': 'show'
+            }
         }
+
     ],
 
     getRouters: function () {

@@ -17,9 +17,34 @@ class MessageController extends ApiController
      * @param $userId
      * @return \Illuminate\Http\Response
      */
-    public function index($userId)
+    public function index($userId, Request $request)
     {
         $userFrom = User::findOrFail($userId);
+
+        if ($request->has('with_user')) {
+            $withUserId = $request->get('with_user');
+            $userTo = User::findOrFail($withUserId);
+            $messages = $userFrom->messagesWith($userTo->id)->get();
+            return $this->setStatusCode(200)->respond($messages, ['user_from' => $userFrom, 'users_to' => $userTo]);
+        }
+
+
+        /**
+         * $messages = Message::where('user_from_id', $userId)->orWhere('user_to_id', $userId)->get();
+         * $usersToIds = $messages->pluck('user_to_id');
+         * $usersFromIds = $messages->pluck('user_from_id');
+         *
+         * $usersTo = User::where(function ($users) use($usersToIds, $usersFromIds) {
+         * $users->where(function ($user) use ($usersToIds) {
+         * $user->whereIn('id', $usersToIds);
+         * })->orWhere(function ($user) use ($usersFromIds) {
+         * $user->whereIn('id', $usersFromIds);
+         * });
+         * })
+         * ->where('id', '!=', 7)
+         * ->get();
+         **/
+
 
         $messages = $userFrom->messages()->get();
         if (!$messages) {
@@ -27,6 +52,7 @@ class MessageController extends ApiController
         }
         $usersToIds = $messages->pluck('user_to_id');
         $usersTo = User::whereIn('id', $usersToIds)->get();
+
 
         return $this->setStatusCode(200)->respond(
             $messages,
