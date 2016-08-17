@@ -9,13 +9,14 @@ module.exports = {
         {
             controller: new DashBoardController(),
             appRoutes: {
+                '': 'index',
                 'dashboard': 'index'
             }
         },
         {
             controller: new TopicController(),
             appRoutes: {
-                '': 'index',
+                'topics': 'index',
                 'topics/:id' : 'show'
             }
         },

@@ -2,12 +2,12 @@
 NEW TOPIC VIEW STYLES
 */
 
-.topic-new {
+.topic-form {
   width: 100%;
   padding: 20px;
   background: #fff;
 }
-.topic-new > div {
+.topic-form > div {
   width: 100%;
   margin: 5px 0 15px;
 }
@@ -79,10 +79,12 @@ TOPIC DETAILS
 
 .topic {
   width: 100%;
-  padding: 0 15px;
+  //padding: 0 15px;
 }
 
 .topic-comment-item {
+  background: #fff;
+  border: 1px solid #EEEEEE;
   margin: 20px 0;
 }
 
@@ -250,20 +252,30 @@ TOPIC DETAILS
 }
 
 .topic-item {
-  width: 100%;
   height: 80px;
-  display: flex;
   margin-bottom: 20px;
+  border: 1px solid #EEEEEE;
+  padding-top: 15px;
+  overflow: hidden;
+  background: #fff;
 }
 
-.post-item {
-  width: 100%;
-  height: 80px;
-  display: flex;
-  margin-bottom: 5px;
-  border-bottom: 1px solid #EEEEEE;
-  overflow: hidden;
+.topic-head {
+  border: 1px solid #EEEEEE;
+  background: #fff;
+}
 
-  text-decoration: none;
-  cursor: pointer;
+.topic-new-comment-container, .new-comment-container {
+  margin: 20px auto;
+}
+.post-item {
+  //width: 100%;
+  //height: 80px;
+  //display: flex;
+  //margin-bottom: 5px;
+  //border-bottom: 1px solid #EEEEEE;
+  //overflow: hidden;
+  //
+  //text-decoration: none;
+  //cursor: pointer;
 }

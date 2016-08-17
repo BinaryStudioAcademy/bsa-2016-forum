@@ -18,6 +18,7 @@ body {
 }
 .menu-container li a:hover {
   border-color: #ffa500;
+  background: transparent;
 }
 .menu-container li.active a {
   border-color: #ffa500;
@@ -25,11 +26,11 @@ body {
 .post-head {
   padding: 15px;
   background: #545861;
-  margin-top: 15px;
+  margin: 15px 0;
   color: #fff;
   text-transform: uppercase;
 }
-.post-title {
+.post-title a {
   text-align: left;
   color: #ffa500;
   font-weight: bold;
@@ -37,8 +38,8 @@ body {
 
 .content-container {
   padding: 0;
-  margin: 15px auto;
-  display: flex;
+  //margin: 15px auto;
+  //display: flex;
 }
 
 .content-container-main {
