@@ -129,6 +129,11 @@ class TopicController extends ApiController
 
     }
 
+    /**
+     * Set parameters for filters
+     *
+     * @param TopicRequest $request
+     */
     protected function setFiltersData(TopicRequest $request)
     {
         $this->searchStr = $request->get('query');
