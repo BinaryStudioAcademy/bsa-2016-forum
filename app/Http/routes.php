@@ -65,7 +65,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
             'show' => 'voteItems.show',
             'update' => 'voteItems.update',
             'destroy' => 'voteItems.destroy',
-        ],
+        ]
     ]);
 
     /*Routes for users topics*/
