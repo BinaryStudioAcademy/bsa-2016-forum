@@ -15,10 +15,9 @@ use App\Http\Requests;
 class AttachmentController extends ApiController
 {
     /**
-     * AttachmentController constructor.
-     * define cloudinary cloud service
+     *define Cloudinary config
      */
-    protected function __construct()
+    protected function defineCloud()
     {
         \Cloudinary::config(config('cloudinary'));
     }
@@ -29,14 +28,14 @@ class AttachmentController extends ApiController
      */
     protected function uploadAttachmentToCloud(Request $request)
     {
+        $this->defineCloud();
         $tmp_file_path = $request->file('f')->getRealPath();
         // we need to move tmp file with new real file name because of problems with file type defining on cloud server side
         $new_tmp_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $request->file('f')->getClientOriginalName();
         move_uploaded_file($tmp_file_path, $new_tmp_file);
 
         $cloud_answer = \Cloudinary\Uploader::upload($new_tmp_file,
-            [
-                'resource_type' => 'auto',
+            ['resource_type' => 'auto',
                 'public_id' => time() . '_' . $request->file('f')->getClientOriginalName()
             ]);
 
