@@ -11,18 +11,25 @@
             </div>
             <div class="topic-body">
                 <div class="topic-msg">
-                    <p>Even though a field is marked as 'editable=False' in the model, I would like the admin page to display it. Currently it hides the field altogether.. How can this be achieved ?</p>
+                    <a href="{{ comment_url }}">{{ content_origin }}</a>
                 </div>
             </div>
         </div>
         <div class="topic-control">
-            <div class="topic-history-margin hidden-xs"></div>
-            <div class="topic-history">P: 21 Nov 9:43 U: usernik</div>
+            <div class="topic-bar hidden-xs"></div>
+            <div class="topic-history">{{ created_at }}: usernik</div>
+            <div class="topic-history">{{ user }}</div>
+            <div class="topic-history">Rating {{ rating }}</div>
             <div class="topic-control-btn">
-                <a>Edit</a><a>Share</a><a>Reply</a><a>notification</a>
+                <a class="edit-btn">Edit</a>
+                <a class="bookmark-btn">Bookmark</a>
+                <a class="share-btn">Share</a>
+                <a class="answer-btn">Reply</a>
+                <a class="notification-btn">Notification</a>
             </div>
         </div>
     </div>
+
     <div class="topic-comment-included">
         <!-- comments on this comment container -->
         <!-- comment item such as this item -->
@@ -30,4 +37,6 @@
                 <div class="topic-comment-main">
                     <di ... -->
     </div>
+
+    <div class="new-answer-container"></div>
 </div>

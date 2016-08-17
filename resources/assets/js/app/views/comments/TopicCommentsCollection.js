@@ -1,8 +1,17 @@
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
-var topicItem = require('./topicItem');
+var CommentItem = require('./TopicCommentItem');
 
 module.exports = Marionette.CollectionView.extend({
-    childView: topicItem,
-    className: 'container-fluid',
+    childView: CommentItem,
+
+    events: {
+
+    },
+
+
+
+    onRender: function () {
+
+    }
 });
