@@ -208,6 +208,17 @@ class CommentController extends ApiController
         }
     }
 
+    public function storeVoteCommentChild(Vote $vote, Comment $comment, CommentsRequest $childCommentInput)
+        {
+            if ($this->isCommentBelongsToVote($vote, $comment)) {
+                $childComment = Comment::create($childCommentInput->all());
+                $comments = $comment->comments()->save($childComment);
+                return $this->setStatusCode(200)->respond($comments);
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
+        }
+
     /**********  VoteItem SECTION START **********/
 
     /**
