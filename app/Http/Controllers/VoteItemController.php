@@ -23,6 +23,7 @@ class VoteItemController extends ApiController
      */
     public function index($voteId)
     {
+        Auth::login(User::find(1));
         $vote = Vote::findOrFail($voteId);
         $voteItems = $vote->voteItems()->get();
         if (!$voteItems) {
@@ -123,7 +124,7 @@ class VoteItemController extends ApiController
         if (!Auth::user()->allowed('delete.voteitems', $voteItem)) {
             throw (new PermissionDeniedException('voteitems'));
         }
-        $vote->delete();
+        $voteItem->delete();
         return $this->setStatusCode(204)->respond();
     }
 }

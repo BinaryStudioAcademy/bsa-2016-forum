@@ -29,7 +29,7 @@ class TagRequest extends ApiRequest
     public function messages()
     {
         return [
-            'type.required' => 'Type is required',
+            'name.required' => 'Name is required',
         ];
     }
 }
