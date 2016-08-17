@@ -108,6 +108,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::put('{comment}', 'CommentController@updateTopicComment')->name('updateTopicComment');
         Route::delete('{comment}', 'CommentController@destroyTopicComment')->name('deleteTopicComment');
         Route::get('{comment}/comments', 'CommentController@getTopicCommentChildren')->name('topicCommentChildren');
+        Route::post('{comment}/comments', 'CommentController@storeTopicCommentChildren')->name('storeTopicCommentChildren');
     });
     /*Routes for Vote comments*/
     Route::group(['prefix' => 'votes/{vote}/comments'], function () {
@@ -117,6 +118,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::put('{comment}', 'CommentController@updateVoteComment')->name('updateVoteComment');
         Route::delete('{comment}', 'CommentController@destroyVoteComment')->name('deleteVoteComment');
         Route::get('{comment}/comments', 'CommentController@getVoteCommentChildren')->name('voteCommentChildren');
+        Route::post('{comment}/comments', 'CommentController@storeVoteCommentChildren')->name('storeVoteCommentChildren');
     });
     /*Routes for VoteItem comments*/
     Route::group(['prefix' => 'votes/{vote}/voteitems/{voteitem}/comments'], function () {
