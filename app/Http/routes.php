@@ -68,18 +68,16 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
     });
     /*Routes for Topic tags*/
     Route::group(['prefix' => 'topics/{topic}/tags'], function () {
-        Route::get('', 'TagController@getTopicTags')->name('topicTags');
+        Route::get('', 'TagController@getAllTopicTags')->name('topicTags');
         Route::post('', 'TagController@storeTopicTag')->name('storeTopicTag');
         Route::get('{tag}', 'TagController@getTopicTag')->name('topicTag');
-        Route::put('{tag}', 'TagController@updateTopicTag')->name('updateTopicTag');
         Route::delete('{tag}', 'TagController@destroyTopicTag')->name('deleteTopicTag');
     });
     /*Routes for Vote tags*/
     Route::group(['prefix' => 'votes/{vote}/tags'], function () {
-        Route::get('', 'TagController@getVoteTags')->name('voteTags');
+        Route::get('', 'TagController@getAllVoteTags')->name('voteTags');
         Route::post('', 'TagController@storeVoteTag')->name('storeVoteTag');
         Route::get('{tag}', 'TagController@getVoteTag')->name('voteTag');
-        Route::put('{tag}', 'TagController@updateVoteTag')->name('updateVoteTag');
         Route::delete('{tag}', 'TagController@destroyVoteTag')->name('deleteVoteTag');
     });
     /*Routes for Topic comments*/
