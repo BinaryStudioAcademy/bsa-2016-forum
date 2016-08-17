@@ -15,7 +15,8 @@ class CreateAttachmentsTable extends Migration
     {
         Schema::create('attachments', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('value');
+            $table->string('url');
+            $table->string('cloud_public_id');
             $table->string('type')->nullable();
             $table->softDeletes();
             $table->timestamps();
