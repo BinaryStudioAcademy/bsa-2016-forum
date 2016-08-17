@@ -26,6 +26,14 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
             'destroy' => 'users.destroy',
         ],
     ]);
+    /*Routes for users Role*/
+    Route::group(['prefix' => 'users/{user}/roles'], function () {
+        Route::get('', 'UserController@getUserRole')->name('userRole');
+        Route::put('{role}', 'UserController@updateRole')->name('updateRole');
+    });
+    /*Routes for roles*/
+    Route::get('roles', 'RoleController@index')->name('roles');
+
     Route::resource('topics', 'TopicController', [
         'except' => ['edit', 'create'],
         'names' => [
