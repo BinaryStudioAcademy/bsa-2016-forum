@@ -16,15 +16,20 @@
             </div>
         </div>
         <div class="topic-control">
-            <div class="topic-history-margin hidden-xs"></div>
-            <div class="topic-history">{{ created_at }}</div>
+            <div class="topic-bar hidden-xs"></div>
+            <div class="topic-history">{{ created_at }}: usernik</div>
             <div class="topic-history">{{ user }}</div>
             <div class="topic-history">Rating {{ rating }}</div>
             <div class="topic-control-btn">
-                <a>Edit</a><a>Share</a><a>Reply</a><a>notification</a>
+                <a class="edit-btn">Edit</a>
+                <a class="bookmark-btn">Bookmark</a>
+                <a class="share-btn">Share</a>
+                <a class="answer-btn">Answer</a>
+                <a class="notification-btn">notification</a>
             </div>
         </div>
     </div>
+
     <div class="topic-comment-included">
         <!-- comments on this comment container -->
         <!-- comment item such as this item -->
@@ -32,4 +37,6 @@
                 <div class="topic-comment-main">
                     <di ... -->
     </div>
+
+    <div class="new-answer-container"></div>
 </div>

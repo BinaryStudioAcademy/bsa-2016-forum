@@ -3,7 +3,7 @@ var _ = require('underscore');
 var Radio = require('backbone.radio');
 var Marionette = require('backbone.marionette');
 
-// инитим channels на сам инстанс марионета
+// init channels on marionette
 Marionette.Application.prototype._initChannel = function () {
     this.channelName = _.result(this, 'channelName') || 'global';
     this.channel = _.result(this, 'channel') || Radio.channel(this.channelName);

@@ -25,34 +25,22 @@
             <div class="topic-bar hidden-xs"></div>
             <div class="topic-history">{{ created_at }}: usernik</div>
             <div class="topic-control-btn">
-                <a>Edit</a><a>Share</a><a>Answer</a><a>notification</a>
+                <a class="edit-btn">Edit</a>
+                <a class="bookmark-btn">Bookmark</a>
+                <a class="share-btn">Share</a>
+                <a class="answer-btn">Answer</a>
+                <a class="notification-btn">notification</a>
             </div>
         </div>
+
+        <div class="new-comment-container"></div>
     </div>
+
+
     <div class="topic-comments" id="topic-comments">
 
     </div>
-    <a class="topic-more">Load more</a>
-    <div class="topic-comment-main">
-        <div class="topic-comment-flex">
-            <div class="topic-bar hidden-xs">
-                <div class="topic-avatar">
-                    <img src="/images/user.png">
-                </div>
-                <div class="topic-addition">
 
-                </div>
-            </div>
-            <div class="topic-body">
-                <textarea class="form-control" rows="3" placeholder="Comment..."></textarea>
-                <div class="topic-attachment"><a>Attach</a></div>
-            </div>
-        </div>
-        <div class="topic-control">
-            <div class="topic-control-btn topic-control-add">
-                <button class="btn btn-default">Add comment</button>
-            </div>
-        </div>
-    </div>
+    <a class="topic-more">Load more</a>
 </div>
-<div class="comments-container"></div>
+

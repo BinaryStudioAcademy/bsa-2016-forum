@@ -5,6 +5,12 @@ var CommentItem = require('./CommentItem');
 module.exports = Marionette.CollectionView.extend({
     childView: CommentItem,
 
+    events: {
+
+    },
+
+
+
     onRender: function () {
 
     }
