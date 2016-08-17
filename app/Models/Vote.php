@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -66,5 +67,35 @@ class Vote extends Model
     {
         return $this->morphToMany(Notification::class, 'notificationable');
     }
-    
+
+    /**
+     * Scope a query to only include votes which contain a searching text in the vote's title
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $searchStr
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilterByQuery(Builder $query, $searchStr)
+    {
+        if ($searchStr) {
+            $query = $query->where('title','LIKE','%'.$searchStr.'%');
+        }
+        return $query;
+    }
+
+    /**
+     * Scope a query to only include votes which have tags with selected IDs
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $tagIds
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilterByTags(Builder $query, array $tagIds)
+    {
+        if (!empty($tagIds)) {
+            $query = $query->whereHas('tags', function($q) use ($tagIds){
+                $q->whereIn('tag_id', $tagIds);
+            });
+        }
+        return $query;
+    }
 }
