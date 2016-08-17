@@ -9,12 +9,43 @@ use App\Models\Topic;
 use App\Models\Vote;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use App\Http\Requests\AttachmentsRequest;
 
 use App\Http\Requests;
 
 class AttachmentController extends ApiController
 {
+    /**
+     *define Cloudinary config
+     */
+    protected function defineCloud()
+    {
+        \Cloudinary::config(config('cloudinary'));
+    }
+
+    /**
+     * @param Request $request
+     * @return array for create attachment Model
+     */
+    protected function uploadAttachmentToCloud(Request $request)
+    {
+        $this->defineCloud();
+        $tmp_file_path = $request->file('f')->getRealPath();
+        // we need to move tmp file with new real file name because of problems with file type defining on cloud server side
+        $new_tmp_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $request->file('f')->getClientOriginalName();
+        move_uploaded_file($tmp_file_path, $new_tmp_file);
+
+        $cloud_answer = \Cloudinary\Uploader::upload($new_tmp_file,
+            ['resource_type' => 'auto',
+                'public_id' => time() . '_' . $request->file('f')->getClientOriginalName()
+            ]);
+
+        $attachment_data['cloud_public_id'] = $cloud_answer['public_id'];
+        $attachment_data['type'] = mime_content_type($new_tmp_file);
+        $attachment_data['url'] = $cloud_answer['url'];
+        unlink($new_tmp_file);
+
+        return $attachment_data;
+    }
 
     /**********  TOPIC SECTION START **********/
 
@@ -56,12 +87,13 @@ class AttachmentController extends ApiController
 
     /**
      * @param Topic $topic
-     * @param AttachmentsRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeTopicAttachment(Topic $topic, AttachmentsRequest $request)
+    public function storeTopicAttachment(Topic $topic, Request $request)
     {
-        $attachment = Attachment::create($request->all());
+        $attachment_data = $this->uploadAttachmentToCloud($request);
+        $attachment = Attachment::create($attachment_data);
         $attachment = $topic->attachments()->save($attachment);
         return $this->setStatusCode(201)->respond($attachment);
     }
@@ -75,6 +107,8 @@ class AttachmentController extends ApiController
     public function destroyTopicAttachment(Topic $topic, Attachment $attachment)
     {
         if ($this->isAttachmentBelongsToTopic($topic, $attachment)) {
+            $this->defineCloud();
+            \Cloudinary\Uploader::destroy($attachment->cloud_public_id);
             $attachment->delete();
             return $this->setStatusCode(204)->respond();
         } else {
@@ -96,6 +130,10 @@ class AttachmentController extends ApiController
         return ($voteWhichHasThisAttachment && $voteWhichHasThisAttachment->id === $vote->id);
     }
 
+    /**
+     * @param Vote $vote
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllVoteAttachments(Vote $vote)
     {
         $attachments = $vote->attachments()->get();
@@ -118,12 +156,13 @@ class AttachmentController extends ApiController
 
     /**
      * @param Vote $vote
-     * @param AttachmentsRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeVoteAttachment(Vote $vote, AttachmentsRequest $request)
+    public function storeVoteAttachment(Vote $vote, Request $request)
     {
-        $attachment = Attachment::create($request->all());
+        $attachment_data = $this->uploadAttachmentToCloud($request);
+        $attachment = Attachment::create($attachment_data);
         $attachment = $vote->attachments()->save($attachment);
         return $this->setStatusCode(201)->respond($attachment);
     }
@@ -137,6 +176,8 @@ class AttachmentController extends ApiController
     public function destroyVoteAttachment(Vote $vote, Attachment $attachment)
     {
         if ($this->isAttachmentBelongsToVote($vote, $attachment)) {
+            $this->defineCloud();
+            \Cloudinary\Uploader::destroy($attachment->cloud_public_id);
             $attachment->delete();
             return $this->setStatusCode(204)->respond();
         } else {
@@ -158,6 +199,10 @@ class AttachmentController extends ApiController
         return ($commentWhichHasThisAttachment && $commentWhichHasThisAttachment->id === $comment->id);
     }
 
+    /**
+     * @param Comment $comment
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllCommentAttachments(Comment $comment)
     {
         $attachments = $comment->attachments()->get();
@@ -180,12 +225,13 @@ class AttachmentController extends ApiController
 
     /**
      * @param Comment $comment
-     * @param AttachmentsRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeCommentAttachment(Comment $comment, AttachmentsRequest $request)
+    public function storeCommentAttachment(Comment $comment, Request $request)
     {
-        $attachment = Attachment::create($request->all());
+        $attachment_data = $this->uploadAttachmentToCloud($request);
+        $attachment = Attachment::create($attachment_data);
         $attachment = $comment->attachments()->save($attachment);
         return $this->setStatusCode(201)->respond($attachment);
     }
@@ -199,6 +245,8 @@ class AttachmentController extends ApiController
     public function destroyCommentAttachment(Comment $comment, Attachment $attachment)
     {
         if ($this->isAttachmentBelongsToComment($comment, $attachment)) {
+            $this->defineCloud();
+            \Cloudinary\Uploader::destroy($attachment->cloud_public_id);
             $attachment->delete();
             return $this->setStatusCode(204)->respond();
         } else {
@@ -220,6 +268,10 @@ class AttachmentController extends ApiController
         return ($messageWhichHasThisAttachment && $messageWhichHasThisAttachment->id === $message->id);
     }
 
+    /**
+     * @param Message $message
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllMessageAttachments(Message $message)
     {
         $attachments = $message->attachments()->get();
@@ -242,12 +294,13 @@ class AttachmentController extends ApiController
 
     /**
      * @param Message $message
-     * @param AttachmentsRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeMessageAttachment(Message $message, AttachmentsRequest $request)
+    public function storeMessageAttachment(Message $message, Request $request)
     {
-        $attachment = Attachment::create($request->all());
+        $attachment_data = $this->uploadAttachmentToCloud($request);
+        $attachment = Attachment::create($attachment_data);
         $attachment = $message->attachments()->save($attachment);
         return $this->setStatusCode(201)->respond($attachment);
     }
@@ -261,6 +314,8 @@ class AttachmentController extends ApiController
     public function destroyMessageAttachment(Message $message, Attachment $attachment)
     {
         if ($this->isAttachmentBelongsToMessage($message, $attachment)) {
+            $this->defineCloud();
+            \Cloudinary\Uploader::destroy($attachment->cloud_public_id);
             $attachment->delete();
             return $this->setStatusCode(204)->respond();
         } else {
