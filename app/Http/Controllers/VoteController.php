@@ -21,9 +21,10 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $users = User::all();
         Auth::login($users[1]);
     }
+
     /**
      * @param $votes array
-     * @return $data array
+     * @return array $data array
      */
     private function getMetaData($votes)
     {
@@ -43,10 +44,11 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         }
         return $data;
     }
+
     /**
      * Display a listing of the resource.
-     *
      * @return \Illuminate\Http\Response
+     * @throws PermissionDeniedException
      */
     public function index()
     {
@@ -58,11 +60,13 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $data = $this->getMetaData($votes);
         return $this->setStatusCode(200)->respond($data);
     }
+
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param VotesRequest|Request $request
      * @return \Illuminate\Http\Response
+     * @throws PermissionDeniedException
      */
     public function store(VotesRequest $request)
     {
@@ -73,11 +77,13 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $vote = Vote::create($request->all());
         return $this->setStatusCode(201)->respond($vote);
     }
+
     /**
      * Display the specified resource.
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
+     * @throws PermissionDeniedException
      */
     public function show($id)
     {
@@ -100,9 +106,10 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param VotesRequest|Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
+     * @throws PermissionDeniedException
      */
     public function update(VotesRequest $request, $id)
     {
@@ -114,11 +121,13 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $vote->update($request->all());
         return $this->setStatusCode(200)->respond($vote);
     }
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
+     * @throws PermissionDeniedException
      */
     public function destroy($id)
     {
@@ -136,6 +145,12 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         }
     }
 
+    /**
+     * Display a listing of all votes created by user
+     * @param $userId
+     * @return \Illuminate\Http\JsonResponse
+     * @throws PermissionDeniedException
+     */
     public function getUserVotes($userId)
     {
         $user = User::findOrFail($userId);
@@ -151,6 +166,13 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         return $this->setStatusCode(200)->respond($votes, ['user' => $user]);
     }
 
+    /**
+     * Display the specific vote created by specific user
+     * @param $userId
+     * @param $voteId
+     * @return \Illuminate\Http\JsonResponse
+     * @throws PermissionDeniedException
+     */
     public function getUserVote($userId, $voteId)
     {
         $user = User::findOrFail($userId);
