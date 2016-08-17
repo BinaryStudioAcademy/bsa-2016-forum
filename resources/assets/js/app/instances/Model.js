@@ -3,9 +3,14 @@ var _ = require('underscore');
 var App = require('../instances/appInstance');
 
 module.exports = Backbone.Model.extend({
+    parentUrl: null,
+
+    getEntityUrl: function () {
+        return (_.result(this, 'parentUrl') || '') + (_.result(this, 'url') || _.result(this, 'urlRoot'));
+    },
 
     _getRequestUrl: function () {
-        return App.getBaseUrl() + (_.result(this, 'url') || _.result(this, 'urlRoot') || _.result(this.collection, 'url'));
+        return App.getBaseUrl() + this.getEntityUrl();
     },
 
     sync: function (method, collection, options) {
@@ -24,4 +29,5 @@ module.exports = Backbone.Model.extend({
             return response;
         }
     }
+
 });
