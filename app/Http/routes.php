@@ -26,6 +26,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
             'destroy' => 'users.destroy',
         ],
     ]);
+    
     Route::resource('topics', 'TopicController', [
         'except' => ['edit', 'create'],
         'names' => [
@@ -46,6 +47,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
             'destroy' => 'votes.destroy',
         ],
     ]);
+
     Route::resource('users/{user}/messages', 'MessageController', [
         'except' => ['edit', 'create'],
         'names' => [
@@ -140,4 +142,9 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
 
     Route::get('rss', 'rssController@index')->name('rss');
     Route::post('rss', 'rssController@subscribe')->name('rssSubscribe');
+
+
+   // Route::get('votes/',  ['middleware' => 'auth-service', function() {
+   //    'VoteController@index()';
+   // }]);
 });
