@@ -14,10 +14,14 @@ use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
 class VoteController extends ApiController implements HasRoleAndPermissionContract
 {
     use HasRoleAndPermission;
-    
+
+    protected $searchStr = null;
+    protected $tagIds = [];
+
     #TODO: Delete this after the authorization implement
     public function __construct()
     {
+
         $users = User::all();
         Auth::login($users[1]);
     }
@@ -47,16 +51,19 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
 
     /**
      * Display a listing of the resource.
+     * @param Request $request
      * @return \Illuminate\Http\Response
      * @throws PermissionDeniedException
      */
-    public function index()
+    public function index(Request $request)
     {
         $vote = new Vote();
         if (!(Auth::user()->allowed('view.votes', $vote)))
             throw new PermissionDeniedException('index');
 
-        $votes = Vote::all();
+        $this->setFiltersParameters($request);
+
+        $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
         $data = $this->getMetaData($votes);
         return $this->setStatusCode(200)->respond($data);
     }
@@ -148,13 +155,20 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     /**
      * Display a listing of all votes created by user
      * @param $userId
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws PermissionDeniedException
      */
-    public function getUserVotes($userId)
+    public function getUserVotes($userId, Request $request)
     {
         $user = User::findOrFail($userId);
-        $votes = $user->votes()->get();
+
+        $this->setFiltersParameters($request);
+        $votes = $user->votes()
+            ->getQuery()
+            ->filterByQuery($this->searchStr)
+            ->filterByTags($this->tagIds)
+            ->get();
 
         $vote = $votes[0];
         if (!(Auth::user()->allowed('view.votes', $vote)))
@@ -185,5 +199,13 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
             throw (new ModelNotFoundException)->setModel(Vote::class);
         }
         return $this->setStatusCode(200)->respond($vote, ['user' => $user]);
+    }
+
+    //set filter's parameters from request
+    protected function setFiltersParameters(Request $request)
+    {
+        $this->searchStr = $request->get('query');
+        $tagIds = $request->get('tag_ids');
+        $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
     }
 }
