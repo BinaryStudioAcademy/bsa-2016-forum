@@ -15,15 +15,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Validator::extend('is_current_user', function($attribute, $value, $parameters, $validator) {
+        Validator::extend('is_current_user', function ($attribute, $value, $parameters, $validator) {
             return $value == Auth::id();
         });
 
-        Validator::extend('not_same_user', function($attribute, $value, $parameters, $validator) {
+        Validator::extend('not_same_user', function ($attribute, $value, $parameters, $validator) {
             return $value != Auth::id();
         });
 
-        Validator::extend('file_isset', function($attribute, $value, $parameters, $validator) {
+        Validator::extend('file_isset', function ($attribute, $value, $parameters, $validator) {
             return file_exists($value);
         });
     }

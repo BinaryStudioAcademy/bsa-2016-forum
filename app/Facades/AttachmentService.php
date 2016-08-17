@@ -4,8 +4,12 @@ namespace App\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class AttachmentService extends Facade {
+class AttachmentService extends Facade
+{
 
-    protected static function getFacadeAccessor() { return 'AttachmentService'; }
+    protected static function getFacadeAccessor()
+    {
+        return 'AttachmentService';
+    }
 
 }
