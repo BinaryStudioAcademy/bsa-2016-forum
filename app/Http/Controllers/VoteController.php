@@ -163,6 +163,11 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     {
         $user = User::findOrFail($userId);
 
+        $vote = new Vote();
+        if (!(Auth::user()->allowed('view.votes', $vote))){
+            throw new PermissionDeniedException('index');
+        }
+
         $this->setFiltersParameters($request);
         $votes = $user->votes()
             ->getQuery()
@@ -170,13 +175,10 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
             ->filterByTags($this->tagIds)
             ->get();
 
-        $vote = $votes[0];
-        if (!(Auth::user()->allowed('view.votes', $vote)))
-            throw new PermissionDeniedException('index');
-
         if(!$votes){
             return $this->setStatusCode(200)->respond();
         }
+
         return $this->setStatusCode(200)->respond($votes, ['user' => $user]);
     }
 
@@ -192,12 +194,14 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $user = User::findOrFail($userId);
         $vote = $user->getVote($voteId);
 
-        if (!(Auth::user()->allowed('view.votes', $vote)))
-            throw new PermissionDeniedException('view');
-
         if(!$vote){
             throw (new ModelNotFoundException)->setModel(Vote::class);
         }
+
+        if (!(Auth::user()->allowed('view.votes', $vote))){
+            throw new PermissionDeniedException('view');
+        }
+
         return $this->setStatusCode(200)->respond($vote, ['user' => $user]);
     }
 
