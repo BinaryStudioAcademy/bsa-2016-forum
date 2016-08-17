@@ -133,7 +133,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
     /*Routes for VoteItem comments*/
     Route::group(['middleware' => 'auth-service', 'prefix' => 'votes/{vote}/voteitem/{voteitem}/comments'], function () {
         Route::get('', 'CommentController@getVoteItemComments')->name('voteItemComments');
-        Route::post('', 'CommentControl ler@storeVoteItemComment')->name('storeVoteItemComment');
+        Route::post('', 'CommentController@storeVoteItemComment')->name('storeVoteItemComment');
         Route::get('{comment}', 'CommentController@getVoteItemComment')->name('voteItemComment');
         Route::put('{comment}', 'CommentController@updateVoteItemComment')->name('updateVoteItemComment');
         Route::delete('{comment}', 'CommentController@destroyVoteItemComment')->name('deleteVoteItemComment');
