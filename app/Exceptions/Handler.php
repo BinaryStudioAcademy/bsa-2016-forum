@@ -9,7 +9,9 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use \DCN\RBAC\Exceptions\PermissionDeniedException;
 
 class Handler extends ExceptionHandler
 {
@@ -50,6 +52,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if ($e instanceof PermissionDeniedException) {
+            return response($e->getMessage(), 401);
+        }
+
+        if ($e instanceof MethodNotAllowedHttpException) {
+            return response('Method Not Allowed', 405);
+        }
+
         if ($e instanceof ValidationException) {
             $validationErrors = $e->validator->errors();
             return response($validationErrors, 400);
@@ -66,9 +76,13 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof NotFoundHttpException){
-            return response(404);
+            return response('Resource not found', 404);
         }
 
+        if ($e instanceof PermissionDeniedException){
+            return response($e->getMessage(), 403);
+        }
+        
         return parent::render($request, $e);
     }
 }

@@ -13,7 +13,7 @@ class Attachment extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['cloud_public_id', 'type', 'url'];
 
     /**
      * The attributes that should be mutated to dates.

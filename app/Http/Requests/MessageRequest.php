@@ -25,7 +25,7 @@ class MessageRequest extends ApiRequest
             'user_from_id' => 'required|integer|is_current_user',
             'user_to_id' => 'required|exists:users,id|integer|not_same_user',
             'message' => 'required',
-            'is_read' => 'integer|size:1',
+            'is_read' => 'integer|between:0,1',
         ];
     }
 

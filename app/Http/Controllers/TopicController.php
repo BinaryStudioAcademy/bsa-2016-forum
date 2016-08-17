@@ -7,17 +7,23 @@ use App\Http\Requests\TopicRequest;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-
 class TopicController extends ApiController
 {
+    protected $searchStr = null;
+
+    protected $tagIds = [];
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param  TopicRequest  $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(TopicRequest $request)
     {
-        $topics = Topic::all();
+        $this->setFiltersData($request);
+
+        $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
 
         return $this->setStatusCode(200)->respond($topics);
     }
@@ -25,7 +31,7 @@ class TopicController extends ApiController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  TopicRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(TopicRequest $request)
@@ -51,11 +57,11 @@ class TopicController extends ApiController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
+     * @param  TopicRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(TopicRequest $request, $id)
+    public function update($id, TopicRequest $request)
     {
         $topic = Topic::findOrFail($id);
         $topic->update($request->all());
@@ -77,15 +83,40 @@ class TopicController extends ApiController
 
         return $this->setStatusCode(204)->respond();
     }
-    public function getUserTopics($userId)
+
+    /**
+     * Get all or filtering user's topics
+     *
+     * @param int $userId
+     * @param  TopicRequest  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUserTopics($userId, TopicRequest $request)
     {
         $user = User::findOrFail($userId);
-        $topics = $user->topics()->get();
+
+        $this->setFiltersData($request);
+
+        $topics = $user->topics()
+            ->getQuery()
+            ->filterByQuery($this->searchStr)
+            ->filterByTags($this->tagIds)
+            ->get();
+
         if(!$topics){
             return $this->setStatusCode(200)->respond();
         }
+
         return $this->setStatusCode(200)->respond($topics, ['user' => $user]);
     }
+
+    /**
+     * Get selected user's topic
+     *
+     * @param int $userId
+     * @param int $topicId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getUserTopic($userId, $topicId)
     {
         $user = User::findOrFail($userId);
@@ -97,4 +128,17 @@ class TopicController extends ApiController
         return $this->setStatusCode(200)->respond($topic, ['user' => $user]);
 
     }
+
+    /**
+     * Set parameters for filters
+     *
+     * @param TopicRequest $request
+     */
+    protected function setFiltersData(TopicRequest $request)
+    {
+        $this->searchStr = $request->get('query');
+        $tagIds = $request->get('tag_ids');
+        $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+    }
+
 }
