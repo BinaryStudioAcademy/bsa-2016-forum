@@ -9,7 +9,7 @@ module.exports = {
         {
             controller: new DashBoardController(),
             appRoutes: {
-                '': 'index'
+                '': 'index',
                 'dashboard': 'index'
             }
         },
