@@ -27,16 +27,19 @@ module.exports = Marionette.Object.extend({
         app.render(new MessageDialogLayout({
             currentUser: currentUser,
             collection: messageCollection,
-            sendMessageEvent: function (data) {
-                Test = data;
-                var message = new MessageModel ({
-                    message: data.message,
-                    user_from_id: currentUser.get('id'),
-                    user_to_id: id,
-                    is_read: false
-                });
-                message.parentUrl = _.result(currentUser, 'url');
-                message.save();
+            events: {
+                'submit form': function (e) {
+                    e.preventDefault();
+                    var message = new MessageModel ({
+                        message: e.target.message.value,
+                        user_from_id: currentUser.get('id'),
+                        user_to_id: messageCollection._meta.with_user.id,
+                        is_read: false
+                    });
+                    e.target.message.value = '';
+                    message.parentUrl = _.result(currentUser, 'url');
+                    message.save();
+                }
             }
         }));
     }

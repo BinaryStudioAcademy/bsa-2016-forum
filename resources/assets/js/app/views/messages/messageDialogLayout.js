@@ -4,9 +4,6 @@ var messageDialogCollection = require('./messageDialogCollection');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'messageDialogLayout',
-    events: {
-        'submit form': 'sendEvent'
-    },
     regions: {
         container: '#dialog-messages'
     },
@@ -15,10 +12,5 @@ module.exports = Marionette.LayoutView.extend({
             collection: this.collection,
             currentUser: this.options.currentUser
         }));
-    },
-    
-    sendEvent: function (e) {
-        e.preventDefault();
-        this.options.sendMessageEvent(e.target);
     }
 });
