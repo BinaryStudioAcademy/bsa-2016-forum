@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Emarref\Jwt\Claim;
 
 
-class AuthService
+class AuthMain extends AuthService
 {
     /**
      * Run the request filter.
@@ -19,16 +19,9 @@ class AuthService
      * @param  \Closure  $next
      * @return mixed
      */
-    
-    public function loginUser()
-    {
-        $users = User::all();
-        Auth::login($users[1]);
-    }
-    
     public function handle($request, Closure $next)
     {
-       //
+        $this->loginUser();
         return $next($request);
     }
 
