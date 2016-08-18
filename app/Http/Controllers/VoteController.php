@@ -32,6 +32,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
             $data['user'][$vote->id] = $vote->user()->first();
             $data['likes'][$vote->id] = $vote->likes()->count();
             $data['comments'][$vote->id] = $vote->comments()->count();
+            $data['tags'][$vote->id] = $vote->tags()->get(['name']);
         }
         return $data;
     }
@@ -89,12 +90,14 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $user = $vote->user()->first();
         $likeCount = $vote->likes()->count();
         $commentCount = $vote->comments()->count();
+        $tags = $vote->tags()->get(['name']);
 
         return $this->setStatusCode(200)->respond($vote,
             [
                 'user' => [$vote->id => $user],
                 'likes' => [$vote->id => $likeCount],
-                'comments' => [$vote->id => $commentCount]
+                'comments' => [$vote->id => $commentCount],
+                'tags' => [$vote->id => $tags]
             ]
         );
     }

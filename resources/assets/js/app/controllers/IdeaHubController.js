@@ -47,15 +47,15 @@ module.exports = Marionette.Object.extend({
         if (Votes.get(id)) {
             model = Votes.get(id);
             app.render(new ShowVote({
-                model: model,
+                voteModel: model,
                 collection: myCommentsCollection
             }));
         } else {
             model = new VoteModel({id: id});
+            model.fetch();
 
-            model.fetch({async: false});
             app.render(new ShowVote({
-                model: model,
+                voteModel: model,
                 collection: myCommentsCollection
             }));
 

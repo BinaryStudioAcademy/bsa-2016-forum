@@ -1,28 +1,18 @@
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var AddCommentView = require('./VoteCommentItemAdd');
-var CommentsCollectionView = require('../../views/votes/VoteCommentsCollection.js');
+var CommentsCollectionView = require('../../views/votes/VoteCommentsCollection');
+var VoteHeader = require('../../views/votes/voteHeader');
+
 module.exports = Marionette.LayoutView.extend({
     template: 'voteDetail',
     regions: {
         comments: '#comments',
-        addcomment: '#add-comment'
+        addcomment: '#add-comment',
+        voteheader: '#vote-header'
     },
     ui: {
         c_count: '#count'
-    },
-    serializeData: function () {
-        var tempmeta = this.model.getMeta();
-        var id = this.model.get('id');
-        return {
-            model: this.model.toJSON(),
-            meta: {
-                user: tempmeta.user[id],
-                likes: tempmeta.likes[id],
-                comments: tempmeta.comments[id]
-            }
-        };
-
     },
     initialize: function () {
         this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount', function (n) {
@@ -34,11 +24,15 @@ module.exports = Marionette.LayoutView.extend({
             new CommentsCollectionView({
                 collection: this.options.collection
             }));
-
+        console.log('onbeforeshow');
         this.getRegion('addcomment').show(
             new AddCommentView({
                 collection: this.options.collection
             })
+        );
+
+        this.getRegion('voteheader').show(
+            new VoteHeader({model: this.options.voteModel})
         );
     }
 });
