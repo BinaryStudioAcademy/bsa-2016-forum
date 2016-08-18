@@ -9,11 +9,9 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::get('/',['middleware' =>'auth-main'],function() {
-    function () {
+Route::get('/',['middleware' =>'auth-main',function() {
         return view('main');
-    };
-});
+}]);
 
 Route::group(['middleware' =>'api', 'prefix' => 'api/v1'], function () {
     Route::get('/', function () {
