@@ -24,24 +24,20 @@ module.exports = Marionette.LayoutView.extend({
         };
 
     },
-    initialize: function (options) {
-
-        this.listenTo(Radio.channel('votesChannel'), 'setVotesCount', function (n) {
+    initialize: function () {
+        this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount', function (n) {
             this.ui.c_count.text(n + ' Comments');
         });
-        if(options.collection) {
-            this.CommentsCollection = options.collection;
-        }
     },
     onBeforeShow: function () {
         this.getRegion('comments').show(
             new CommentsCollectionView({
-                collection: this.CommentsCollection
+                collection: this.options.collection
             }));
 
         this.getRegion('addcomment').show(
             new AddCommentView({
-                collection: this.CommentsCollection,
+                collection: this.options.collection,
                 parentId: this.model.get('id')
             })
         );

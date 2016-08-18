@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\Models\Vote;
 use App\Models\User;
 use App\Http\Requests\VotesRequest;
@@ -98,9 +99,12 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $commentCount = $vote->comments()->count();
 
         return $this->setStatusCode(200)->respond($vote,
-            ['user' => [$vote->id => $user],
-            'likes' => [$vote->id => $likeCount],
-            'comments' => [$vote->id => $commentCount]]);
+            [
+                'user' => [$vote->id => $user],
+                'likes' => [$vote->id => $likeCount],
+                'comments' => [$vote->id => $commentCount]
+            ]
+        );
     }
 
     /**
@@ -157,7 +161,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $user = User::findOrFail($userId);
 
         $vote = new Vote();
-        if (!(Auth::user()->allowed('view.votes', $vote))){
+        if (!(Auth::user()->allowed('view.votes', $vote))) {
             throw new PermissionDeniedException('index');
         }
 
@@ -168,7 +172,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
             ->filterByTags($this->tagIds)
             ->get();
 
-        if(!$votes){
+        if (!$votes) {
             return $this->setStatusCode(200)->respond();
         }
 
@@ -187,11 +191,11 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $user = User::findOrFail($userId);
         $vote = $user->getVote($voteId);
 
-        if(!$vote){
+        if (!$vote) {
             throw (new ModelNotFoundException)->setModel(Vote::class);
         }
 
-        if (!(Auth::user()->allowed('view.votes', $vote))){
+        if (!(Auth::user()->allowed('view.votes', $vote))) {
             throw new PermissionDeniedException('view');
         }
 

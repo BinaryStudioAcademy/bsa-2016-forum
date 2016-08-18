@@ -5,7 +5,7 @@ module.exports = BaseCollection.extend({
     model: model,
     url: '/comments',
     initialize: function (models, options) {
-        if (options) {
+        if (options.parentUrl) {
             this.parentUrl = options.parentUrl;
         }
     },

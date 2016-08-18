@@ -11,9 +11,6 @@ module.exports = Marionette.ItemView.extend({
         if (options.collection) {
             this.collection = options.collection;
         }
-        if (options.parentId) {
-            this.parentId = options.parentId;
-        }
     },
     events: {
         'click @ui.addButton': function () {

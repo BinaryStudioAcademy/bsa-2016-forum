@@ -19,15 +19,15 @@ module.exports = Marionette.Object.extend({
         });
 
         this.listenTo(Radio.channel('votesChannel'), 'storeComment', function (view) {
-            var model = new CommentModel({parentUrl: '/votes/' + view.parentId});
+            var model = new CommentModel({}, {parentUrl: view.collection.parentUrl});
             model.set('user_id', 2);
             model.set('rating', 0);
             model.save({content_origin: view.ui.text.val()}, {
                 success: function (data) {
-                    //view.collection.fetch();
+                    //view.collection.fetch({async: false});
                     view.collection.add(data);
                     view.ui.text.val('');
-                    Radio.trigger('votesChannel', 'clearAddView');
+                    Radio.trigger('votesChannel', 'setCommentsCount', view.collection.length);
                 }
             });
         });
@@ -40,7 +40,7 @@ module.exports = Marionette.Object.extend({
         Votes.fetch();
     },
     showVote: function (id) {
-        var model = new VoteModel();
+        var model = undefined;
         var myCommentsCollection = new CommentsCollection([], {parentUrl: '/votes/' + id});
         myCommentsCollection.fetch();
 
@@ -53,14 +53,11 @@ module.exports = Marionette.Object.extend({
         } else {
             model = new VoteModel({id: id});
 
-            model.fetch({
-                success: function (data) {
-                    app.render(new ShowVote({
-                        model: model,
-                        collection: myCommentsCollection
-                    }));
-                }
-            });
+            model.fetch({async: false});
+            app.render(new ShowVote({
+                model: model,
+                collection: myCommentsCollection
+            }));
 
         }
     }
