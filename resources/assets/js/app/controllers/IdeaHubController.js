@@ -19,7 +19,7 @@ module.exports = Marionette.Object.extend({
         });
 
         this.listenTo(Radio.channel('votesChannel'), 'storeComment', function (view) {
-            var model = new CommentModel({}, {parentUrl: view.collection.parentUrl});
+            var model = new CommentModel({}, {parentUrl: view.options.collection.parentUrl});
             model.set('user_id', 2);
             model.set('rating', 0);
             model.save({content_origin: view.ui.text.val()}, {
@@ -27,7 +27,7 @@ module.exports = Marionette.Object.extend({
                     //view.collection.fetch({async: false});
                     view.collection.add(data);
                     view.ui.text.val('');
-                    Radio.trigger('votesChannel', 'setCommentsCount', view.collection.length);
+                    Radio.trigger('votesChannel', 'setCommentsCount', view.options.collection.length);
                 }
             });
         });
