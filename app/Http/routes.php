@@ -107,7 +107,12 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::get('{comment}', 'CommentController@getTopicComment')->name('topicComment');
         Route::put('{comment}', 'CommentController@updateTopicComment')->name('updateTopicComment');
         Route::delete('{comment}', 'CommentController@destroyTopicComment')->name('deleteTopicComment');
+
         Route::get('{comment}/comments', 'CommentController@getTopicCommentChildren')->name('topicCommentChildren');
+        Route::post('{comment}/comments', 'CommentController@storeTopicCommentChild')->name('storeTopicCommentChild');
+        Route::get('{comment}/comments/{commentChild}', 'CommentController@getTopicCommentChild')->name('getTopicCommentChild');
+        Route::put('{comment}/comments/{commentChild}', 'CommentController@updateTopicCommentChild')->name('updateTopicCommentChild');
+        Route::delete('{comment}/comments/{commentChild}', 'CommentController@destroyTopicCommentChild')->name('deleteTopicCommentChild');
     });
     /*Routes for Vote comments*/
     Route::group(['prefix' => 'votes/{vote}/comments'], function () {
@@ -116,10 +121,15 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
         Route::get('{comment}', 'CommentController@getVoteComment')->name('voteComment');
         Route::put('{comment}', 'CommentController@updateVoteComment')->name('updateVoteComment');
         Route::delete('{comment}', 'CommentController@destroyVoteComment')->name('deleteVoteComment');
+
         Route::get('{comment}/comments', 'CommentController@getVoteCommentChildren')->name('voteCommentChildren');
+        Route::post('{comment}/comments', 'CommentController@storeVoteCommentChild')->name('storeVoteCommentChild');
+        Route::get('{comment}/comments/{commentChild}', 'CommentController@getVoteCommentChild')->name('getVoteCommentChild');
+        Route::put('{comment}/comments/{commentChild}', 'CommentController@updateVoteCommentChild')->name('updateVoteCommentChild');
+        Route::delete('{comment}/comments/{commentChild}', 'CommentController@destroyVoteCommentChild')->name('deleteVoteCommentChild');
     });
     /*Routes for VoteItem comments*/
-    Route::group(['prefix' => 'votes/{vote}/voteitem/{voteitem}/comments'], function () {
+    Route::group(['prefix' => 'votes/{vote}/voteitems/{voteitem}/comments'], function () {
         Route::get('', 'CommentController@getVoteItemComments')->name('voteItemComments');
         Route::post('', 'CommentController@storeVoteItemComment')->name('storeVoteItemComment');
         Route::get('{comment}', 'CommentController@getVoteItemComment')->name('voteItemComment');
