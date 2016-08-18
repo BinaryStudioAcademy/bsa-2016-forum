@@ -58,8 +58,8 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $this->setFiltersParameters($request);
 
         $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
-        $data = $this->getMetaData($votes);
-        return $this->setStatusCode(200)->respond($data);
+        $meta = $this->getMetaData($votes);
+        return $this->setStatusCode(200)->respond($votes, $meta);
     }
 
     /**
