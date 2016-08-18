@@ -7,8 +7,8 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\MessageRequest;
+use Illuminate\Support\Facades\Input;
 
-use App\Http\Requests;
 
 class MessageController extends ApiController
 {
@@ -18,12 +18,12 @@ class MessageController extends ApiController
      * @param $userId
      * @return \Illuminate\Http\Response
      */
-    public function index($userId, Request $request)
+    public function index($userId)
     {
         $userFrom = User::findOrFail($userId);
 
-        if ($request->has('with_user')) {
-            $withUserId = $request->get('with_user');
+        if (Input::has('with_user')) {
+            $withUserId = Input::get('with_user');
             $userTo = User::findOrFail($withUserId);
             $messages = Message::getConversation($userFrom->id, $userTo->id)->get();
             return $this->setStatusCode(200)->respond($messages, ['with_user' => $userTo]);
@@ -46,16 +46,19 @@ class MessageController extends ApiController
          * ->get();
          **/
         
-        $messages = $userFrom->messages()->get();
+        $messages = Message::where('user_to_id', $userFrom->id)
+            ->groupBy('user_from_id')
+            ->get();
+
         if (!$messages) {
             return $this->setStatusCode(200)->respond();
         }
-        $usersToIds = $messages->pluck('user_to_id');
+        $usersToIds = $messages->pluck('user_from_id');
         $usersTo = User::whereIn('id', $usersToIds)->get();
 
         return $this->setStatusCode(200)->respond(
             $messages,
-            ['user_from' => $userFrom, 'users_to' => $usersTo]
+            ['users_to' => $usersTo]
         );
     }
 
