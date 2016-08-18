@@ -20,7 +20,10 @@ Route::group(['middleware' =>'api', 'prefix' => 'api/v1'], function () {
 });
 
 Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], function () {
+
     /*Routes for Users*/
+    Route::get('user','UserController@getUser')->name('user');
+
     Route::resource('users', 'UserController', [
         'except' => ['edit', 'create'],
         'names' => [
