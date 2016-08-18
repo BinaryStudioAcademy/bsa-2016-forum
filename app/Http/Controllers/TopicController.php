@@ -18,11 +18,11 @@ class TopicController extends ApiController
     {
         $topicTags = json_decode($topicTags, true);
         foreach ($topicTags as $tag) {
-            if($tag['id']){
+            if(!empty($tag['id'])){
                 $tag = Tag::find($tag['id']);
                 $topic->tags()->save($tag);
             }else{
-                $existedTag = Tag::where('name',$tag['name']);
+                $existedTag = Tag::where('name',$tag['name'])->get()->first();
                 if($existedTag){
                     $topic->tags()->save($existedTag);
                 }else{
