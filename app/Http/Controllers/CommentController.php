@@ -227,7 +227,7 @@ class CommentController extends ApiController
         return ($voteWhichHasThisComment && $voteWhichHasThisComment->id === $vote->id);
     }
 
-    public function makeCommentsMeta($comments){
+    protected function makeCommentsMeta($comments){
         $meta = [];
 
         foreach ($comments as $comment) {
