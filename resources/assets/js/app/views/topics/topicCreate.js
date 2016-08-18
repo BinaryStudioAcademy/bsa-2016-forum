@@ -4,16 +4,13 @@ var TopicModel = require('../../Models/TopicModel');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicCreateNew',
-    model: new TopicModel(),
 
     ui: {
-        name: '[name="name"]',
-        description: '[name="description"]',
         createForm: '.topic-form'
     },
 
     initialize: function () {
-        this.bindUIElements();
+        this.model.set({user_id: 2})
     },
 
     modelEvents: {
@@ -26,25 +23,18 @@ module.exports = Marionette.ItemView.extend({
     },
 
     events: {
-        'change @ui.name': function () {
-            this.model.set({name: this.ui.name.val()})
-        },
-        'change @ui.description': function () {
-            this.model.set({description: this.ui.description.val()})
+        'change form': function (e) {
+            var updateModel = {};
+            var value = e.target.value;
+            var attr = e.target.name;
+            updateModel[attr] = value;
+            this.model.set(updateModel);
         },
         'submit @ui.createForm': function (e) {
             e.preventDefault();
-            this.model.save({
-                name: this.ui.name.val(),
-                description: this.ui.description.val(),
-                user_id: 2
-            }, {
+            this.model.save({}, {
                 success: function (model, response) {
                     Backbone.history.navigate('topics/' + model.get('id'), {trigger: true});
-                },
-                error: function (model, xhr, options) {
-                    var errors = JSON.parse(xhr.responseText);
-                    model.trigger('invalid', model, errors);
                 }
             });
         }

@@ -7,10 +7,9 @@ module.exports = baseModel.extend({
         var errors = {};
         if (!attrs.name) errors['name'] = 'Name is required';
         if (!attrs.description) errors['description'] = 'Description is required';
-
+        
         if (!_.isEmpty(errors)) {
             return errors;
         }
-        return false;
     }
 });

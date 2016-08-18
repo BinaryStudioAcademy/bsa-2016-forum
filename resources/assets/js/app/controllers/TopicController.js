@@ -15,7 +15,8 @@ module.exports = Marionette.Object.extend({
     },
 
     create: function () {
-        app.render(new TopicCreate());
+        var topicModel = new TopicModel();
+        app.render(new TopicCreate({model: topicModel}));
     },
 
     show: function (id) {
@@ -26,4 +27,4 @@ module.exports = Marionette.Object.extend({
             }
         });
     }
-});
+}); 

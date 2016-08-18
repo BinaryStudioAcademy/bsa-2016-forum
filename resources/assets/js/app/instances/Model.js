@@ -8,13 +8,17 @@ module.exports = Backbone.Model.extend({
         return App.getBaseUrl() + (_.result(this, 'url') || _.result(this, 'urlRoot') || _.result(this.collection, 'url'));
     },
 
-    sync: function (method, collection, options) {
+    sync: function (method, model, options) {
         if (!options.url) {
-            options.url = this._getRequestUrl(collection);
+            options.url = this._getRequestUrl(model);
         }
-        return Backbone.sync(method, collection, options);
+        options.error = function (xhr, status, error) {
+            if (xhr.status == 400) {
+                model.trigger('invalid', this, xhr.responseJSON)
+            }
+        };
+        return Backbone.sync(method, model, options);
     },
-
 
     parse: function (response, options) {
         if (!options.collection) {
@@ -24,4 +28,5 @@ module.exports = Backbone.Model.extend({
             return response;
         }
     }
-});
+})
+;
