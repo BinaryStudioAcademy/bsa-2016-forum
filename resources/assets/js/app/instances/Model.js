@@ -13,6 +13,10 @@ module.exports = Backbone.Model.extend({
         return App.getBaseUrl() + this.getEntityUrl();
     },
 
+    getSelfUrl: function () {
+        return App.getBaseUrl() + (_.result(this, 'url') || _.result(this, 'urlRoot'));
+    },
+
     sync: function (method, collection, options) {
         if (!options.url) {
             options.url = this._getRequestUrl(collection);

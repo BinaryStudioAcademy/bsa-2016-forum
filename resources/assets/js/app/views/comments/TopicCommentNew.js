@@ -7,6 +7,7 @@ var Dropzone = require('dropzone');
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentNew',
     _dropZone: null,
+    className: 'topic-comment-item',
 
     ui: {
         'attach': '.topic-attachment button',
@@ -36,10 +37,16 @@ module.exports = Marionette.ItemView.extend({
         }
     },
 
+    showLoader: function (show) {
+        return show ? this.$('.topic-control-add .loader')
+            .removeClass('hidden') : this.$('.topic-control-add .loader').addClass('hidden');
+    },
+
     submitComment: function (event) {
         event.preventDefault();
 
         var data = {
+            // user id from server is default
             user_id: 2,
         };
 
@@ -48,49 +55,54 @@ module.exports = Marionette.ItemView.extend({
         });
 
         this.model.set(data);
-        
+
         var parent = this;
 
-        this.model.save({}, {
-            success: function (model) {
-                logger('comment saved successfully');
+        if (this.model.isValid()) {
+            this.showLoader(true);
+            this.model.save({}, {
+                success: function (model) {
+                    //logger('comment saved successfully');
 
-                if (parent._dropZone && parent._dropZone.files) {
+                    if (parent._dropZone && parent._dropZone.files.length) {
+                        parent._dropZone.processQueue();
+                    } else {
+                        Radio.channel('newComment').trigger('addCommentModel', model);
+                        parent.remove();
+                    }
+                },
 
-                    model.parentUrl = '';
-
-                    parent._dropZone.options.url = model.getEntityUrl() + '/attachments';
-
-                    console.log(parent._dropZone.options.url);
-
-                    parent._dropZone.processQueue();
+                error: function (response) {
+                    console.error(response.responseText);
                 }
-
-                Radio.channel('newComment').trigger('addCommentModel', data);
-            },
-
-            error: function (response) {
-                console.error(response.responseText);
-            }
-        });
+            });
+        }
     },
 
     initDropZone: function () {
+        var parent = this;
+        var model = this.model;
+
         this._dropZone = new Dropzone(this.$('#drop')[0], {
 
-            url: '/comments',
-            method: 'post',
-
-            init: function () {
-
+            url: function(file) {
+                return model.getSelfUrl() + '/attachments';
             },
 
+            method: 'post',
+            // input file name, registered on server
+            paramName: "f",
             parallelUploads : 10,
             autoProcessQueue : false,
             uploadMultiple: false,
             addRemoveLinks: true,
 
+            init: function () {
+
+            },
+
             sending: function(file, xhr, formData) {
+                // triggered on each file
                 //console.log(xhr, formData, 'sending');
             },
 
@@ -99,8 +111,23 @@ module.exports = Marionette.ItemView.extend({
             },
 
             success: function (data, xhr) {
-                console.log('success', data);
+                //console.log('success', data);
             },
+
+            complete: function(file) {
+                if (file.status !== 'canceled') {
+                    this.removeFile(file);
+                }
+            },
+            // file canceled to upload
+            canceled: function(file) {
+
+            },
+
+            queuecomplete: function () {
+                parent.remove();
+                Radio.channel('newComment').trigger('addCommentModel', model);
+            }
         });
     },
 
