@@ -46,8 +46,8 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function index(Request $request)
     {
         $vote = new Vote();
-        if (!(Auth::user()->allowed('view.votes', $vote)))
-            throw new PermissionDeniedException('index');
+        //if (!(Auth::user()->allowed('view.votes', $vote)))
+        //    throw new PermissionDeniedException('index');
 
         $this->setFiltersParameters($request);
 
@@ -84,8 +84,8 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     {
         $vote = Vote::findOrFail($id);
 
-        if (!(Auth::user()->allowed('view.votes', $vote)))
-            throw new PermissionDeniedException('view');
+        //if (!(Auth::user()->allowed('view.votes', $vote)))
+        //    throw new PermissionDeniedException('view');
 
         $user = $vote->user()->first();
         $likeCount = $vote->likes()->count();
