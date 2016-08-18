@@ -6,14 +6,14 @@
     </div>
     <div class="votes-item-body">
         <div class="votes-item-title">
-            <span>Vote title</span>
+            <span><a id="label">{{ model.title }}</a></span> Opened by: <span> {{ meta.user.first_name}} {{ meta.user.last_name }} </span>
         </div>
         <div class="votes-item-details">
-            <a>0 Comments</a><a>0 Votes</a><a>0 Views</a>
+            <a>{{ meta.comments}} Comments</a><a>{{ meta.likes }} likes</a>
         </div>
         <div class="votes-item-tags">
             <span>#Vote</span><span>#Votes</span><span>#Vote</span>
         </div>
-        <span class="votes-item-time">Asked 1 day ago</span>
+        <span class="votes-item-time">Created at {{ model.created_at }}</span>
     </div>
 </div>

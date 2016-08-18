@@ -20,6 +20,9 @@ module.exports = Backbone.Model.extend({
         return Backbone.sync(method, collection, options);
     },
 
+    getMeta: function () {
+        return (_.result(this, '_meta') || _.result(this.collection, '_meta'));
+    },
 
     parse: function (response, options) {
         if (!options.collection) {

@@ -24,19 +24,13 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
      */
     private function getMetaData($votes)
     {
-        $data =[];
-        $i = 0;
+        $data = [];
 
         foreach ($votes as $vote) {
 
-            if ($vote->is_saved) {
-                $data[$i]['data'] = $vote;
-                $data[$i]['_meta']['user'] = $vote->user()->first();
-                $data[$i]['_meta']['likes'] = $vote->likes()->count();
-                $data[$i]['_meta']['tags'] = $vote->tags()->count();
-                $data[$i]['_meta']['comments'] = $vote->comments()->count();
-                $i++;
-            }
+            $data['user'][$vote->id] = $vote->user()->first();
+            $data['likes'][$vote->id] = $vote->likes()->count();
+            $data['comments'][$vote->id] = $vote->comments()->count();
         }
         return $data;
     }
@@ -56,8 +50,8 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $this->setFiltersParameters($request);
 
         $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
-        $data = $this->getMetaData($votes);
-        return $this->setStatusCode(200)->respond($data);
+        $meta = $this->getMetaData($votes);
+        return $this->setStatusCode(200)->respond($votes, $meta);
     }
 
     /**
@@ -93,13 +87,12 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
 
         $user = $vote->user()->first();
         $likeCount = $vote->likes()->count();
-        $tagCount = $vote->tags()->count();
         $commentCount = $vote->comments()->count();
 
-        return $this->setStatusCode(200)->respond($vote, ['user' => $user,
-            'likes' => $likeCount,
-            'tags' => $tagCount,
-            'comments' => $commentCount]);
+        return $this->setStatusCode(200)->respond($vote,
+            ['user' => [$vote->id => $user],
+            'likes' => [$vote->id => $likeCount],
+            'comments' => [$vote->id => $commentCount]]);
     }
 
     /**
