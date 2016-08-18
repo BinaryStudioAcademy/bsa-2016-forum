@@ -16,6 +16,9 @@ Route::group(['middleware' => 'api', 'prefix' => 'api/v1'], function () {
     Route::get('/', function () {
         return 'Welcome to REST API v1';
     });
+
+    Route::get('user','UserController@getUser')->name('user');
+
     Route::resource('users', 'UserController', [
         'except' => ['edit', 'create'],
         'names' => [
