@@ -3,13 +3,15 @@ var Radio = require('backbone.radio');
 var AddCommentView = require('./VoteCommentItemAdd');
 var CommentsCollectionView = require('../../views/votes/VoteCommentsCollection');
 var VoteHeader = require('../../views/votes/voteHeader');
+var VoteAnswersCollectionView = require('../../views/votes/VoteAnswersCollection');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'voteDetail',
     regions: {
         comments: '#comments',
         addcomment: '#add-comment',
-        voteheader: '#vote-header'
+        voteheader: '#vote-header',
+        answers: '#answers'
     },
     ui: {
         c_count: '#count'
@@ -24,7 +26,7 @@ module.exports = Marionette.LayoutView.extend({
             new CommentsCollectionView({
                 collection: this.options.collection
             }));
-        console.log('onbeforeshow');
+
         this.getRegion('addcomment').show(
             new AddCommentView({
                 collection: this.options.collection
@@ -33,6 +35,10 @@ module.exports = Marionette.LayoutView.extend({
 
         this.getRegion('voteheader').show(
             new VoteHeader({model: this.options.voteModel})
+        );
+
+        this.getRegion('answers').show(
+            new VoteAnswersCollectionView({collection: this.options.answers})
         );
     }
 });

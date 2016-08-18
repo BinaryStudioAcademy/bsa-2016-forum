@@ -9,7 +9,7 @@ module.exports = Marionette.ItemView.extend({
     },
     serializeData: function () {
         var tempmeta = this.model.getMeta();
-        if (tempmeta === undefined) return [];
+        if (tempmeta === undefined) return {model: {title:'We are loaging data. Please, wait.'}};
         else {
             var id = this.model.get('id');
             return {

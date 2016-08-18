@@ -5,6 +5,7 @@ var VoteModel = require('../models/VoteModel');
 var ListVotes = require('../views/votes/ListVotes');
 
 var CommentsCollection = require('../collections/commentCollection');
+var VoteAnswersCollection = require('../collections/voteAICollection');
 var CommentModel = require('../models/CommentModel');
 var ShowVote = require('../views/votes/ShowVote');
 
@@ -41,14 +42,18 @@ module.exports = Marionette.Object.extend({
     },
     showVote: function (id) {
         var model = undefined;
-        var myCommentsCollection = new CommentsCollection([], {parentUrl: '/votes/' + id});
+        var parentUrl = '/votes/' + id;
+        var myCommentsCollection = new CommentsCollection([], {parentUrl: parentUrl});
+        var voteAnswers = new VoteAnswersCollection([], {parentUrl: parentUrl});
         myCommentsCollection.fetch();
+        voteAnswers.fetch();
 
         if (Votes.get(id)) {
             model = Votes.get(id);
             app.render(new ShowVote({
                 voteModel: model,
-                collection: myCommentsCollection
+                collection: myCommentsCollection,
+                answers: voteAnswers
             }));
         } else {
             model = new VoteModel({id: id});
@@ -56,7 +61,8 @@ module.exports = Marionette.Object.extend({
 
             app.render(new ShowVote({
                 voteModel: model,
-                collection: myCommentsCollection
+                collection: myCommentsCollection,
+                answers: voteAnswers
             }));
 
         }
