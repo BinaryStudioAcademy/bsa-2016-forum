@@ -71,9 +71,7 @@ class MessageController extends ApiController
     {
         $userFrom = User::findOrFail($userId);
         $message = new Message($request->all());
-        $message->user()->associate($userFrom);
         $message->save();
-
         return $this->setStatusCode(201)->respond($message);
     }
 
