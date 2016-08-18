@@ -21,7 +21,6 @@ module.exports = Marionette.Object.extend({
     },
     show: function (id) {
         var messageCollection = new MessageCollection();
-        M = messageCollection;
         messageCollection.parentUrl = _.result(currentUser, 'url');
         messageCollection.fetch({
             data: { with_user: id }
@@ -29,15 +28,24 @@ module.exports = Marionette.Object.extend({
         app.render(new MessageDialogLayout({
             currentUser: currentUser,
             collection: messageCollection
-        }).listenTo(Radio.channel('messagesChannel'),'sendMessage', function (text) {
+        }).listenTo(Radio.channel('messagesChannel'),'sendMessage', function (ui) {
             var message = new MessageModel ({
-                message: text,
+                message: ui.message.val(),
                 user_from_id: currentUser.get('id'),
                 user_to_id: messageCollection.getMeta().with_user.id,
-                is_read: false
+                is_read: 0
             });
             message.parentUrl = _.result(currentUser, 'url');
-            messageCollection.create(message);
+            message.save(null, {
+                success: function (model) {
+                    ui.button.html('Send');
+                    ui.message.val();
+                    messageCollection.add(model);
+                },
+                error: function () {
+                    ui.button.html('ReSend');
+                }
+            });
         }));
     }
 });

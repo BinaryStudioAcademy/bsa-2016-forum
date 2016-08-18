@@ -11,12 +11,13 @@ module.exports = Marionette.LayoutView.extend({
     events: {
         'submit form': function (e) {
             e.preventDefault();
-            Radio.channel('messagesChannel').trigger('sendMessage', this.ui.message[0].value);
-            this.ui.message[0].value = '';
+            Radio.channel('messagesChannel').trigger('sendMessage', this.ui);
         }
     },
     ui: {
-        message: '#messages-new-text'
+        message: '#messages-new-text',
+        button: '#messages-new-submit',
+        messageContainer: '#dialog-messages'
     },
     onRender: function () {
         this.container.show(new messageDialogCollection({
