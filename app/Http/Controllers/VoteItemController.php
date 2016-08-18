@@ -123,7 +123,7 @@ class VoteItemController extends ApiController
         if (!Auth::user()->allowed('delete.voteitems', $voteItem)) {
             throw (new PermissionDeniedException('voteitems'));
         }
-        $vote->delete();
+        $voteItem->delete();
         return $this->setStatusCode(204)->respond();
     }
 }

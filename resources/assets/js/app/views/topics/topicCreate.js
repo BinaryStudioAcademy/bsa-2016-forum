@@ -23,7 +23,7 @@ module.exports = Marionette.ItemView.extend({
     },
 
     events: {
-        'change form': function (e) {
+        'change @ui.createForm': function (e) {
             var updateModel = {};
             var value = e.target.value;
             var attr = e.target.name;

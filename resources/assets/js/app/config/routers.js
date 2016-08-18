@@ -1,16 +1,24 @@
 var TopicController = require('../controllers/TopicController');
 var IdeaHubController = require('../controllers/IdeaHubController');
 var UserController = require('../controllers/UserController');
+var DashBoardController = require('../controllers/DashboardController');
 
-var routers = {
+module.exports = {
 
     routers: [
         {
-            controller: new TopicController(),
+            controller: new DashBoardController(),
             appRoutes: {
                 '': 'index',
-                'topic/create': 'create',
-                'topics/:id': 'show'
+                'dashboard': 'index'
+            }
+        },
+        {
+            controller: new TopicController(),
+            appRoutes: {
+                'topics': 'index',
+                'topics/:id' : 'show',
+                'topic/create': 'create'
             }
         },
 
@@ -34,5 +42,4 @@ var routers = {
     }
 };
 
-module.exports = routers;
 

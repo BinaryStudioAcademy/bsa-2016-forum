@@ -17,9 +17,6 @@ module.exports = Marionette.LayoutView.extend({
             Backbone.history.navigate('topic/create', {trigger: true});
         }
     },
-    initialize: function () {
-        this.bindUIElements();
-    },
 
     onRender: function () {
         this.container.show(new topicCollection({

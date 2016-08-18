@@ -124,4 +124,13 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
         return $this->setStatusCode(200)->respond($role, ['user' => $user]);
 
     }
+
+    public function getUser()
+    {
+        $user = Auth::user();
+        if(!$user){
+            return $this->setStatusCode(401)->respond();
+        }
+        return $this->setStatusCode(200)->respond($user);
+    }
 }
