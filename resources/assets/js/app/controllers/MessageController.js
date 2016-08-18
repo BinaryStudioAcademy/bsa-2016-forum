@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var Marionette = require('backbone.marionette');
+var Radio = require('backbone.radio');
 var currentUser = require('../initializers/currentUser');
 var app = require('../instances/appInstance');
 var MessageLayout = require('../views/messages/messageLayout');
@@ -19,6 +20,9 @@ module.exports = Marionette.Object.extend({
         }));
     },
     show: function (id) {
+        
+        R = Radio;
+        
         var messageCollection = new MessageCollection();
         messageCollection.parentUrl = _.result(currentUser, 'url');
         messageCollection.fetch({
@@ -26,21 +30,16 @@ module.exports = Marionette.Object.extend({
         });
         app.render(new MessageDialogLayout({
             currentUser: currentUser,
-            collection: messageCollection,
-            events: {
-                'submit form': function (e) {
-                    e.preventDefault();
-                    var message = new MessageModel ({
-                        message: e.target.message.value,
-                        user_from_id: currentUser.get('id'),
-                        user_to_id: messageCollection._meta.with_user.id,
-                        is_read: false
-                    });
-                    e.target.message.value = '';
-                    message.parentUrl = _.result(currentUser, 'url');
-                    message.save();
-                }
-            }
+            collection: messageCollection
+        }).listenTo(Radio.channel('messagesChannel'),'sendMessage', function (text) {
+            var message = new MessageModel ({
+                message: text,
+                user_from_id: currentUser.get('id'),
+                user_to_id: messageCollection._meta.with_user.id,
+                is_read: false
+            });
+            message.parentUrl = _.result(currentUser, 'url');
+            message.save();
         }));
     }
 });

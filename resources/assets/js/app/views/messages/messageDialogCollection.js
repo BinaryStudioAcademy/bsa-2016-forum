@@ -7,7 +7,7 @@ module.exports = Marionette.CollectionView.extend({
         Test = this;
         return { 
             currentUser: this.options.currentUser,
-            withUser: this.collection._meta.with_user
+            withUser: this.collection.getMeta().with_user
         }; 
     }
 });
