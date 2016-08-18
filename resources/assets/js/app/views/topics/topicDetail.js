@@ -1,11 +1,11 @@
 var Marionette = require('backbone.marionette');
-var Backbone = require('backbone');
 var CommentsCollection = require('../../collections/TopicCommentsCollection');
 var CommentsCollectionView = require('../comments/TopicCommentsCollection');
 var _ = require('underscore');
 var logger = require('../../instances/logger');
 var NewTopicCommentView = require('../comments/TopicCommentNew');
 var Radio = require('backbone.radio');
+var TopicCommentModel = require('../../models/TopicCommentModel');
 
 module.exports = Marionette.LayoutView.extend({
 
@@ -19,7 +19,7 @@ module.exports = Marionette.LayoutView.extend({
 
     events: {
         'click @ui.answer': function (event) {
-		    Radio.channel('newComment').trigger('showCommentForm', this);
+            Radio.channel('newComment').trigger('showCommentForm', this);
         }
     },
 
@@ -33,9 +33,11 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     newCommentForm: function (parentView) {
-        //console.log(parentView);
+        var model = new TopicCommentModel();
+        model.parentUrl = _.result(this.model, 'url');
+
         parentView.getRegion('newComment').show(new NewTopicCommentView({
-            topicModel: this.model
+            model: model
         }));
     },
 

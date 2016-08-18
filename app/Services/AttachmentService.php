@@ -18,7 +18,7 @@ class AttachmentService
      */
     public function uploadAttachmentToCloud(Request $request)
     {
-        if($request->file('f')){
+        if ($request->file('f')){
             $tmp_file_path = $request->file('f')->getRealPath();
             // we need to move tmp file with new real file name because of problems with file type defining on cloud server side
             $new_tmp_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $request->file('f')->getClientOriginalName();

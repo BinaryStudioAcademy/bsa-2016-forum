@@ -1,13 +1,12 @@
 var Marionette = require('backbone.marionette');
 var logger = require('../../instances/logger');
 var _ = require('underscore');
-var TopicCommentModel = require('../../models/TopicCommentModel');
 var Radio = require('backbone.radio');
 var Dropzone = require('dropzone');
 
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentNew',
-    attachment: null,
+    _dropZone: null,
 
     ui: {
         'attach': '.topic-attachment button',
@@ -30,14 +29,17 @@ module.exports = Marionette.ItemView.extend({
     },
 
     attachFile: function (event) {
-        this.$el.find('.dropzone-container').toggle();
+        if (this.$('.dropzone-container').hasClass('hidden')) {
+            this.$('.dropzone-container').removeClass('hidden')
+        } else {
+            this.$('.dropzone-container').addClass('hidden')
+        }
     },
 
     submitComment: function (event) {
         event.preventDefault();
 
         var data = {
-            //files: this.$('#attach').prop('files'),
             user_id: 2,
         };
 
@@ -45,29 +47,64 @@ module.exports = Marionette.ItemView.extend({
             data[ input.name ] = input.value;
         });
 
-        var model = new TopicCommentModel();
+        this.model.set(data);
+        
+        var parent = this;
 
-        model.parentUrl = _.result(this._topicModel, 'url');
-
-        model.set(data);
-
-        model.save({}, {
-            success: function (data) {
+        this.model.save({}, {
+            success: function (model) {
                 logger('comment saved successfully');
+
+                if (parent._dropZone && parent._dropZone.files) {
+
+                    model.parentUrl = '';
+
+                    parent._dropZone.options.url = model.getEntityUrl() + '/attachments';
+
+                    console.log(parent._dropZone.options.url);
+
+                    parent._dropZone.processQueue();
+                }
+
                 Radio.channel('newComment').trigger('addCommentModel', data);
             },
+
             error: function (response) {
                 console.error(response.responseText);
             }
         });
     },
 
-    onRender: function () {
-        var drop = new Dropzone(this.$('#drop')[0], {
-            url: function(file) {
-                console.log(file);
-                return '';
-            }
+    initDropZone: function () {
+        this._dropZone = new Dropzone(this.$('#drop')[0], {
+
+            url: '/comments',
+            method: 'post',
+
+            init: function () {
+
+            },
+
+            parallelUploads : 10,
+            autoProcessQueue : false,
+            uploadMultiple: false,
+            addRemoveLinks: true,
+
+            sending: function(file, xhr, formData) {
+                //console.log(xhr, formData, 'sending');
+            },
+
+            error: function (xhr) {
+                console.error('error');
+            },
+
+            success: function (data, xhr) {
+                console.log('success', data);
+            },
         });
+    },
+
+    onRender: function () {
+        this.initDropZone();
     }
 });
