@@ -24,6 +24,11 @@ class CommentController extends ApiController
         return false;
     }
 
+    /**
+     * @param Comment $comment
+     * @param Comment $commentChild
+     * @return bool
+     */
     protected function isCommentChildBelongsToComment(Comment $comment, Comment $commentChild)
     {
         if ($comment->comments()->find($commentChild->id)) {
