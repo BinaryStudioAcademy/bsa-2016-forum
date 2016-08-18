@@ -22,7 +22,16 @@ class AuthApi extends AuthService
     public function handle($request, Closure $next)
     {
         $this->loginUser();
+
+        $url = $request->fullUrl();
+        
+        if  (!($this->checkCookie())){
+            return redirect('http://team.binary-studio.com/auth/')->withCookie("referer", $url);
+        }
+
         return $next($request);
+
+
     }
 
 }

@@ -87,7 +87,13 @@ class User extends Authenticatable implements HasRoleAndPermissionContract
         return $this->hasMany(Like::class);
     }
 
-    public function getVote($voteId){
+    public function getVote($voteId)
+    {
         return $this->votes()->where('id',$voteId)->first();
+    }
+
+    public function isExist($userData)
+    {
+         return $user = User::all()->where('global_id', '=', $userData->id);
     }
 }
