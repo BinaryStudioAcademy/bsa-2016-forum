@@ -40,7 +40,7 @@ class MessageController extends ApiController
      * Store a newly created resource in storage.
      *
      * @param $userId
-     * @param  \Illuminate\Http\Request $request
+     * @param MessageRequest|Request $request
      * @return \Illuminate\Http\Response
      */
     public function store($userId, MessageRequest $request)
@@ -50,8 +50,7 @@ class MessageController extends ApiController
         $message->user()->associate($userFrom);
         $message->save();
 
-        $this->setStatusCode(201)->respond($message);
-
+        return $this->setStatusCode(201)->respond($message);
     }
 
     /**
@@ -80,7 +79,7 @@ class MessageController extends ApiController
      * Update the specified resource in storage.
      *
      * @param $userId
-     * @param  \Illuminate\Http\Request $request
+     * @param MessageRequest|Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
