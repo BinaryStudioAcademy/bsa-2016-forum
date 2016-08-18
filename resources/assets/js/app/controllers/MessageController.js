@@ -23,8 +23,8 @@ module.exports = Marionette.Object.extend({
         messageCollection.fetch({
             data: { with_user: id }
         });
-        Test = messageCollection;
         app.render(new MessageDialogLayout({
+            currentUser: currentUser,
             collection: messageCollection
         }));
     }

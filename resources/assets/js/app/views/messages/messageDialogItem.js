@@ -3,14 +3,18 @@ var currentUser = require('../../initializers/currentUser');
 
 module.exports = Marionette.ItemView.extend({
     template: 'messageDialogItem',
+    initialize: function(options) {
+        this.currentUser = options.currentUser;
+        this.withUser = options.withUser;
+    },
     serializeData: function () {
         var direction = '';
         var with_user = {};
         if(this.model.get('user_from_id') == currentUser.get('id')) {
-            with_user = currentUser.toJSON();
+            with_user = this.currentUser.toJSON();
             direction = 'from';
         } else {
-            with_user = this.model.collection._meta.with_user;
+            with_user = this.withUser;
             direction = 'to';
         }
 

@@ -9,7 +9,8 @@ module.exports = Marionette.LayoutView.extend({
     },
     onRender: function () {
         this.container.show(new messageDialogCollection({
-            collection: this.collection
+            collection: this.collection,
+            currentUser: this.options.currentUser
         }));
     }
 });
