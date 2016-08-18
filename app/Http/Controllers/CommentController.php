@@ -8,10 +8,44 @@ use App\Models\VoteItem;
 use App\Http\Requests\CommentsRequest;
 use App\Models\Topic;
 use App\Http\Requests;
+use DCN\RBAC\Exceptions\PermissionDeniedException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 
 class CommentController extends ApiController
 {
+    /**
+     * @param $type
+     * @param Comment $comment
+     * @param $essence
+     * @return bool
+     * @throws PermissionDeniedException
+     */
+    protected function checkPermission($type, $message, $comment = null, $essence = null)
+    {
+        if (is_null($comment)) {
+            $comment = new Comment();
+        }
+
+        if (!(Auth::user()->allowed($type, $comment))) {
+            throw new PermissionDeniedException($message);
+        }
+
+        if ((!is_null($essence)) && ($essence->user_id != Auth::user()->id)) {
+            $isAdmin = DB::table('role_user')
+                ->leftJoin('roles', 'role_user.role_id', '=', 'roles.id')
+                ->where('role_user.user_id', Auth::user()->id)
+                ->first();
+
+            if (($isAdmin->slug != 'admin') && $this->isCommentHasAnyChild($comment)) {
+                throw new PermissionDeniedException($message);
+            }
+        }
+
+        return true;
+    }
+
     /**
      * @param Comment $comment
      * @return bool
@@ -58,8 +92,10 @@ class CommentController extends ApiController
      */
     public function getTopicComments(Topic $topic)
     {
-        $comments = $topic->comments()->get();
-        return $this->setStatusCode(200)->respond($comments);
+        if ($this->checkPermission('view.comment', 'getTopicComments')) {
+            $comments = $topic->comments()->get();
+            return $this->setStatusCode(200)->respond($comments);
+        }
     }
 
     /**
@@ -69,10 +105,12 @@ class CommentController extends ApiController
      */
     public function getTopicComment(Topic $topic, Comment $comment)
     {
-        if ($this->isCommentBelongsToTopic($topic, $comment)) {
-            return $this->setStatusCode(200)->respond($comment);
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('view.comment', 'getTopicComments', $comment)) {
+            if ($this->isCommentBelongsToTopic($topic, $comment)) {
+                return $this->setStatusCode(200)->respond($comment);
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -83,9 +121,11 @@ class CommentController extends ApiController
      */
     public function storeTopicComment(Topic $topic, CommentsRequest $request)
     {
-        $comment = Comment::create($request->all());
-        $comment = $topic->comments()->save($comment);
-        return $this->setStatusCode(201)->respond($comment);
+        if ($this->checkPermission('create.comment', 'storeTopicComment')) {
+            $comment = Comment::create($request->all());
+            $comment = $topic->comments()->save($comment);
+            return $this->setStatusCode(201)->respond($comment);
+        }
     }
 
     /**
@@ -96,11 +136,13 @@ class CommentController extends ApiController
      */
     public function updateTopicComment(Topic $topic, Comment $comment, CommentsRequest $request)
     {
-        if ($this->isCommentBelongsToTopic($topic, $comment)) {
-            $comment->update($request->all());
-            return $this->setStatusCode(200)->respond($comment);
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('update.comment', 'updateTopicComment', $comment, $topic)) {
+            if ($this->isCommentBelongsToTopic($topic, $comment)) {
+                $comment->update($request->all());
+                return $this->setStatusCode(200)->respond($comment);
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -112,11 +154,13 @@ class CommentController extends ApiController
      */
     public function destroyTopicComment(Topic $topic, Comment $comment)
     {
-        if ($this->isCommentBelongsToTopic($topic, $comment)) {
-            $comment->delete();
-            return $this->setStatusCode(204)->respond();
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('delete.comment', 'destroyTopicComment', $comment, $topic)) {
+            if ($this->isCommentBelongsToTopic($topic, $comment)) {
+                $comment->delete();
+                return $this->setStatusCode(204)->respond();
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -126,14 +170,17 @@ class CommentController extends ApiController
      * @param Topic $topic
      * @param Comment $comment
      * @return \Illuminate\Http\JsonResponse
+     * @throws PermissionDeniedException
      */
     public function getTopicCommentChildren(Topic $topic, Comment $comment)
     {
-        if ($this->isCommentBelongsToTopic($topic, $comment)) {
-            $comments = $comment->comments()->get();
-            return $this->setStatusCode(200)->respond($comments);
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('view.comment', 'getTopicCommentChildren', $comment)) {
+            if ($this->isCommentBelongsToTopic($topic, $comment)) {
+                $comments = $comment->comments()->get();
+                return $this->setStatusCode(200)->respond($comments);
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -145,12 +192,14 @@ class CommentController extends ApiController
      */
     public function storeTopicCommentChild(Topic $topic, Comment $comment, CommentsRequest $childCommentInput)
     {
-        if ($this->isCommentBelongsToTopic($topic, $comment)) {
-            $childComment = Comment::create($childCommentInput->all());
-            $childComment = $comment->comments()->save($childComment);
-            return $this->setStatusCode(200)->respond($childComment);
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('create.comment', 'storeTopicCommentChild', $childCommentInput)) {
+            if ($this->isCommentBelongsToTopic($topic, $comment)) {
+                $childComment = Comment::create($childCommentInput->all());
+                $childComment = $comment->comments()->save($childComment);
+                return $this->setStatusCode(200)->respond($childComment);
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -162,12 +211,14 @@ class CommentController extends ApiController
      */
     public function getTopicCommentChild(Topic $topic, Comment $comment, Comment $commentChild)
     {
-        if ($this->isCommentBelongsToTopic($topic, $comment)
-            && $this->isCommentChildBelongsToComment($comment, $commentChild)
-        ) {
-            return $this->setStatusCode(200)->respond($commentChild);
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('view.comment', 'getTopicCommentChild', $commentChild)) {
+            if ($this->isCommentBelongsToTopic($topic, $comment)
+                && $this->isCommentChildBelongsToComment($comment, $commentChild)
+            ) {
+                return $this->setStatusCode(200)->respond($commentChild);
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -184,13 +235,15 @@ class CommentController extends ApiController
         Comment $commentChild,
         CommentsRequest $request
     ) {
-        if ($this->isCommentBelongsToTopic($topic, $comment)
-            && $this->isCommentChildBelongsToComment($comment, $commentChild)
-        ) {
-            $commentChild->update($request->all());
-            return $this->setStatusCode(200)->respond($commentChild);
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('update.comment', 'updateTopicCommentChild', $commentChild, $topic)) {
+            if ($this->isCommentBelongsToTopic($topic, $comment)
+                && $this->isCommentChildBelongsToComment($comment, $commentChild)
+            ) {
+                $commentChild->update($request->all());
+                return $this->setStatusCode(200)->respond($commentChild);
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -203,13 +256,15 @@ class CommentController extends ApiController
      */
     public function destroyTopicCommentChild(Topic $topic, Comment $comment, Comment $commentChild)
     {
-        if ($this->isCommentBelongsToTopic($topic, $comment)
-            && $this->isCommentChildBelongsToComment($comment, $commentChild)
-        ) {
-            $commentChild->delete();
-            return $this->setStatusCode(204)->respond();
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('delete.comment', 'destroyTopicCommentChild', $commentChild, $topic)) {
+            if ($this->isCommentBelongsToTopic($topic, $comment)
+                && $this->isCommentChildBelongsToComment($comment, $commentChild)
+            ) {
+                $commentChild->delete();
+                return $this->setStatusCode(204)->respond();
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -233,8 +288,10 @@ class CommentController extends ApiController
      */
     public function getVoteComments(Vote $vote)
     {
-        $comments = $vote->comments()->get();
-        return $this->setStatusCode(200)->respond($comments);
+        if ($this->checkPermission('view.comment', 'getVoteComments')) {
+            $comments = $vote->comments()->get();
+            return $this->setStatusCode(200)->respond($comments);
+        }
     }
 
     /**
@@ -244,10 +301,12 @@ class CommentController extends ApiController
      */
     public function getVoteComment(Vote $vote, Comment $comment)
     {
-        if ($this->isCommentBelongsToVote($vote, $comment)) {
-            return $this->setStatusCode(200)->respond($comment);
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('view.comment', 'getVoteComment', $comment)) {
+            if ($this->isCommentBelongsToVote($vote, $comment)) {
+                return $this->setStatusCode(200)->respond($comment);
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -258,9 +317,11 @@ class CommentController extends ApiController
      */
     public function storeVoteComment(Vote $vote, CommentsRequest $request)
     {
-        $comment = Comment::create($request->all());
-        $comment = $vote->comments()->save($comment);
-        return $this->setStatusCode(201)->respond($comment);
+        if ($this->checkPermission('create.comment', 'storeVoteComment')) {
+            $comment = Comment::create($request->all());
+            $comment = $vote->comments()->save($comment);
+            return $this->setStatusCode(201)->respond($comment);
+        }
     }
 
     /**
@@ -271,11 +332,13 @@ class CommentController extends ApiController
      */
     public function updateVoteComment(Vote $vote, Comment $comment, CommentsRequest $request)
     {
-        if ($this->isCommentBelongsToVote($vote, $comment)) {
-            $comment->update($request->all());
-            return $this->setStatusCode(200)->respond($comment);
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('update.comment', 'updateVoteComment', $comment, $vote)) {
+            if ($this->isCommentBelongsToVote($vote, $comment)) {
+                $comment->update($request->all());
+                return $this->setStatusCode(200)->respond($comment);
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -287,11 +350,13 @@ class CommentController extends ApiController
      */
     public function destroyVoteComment(Vote $vote, Comment $comment)
     {
-        if ($this->isCommentBelongsToVote($vote, $comment)) {
-            $comment->delete();
-            return $this->setStatusCode(204)->respond();
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('delete.comment', 'destroyVoteComment', $comment, $vote)) {
+            if ($this->isCommentBelongsToVote($vote, $comment)) {
+                $comment->delete();
+                return $this->setStatusCode(204)->respond();
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -304,11 +369,13 @@ class CommentController extends ApiController
      */
     public function getVoteCommentChildren(Vote $vote, Comment $comment)
     {
-        if ($this->isCommentBelongsToVote($vote, $comment)) {
-            $comments = $comment->comments()->get();
-            return $this->setStatusCode(200)->respond($comments);
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('view.comment', 'getVoteCommentChildren', $comment)) {
+            if ($this->isCommentBelongsToVote($vote, $comment)) {
+                $comments = $comment->comments()->get();
+                return $this->setStatusCode(200)->respond($comments);
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -320,12 +387,14 @@ class CommentController extends ApiController
      */
     public function storeVoteCommentChild(Vote $vote, Comment $comment, CommentsRequest $childCommentInput)
     {
-        if ($this->isCommentBelongsToVote($vote, $comment)) {
-            $childComment = Comment::create($childCommentInput->all());
-            $childComment = $comment->comments()->save($childComment);
-            return $this->setStatusCode(200)->respond($childComment);
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('create.comment', 'storeVoteCommentChild', $childCommentInput)) {
+            if ($this->isCommentBelongsToVote($vote, $comment)) {
+                $childComment = Comment::create($childCommentInput->all());
+                $childComment = $comment->comments()->save($childComment);
+                return $this->setStatusCode(200)->respond($childComment);
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -337,12 +406,14 @@ class CommentController extends ApiController
      */
     public function getVoteCommentChild(Vote $vote, Comment $comment, Comment $commentChild)
     {
-        if ($this->isCommentBelongsToVote($vote, $comment)
-            && $this->isCommentChildBelongsToComment($comment, $commentChild)
-        ) {
-            return $this->setStatusCode(200)->respond($commentChild);
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('view.comment', 'getVoteCommentChild', $commentChild)) {
+            if ($this->isCommentBelongsToVote($vote, $comment)
+                && $this->isCommentChildBelongsToComment($comment, $commentChild)
+            ) {
+                return $this->setStatusCode(200)->respond($commentChild);
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -359,13 +430,15 @@ class CommentController extends ApiController
         Comment $commentChild,
         CommentsRequest $request
     ) {
-        if ($this->isCommentBelongsToVote($vote, $comment)
-            && $this->isCommentChildBelongsToComment($comment, $commentChild)
-        ) {
-            $commentChild->update($request->all());
-            return $this->setStatusCode(200)->respond($commentChild);
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('update.comment', 'updateVoteCommentChild', $commentChild, $vote)) {
+            if ($this->isCommentBelongsToVote($vote, $comment)
+                && $this->isCommentChildBelongsToComment($comment, $commentChild)
+            ) {
+                $commentChild->update($request->all());
+                return $this->setStatusCode(200)->respond($commentChild);
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -378,13 +451,15 @@ class CommentController extends ApiController
      */
     public function destroyVoteCommentChild(Vote $vote, Comment $comment, Comment $commentChild)
     {
-        if ($this->isCommentBelongsToVote($vote, $comment)
-            && $this->isCommentChildBelongsToComment($comment, $commentChild)
-        ) {
-            $commentChild->delete();
-            return $this->setStatusCode(204)->respond();
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('delete.comment', 'destroyVoteCommentChild', $commentChild, $vote)) {
+            if ($this->isCommentBelongsToVote($vote, $comment)
+                && $this->isCommentChildBelongsToComment($comment, $commentChild)
+            ) {
+                $commentChild->delete();
+                return $this->setStatusCode(204)->respond();
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -408,8 +483,10 @@ class CommentController extends ApiController
      */
     public function getVoteItemComments(VoteItem $voteItem)
     {
-        $comments = $voteItem->comments()->get();
-        return $this->setStatusCode(200)->respond($comments);
+        if ($this->checkPermission('view.comment', 'getVoteItemComments')) {
+            $comments = $voteItem->comments()->get();
+            return $this->setStatusCode(200)->respond($comments);
+        }
     }
 
     /**
@@ -419,10 +496,12 @@ class CommentController extends ApiController
      */
     public function getVoteItemComment(VoteItem $voteItem, Comment $comment)
     {
-        if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
-            return $this->setStatusCode(200)->respond($comment);
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('view.comment', 'getVoteItemComment', $comment)) {
+            if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
+                return $this->setStatusCode(200)->respond($comment);
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -433,9 +512,11 @@ class CommentController extends ApiController
      */
     public function storeVoteItemComment(VoteItem $voteItem, CommentsRequest $request)
     {
-        $comment = Comment::create($request->all());
-        $comment = $voteItem->comments()->save($comment);
-        return $this->setStatusCode(201)->respond($comment);
+        if ($this->checkPermission('create.comment', 'storeVoteItemComment')) {
+            $comment = Comment::create($request->all());
+            $comment = $voteItem->comments()->save($comment);
+            return $this->setStatusCode(201)->respond($comment);
+        }
     }
 
     /**
@@ -446,11 +527,13 @@ class CommentController extends ApiController
      */
     public function updateVoteItemComment(VoteItem $voteItem, Comment $comment, CommentsRequest $request)
     {
-        if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
-            $comment->update($request->all());
-            return $this->setStatusCode(200)->respond($comment);
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('update.comment', 'updateVoteItemComment', $comment, $voteItem)) {
+            if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
+                $comment->update($request->all());
+                return $this->setStatusCode(200)->respond($comment);
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
@@ -462,11 +545,13 @@ class CommentController extends ApiController
      */
     public function destroyVoteItemComment(VoteItem $voteItem, Comment $comment)
     {
-        if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
-            $comment->delete();
-            return $this->setStatusCode(204)->respond();
-        } else {
-            throw (new ModelNotFoundException)->setModel(Comment::class);
+        if ($this->checkPermission('delete.comment', 'destroyVoteItemComment', $comment, $voteItem)) {
+            if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
+                $comment->delete();
+                return $this->setStatusCode(204)->respond();
+            } else {
+                throw (new ModelNotFoundException)->setModel(Comment::class);
+            }
         }
     }
 
