@@ -14,18 +14,25 @@ class TopicController extends ApiController
 
     protected $tagIds = [];
 
-    protected function topicTagsHandler($topic, $topicTags)
+    /**
+     * @param $topic
+     * @param $topicTags
+     */
+    protected function topicTagsHandler(Topic $topic, $topicTags)
     {
         $topicTags = json_decode($topicTags, true);
+
         foreach ($topicTags as $tag) {
-            if(!empty($tag['id'])){
+            if (!empty($tag['id'])) {
                 $tag = Tag::find($tag['id']);
-                $topic->tags()->save($tag);
-            }else{
-                $existedTag = Tag::where('name',$tag['name'])->get()->first();
-                if($existedTag){
+                if (!$topic->tags()->get()->find($tag['id'])) {
+                    $topic->tags()->save($tag);
+                }
+            } elseif (!empty($tag['name'])) {
+                $existedTag = Tag::where('name', $tag['name'])->get()->first();
+                if ($existedTag && !$topic->tags()->get()->find($existedTag->id)) {
                     $topic->tags()->save($existedTag);
-                }else{
+                } else {
                     Tag::create($tag);
                 }
             }
@@ -84,8 +91,10 @@ class TopicController extends ApiController
      */
     public function update($id, TopicRequest $request)
     {
-        $topic = Topic::findOrFail($id);
-        $extendedTopic = $topic = $topic->update($request->all());
+        $topic = Topic::findOrfail($id);
+        $topic->update($request->all());
+
+        $extendedTopic = $topic = Topic::findOrfail($id);
         $this->topicTagsHandler($topic, $request->tags);
         $extendedTopic->tags = $topic->tags()->get();
         return $this->setStatusCode(200)->respond($extendedTopic);
