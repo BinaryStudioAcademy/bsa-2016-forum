@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use App\Models\Topic;
 use App\Http\Requests\TopicRequest;
 use App\Models\User;
@@ -13,10 +14,28 @@ class TopicController extends ApiController
 
     protected $tagIds = [];
 
+    protected function topicTagsHandler($topic, $topicTags)
+    {
+        $topicTags = json_decode($topicTags, true);
+        foreach ($topicTags as $tag) {
+            if($tag['id']){
+                $tag = Tag::find($tag['id']);
+                $topic->tags()->save($tag);
+            }else{
+                $existedTag = Tag::where('name',$tag['name']);
+                if($existedTag){
+                    $topic->tags()->save($existedTag);
+                }else{
+                    Tag::create($tag);
+                }
+            }
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @param  TopicRequest  $request
+     * @param  TopicRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(TopicRequest $request)
@@ -31,48 +50,51 @@ class TopicController extends ApiController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  TopicRequest  $request
+     * @param  TopicRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(TopicRequest $request)
     {
-        $topic = Topic::create($request->all());
-
-        return $this->setStatusCode(201)->respond($topic);
+        $extendedTopic = $topic = Topic::create($request->all());
+        $this->topicTagsHandler($topic, $request->tags);
+        $extendedTopic->tags = $topic->tags()->get();
+        return $this->setStatusCode(201)->respond($extendedTopic);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $topic = Topic::findOrFail($id);
+        $extendedTopic = $topic = Topic::findOrFail($id);
+        $extendedTopic->tags = $topic->tags()->get();
 
-        return $this->setStatusCode(200)->respond($topic);
+        return $this->setStatusCode(200)->respond($extendedTopic);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
-     * @param  TopicRequest  $request
+     * @param  int $id
+     * @param  TopicRequest $request
      * @return \Illuminate\Http\Response
      */
     public function update($id, TopicRequest $request)
     {
         $topic = Topic::findOrFail($id);
-        $topic->update($request->all());
-
-        return $this->setStatusCode(200)->respond($topic);
+        $extendedTopic = $topic = $topic->update($request->all());
+        $this->topicTagsHandler($topic, $request->tags);
+        $extendedTopic->tags = $topic->tags()->get();
+        return $this->setStatusCode(200)->respond($extendedTopic);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -88,7 +110,7 @@ class TopicController extends ApiController
      * Get all or filtering user's topics
      *
      * @param int $userId
-     * @param  TopicRequest  $request
+     * @param  TopicRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function getUserTopics($userId, TopicRequest $request)
@@ -103,7 +125,7 @@ class TopicController extends ApiController
             ->filterByTags($this->tagIds)
             ->get();
 
-        if(!$topics){
+        if (!$topics) {
             return $this->setStatusCode(200)->respond();
         }
 
@@ -120,8 +142,8 @@ class TopicController extends ApiController
     public function getUserTopic($userId, $topicId)
     {
         $user = User::findOrFail($userId);
-        $topic = $user->topics()->where('id',$topicId)->first();
-        if(!$topic){
+        $topic = $user->topics()->where('id', $topicId)->first();
+        if (!$topic) {
             throw (new ModelNotFoundException)->setModel(Topic::class);
         }
 
