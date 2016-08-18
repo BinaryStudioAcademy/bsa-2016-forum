@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tag;
 use App\Models\Topic;
 use App\Http\Requests\TopicRequest;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Facades\TagService;
 
 class TopicController extends ApiController
 {
@@ -14,32 +14,7 @@ class TopicController extends ApiController
 
     protected $tagIds = [];
 
-    /**
-     * @param $topic
-     * @param $topicTags
-     */
-    protected function topicTagsHandler(Topic $topic, $topicTags)
-    {
-        $topicTags = json_decode($topicTags, true);
-
-        foreach ($topicTags as $tag) {
-            if (!empty($tag['id'])) {
-                $tag = Tag::find($tag['id']);
-                if (!$topic->tags()->get()->find($tag['id'])) {
-                    $topic->tags()->save($tag);
-                }
-            } elseif (!empty($tag['name'])) {
-                $existedTag = Tag::where('name', $tag['name'])->get()->first();
-                if ($existedTag && !$topic->tags()->get()->find($existedTag->id)) {
-                    $topic->tags()->save($existedTag);
-                } else {
-                    Tag::create($tag);
-                }
-            }
-        }
-    }
-
-    /**
+     /**
      * Display a listing of the resource.
      *
      * @param  TopicRequest $request
@@ -63,7 +38,7 @@ class TopicController extends ApiController
     public function store(TopicRequest $request)
     {
         $extendedTopic = $topic = Topic::create($request->all());
-        $this->topicTagsHandler($topic, $request->tags);
+        TagService::TagsHandler($topic, $request->tags);
         $extendedTopic->tags = $topic->tags()->get();
         return $this->setStatusCode(201)->respond($extendedTopic);
     }
@@ -95,7 +70,7 @@ class TopicController extends ApiController
         $topic->update($request->all());
 
         $extendedTopic = $topic = Topic::findOrfail($id);
-        $this->topicTagsHandler($topic, $request->tags);
+        TagService::TagsHandler($topic, $request->tags);
         $extendedTopic->tags = $topic->tags()->get();
         return $this->setStatusCode(200)->respond($extendedTopic);
     }
