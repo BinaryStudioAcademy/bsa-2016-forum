@@ -37,8 +37,7 @@ module.exports = Marionette.LayoutView.extend({
 
         this.getRegion('addcomment').show(
             new AddCommentView({
-                collection: this.options.collection,
-                parentId: this.model.get('id')
+                collection: this.options.collection
             })
         );
     }
