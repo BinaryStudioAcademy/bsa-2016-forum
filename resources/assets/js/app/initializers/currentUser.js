@@ -1,3 +1,7 @@
 var UserModel = require('../models/UserModel');
 
-module.exports = new UserModel({id: 2});
+var currentUser = new UserModel({id: 2});
+
+currentUser.fetch();
+
+module.exports = currentUser;
