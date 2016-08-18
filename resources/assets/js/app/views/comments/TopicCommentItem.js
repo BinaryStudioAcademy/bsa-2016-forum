@@ -15,9 +15,9 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     ui: {
-        'answer': '.topic-comment-item .topic-control-btn .answer-btn',
-        'share': '.topic-comment-item .topic-control-btn .share-btn',
-        'notification': '.topic-comment-item .topic-control-btn .notification-btn'
+        'answer': '.answer-btn',
+        'share': '.share-btn',
+        'notification': '.notification-btn'
     },
 
     events: {

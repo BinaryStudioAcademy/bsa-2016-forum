@@ -3,6 +3,7 @@ var logger = require('../../instances/logger');
 var _ = require('underscore');
 var TopicCommentModel = require('../../models/TopicCommentModel');
 var Radio = require('backbone.radio');
+var Dropzone = require('dropzone');
 
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentNew',
@@ -10,21 +11,26 @@ module.exports = Marionette.ItemView.extend({
 
     ui: {
         'attach': '.topic-attachment button',
-        'submit': '#submit'
+        'submit': '#submit',
+        'close': '.close-btn button'
     },
 
     events: {
         'click @ui.attach': 'attachFile',
-        'click @ui.submit': 'submitComment'
+        'click @ui.submit': 'submitComment',
+        'click @ui.close': 'close'
     },
 
     initialize: function (options) {
         this._topicModel = options.topicModel;
     },
 
+    close: function (event) {
+        this.remove();
+    },
+
     attachFile: function (event) {
-        logger(this.$el.find('#attach'));
-        this.$el.find('#attach').trigger('click');
+        this.$el.find('.dropzone-container').toggle();
     },
 
     submitComment: function (event) {
@@ -43,17 +49,24 @@ module.exports = Marionette.ItemView.extend({
 
         model.parentUrl = _.result(this._topicModel, 'url');
 
-        logger(model);
-
         model.set(data);
 
         model.save({}, {
             success: function (data) {
-                logger('comment saved succesfully', data, model);
-                Radio.channel('newComment').trigger('addComentModel', model)
+                logger('comment saved successfully');
+                Radio.channel('newComment').trigger('addCommentModel', data);
             },
             error: function (response) {
                 console.error(response.responseText);
+            }
+        });
+    },
+
+    onRender: function () {
+        var drop = new Dropzone(this.$('#drop')[0], {
+            url: function(file) {
+                console.log(file);
+                return '';
             }
         });
     }

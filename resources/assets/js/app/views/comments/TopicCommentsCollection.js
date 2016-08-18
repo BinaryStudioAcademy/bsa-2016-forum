@@ -16,7 +16,7 @@ module.exports = Marionette.CollectionView.extend({
     },
 
     addCommentModel: function (model) {
-        logger(model);
+        //logger(model);
         this.collection.add(model);
     },
 

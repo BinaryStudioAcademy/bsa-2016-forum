@@ -1,29 +1,29 @@
-<form id="fileupload" class="comment-new-form" enctype="multipart/form-data">
-    <div class="topic-comment-main">
-        <div class="topic-comment-flex">
-            <div class="topic-bar hidden-xs">
-                <div class="topic-avatar">
-                    <img src="/images/user.png">
-                </div>
-                <div class="topic-addition">
-
-                </div>
+<div class="topic-comment-main">
+    <div class="close-btn text-right"><button class="btn btn-warning">
+        <span class="glyphicon glyphicon-remove"></span></button></div>
+    <div class="topic-comment-flex">
+        <div class="topic-bar hidden-xs">
+            <div class="topic-avatar">
+                <img src="/images/user.png">
             </div>
-            <div class="topic-body">
-                <textarea class="form-control" rows="3" placeholder="Comment..."
-                          name="content_origin"></textarea>
-                <div class="topic-attachment">
-                    <div class="hidden attach-input">
-                        <input name="attachments[]" id="attach" type="file" multiple>
-                    </div>
-                    <button type="button" class="btn btn-default">Attach</button>
-                </div>
+            <div class="topic-addition">
+
             </div>
         </div>
-        <div class="topic-control">
-            <div class="topic-control-btn topic-control-add">
-                <button class="btn btn-default" id="submit">Add comment</button>
+        <div class="topic-body">
+        <textarea class="form-control" rows="3" placeholder="Comment..." name="content_origin"></textarea>
+            <div class="topic-attachment">
+                <button type="button"
+                        class="btn btn-default">Attach</button>
             </div>
         </div>
     </div>
-</form>
+    <div class="collapse dropzone-container">
+        <div id="drop" class="dropzone"></div>
+    </div>
+    <div class="topic-control">
+        <div class="topic-control-btn topic-control-add">
+            <button class="btn btn-default" id="submit">Add comment</button>
+        </div>
+    </div>
+</div>

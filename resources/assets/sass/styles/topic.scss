@@ -227,7 +227,7 @@ TOPIC DETAILS
 }
 
 .topic-control-add {
-  padding: 15px;
+  padding: 15px 0;
 }
 
 .topic-more {
@@ -265,9 +265,10 @@ TOPIC DETAILS
   background: #fff;
 }
 
-.topic-new-comment-container, .new-comment-container {
-  margin: 20px auto;
+.topic-comment-main .close-btn {
+  padding: 10px;
 }
+
 .post-item {
   //width: 100%;
   //height: 80px;
