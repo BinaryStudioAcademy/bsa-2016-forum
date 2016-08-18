@@ -15,9 +15,9 @@ module.exports = Marionette.ItemView.extend({
 
     modelEvents: {
         'invalid': function (model, errors, options) {
-            $('.errors').empty();
+            this.$('.errors').empty();
             for (var error in errors) {
-                $('[name="' + error + '"]').siblings('.errors').html(errors[error]);
+                this.$('[name="' + error + '"]').siblings('.errors').html(errors[error]);
             }
         }
     },

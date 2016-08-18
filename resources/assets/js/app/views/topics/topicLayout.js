@@ -9,15 +9,7 @@ module.exports = Marionette.LayoutView.extend({
     regions: {
         container: '#posts'
     },
-    ui: {
-        createTopic: '.create-topic'
-    },
-    events: {
-        'click @ui.createTopic': function () {
-            Backbone.history.navigate('topic/create', {trigger: true});
-        }
-    },
-
+    
     onRender: function () {
         this.container.show(new topicCollection({
             collection: this.collection

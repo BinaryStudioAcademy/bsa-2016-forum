@@ -17,9 +17,12 @@ module.exports = Backbone.Model.extend({
         if (!options.url) {
             options.url = this._getRequestUrl(model);
         }
-        options.error = function (xhr, status, error) {
-            if (xhr.status == 400) {
-                model.trigger('invalid', this, xhr.responseJSON)
+
+        if (!options.statusCode) options.statusCode = {};
+        options.statusCode['400'] = function (xhr, textStatus, errorThrown) {
+            if (xhr.responseJSON) {
+                model.validationError = xhr.responseJSON;
+                model.trigger('invalid', model, model.validationError);
             }
         };
         return Backbone.sync(method, model, options);
