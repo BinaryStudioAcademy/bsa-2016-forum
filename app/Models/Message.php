@@ -32,9 +32,9 @@ class Message extends Model
         return $this->morphToMany(Notification::class, 'attachmenttable');
     }
 
-    public static function between($userId, $withUserId)
+    public static function getConversation($userId, $withUserId)
     {
-        return Message::where(function ($msg) use ($userId, $withUserId) {
+        return static::where(function ($msg) use ($userId, $withUserId) {
             $msg->where('user_from_id', $userId)
                 ->where('user_to_id', $withUserId);
         })->orWhere(function ($msg) use ($userId, $withUserId) {
