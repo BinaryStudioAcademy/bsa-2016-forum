@@ -131,6 +131,7 @@ MESSAGE DIALOG
 
 .message-msg-body {
   padding: 0 5px;
+  overflow: hidden;
 }
 
 .message-msg-body a {
@@ -141,6 +142,7 @@ MESSAGE DIALOG
 
 .message-msg-body p {
   margin-bottom: 2px;
+  word-wrap: break-word;
 }
 
 .message-msg-body span {
@@ -165,6 +167,7 @@ MESSAGE DIALOG
   color: #555;
   font-size: 14px;
   font-weight: 400;
+  min-height: 90px;
 }
 
 .message-new-control {
