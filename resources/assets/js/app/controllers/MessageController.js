@@ -20,10 +20,8 @@ module.exports = Marionette.Object.extend({
         }));
     },
     show: function (id) {
-        
-        R = Radio;
-        
         var messageCollection = new MessageCollection();
+        M = messageCollection;
         messageCollection.parentUrl = _.result(currentUser, 'url');
         messageCollection.fetch({
             data: { with_user: id }
@@ -35,11 +33,11 @@ module.exports = Marionette.Object.extend({
             var message = new MessageModel ({
                 message: text,
                 user_from_id: currentUser.get('id'),
-                user_to_id: messageCollection._meta.with_user.id,
+                user_to_id: messageCollection.getMeta().with_user.id,
                 is_read: false
             });
             message.parentUrl = _.result(currentUser, 'url');
-            message.save();
+            messageCollection.create(message);
         }));
     }
 });

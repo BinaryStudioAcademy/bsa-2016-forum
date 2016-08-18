@@ -44,8 +44,7 @@ class MessageController extends ApiController
          * ->where('id', '!=', 7)
          * ->get();
          **/
-
-
+        
         $messages = $userFrom->messages()->get();
         if (!$messages) {
             return $this->setStatusCode(200)->respond();
@@ -75,8 +74,7 @@ class MessageController extends ApiController
         $message->user()->associate($userFrom);
         $message->save();
 
-        $this->setStatusCode(201)->respond($message);
-
+        return $this->setStatusCode(201)->respond($message);
     }
 
     /**
@@ -117,7 +115,7 @@ class MessageController extends ApiController
             throw (new ModelNotFoundException)->setModel(Message::class);
         }
         $message->update($request->all());
-        return $this->setStatusCode(200)->respond($message);
+        return $this->setStatusCode(201)->respond($message);
 
     }
 
