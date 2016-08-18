@@ -23,7 +23,10 @@ module.exports = Marionette.Object.extend({
         var messageCollection = new MessageCollection();
         messageCollection.parentUrl = _.result(currentUser, 'url');
         messageCollection.fetch({
-            data: { with_user: id }
+            data: { with_user: id },
+            success: function () {
+                Radio.channel('messagesChannel').trigger('newMessageScroll');
+            }
         });
         app.render(new MessageDialogLayout({
             currentUser: currentUser,
@@ -41,6 +44,7 @@ module.exports = Marionette.Object.extend({
                     ui.button.html('Send');
                     ui.message.val();
                     messageCollection.add(model);
+                    Radio.channel('messagesChannel').trigger('newMessageScroll');
                 },
                 error: function () {
                     ui.button.html('ReSend');

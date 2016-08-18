@@ -1,10 +1,11 @@
 var Marionette = require('backbone.marionette');
 var messageDialogItem = require('./messageDialogItem');
+var Radio = require('backbone.radio');
 
 module.exports = Marionette.CollectionView.extend({
     childView: messageDialogItem,
     initialize: function(){
-        this.listenTo(this.collection, "add", this.scrollDown);
+        this.listenTo(Radio.channel('messagesChannel'),'newMessageScroll', this.scrollDown);
     },
     childViewOptions : function () {
         return { 
@@ -14,6 +15,6 @@ module.exports = Marionette.CollectionView.extend({
     },
 
     scrollDown: function () {
-        this._parent.$el.animate({ scrollTop: this.$el.prop("scrollHeight")}, 200);
+        this._parent.$el.animate({ scrollTop: this.$el.prop("scrollHeight")}, 500);
     }
 });
