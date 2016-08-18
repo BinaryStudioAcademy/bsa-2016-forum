@@ -11,5 +11,6 @@ module.exports = function (controller, appRoutes) {
             logger('route #' + path + ' start with method ' + name);
         }
     });
+
 };
 

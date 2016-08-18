@@ -22,9 +22,11 @@ var logger = require('../instances/logger');
 var Handlebars = require('handlebars');
 var Templates = require('../templates')(Handlebars);
 
+var NavigCollection = require('../initializers/navigationCollection');
+
 var app = Marionette.Application.extend({
     initialize: function (options) {
-        logger('My app has initialized');
+        logger('My app has been initialized');
     },
 
     setRootLayout: function (layout) {
@@ -58,15 +60,12 @@ var app = Marionette.Application.extend({
     },
     onStart: function (config) {
         this.config = config;
-
-
         this.templateCashing();
-
+        this.setRootLayout(new mainLayoutView({ collection: NavigCollection }));
         appInstance.setInstance(this);
-
-        this.setRootLayout(new mainLayoutView());
         this.showRootLayout();
         this.setRouting();
+
         logger('start application');
 
         if (Backbone.history) {
