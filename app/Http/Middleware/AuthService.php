@@ -25,7 +25,7 @@ class AuthService
         $users = User::all();
         Auth::login($users[1]);
     }
-    
+
     public function handle($request, Closure $next)
     {
        //
