@@ -67,6 +67,7 @@ MESSAGE DIALOG
   border-bottom: #DDDDDD 1px solid;
   height: calc(100vh - 400px);
   overflow-y: auto;
+  min-height: 320px;
 }
 
 .message-dialog {
