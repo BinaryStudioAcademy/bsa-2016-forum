@@ -23,7 +23,6 @@ class VoteItemController extends ApiController
      */
     public function index($voteId)
     {
-        Auth::login(User::find(1));
         $vote = Vote::findOrFail($voteId);
         $voteItems = $vote->voteItems()->get();
         if (!$voteItems) {
