@@ -24,7 +24,7 @@ class MessageController extends ApiController
         if ($request->has('with_user')) {
             $withUserId = $request->get('with_user');
             $userTo = User::findOrFail($withUserId);
-            $messages = $userFrom->messagesWith($userTo->id)->get();
+            $messages = Message::between($userFrom->id, $userTo->id)->get();
             return $this->setStatusCode(200)->respond($messages, ['user_from' => $userFrom, 'users_to' => $userTo]);
         }
 
