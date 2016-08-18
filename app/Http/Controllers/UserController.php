@@ -5,17 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\User;
 
 use Auth;
-use DCN\RBAC\Exceptions\RoleDeniedException;
-use DCN\RBAC\Models\Role;
 use Illuminate\Http\Request;
 
-use DCN\RBAC\Traits\HasRoleAndPermission;
-use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
-
-class UserController extends ApiController implements HasRoleAndPermissionContract
+class UserController extends ApiController
 {
-    use HasRoleAndPermission;
-
     /**
      * Display a listing of the resource.
      *
@@ -93,22 +86,20 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
 
     /**
      * @param $userId
-     * @param Request $requestst
      * @param $roleId
      * @return \Illuminate\Http\JsonResponse
-     * @throws RoleDeniedException
      */
-    public function updateRole($userId, Request $requestst, $roleId)
+    public function updateRole($userId, $roleId)
     {
 //        Auth::login(User::find(1));   //uncomment for test when there is no user Admin login in
 
-        if(!Auth::user()->is('admin')){
-            throw (new RoleDeniedException('Admin'));
-        }
+        //TODO use permissions policies
+
         $user = User::findOrFail($userId);
         $role = Role::findOrFail($roleId);
-        $user->detachAllRoles();
-        $user->attachRole($role);
+        $user->role()->associate($role);
+        $user->save();
+
         return $this->setStatusCode(200)->respond(['user' => $user, 'role' => $role] );
     }
 
@@ -127,10 +118,8 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
 
     public function getUser()
     {
-        $user = Auth::user();
-        if(!$user){
-            return $this->setStatusCode(401)->respond();
-        }
+        $user = Auth::authenticate();;
+
         return $this->setStatusCode(200)->respond($user);
     }
 }

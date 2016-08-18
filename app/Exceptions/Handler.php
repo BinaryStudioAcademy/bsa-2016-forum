@@ -12,7 +12,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use \DCN\RBAC\Exceptions\PermissionDeniedException;
 
 class Handler extends ExceptionHandler
 {
@@ -80,10 +79,8 @@ class Handler extends ExceptionHandler
             return response('Resource not found', 404);
         }
 
-        if ($e instanceof PermissionDeniedException){
-            return response($e->getMessage(), 403);
-        }
-        
+        //TODO use Laravel's Exception for 403 HTTP code
+
         return parent::render($request, $e);
     }
 }
