@@ -22,7 +22,6 @@ module.exports = Marionette.ItemView.extend({
     },
 
     initialize: function (options) {
-        this._topicModel = options.topicModel;
     },
 
     close: function (event) {
@@ -110,8 +109,9 @@ module.exports = Marionette.ItemView.extend({
                 console.error('error');
             },
 
-            success: function (data, xhr) {
-                //console.log('success', data);
+            success: function (file, xhr) {
+                logger(file);
+                //Radio.channel('attachment').trigger('addAttachmentModel', file);
             },
 
             complete: function(file) {
@@ -119,11 +119,13 @@ module.exports = Marionette.ItemView.extend({
                     this.removeFile(file);
                 }
             },
+
             // file canceled to upload
             canceled: function(file) {
 
             },
 
+            // event triggers when all files has been uploaded
             queuecomplete: function () {
                 parent.remove();
                 Radio.channel('newComment').trigger('addCommentModel', model);
