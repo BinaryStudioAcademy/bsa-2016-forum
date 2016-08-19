@@ -30,7 +30,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('login', function (data) {
 
         // check user id and it token
-        var status = true; data.token; data.user_id; config.authUrl;
+        var status = true; data.token; data.user_id; config.authUrl; config.authKey;
 
         if(status) {
             console.log("User id: " + data.user_id + " connected");
