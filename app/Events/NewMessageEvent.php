@@ -12,10 +12,11 @@ class NewMessageEvent extends Event implements ShouldBroadcast
     use SerializesModels;
 
     public $message;
+
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param Message $message
      */
     public function __construct(Message $message)
     {
