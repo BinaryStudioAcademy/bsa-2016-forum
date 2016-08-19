@@ -15,5 +15,7 @@ composer.lock
 .sass-cache
 .sass-cache/*
 /public/fonts/
+/public/apidoc/
 storage/debugbar/
 _ide_helper.php
+apidoc.json
