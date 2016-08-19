@@ -27,5 +27,8 @@ class UsersTableSeeder extends Seeder
         $roleAdmin = \DB::table('roles')->where('name', 'Admin')->value('id');
         $user->detachRole($roleUser);
         $user->attachRole($roleAdmin);
+        $user->global_id = '577a16659829fe050adb3f5c';
+        $user->email = 'tester_a@example.com';
+        $user->save();
     }
 }

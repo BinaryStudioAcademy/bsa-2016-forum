@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use DCN\RBAC\Traits\HasRoleAndPermission;
 use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
 
@@ -94,6 +95,30 @@ class User extends Authenticatable implements HasRoleAndPermissionContract
 
     public function isExist($userData)
     {
-         return $user = User::all()->where('global_id', '=', $userData->id);
+       // var_dump($userData);
+        //var_dump($userData->id);
+        $user = User::findOrFail($userData->id);
+        //var_dump($user);
+
+        try {
+            $user = User::findOrFail($userData->id);
+          //  var_dump($userData->id);
+           // var_dump($user);
+        }
+        catch  (ModelNotFoundException $e){
+
+            try {
+                $user= User::findOrFail($userData->email);
+             //   var_dump($user);
+            }
+            catch (ModelNotFoundException $e)
+            {
+                return false;
+            }
+        }
+        return $user;
+        
+       // User::findOrFail('global_id');
+        // return $user = User::all()->where('global_id', '=', $userData->id);
     }
 }

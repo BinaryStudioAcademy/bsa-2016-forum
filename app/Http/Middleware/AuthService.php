@@ -37,12 +37,12 @@ class AuthService
             $algorithm = new \Emarref\Jwt\Algorithm\Hs256('superpupersecret');
             $encryption = \Emarref\Jwt\Encryption\Factory::create($algorithm);
             $context = new \Emarref\Jwt\Verification\Context($encryption);
-
            if ($jwt->verify($token, $context)){
                $userData =  json_decode($token->getPayload()->getClaims()->jsonSerialize());
                $user = new User();
-               var_dump($userData);
-               var_dump($user->isExist($userData));
+               if($user->isExist($userData)){
+                   var_dump('gggggg');
+               };
            };
 
         }
