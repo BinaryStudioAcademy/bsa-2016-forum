@@ -196,7 +196,7 @@ class CommentController extends ApiController
     *"Content is required"
     *],
     *"user_id": [
-    *"User not is authorized"
+    *"The User is not authorized"
     *]
     *}
     * }
@@ -256,7 +256,7 @@ class CommentController extends ApiController
      *"Content is required"
      *],
      *"user_id": [
-     *"User not is authorized"
+     *"The User is not authorized"
      *]
      *}
      *}
@@ -430,7 +430,7 @@ class CommentController extends ApiController
      *"Content is required"
      *],
      *"user_id": [
-     *"User not is authorized"
+     *"The User is not authorized"
      *]
      *}
      *}
@@ -552,7 +552,7 @@ class CommentController extends ApiController
      *"Content is required"
      *],
      *"user_id": [
-     *"User not is authorized"
+     *"The User is not authorized"
      *]
      *}
      *     }
@@ -1005,7 +1005,7 @@ class CommentController extends ApiController
     *"Content is required"
     *],
     *"user_id": [
-    *"User not is authorized"
+    *"The User is not authorized"
     *]
     *}
     *     }
@@ -1058,7 +1058,7 @@ class CommentController extends ApiController
     *"Content is required"
     *],
     *"user_id": [
-    *"User not is authorized"
+    *"The User is not authorized"
     *]
     *}
     *}
@@ -1184,7 +1184,7 @@ class CommentController extends ApiController
     *"Content is required"
     *],
     *"user_id": [
-    *"User not is authorized"
+    *"The User is not authorized"
     *]
     *}
     *     }
@@ -1273,7 +1273,7 @@ class CommentController extends ApiController
     *"Content is required"
     *],
     *"user_id": [
-    *"User not is authorized"
+    *"The User is not authorized"
     *]
     *}
     *}
