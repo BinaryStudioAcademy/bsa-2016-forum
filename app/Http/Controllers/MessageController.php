@@ -302,11 +302,11 @@ class MessageController extends ApiController
 
 
     /**
-     * @api {put} users/:id/messages/:id  Add message of the user
+     * @api {put} users/:id/messages/:id  Update message of the user
      * @apiName update User-message
      * @apiGroup Messages
      *
-     * @apiDescription Add message of the specific user
+     * @apiDescription Update message of the specific user
      *
      * @apiParam {Number} id  User ID, Message ID
      * @apiParam {Number} user_from_id  User ID who sent message
@@ -358,8 +358,7 @@ class MessageController extends ApiController
      *"User ID_to can not be the same as authorized"
      *]
      *}
-
-
+     */
 
     /**
     * @api {delete} users/:id/messages/:id Delete the message of the user
