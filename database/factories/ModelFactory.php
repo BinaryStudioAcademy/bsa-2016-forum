@@ -86,3 +86,12 @@ $factory->define(App\Models\Like::class, function () {
         'user_id' => App\Models\User::all()->random(1)->id,
     ];
 });
+
+
+$factory->define(App\Models\Attachment::class, function (Faker\Generator $faker) {
+    return [
+        'url' => $faker->imageUrl(),
+        'cloud_public_id' => $faker->numberBetween(0, 1000),
+        'type'  => $faker->mimeType ,
+    ];
+});

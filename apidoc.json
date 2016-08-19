@@ -1,7 +1,7 @@
 {
-  "name": "BSA-forum",
+  "name": "BSA",
   "version": "0.1.0",
-  "description": "BSA forum 2016",
-  "title": "BSA forum 2016",
-  "url" : "api/v1"
+  "description": "apiDoc Forum BSA Api",
+  "title": "Forum BSA doc",
+  "url" : "http://127.0.0.1/bsa.com/api/v1/"
 }

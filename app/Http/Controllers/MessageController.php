@@ -111,4 +111,159 @@ class MessageController extends ApiController
         $message->delete();
         return $this->setStatusCode(204)->respond();
     }
+
+    /**
+    * @api {get} users/:id/messages List user messages
+    * @apiName Index user-messages
+    * @apiGroup Messages
+    *
+    * @apiDescription Returns the list of messages  of the specific user
+    *
+    * @apiParam {Number} id User ID
+    *
+    * @apiSuccess {Json} List List of the User messages
+    *
+    * @apiSuccessExample Success-Response:
+    *     HTTP/1.1 200 OK
+    *{
+    *"data": [
+    *{
+    *"id": 41,
+    *"user_from_id": 51,
+    *"user_to_id": 55,
+    *"message": "Voluptatem sequi ab quas qui quaerat voluptatibus at. Quo omnis in est. Magni ipsa minima culpa qui molestias ex minus. Magni ea commodi est inventore.",
+    *"is_read": 1,
+    *"created_at": "2016-08-18 20:03:52",
+    *"updated_at": "2016-08-18 20:03:52"
+    *}
+    *],
+    *"_meta": {
+    *"user_from": {
+    *"id": 51,
+    *"first_name": "Aditya",
+    *"last_name": "Jaskolski",
+    *"display_name": "verna.leffler",
+    *"email": "jefferey.kilback@example.com",
+    *"reputation": 281,
+    *"status_id": 12,
+    *"last_visit_at": "2016-02-12 05:17:40",
+    *"created_at": "2016-08-18 20:03:44",
+    *"updated_at": "2016-08-18 20:03:44"
+    *},
+    *"users_to": [
+    *{
+    *"id": 55,
+    *"first_name": "Joana",
+    *"last_name": "Leffler",
+    *"display_name": "johanna.rippin",
+    *"email": "pjohnston@example.net",
+    *"reputation": 236,
+    *"status_id": 11,
+    *"last_visit_at": "2016-06-04 21:12:32",
+    *"created_at": "2016-08-18 20:03:44",
+    *"updated_at": "2016-08-18 20:03:44"
+    *}
+    *]
+    *}
+    *}
+    * @apiError 404   User not found
+    *
+    * @apiErrorExample Error-Response:
+    *     HTTP/1.1 404 Not Found
+    *     {
+    *      User not found
+    *     }
+    */
+
+    /**
+    * @api {get} users/:id/messages/:id  Get the user message
+    * @apiName View user-message
+    * @apiGroup Messages
+    *
+    * @apiDescription Returns the specific message of the specific user
+    *
+    * @apiParam {Number} id User ID, Message ID
+    *
+    * @apiSuccess {Json} Json User message
+    *
+    * @apiSuccessExample Success-Response:
+    *     HTTP/1.1 200 OK
+    *{
+    *"data": {
+    *"id": 41,
+    *"user_from_id": 51,
+    *"user_to_id": 55,
+    *"message": "Voluptatem sequi ab quas qui quaerat voluptatibus at. Quo omnis in est. Magni ipsa minima culpa qui molestias ex minus. Magni ea commodi est inventore.",
+    *"is_read": 1,
+    *"created_at": "2016-08-18 20:03:52",
+    *"updated_at": "2016-08-18 20:03:52"
+    *},
+    *"_meta": {
+    *"user_from": {
+    *"id": 51,
+    *"first_name": "Aditya",
+    *"last_name": "Jaskolski",
+    *"display_name": "verna.leffler",
+    *"email": "jefferey.kilback@example.com",
+    *"reputation": 281,
+    *"status_id": 12,
+    *"last_visit_at": "2016-02-12 05:17:40",
+    *"created_at": "2016-08-18 20:03:44",
+    *"updated_at": "2016-08-18 20:03:44"
+    *},
+    *"user_to": {
+    *"id": 55,
+    *"first_name": "Joana",
+    *"last_name": "Leffler",
+    *"display_name": "johanna.rippin",
+    *"email": "pjohnston@example.net",
+    *"reputation": 236,
+    *"status_id": 11,
+    *"last_visit_at": "2016-06-04 21:12:32",
+    *"created_at": "2016-08-18 20:03:44",
+    *"updated_at": "2016-08-18 20:03:44"
+    *}
+    *}
+    *}
+    *
+    * @apiError 404   User not found,  Message not found
+    *
+    * @apiErrorExample Error-Response:
+    *     HTTP/1.1 404 Not Found
+    *     {
+    *      User not found
+    *     }
+    *
+    * @apiErrorExample Error-Response:
+    *     HTTP/1.1 404 Not Found
+    *     {
+    *      Message not found
+    *     }
+    */
+
+    /**
+    * @api {delete} users/:id/messages/:id Delete the message of the user
+    * @apiName delete user-message
+    * @apiGroup Messages
+    *
+    * @apiDescription Delete specific user message.
+    *
+    * @apiParam {Number} id  User ID, Message ID
+    *
+    * @apiSuccessExample Success-Response:
+    *     HTTP/1.1 204 No content
+    *
+    * @apiError 404   User not found, Message not found
+    *
+    * @apiErrorExample Error-Response 404:
+    *     HTTP/1.1 404 Not Found
+    *     {
+    *      User not found
+    *     }
+    * @apiErrorExample Error-Response 404:
+    *     HTTP/1.1 404 Not Found
+    *     {
+    *      Message not found
+    *     }
+    */
 }

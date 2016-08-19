@@ -13,13 +13,16 @@ class TopicsTableSeeder extends Seeder
     {
         factory(App\Models\Topic::class, 20)->create()->each(function($topic) {
             $comment = factory(App\Models\Comment::class)->make();
-            $comment = $topic->comments()->save($comment);
+            $topic->comments()->save($comment);
             
+            $attachment = factory(App\Models\Attachment::class)->make();
+            $topic->attachments()->save($attachment);
+
             $tag = factory(App\Models\Tag::class)->make();
-            $comment = $topic->tags()->save($tag);
+            $topic->tags()->save($tag);
 
             $like = factory(App\Models\Like::class)->make();
-            $vote = $topic->likes()->save($like);
+            $topic->likes()->save($like);
             
         });
     }
