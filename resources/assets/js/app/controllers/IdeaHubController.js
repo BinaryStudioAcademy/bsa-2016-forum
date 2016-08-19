@@ -1,38 +1,34 @@
 var app = require('../instances/appInstance');
-var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
+var Radio = require('backbone.radio');
+
 var VoteModel = require('../models/VoteModel');
-var ListVotes = require('../views/votes/ListVotes');
+var CommentModel = require('../models/CommentModel');
 
 var CommentsCollection = require('../collections/commentCollection');
-var VoteAnswersCollection = require('../collections/voteAICollection');
-var CommentModel = require('../models/CommentModel');
+
+var ListVotes = require('../views/votes/ListVotes');
 var ShowVote = require('../views/votes/ShowVote');
 
-var Radio = require('backbone.radio');
 var Votes = require('../instances/Votes');
+
 module.exports = Marionette.Object.extend({
     initialize: function () {
-        this.listenTo(Radio.channel('votesChannel'), 'showVote', function (id) {
-            Backbone.history.navigate('votes/' + id, {
-                trigger: true
-            });
-        });
-
-        this.listenTo(Radio.channel('votesChannel'), 'storeComment', function (view) {
+        this.listenTo(Radio.channel('votesChannel'), 'createComment', function (view) {
             var model = new CommentModel({}, {parentUrl: view.options.collection.parentUrl});
             model.set('user_id', 2);
             model.set('rating', 0);
             model.save({content_origin: view.ui.text.val()}, {
                 success: function (data) {
-                    //view.collection.fetch({async: false});
-                    view.collection.add(data);
+                    //view.options.collection.fetch({async: false});
+                    view.options.collection.add(data);
                     view.ui.text.val('');
                     Radio.trigger('votesChannel', 'setCommentsCount', view.options.collection.length);
                 }
             });
         });
     },
+    
     index: function () {
 
         Votes.reset();
@@ -42,18 +38,14 @@ module.exports = Marionette.Object.extend({
     },
     showVote: function (id) {
         var model = undefined;
-        var parentUrl = '/votes/' + id;
-        var myCommentsCollection = new CommentsCollection([], {parentUrl: parentUrl});
-        var voteAnswers = new VoteAnswersCollection([], {parentUrl: parentUrl});
-        myCommentsCollection.fetch();
-        voteAnswers.fetch();
+        var myCommentsCollection = new CommentsCollection([], {parentUrl: '/votes/' + id});
+        myCommentsCollection.fetch({success: function(data) {Radio.trigger('votesChannel', 'setCommentsCount', data.length);}});
 
         if (Votes.get(id)) {
             model = Votes.get(id);
             app.render(new ShowVote({
                 voteModel: model,
-                collection: myCommentsCollection,
-                answers: voteAnswers
+                collection: myCommentsCollection
             }));
         } else {
             model = new VoteModel({id: id});
@@ -61,8 +53,7 @@ module.exports = Marionette.Object.extend({
 
             app.render(new ShowVote({
                 voteModel: model,
-                collection: myCommentsCollection,
-                answers: voteAnswers
+                collection: myCommentsCollection
             }));
 
         }
