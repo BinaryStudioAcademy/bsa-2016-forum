@@ -3,7 +3,7 @@
  */
 var app = require('express')();
 var http = require('http');
-var io = require('socket.io')(http.Server(app));
+var io = require('socket.io').listen(3000);
 var Redis = require('ioredis');
 var redis = new Redis();
 var UserOnline = require('./userContainer');
@@ -14,12 +14,11 @@ redis.subscribe('messagesChannel', function(err, count) {
 redis.on('message', function(channel, eventData) {
     eventData = JSON.parse(eventData);
     var message = eventData.data.message;
-    console.log(message);
-    UserOnline.getSocket(message.user_to_id).emit('newMessage', message);
-});
-
-http.listen(3000, function(){
-    console.log('Listening on Port 3000');
+    console.log('new message');
+    if(UserOnline.isOnline(message.user_to_id)){
+        UserOnline.getSocket(message.user_to_id).emit('newMessage', message);
+        console.log("send to user_id: "+message.user_to_id);
+    }
 });
 
 io.sockets.on('connection', function (socket) {

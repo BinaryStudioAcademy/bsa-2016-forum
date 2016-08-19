@@ -11,10 +11,14 @@ module.exports = new function () {
         this.map[socket.id] = userId;
     };
 
+    this.isOnline = function (userId) {
+        return !!this.users[userId];
+    },
+    
     this.getSocket = function (userId) {
         return this.users[userId];
     };
-
+    
     this.remoteSocket = function (socket) {
         delete this.users[this.map[socket.id]];
     };
