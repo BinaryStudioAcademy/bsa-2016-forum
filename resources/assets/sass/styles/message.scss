@@ -190,3 +190,7 @@ MESSAGE DIALOG
 .message-new-control button:hover {
   background-color: #f9c172;
 }
+
+.message-new-control button:disabled {
+  background-color: #DDDDDD
+}

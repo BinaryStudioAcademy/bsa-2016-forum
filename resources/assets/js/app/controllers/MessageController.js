@@ -38,17 +38,20 @@ module.exports = Marionette.Object.extend({
                 user_to_id: messageCollection.getMeta().with_user.id,
                 is_read: 0
             });
-            ui.button.html('Sending');
+            ui.button.html('Sending..');
+            ui.button.prop('disabled', true);
             message.parentUrl = _.result(currentUser, 'url');
             message.save(null, {
                 success: function (model) {
                     ui.button.html('Send');
+                    ui.button.prop('disabled', false);
                     ui.message.val('');
                     messageCollection.add(model);
                     Radio.channel('messagesChannel').trigger('newMessageScroll');
                 },
                 error: function () {
                     ui.button.html('ReSend');
+                    ui.button.prop('disabled', false);
                 }
             });
         }));
