@@ -17,7 +17,7 @@ module.exports = Backbone.Model.extend({
         if (!options.url) {
             options.url = this._getRequestUrl(model);
         }
-
+        
         if (!options.statusCode) options.statusCode = {};
         options.statusCode['400'] = function (xhr, textStatus, errorThrown) {
             if (xhr.responseJSON) {
@@ -26,6 +26,10 @@ module.exports = Backbone.Model.extend({
             }
         };
         return Backbone.sync(method, model, options);
+    },
+
+    getMeta: function() {
+        return (_.result(this, '_meta') || _.result(this.collection, '_meta'));
     },
 
     parse: function (response, options) {

@@ -227,6 +227,16 @@ class CommentController extends ApiController
         return ($voteWhichHasThisComment && $voteWhichHasThisComment->id === $vote->id);
     }
 
+    protected function makeCommentsMeta($comments){
+        $meta = [];
+
+        foreach ($comments as $comment) {
+            $meta['user'][$comment->id] = $comment->user()->first();
+        }
+
+        return $meta;
+    }
+    
     /**
      * @param Vote $vote
      * @return \Illuminate\Http\JsonResponse
@@ -234,7 +244,9 @@ class CommentController extends ApiController
     public function getVoteComments(Vote $vote)
     {
         $comments = $vote->comments()->get();
-        return $this->setStatusCode(200)->respond($comments);
+        $meta = $this->makeCommentsMeta($comments);
+
+        return $this->setStatusCode(200)->respond($comments, $meta);
     }
 
     /**
@@ -260,7 +272,8 @@ class CommentController extends ApiController
     {
         $comment = Comment::create($request->all());
         $comment = $vote->comments()->save($comment);
-        return $this->setStatusCode(201)->respond($comment);
+
+        return $this->setStatusCode(201)->respond($comment, ['user' => [$comment->id => $comment->user()->first()]]);
     }
 
     /**
