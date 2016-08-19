@@ -94,4 +94,20 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    /**
+     * Does user have admin rights
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        $role = $this->role()->first();
+
+        if ($role && $role->name === 'Admin') {
+            return true;
+        }
+
+        return false;
+    }
+
 }
