@@ -1,15 +1,33 @@
 var app = require('../instances/appInstance');
-
 var Marionette = require('backbone.marionette');
+var Radio = require('backbone.radio');
+
 var VoteModel = require('../models/VoteModel');
-var ListVotes = require('../views/votes/ListVotes');
+var CommentModel = require('../models/CommentModel');
 
 var CommentsCollection = require('../collections/commentCollection');
+
+var ListVotes = require('../views/votes/ListVotes');
 var ShowVote = require('../views/votes/ShowVote');
 
-var Radio = require('backbone.radio');
 var Votes = require('../instances/Votes');
+
 module.exports = Marionette.Object.extend({
+    initialize: function () {
+        this.listenTo(Radio.channel('votesChannel'), 'createComment', function (view) {
+            var model = new CommentModel({}, {parentUrl: view.options.collection.parentUrl});
+            model.set('user_id', 2);
+            model.set('rating', 0);
+            model.save({content_origin: view.ui.text.val()}, {
+                success: function (data) {
+                    //view.options.collection.fetch({async: false});
+                    view.options.collection.add(data);
+                    view.ui.text.val('');
+                    Radio.trigger('votesChannel', 'setCommentsCount', view.options.collection.length);
+                }
+            });
+        });
+    },
     
     index: function () {
 
