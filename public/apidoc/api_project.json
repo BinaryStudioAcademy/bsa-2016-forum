@@ -1,14 +1,14 @@
 {
-  "name": "BSA-forum",
+  "name": "BSA",
   "version": "0.1.0",
-  "description": "BSA forum 2016",
-  "title": "BSA forum 2016",
-  "url": "api/v1",
+  "description": "apiDoc Forum BSA Api",
+  "title": "Forum BSA doc",
+  "url": "http://127.0.0.1/bsa.com/api/v1/",
   "sampleUrl": false,
   "apidoc": "0.2.0",
   "generator": {
     "name": "apidoc",
-    "time": "2016-08-18T23:46:33.484Z",
+    "time": "2016-08-19T07:27:24.830Z",
     "url": "http://apidocjs.com",
     "version": "0.16.1"
   }
