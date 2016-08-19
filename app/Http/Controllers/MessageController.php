@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewMessageEvent;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -75,6 +76,7 @@ class MessageController extends ApiController
         $userFrom = User::findOrFail($userId);
         $message = new Message($request->all());
         $message->save();
+        event(new NewMessageEvent($message));
         return $this->setStatusCode(201)->respond($message);
     }
 
