@@ -38,6 +38,7 @@ module.exports = Marionette.Object.extend({
                 user_to_id: messageCollection.getMeta().with_user.id,
                 is_read: 0
             });
+            ui.button.html('Sending');
             message.parentUrl = _.result(currentUser, 'url');
             message.save(null, {
                 success: function (model) {
