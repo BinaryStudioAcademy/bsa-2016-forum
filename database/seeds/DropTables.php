@@ -22,7 +22,6 @@ class DropTables extends Seeder
         \DB::table('votes')->delete();
         \DB::table('users')->delete();
         \DB::table('roles')->delete();
-        \DB::table('role_user')->delete();
         \DB::table('user_statuses')->delete();
     }
 }
