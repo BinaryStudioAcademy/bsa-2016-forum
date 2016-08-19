@@ -136,6 +136,7 @@ module.exports = Marionette.ItemView.extend({
                 //console.log(model.getMeta());
                 model.getMeta().attachments[model.get('id')] = parent._files;
                 Radio.channel('newComment').trigger('addCommentModel', model);
+                parent._files = [];
             }
         });
     },
