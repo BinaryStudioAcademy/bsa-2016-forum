@@ -242,6 +242,125 @@ class MessageController extends ApiController
     */
 
     /**
+     * @api {post} users/:id/messages/ Add message of the user
+     * @apiName add User-message
+     * @apiGroup Messages
+     *
+     * @apiDescription Add message of the specific user
+     *
+     * @apiParam {Number} id  User ID
+     * @apiParam {Number} user_from_id  User ID who sent message
+     * @apiParam {Number} user_from_id  User ID who receive message
+     * @apiParam {String} message  Text of the message
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 201 OK
+     *{
+     *"data": {
+     *"user_from_id": 2,
+     *"user_to_id": "5",
+     *"message": "AAAA",
+     *"is_read": "0",
+     *"updated_at": "2016-08-19 07:37:12",
+     *"created_at": "2016-08-19 07:37:12",
+     *"id": 16,
+     *},
+     *}
+     *  "_meta": []
+     *
+     * @apiError 404   User not found
+     *
+     * @apiErrorExample Error-Response 404:
+     *     HTTP/1.1 404 Not Found
+     *     {
+     *      User not found
+     *     }
+     *
+     * @apiError 400   Bad request
+     *
+     * @apiErrorExample Error-Response 400:
+     *     HTTP/1.1 400 Bad request
+     *{
+     *"user_from_id": [
+     *"Sender ID is required"
+     *],
+     *"user_to_id": [
+     *"Receiver ID is required"
+     *],
+     *"message": [
+     *"Message is required"
+     *]
+     *}
+     *  * @apiErrorExample Error-Response 400:
+     *     HTTP/1.1 400 Bad request
+     * {
+     *"user_to_id": [
+     *"User ID_to can not be the same as authorized"
+     *]
+     *}
+     */
+
+
+    /**
+     * @api {put} users/:id/messages/:id  Update message of the user
+     * @apiName update User-message
+     * @apiGroup Messages
+     *
+     * @apiDescription Update message of the specific user
+     *
+     * @apiParam {Number} id  User ID, Message ID
+     * @apiParam {Number} user_from_id  User ID who sent message
+     * @apiParam {Number} user_from_id  User ID who receive message
+     * @apiParam {String} message  Text of the message
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *{
+     *"data": {
+     *"id": 46,
+     *"user_from_id": "52",
+     *"user_to_id": "53",
+     *"message": "gAJSJHGSHa",
+     *"is_read": 0,
+     *"created_at": "2016-08-18 20:03:52",
+     *"updated_at": "2016-08-19 07:45:06"
+     *},
+     *"_meta": []
+     *}
+     *
+     * @apiError 404   User not found
+     *
+     * @apiErrorExample Error-Response 404:
+     *     HTTP/1.1 404 Not Found
+     *     {
+     *      User not found
+     *     }
+     *
+     * @apiError 400   Bad request
+     *
+     * @apiErrorExample Error-Response 400:
+     *     HTTP/1.1 400 Bad request
+     *{
+     *"user_from_id": [
+     *"Sender ID is required"
+     *],
+     *"user_to_id": [
+     *"Receiver ID is required"
+     *],
+     *"message": [
+     *"Message is required"
+     *]
+     *}
+     *  * @apiErrorExample Error-Response 400:
+     *     HTTP/1.1 400 Bad request
+     * {
+     *"user_to_id": [
+     *"User ID_to can not be the same as authorized"
+     *]
+     *}
+     */
+
+    /**
     * @api {delete} users/:id/messages/:id Delete the message of the user
     * @apiName delete user-message
     * @apiGroup Messages
