@@ -1,6 +1,5 @@
 var Marionette = require('backbone.marionette');
-var app = require('../../instances/appInstance');
-var Radio = require('backbone.radio');
+var Backbone = require('backbone');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteItem',
@@ -9,7 +8,7 @@ module.exports = Marionette.ItemView.extend({
     },
     events: {
         'click @ui.label': function () {
-            Radio.trigger('votesChannel', 'showVote', this.model.get('id'));
+            Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
         }
     },
     serializeData: function () {

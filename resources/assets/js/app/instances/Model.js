@@ -13,14 +13,22 @@ module.exports = Backbone.Model.extend({
         return App.getBaseUrl() + this.getEntityUrl();
     },
 
-    sync: function (method, collection, options) {
+    sync: function (method, model, options) {
         if (!options.url) {
-            options.url = this._getRequestUrl(collection);
+            options.url = this._getRequestUrl(model);
         }
-        return Backbone.sync(method, collection, options);
+        
+        if (!options.statusCode) options.statusCode = {};
+        options.statusCode['400'] = function (xhr, textStatus, errorThrown) {
+            if (xhr.responseJSON) {
+                model.validationError = xhr.responseJSON;
+                model.trigger('invalid', model, model.validationError);
+            }
+        };
+        return Backbone.sync(method, model, options);
     },
 
-    getMeta: function () {
+    getMeta: function() {
         return (_.result(this, '_meta') || _.result(this.collection, '_meta'));
     },
 
@@ -32,5 +40,4 @@ module.exports = Backbone.Model.extend({
             return response;
         }
     }
-
 });

@@ -1,6 +1,7 @@
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 
+
 module.exports = Marionette.ItemView.extend({
     template: 'VoteCommentAdd',
     ui: {
@@ -9,7 +10,7 @@ module.exports = Marionette.ItemView.extend({
     },
     events: {
         'click @ui.addButton': function () {
-            Radio.trigger('votesChannel', 'storeComment', this);
+            Radio.trigger('votesChannel', 'createComment', this);
         }
     }
 });
