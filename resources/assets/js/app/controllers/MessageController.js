@@ -42,7 +42,7 @@ module.exports = Marionette.Object.extend({
             message.save(null, {
                 success: function (model) {
                     ui.button.html('Send');
-                    ui.message.val();
+                    ui.message.val('');
                     messageCollection.add(model);
                     Radio.channel('messagesChannel').trigger('newMessageScroll');
                 },
