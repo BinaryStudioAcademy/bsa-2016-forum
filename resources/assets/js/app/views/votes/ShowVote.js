@@ -21,7 +21,7 @@ module.exports = Marionette.LayoutView.extend({
             this.ui.c_count.text(n + ' Comments');
         });
     },
-    onBeforeShow: function () {
+    onRender: function () {
         this.getRegion('comments').show(
             new CommentsCollectionView({
                 collection: this.options.collection

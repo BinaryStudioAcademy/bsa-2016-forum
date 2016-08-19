@@ -2,25 +2,32 @@ var Marionette = require('backbone.marionette');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteHeader',
-    tagName:'div',
+    tagName: 'div',
     className: 'vote-head',
     modelEvents: {
-        'change':'render'
+        'change': 'render'
     },
     serializeData: function () {
         var tempmeta = this.model.getMeta();
-        if (tempmeta === undefined) return {model: {title:'We are loaging data. Please, wait.'}};
-        else {
+        var meta = {
+            user: {},
+            likes: {},
+            comments: {},
+            tags: {}
+        };
+        if (tempmeta) {
             var id = this.model.get('id');
-            return {
-                model: this.model.toJSON(),
-                meta: {
-                    user: tempmeta.user[id],
-                    likes: tempmeta.likes[id],
-                    comments: tempmeta.comments[id],
-                    tags: tempmeta.tags[id]
-                }
-            };
+            meta = {
+                user: tempmeta.user[id],
+                likes: tempmeta.likes[id],
+                comments: tempmeta.comments[id],
+                tags: tempmeta.tags[id]
+            }
         }
+
+        return {
+            model: this.model.toJSON(),
+            meta: meta
+        };
     }
 });
