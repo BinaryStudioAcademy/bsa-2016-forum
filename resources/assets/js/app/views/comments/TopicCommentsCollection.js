@@ -7,10 +7,6 @@ var Radio = require('backbone.radio');
 module.exports = Marionette.CollectionView.extend({
     childView: CommentItem,
 
-    events: {
-
-    },
-
     initialize: function (options) {
         this.listenTo(Radio.channel('newComment'), 'addCommentModel', this.addCommentModel);
     },
@@ -21,6 +17,6 @@ module.exports = Marionette.CollectionView.extend({
     },
 
     onRender: function () {
-
+        //console.log(this.collection, 'topic comments collection render');
     }
 });

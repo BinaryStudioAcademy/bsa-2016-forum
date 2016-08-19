@@ -6,6 +6,7 @@ use App\Models\Message;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use App\Http\Requests\MessageRequest;
 
 use App\Http\Requests;
 
@@ -39,18 +40,17 @@ class MessageController extends ApiController
      * Store a newly created resource in storage.
      *
      * @param $userId
-     * @param  \Illuminate\Http\Request $request
+     * @param MessageRequest|Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store($userId, Request $request)
+    public function store($userId, MessageRequest $request)
     {
         $userFrom = User::findOrFail($userId);
         $message = new Message($request->all());
         $message->user()->associate($userFrom);
         $message->save();
 
-        $this->setStatusCode(201)->respond($message);
-
+        return $this->setStatusCode(201)->respond($message);
     }
 
     /**
@@ -79,11 +79,11 @@ class MessageController extends ApiController
      * Update the specified resource in storage.
      *
      * @param $userId
-     * @param  \Illuminate\Http\Request $request
+     * @param MessageRequest|Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update($userId, Request $request, $id)
+    public function update($userId, MessageRequest $request, $id)
     {
         $user = User::findOrFail($userId);
         $message = $user->messages()->where('id', $id)->first();

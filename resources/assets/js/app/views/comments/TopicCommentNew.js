@@ -7,6 +7,7 @@ var Dropzone = require('dropzone');
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentNew',
     _dropZone: null,
+    _files: [],
     className: 'topic-comment-item',
 
     ui: {
@@ -22,6 +23,7 @@ module.exports = Marionette.ItemView.extend({
     },
 
     initialize: function (options) {
+        console.log(options);
     },
 
     close: function (event) {
@@ -59,10 +61,11 @@ module.exports = Marionette.ItemView.extend({
 
         if (this.model.isValid()) {
             this.showLoader(true);
+
             this.model.save({}, {
                 success: function (model) {
-                    //logger('comment saved successfully');
-
+                    logger('comment saved successfully');
+                    console.log(model, model.getMeta());
                     if (parent._dropZone && parent._dropZone.files.length) {
                         parent._dropZone.processQueue();
                     } else {
@@ -110,7 +113,9 @@ module.exports = Marionette.ItemView.extend({
             },
 
             success: function (file, xhr) {
-                logger(file);
+                xhr.data ? parent._files.push(xhr.data) : '';
+
+                //logger(file, model);
                 //Radio.channel('attachment').trigger('addAttachmentModel', file);
             },
 
@@ -128,6 +133,8 @@ module.exports = Marionette.ItemView.extend({
             // event triggers when all files has been uploaded
             queuecomplete: function () {
                 parent.remove();
+                //console.log(model.getMeta());
+                model.getMeta().attachments[model.get('id')] = parent._files;
                 Radio.channel('newComment').trigger('addCommentModel', model);
             }
         });

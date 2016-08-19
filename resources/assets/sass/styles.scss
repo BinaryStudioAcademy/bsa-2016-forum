@@ -33,7 +33,7 @@ body {
 .post-title a {
   text-align: left;
   color: #ffa500;
-  font-weight: bold;
+  font-size: 18px;
 }
 
 .content-container {
@@ -58,4 +58,10 @@ body {
   border: 2px dashed #0087F7;
   border-radius: 5px;
   background: white;
+}
+.attachment-item img {
+  height: 100px;
+}
+.attachments-container {
+  padding: 15px;
 }
