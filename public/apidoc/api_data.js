@@ -2044,6 +2044,88 @@ define({ "api": [
     "groupTitle": "Messages"
   },
   {
+    "type": "post",
+    "url": "users/:id/messages/",
+    "title": "Add message of the user",
+    "name": "add_User_message",
+    "group": "Messages",
+    "description": "<p>Add message of the specific user</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>User ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "user_from_id",
+            "description": "<p>User ID who sent message</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Text of the message</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 201 OK\n{\n\"data\": {\n\"user_from_id\": 2,\n\"user_to_id\": \"5\",\n\"message\": \"AAAA\",\n\"is_read\": \"0\",\n\"updated_at\": \"2016-08-19 07:37:12\",\n\"created_at\": \"2016-08-19 07:37:12\",\n\"id\": 16,\n},\n}\n \"_meta\": []",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "404",
+            "description": "<p>User not found</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "400",
+            "description": "<p>Bad request</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response 404:",
+          "content": "HTTP/1.1 404 Not Found\n{\n User not found\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response 400:",
+          "content": "    HTTP/1.1 400 Bad request\n{\n\"user_from_id\": [\n\"Sender ID is required\"\n],\n\"user_to_id\": [\n\"Receiver ID is required\"\n],\n\"message\": [\n\"Message is required\"\n]\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response 400:",
+          "content": "    HTTP/1.1 400 Bad request\n{\n\"user_to_id\": [\n\"User ID_to can not be the same as authorized\"\n]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/Http/Controllers/MessageController.php",
+    "groupTitle": "Messages"
+  },
+  {
     "type": "delete",
     "url": "users/:id/messages/:id",
     "title": "Delete the message of the user",
@@ -2092,6 +2174,88 @@ define({ "api": [
         {
           "title": "Error-Response 404:",
           "content": "HTTP/1.1 404 Not Found\n{\n Message not found\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/Http/Controllers/MessageController.php",
+    "groupTitle": "Messages"
+  },
+  {
+    "type": "put",
+    "url": "users/:id/messages/:id",
+    "title": "Update message of the user",
+    "name": "update_User_message",
+    "group": "Messages",
+    "description": "<p>Update message of the specific user</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>User ID, Message ID</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "user_from_id",
+            "description": "<p>User ID who sent message</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Text of the message</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n\"data\": {\n\"id\": 46,\n\"user_from_id\": \"52\",\n\"user_to_id\": \"53\",\n\"message\": \"gAJSJHGSHa\",\n\"is_read\": 0,\n\"created_at\": \"2016-08-18 20:03:52\",\n\"updated_at\": \"2016-08-19 07:45:06\"\n},\n\"_meta\": []\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "404",
+            "description": "<p>User not found</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "400",
+            "description": "<p>Bad request</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response 404:",
+          "content": "HTTP/1.1 404 Not Found\n{\n User not found\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response 400:",
+          "content": "    HTTP/1.1 400 Bad request\n{\n\"user_from_id\": [\n\"Sender ID is required\"\n],\n\"user_to_id\": [\n\"Receiver ID is required\"\n],\n\"message\": [\n\"Message is required\"\n]\n}",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response 400:",
+          "content": "    HTTP/1.1 400 Bad request\n{\n\"user_to_id\": [\n\"User ID_to can not be the same as authorized\"\n]\n}",
           "type": "json"
         }
       ]
@@ -2777,6 +2941,411 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "app/Http/Controllers/TagController.php",
     "groupTitle": "Tags_Vote"
+  },
+  {
+    "type": "post",
+    "url": "topics/",
+    "title": "Create new topic",
+    "name": "Create_Topic",
+    "group": "Topics",
+    "description": "<p>Creates a new topic.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "optional": false,
+            "field": "No",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Json",
+            "optional": false,
+            "field": "Topic",
+            "description": "<p>the Topic like {key:value,}</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 201 Created\n{\n    \"data\": [\n        {\n        \"id\": 1,\n        \"reviewed_number\": 429,\n        \"name\": \"Maxime dolor hic similique unde sunt incidunt.\",\n        \"description\": \"Et architecto at esse maiores.\",\n        \"rating\": 841,\n        \"user_id\": 1,\n        \"created_at\": \"2016-08-17 07:54:21\",\n        \"updated_at\": \"2016-08-17 07:54:21\"\n        }\n    ],\n    \"_meta\": []\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/Http/Controllers/TopicController.php",
+    "groupTitle": "Topics"
+  },
+  {
+    "type": "delete",
+    "url": "topics/:id",
+    "title": "Delete specific topic",
+    "name": "Delete_topic",
+    "group": "Topics",
+    "description": "<p>Deletes the unique topic.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "ID",
+            "description": "<p>Topic ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 204 No content": [
+          {
+            "group": "Success 204 No content",
+            "optional": false,
+            "field": "Empty",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 204 No content",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ModelNotFoundException",
+            "description": "<p><code>404</code> Topic not found</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "Topic not found",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/Http/Controllers/TopicController.php",
+    "groupTitle": "Topics"
+  },
+  {
+    "type": "get",
+    "url": "topics",
+    "title": "Index topic",
+    "name": "Index_Topic",
+    "group": "Topics",
+    "description": "<p>Returns the list of the topics.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "optional": false,
+            "field": "No",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Json",
+            "optional": false,
+            "field": "List",
+            "description": "<p>of the Topics like {key:value,}, {key:value,}</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\n{\n    \"data\": [\n        {\n        \"id\": 1,\n        \"reviewed_number\": 429,\n        \"name\": \"Maxime dolor hic similique unde sunt incidunt.\",\n        \"description\": \"Et architecto at esse maiores.\",\n        \"rating\": 841,\n        \"user_id\": 1,\n        \"created_at\": \"2016-08-17 07:54:21\",\n        \"updated_at\": \"2016-08-17 07:54:21\"\n        },\n        {\n        \"id\": 2,\n        \"reviewed_number\": 632,\n        \"name\": \"Et sequi ex est ratione.\",\n        \"description\": \"Dolorem sunt assumenda est.\",\n        \"rating\": 279,\n        \"user_id\": 5,\n        \"created_at\": \"2016-08-17 07:54:21\",\n        \"updated_at\": \"2016-08-17 07:54:21\"\n        },\n        {\n        \"id\": 3,\n        \"reviewed_number\": 648,\n        \"name\": \"Quae voluptate autem veniam nam assumenda.\",\n        \"description\": \"Sint minus ducimus ullam vitae.\",\n        \"rating\": 615,\n        \"user_id\": 4,\n        \"created_at\": \"2016-08-17 07:54:21\",\n        \"updated_at\": \"2016-08-17 07:54:21\"\n        }\n        }\n    ],\n    \"_meta\": []\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/Http/Controllers/TopicController.php",
+    "groupTitle": "Topics"
+  },
+  {
+    "type": "get",
+    "url": "users/:id/topics",
+    "title": "Users topics",
+    "name": "Index_Topic",
+    "group": "Topics",
+    "description": "<p>Returns the list of the topics belongs to user.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "ID",
+            "description": "<p>User ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Json",
+            "optional": false,
+            "field": "List",
+            "description": "<p>of the Topics like {key:value,}, {key:value,}</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\n{\n    \"data\": [\n    {\n    \"id\": 4,\n    \"reviewed_number\": 636,\n    \"name\": \"Rem expedita dolore aspernatur in.\",\n    \"description\": \"Soluta numquam molestias dolor quia ad quam consectetur.\",\n    \"rating\": 808,\n    \"user_id\": 2,\n    \"created_at\": \"2016-08-17 07:54:21\",\n    \"updated_at\": \"2016-08-17 07:54:21\"\n    },\n    {\n    \"id\": 15,\n    \"reviewed_number\": 257,\n    \"name\": \"Ex nam ut nobis voluptatem praesentium culpa eveniet.\",\n    \"description\": \"Autem sapiente voluptate dolor expedita ab minus voluptatibus.\",\n    \"rating\": 446,\n    \"user_id\": 2,\n    \"created_at\": \"2016-08-17 07:54:22\",\n    \"updated_at\": \"2016-08-17 07:54:22\"\n    }\n    ],\n    \"_meta\": {\n    \"user\": {\n        \"id\": 2,\n        \"first_name\": \"Pierce\",\n        \"last_name\": \"Morissette\",\n        \"display_name\": \"kreinger\",\n        \"email\": \"dayne.hessel@example.com\",\n        \"reputation\": 472,\n        \"status_id\": 2,\n        \"last_visit_at\": \"2016-05-17 10:26:08\",\n        \"created_at\": \"2016-08-17 07:54:19\",\n        \"updated_at\": \"2016-08-17 07:54:19\"\n        }\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ModelNotFoundException",
+            "description": "<p><code>404</code> User not found</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "User not found",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/Http/Controllers/TopicController.php",
+    "groupTitle": "Topics"
+  },
+  {
+    "type": "put",
+    "url": "topics/:id",
+    "title": "Update specific topic.",
+    "name": "Update_Topic",
+    "group": "Topics",
+    "description": "<p>Updates the unique topic.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "ID",
+            "description": "<p>Topic ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Json",
+            "optional": false,
+            "field": "Topic",
+            "description": "<p>the Topic like {key:value,}</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n    \"data\": [\n        {\n        \"id\": 1,\n        \"reviewed_number\": 429,\n        \"name\": \"Maxime dolor hic similique unde sunt incidunt.\",\n        \"description\": \"Et architecto at esse maiores.\",\n        \"rating\": 841,\n        \"user_id\": 1,\n        \"created_at\": \"2016-08-17 07:54:21\",\n        \"updated_at\": \"2016-08-17 07:54:21\"\n        }\n    ],\n    \"_meta\": []\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ModelNotFoundException",
+            "description": "<p><code>404</code> Topic not found</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "Topic not found",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/Http/Controllers/TopicController.php",
+    "groupTitle": "Topics"
+  },
+  {
+    "type": "get",
+    "url": "users/:id/topics/:id",
+    "title": "Users topic",
+    "name": "Users_topic",
+    "group": "Topics",
+    "description": "<p>Returns the topic belongs to user.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "ID",
+            "description": "<p>User ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Json",
+            "optional": false,
+            "field": "Topic",
+            "description": "<p>the Topic like {key:value,}</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n\n{\n    \"data\": {\n        \"id\": 15,\n        \"reviewed_number\": 257,\n        \"name\": \"Ex nam ut nobis voluptatem praesentium culpa eveniet.\",\n        \"description\": \"Autem sapiente voluptate dolor expedita ab minus voluptatibus.\",\n        \"rating\": 446,\n        \"user_id\": 2,\n        \"created_at\": \"2016-08-17 07:54:22\",\n        \"updated_at\": \"2016-08-17 07:54:22\"\n    },\n    \"_meta\": {\n        \"user\": {\n            \"id\": 2,\n            \"first_name\": \"Pierce\",\n            \"last_name\": \"Morissette\",\n            \"display_name\": \"kreinger\",\n            \"email\": \"dayne.hessel@example.com\",\n            \"reputation\": 472,\n            \"status_id\": 2,\n            \"last_visit_at\": \"2016-05-17 10:26:08\",\n            \"created_at\": \"2016-08-17 07:54:19\",\n            \"updated_at\": \"2016-08-17 07:54:19\"\n            }\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ModelNotFoundException",
+            "description": "<p><code>404</code> User not found</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "User not found",
+          "type": "json"
+        },
+        {
+          "title": "Error-Response:",
+          "content": "Topic not found",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/Http/Controllers/TopicController.php",
+    "groupTitle": "Topics"
+  },
+  {
+    "type": "get",
+    "url": "topics/:id",
+    "title": "View specific Topic",
+    "name": "View_Topic",
+    "group": "Topics",
+    "description": "<p>Returns the unique Topic.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "ID",
+            "description": "<p>Topic ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Json",
+            "optional": false,
+            "field": "Topic",
+            "description": "<p>the Topic like {key:value,}</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n    \"data\": [\n        {\n        \"id\": 1,\n        \"reviewed_number\": 429,\n        \"name\": \"Maxime dolor hic similique unde sunt incidunt.\",\n        \"description\": \"Et architecto at esse maiores.\",\n        \"rating\": 841,\n        \"user_id\": 1,\n        \"created_at\": \"2016-08-17 07:54:21\",\n        \"updated_at\": \"2016-08-17 07:54:21\"\n        }\n    ],\n    \"_meta\": []\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "ModelNotFoundException",
+            "description": "<p><code>404</code> Topic not found</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "Topic not found",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "app/Http/Controllers/TopicController.php",
+    "groupTitle": "Topics"
   },
   {
     "type": "post",
