@@ -22,7 +22,7 @@ class VoteItemController extends ApiController
      * @return \Illuminate\Http\Response
      */
     /**
-     * @api {get} /votes/:id/voteitems Index voteItems belongs to specific vote(IdeaHub)
+     * @api {get} votes/:id/voteitems Index voteItems belongs to specific vote(IdeaHub)
      * @apiName Index VoteItems
      * @apiGroup VoteItems
      *
@@ -101,7 +101,7 @@ class VoteItemController extends ApiController
      * @throws PermissionDeniedException
      */
     /**
-     * @api {post} /votes/:id/voteitems  Create new voteitem
+     * @api {post} votes/:id/voteitems  Create new voteitem
      * @apiName Create VoteItem
      * @apiGroup VoteItems
      *
@@ -161,7 +161,7 @@ class VoteItemController extends ApiController
      * @throws PermissionDeniedException
      */
     /**
-     * @api {get} /votes/:id/voteitems/:id  View specific VoteItem
+     * @api {get} votes/:id/voteitems/:id  View specific VoteItem
      * @apiName View VoteItem
      * @apiGroup VoteItems
      *
@@ -249,7 +249,7 @@ class VoteItemController extends ApiController
      * @throws PermissionDeniedException
      */
     /**
-     * @api {put} /votes/:id/voteitems/:id  Update specific voteitem
+     * @api {put} votes/:id/voteitems/:id  Update specific voteitem
      * @apiName Update VoteItem
      * @apiGroup VoteItems
      *
@@ -326,7 +326,7 @@ class VoteItemController extends ApiController
      * @throws PermissionDeniedException
      */
     /**
-     * @api {delete} /votes/:id/voteitems/:id  Delete specific voteItem
+     * @api {delete} votes/:id/voteitems/:id  Delete specific voteItem
      * @apiName Delete voteItem
      * @apiGroup VoteItems
      *

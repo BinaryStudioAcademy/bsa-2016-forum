@@ -22,7 +22,7 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
      * @return \Illuminate\Http\Response
      */
     /**
-     * @api {get} /users Index users
+     * @api {get} users Index users
      * @apiName Index Users
      * @apiGroup Users
      *
@@ -99,7 +99,7 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
      * @return \Illuminate\Http\Response
      */
     /**
-     * @api {post} /users Create user
+     * @api {post} users Create user
      * @apiName Create User
      * @apiGroup Users
      *
@@ -146,7 +146,7 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
      */
 
     /**
-     * @api {get} /users/:id Show user
+     * @api {get} users/:id Show user
      * @apiName Show User
      * @apiGroup Users
      *
@@ -193,7 +193,7 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
      * @return \Illuminate\Http\Response
      */
     /**
-     * @api {put} /users/:id  Update specific user
+     * @api {put} users/:id  Update specific user
      * @apiName Update User
      * @apiGroup Users
      *
@@ -245,7 +245,7 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
      * @return \Illuminate\Http\Response
      */
     /**
-     * @api {delete} /users/:id  Delete specific user
+     * @api {delete} users/:id  Delete specific user
      * @apiName Delete User
      * @apiGroup Users
      *
@@ -290,7 +290,7 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
      */
 
     /**
-     * @api {put} /users/:id/roles/:id  Update role for specific user
+     * @api {put} users/:id/roles/:id  Update role for specific user
      * @apiName Update Users Role
      * @apiGroup Users
      *
@@ -358,7 +358,7 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
      */
 
     /**
-     * @api {put} /users/:id/roles Show role for specific user
+     * @api {put} users/:id/roles Show role for specific user
      * @apiName Show Users Role
      * @apiGroup Users
      *
@@ -422,7 +422,7 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
 
     }
     /**
-     * @api {get} /user Show logged in user
+     * @api {get} user Show logged in user
      * @apiName Show logged in user
      * @apiGroup Users
      *

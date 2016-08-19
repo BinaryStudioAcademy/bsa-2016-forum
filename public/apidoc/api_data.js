@@ -2780,7 +2780,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/users",
+    "url": "users",
     "title": "Create user",
     "name": "Create_User",
     "group": "Users",
@@ -2823,7 +2823,7 @@ define({ "api": [
   },
   {
     "type": "delete",
-    "url": "/users/:id",
+    "url": "users/:id",
     "title": "Delete specific user",
     "name": "Delete_User",
     "group": "Users",
@@ -2896,7 +2896,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/users",
+    "url": "users",
     "title": "Index users",
     "name": "Index_Users",
     "group": "Users",
@@ -2939,7 +2939,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/users/:id",
+    "url": "users/:id",
     "title": "Show user",
     "name": "Show_User",
     "group": "Users",
@@ -2983,7 +2983,7 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/users/:id/roles",
+    "url": "users/:id/roles",
     "title": "Show role for specific user",
     "name": "Show_Users_Role",
     "group": "Users",
@@ -3046,7 +3046,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/user",
+    "url": "user",
     "title": "Show logged in user",
     "name": "Show_logged_in_user",
     "group": "Users",
@@ -3077,7 +3077,7 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/users/:id",
+    "url": "users/:id",
     "title": "Update specific user",
     "name": "Update_User",
     "group": "Users",
@@ -3140,7 +3140,7 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/users/:id/roles/:id",
+    "url": "users/:id/roles/:id",
     "title": "Update role for specific user",
     "name": "Update_Users_Role",
     "group": "Users",
@@ -3208,7 +3208,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/votes/:id/voteitems",
+    "url": "votes/:id/voteitems",
     "title": "Create new voteitem",
     "name": "Create_VoteItem",
     "group": "VoteItems",
@@ -3282,7 +3282,7 @@ define({ "api": [
   },
   {
     "type": "delete",
-    "url": "/votes/:id/voteitems/:id",
+    "url": "votes/:id/voteitems/:id",
     "title": "Delete specific voteItem",
     "name": "Delete_voteItem",
     "group": "VoteItems",
@@ -3360,7 +3360,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/votes/:id/voteitems",
+    "url": "votes/:id/voteitems",
     "title": "Index voteItems belongs to specific vote(IdeaHub)",
     "name": "Index_VoteItems",
     "group": "VoteItems",
@@ -3423,7 +3423,7 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/votes/:id/voteitems/:id",
+    "url": "votes/:id/voteitems/:id",
     "title": "Update specific voteitem",
     "name": "Update_VoteItem",
     "group": "VoteItems",
@@ -3502,7 +3502,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/votes/:id/voteitems/:id",
+    "url": "votes/:id/voteitems/:id",
     "title": "View specific VoteItem",
     "name": "View_VoteItem",
     "group": "VoteItems",
@@ -3581,7 +3581,7 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/votes/",
+    "url": "votes/",
     "title": "Create new vote",
     "name": "Create_Vote",
     "group": "Votes",
@@ -3643,7 +3643,7 @@ define({ "api": [
   },
   {
     "type": "delete",
-    "url": "/votes/:id",
+    "url": "votes/:id",
     "title": "Delete specific vote",
     "name": "Delete_vote",
     "group": "Votes",
@@ -3716,7 +3716,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/users/:id/votes",
+    "url": "users/:id/votes",
     "title": "Users votes (IdeaHubs)",
     "name": "Index_Votes",
     "group": "Votes",
@@ -3790,7 +3790,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/votes",
+    "url": "votes",
     "title": "Index vote (IdeaHub)",
     "name": "Index_Votes",
     "group": "Votes",
@@ -3857,7 +3857,7 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/votes/:id",
+    "url": "votes/:id",
     "title": "Update specific vote (IdeaHub).",
     "name": "Update_Vote",
     "group": "Votes",
@@ -3931,7 +3931,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/users/:id/votes/:id",
+    "url": "users/:id/votes/:id",
     "title": "Users vote (IdeaHub)",
     "name": "Users_vote",
     "group": "Votes",
@@ -4010,7 +4010,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/votes/:id",
+    "url": "votes/:id",
     "title": "View specific Vote",
     "name": "View_Vote",
     "group": "Votes",

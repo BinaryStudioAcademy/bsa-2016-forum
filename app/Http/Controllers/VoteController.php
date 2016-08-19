@@ -48,7 +48,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
  * @throws PermissionDeniedException
  */
     /**
-     * @api {get} /votes Index vote (IdeaHub)
+     * @api {get} votes Index vote (IdeaHub)
      * @apiName Index Votes
      * @apiGroup Votes
      *
@@ -153,7 +153,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
      * @throws PermissionDeniedException
      */
     /**
-     * @api {post} /votes/  Create new vote
+     * @api {post} votes/  Create new vote
      * @apiName Create Vote
      * @apiGroup Votes
      *
@@ -203,7 +203,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
      * @throws PermissionDeniedException
      */
     /**
-     * @api {get} /votes/:id View specific Vote
+     * @api {get} votes/:id View specific Vote
      * @apiName View Vote
      * @apiGroup Votes
      *
@@ -286,7 +286,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
      */
 
     /**
-     * @api {put} /votes/:id  Update specific vote (IdeaHub).
+     * @api {put} votes/:id  Update specific vote (IdeaHub).
      * @apiName Update Vote
      * @apiGroup Votes
      *
@@ -345,7 +345,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
      * @throws PermissionDeniedException
      */
     /**
-     * @api {delete} /votes/:id Delete specific vote
+     * @api {delete} votes/:id Delete specific vote
      * @apiName Delete vote
      * @apiGroup Votes
      *
@@ -397,7 +397,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
      */
 
     /**
-     * @api {get} /users/:id/votes Users votes (IdeaHubs)
+     * @api {get} users/:id/votes Users votes (IdeaHubs)
      * @apiName Index Votes
      * @apiGroup Votes
      *
@@ -493,7 +493,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
      */
 
     /**
-     * @api {get} /users/:id/votes/:id Users vote (IdeaHub)
+     * @api {get} users/:id/votes/:id Users vote (IdeaHub)
      * @apiName Users vote
      * @apiGroup Votes
      *
