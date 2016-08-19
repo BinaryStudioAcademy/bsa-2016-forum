@@ -3,23 +3,24 @@
  */
 
 module.exports = new function () {
-    this.users = [];
-    this.map = [];
+    this._userSocketId = [];
+    this._socketIdUser = [];
 
-    this.userAdd = function (userId, socket) {
-        this.users[userId] = socket;
-        this.map[socket.id] = userId;
+    this.Add = function (userId, socketId) {
+        this._userSocketId[userId] = socketId;
+        this._socketIdUser[socketId] = userId;
     };
-
-    this.isOnline = function (userId) {
-        return !!this.users[userId];
-    },
-    
-    this.getSocket = function (userId) {
-        return this.users[userId];
+   
+    this.Remove = function (socketId) {
+        delete this._userSocketId[this._socketIdUser[socketId]];
+        delete this._socketIdUser[socketId];
     };
     
-    this.remoteSocket = function (socket) {
-        delete this.users[this.map[socket.id]];
+    this.getSocketId = function (userId) {
+        return this._userSocketId[userId] || 0;
+    };
+    
+    this.getUserId = function (socketId) {
+        return this._socketIdUser[socketId];
     };
 };
