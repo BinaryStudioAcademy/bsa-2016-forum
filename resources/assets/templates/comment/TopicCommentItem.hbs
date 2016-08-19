@@ -15,9 +15,10 @@
                 </div>
                 <div class="attachments-container">
                     {{#each meta.attachments}}
-                        <div class="attachment-item">
-                            <div><img src="{{ url }}"></div>
-                            <div>{{ name }}</div>
+                        <div class="col-xs-6 col-md-3">
+                            <a href="{{ url }}" class="thumbnail">
+                                <img src="{{ url }}" alt="">
+                            </a>
                         </div>
                     {{/each}}
                 </div>

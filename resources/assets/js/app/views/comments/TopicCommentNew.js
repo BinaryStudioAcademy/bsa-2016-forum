@@ -65,7 +65,7 @@ module.exports = Marionette.ItemView.extend({
             this.model.save({}, {
                 success: function (model) {
                     logger('comment saved successfully');
-                    console.log(model, model.getMeta());
+                    //console.log(model, model.getMeta());
                     if (parent._dropZone && parent._dropZone.files.length) {
                         parent._dropZone.processQueue();
                     } else {

@@ -48,7 +48,7 @@ module.exports = Marionette.LayoutView.extend({
 
     onBeforeShow: function () {
         //this.getRegion('attachments').show(new AttachmentsCollectionView({
-        //    collection: attach
+        //    collection: attachs
         //}));
     },
 
