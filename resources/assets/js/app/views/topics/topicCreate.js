@@ -1,6 +1,6 @@
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
-var TopicModel = require('../../Models/TopicModel');
+var TopicModel = require('../../models/TopicModel');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicCreateNew',
