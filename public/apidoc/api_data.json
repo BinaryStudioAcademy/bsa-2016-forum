@@ -859,7 +859,7 @@
         },
         {
           "title": "Error-Response 400:",
-          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"User not is authorized\"\n]\n}\n}",
+          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"The User is not authorized\"\n]\n}\n}",
           "type": "json"
         }
       ]
@@ -936,7 +936,7 @@
         },
         {
           "title": "Error-Response 400:",
-          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"User not is authorized\"\n]\n}\n}",
+          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"The User is not authorized\"\n]\n}\n}",
           "type": "json"
         }
       ]
@@ -1127,7 +1127,7 @@
         },
         {
           "title": "Error-Response 400:",
-          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"User not is authorized\"\n]\n}\n}",
+          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"The User is not authorized\"\n]\n}\n}",
           "type": "json"
         }
       ]
@@ -1204,7 +1204,7 @@
         },
         {
           "title": "Error-Response 400:",
-          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"User not is authorized\"\n]\n}\n    }",
+          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"The User is not authorized\"\n]\n}\n    }",
           "type": "json"
         }
       ]
@@ -1548,7 +1548,7 @@
         },
         {
           "title": "Error-Response 400:",
-          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"User not is authorized\"\n]\n}\n    }",
+          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"The User is not authorized\"\n]\n}\n    }",
           "type": "json"
         }
       ]
@@ -1630,7 +1630,7 @@
         },
         {
           "title": "Error-Response 400:",
-          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"User not is authorized\"\n]\n}\n    }",
+          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"The User is not authorized\"\n]\n}\n    }",
           "type": "json"
         }
       ]
@@ -1826,7 +1826,7 @@
         },
         {
           "title": "Error-Response 400:",
-          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"User not is authorized\"\n]\n}\n}",
+          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"The User is not authorized\"\n]\n}\n}",
           "type": "json"
         }
       ]
@@ -1903,7 +1903,7 @@
         },
         {
           "title": "Error-Response 400:",
-          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"User not is authorized\"\n]\n}\n}",
+          "content": "    HTTP/1.1 400 Bad request\n    {\n     {\n\"content_origin\": [\n\"Content is required\"\n],\n\"user_id\": [\n\"The User is not authorized\"\n]\n}\n}",
           "type": "json"
         }
       ]
