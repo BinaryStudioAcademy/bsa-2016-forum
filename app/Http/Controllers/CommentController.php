@@ -147,6 +147,7 @@ class CommentController extends ApiController
     {
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $childComment = Comment::create($childCommentInput->all());
+            $topic->comments()->save($childComment);
             $childComment = $comment->comments()->save($childComment);
             return $this->setStatusCode(200)->respond($childComment);
         } else {
