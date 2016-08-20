@@ -39,7 +39,9 @@ class AuthService
             $context = new \Emarref\Jwt\Verification\Context($encryption);
            if ($jwt->verify($token, $context)){
                $userData =  json_decode($token->getPayload()->getClaims()->jsonSerialize());
+              
                $user = new User();
+
                if($user->isExist($userData)){
                    var_dump('gggggg');
                };
