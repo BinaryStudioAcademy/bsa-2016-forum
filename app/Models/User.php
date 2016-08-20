@@ -93,32 +93,26 @@ class User extends Authenticatable implements HasRoleAndPermissionContract
         return $this->votes()->where('id',$voteId)->first();
     }
 
-    public function isExist($userData)
+    public static function findUserByGlobalId($globalId)
     {
-        //var_dump($userData);
-     //   $id = $userData->id;
-     //   $user = $this->where('global_id',$userData->id)->first();
-       // $user = User::where('email', '=', $userData->email)->get();
-       // var_dump($user);
-       // var_dump($id);
-
+        $_this = new self;
         try {
-            $user =$this->where('global_id',$userData->id)->firstOrFail();
-            var_dump($userData->id);
-            var_dump($user);
+            $user = $_this->where('global_id',$globalId)->firstOrFail();
         }
         catch  (ModelNotFoundException $e){
-
-            var_dump('ffff');
-
-            try {
-                $user =$this->where('email',$userData->email)->firstOrFail();
-                var_dump($user->email);
+            return null;
             }
-            catch (ModelNotFoundException $e)
-            {
-                return false;
-            }
+        return $user;
+    }
+
+    public static function findUserByEmail($email)
+    {
+        $_this = new self;
+        try {
+            $user = $_this->where('email',$email)->firstOrFail();
+        }
+        catch  (ModelNotFoundException $e){
+            return null;
         }
         return $user;
     }

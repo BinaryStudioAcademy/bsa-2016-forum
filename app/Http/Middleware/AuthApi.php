@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Response;
 use Cookie;
 use App\Models\User;
@@ -21,17 +22,18 @@ class AuthApi extends AuthService
      */
     public function handle($request, Closure $next)
     {
-        $this->loginUser();
+        if (env('APP_ENV') !== 'local') {
+            $userData = $this->checkCookie();
 
-        $url = $request->fullUrl();
-        
-        if  (!($this->checkCookie())){
-            return redirect('http://team.binary-studio.com/auth/')->withCookie("referer", $url);
+            if  (!$userData) {
+                throw new AuthenticationException;
+            }
+            $user = $this->checkUser($userData);
+            Auth::login($user);
+            
+        } else {
+            $this->loginUser();
         }
-
         return $next($request);
-
-
     }
-
 }

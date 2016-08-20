@@ -13,6 +13,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use \DCN\RBAC\Exceptions\PermissionDeniedException;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -54,7 +55,7 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $e)
     {
         if ($e instanceof AuthenticationException) {
-            return response($e->getMessage(), 401);
+            return response('You do not have valid credentials', 401);
         }
 
         if ($e instanceof MethodNotAllowedHttpException) {
@@ -66,9 +67,9 @@ class Handler extends ExceptionHandler
             return response($validationErrors, 400);
         }
 
-        if ($e instanceof \PDOException) {
-            return response('Internal Server Error', 500);
-        }
+      //  if ($e instanceof \PDOException) {
+      //      return response('Internal Server Error', 500);
+      //  }
 
         if ($e instanceof ModelNotFoundException) {
             $modelPathAsArray = explode('\\', $e->getModel());
@@ -82,6 +83,10 @@ class Handler extends ExceptionHandler
 
         if ($e instanceof PermissionDeniedException){
             return response($e->getMessage(), 403);
+        }
+
+        if ($e instanceof ServiceUnavailableHttpException){
+            return response('Authentication Service is not available. Try later.', 503);
         }
         
         return parent::render($request, $e);

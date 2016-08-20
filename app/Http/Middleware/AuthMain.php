@@ -12,6 +12,7 @@ use Emarref\Jwt\Claim;
 
 class AuthMain extends AuthService
 {
+    protected $urlAuth = 'http://team.binary-studio.com/auth/';
     /**
      * Run the request filter.
      *
@@ -19,9 +20,22 @@ class AuthMain extends AuthService
      * @param  \Closure  $next
      * @return mixed
      */
+
     public function handle($request, Closure $next)
     {
-        $this->loginUser();
+        if (env('APP_ENV') !== 'local') {
+            $userData = $this->checkCookie();
+
+            if  (!$userData){
+                $url = $request->fullUrl();
+                return redirect($this->urlAuth)->withCookie("referer", $url);
+            }
+            $user = $this->checkUser($userData);
+            Auth::login($user);
+        
+        } else {
+            $this->loginUser();
+        }
         return $next($request);
     }
 
