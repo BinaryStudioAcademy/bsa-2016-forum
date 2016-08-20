@@ -31,7 +31,8 @@ module.exports = {
         {
             controller: new UserController(),
             appRoutes: {
-                'users': 'index'
+                'users': 'index',
+                'users/:id/votes':'showUserVotes'
             }
         }
     ],

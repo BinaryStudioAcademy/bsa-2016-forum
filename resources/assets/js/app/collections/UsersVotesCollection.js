@@ -1,7 +1,6 @@
 var baseCollection = require('../instances/Collection');
-var voteModel = require('../models/VoteModel');
+var usersVoteModel = require('../models/UsersVoteModel');
 
 module.exports = baseCollection.extend({
-    url: '/votes',
-    model: voteModel
+    model: usersVoteModel,
 });

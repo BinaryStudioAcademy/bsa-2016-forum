@@ -1,5 +1,5 @@
 var Marionette = require('backbone.marionette');
-var myVoteModel = require('../../models/MyVoteModel');
+var usersVoteModel = require('../../models/UsersVoteModel');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteItem',
