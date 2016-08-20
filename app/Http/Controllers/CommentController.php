@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Models\Vote;
 use App\Models\VoteItem;
-use Illuminate\Http\Request;
 use App\Http\Requests\CommentsRequest;
 use App\Models\Topic;
 use App\Http\Requests;
@@ -13,6 +12,31 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CommentController extends ApiController
 {
+    /**
+     * @param Comment $comment
+     * @return bool
+     */
+    protected function isCommentHasAnyChild(Comment $comment)
+    {
+        if ($comment->comments()->get()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param Comment $comment
+     * @param Comment $commentChild
+     * @return bool
+     */
+    protected function isCommentChildBelongsToComment(Comment $comment, Comment $commentChild)
+    {
+        if ($comment->comments()->find($commentChild->id)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /**********  TOPIC SECTION START **********/
 
@@ -96,6 +120,8 @@ class CommentController extends ApiController
         }
     }
 
+    /**********  Topic CommentChild SECTION START **********/
+
     /**
      * @param Topic $topic
      * @param Comment $comment
@@ -106,6 +132,82 @@ class CommentController extends ApiController
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comments = $comment->comments()->get();
             return $this->setStatusCode(200)->respond($comments);
+        } else {
+            throw (new ModelNotFoundException)->setModel(Comment::class);
+        }
+    }
+
+    /**
+     * @param Topic $topic
+     * @param Comment $comment
+     * @param CommentsRequest $childCommentInput
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeTopicCommentChild(Topic $topic, Comment $comment, CommentsRequest $childCommentInput)
+    {
+        if ($this->isCommentBelongsToTopic($topic, $comment)) {
+            $childComment = Comment::create($childCommentInput->all());
+            $childComment = $comment->comments()->save($childComment);
+            return $this->setStatusCode(200)->respond($childComment);
+        } else {
+            throw (new ModelNotFoundException)->setModel(Comment::class);
+        }
+    }
+
+    /**
+     * @param Topic $topic
+     * @param Comment $comment
+     * @param Comment $commentChild
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTopicCommentChild(Topic $topic, Comment $comment, Comment $commentChild)
+    {
+        if ($this->isCommentBelongsToTopic($topic, $comment)
+            && $this->isCommentChildBelongsToComment($comment, $commentChild)
+        ) {
+            return $this->setStatusCode(200)->respond($commentChild);
+        } else {
+            throw (new ModelNotFoundException)->setModel(Comment::class);
+        }
+    }
+
+    /**
+     * @param Topic $topic
+     * @param Comment $comment
+     * @param Comment $commentChild
+     * @param CommentsRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateTopicCommentChild(
+        Topic $topic,
+        Comment $comment,
+        Comment $commentChild,
+        CommentsRequest $request
+    ) {
+        if ($this->isCommentBelongsToTopic($topic, $comment)
+            && $this->isCommentChildBelongsToComment($comment, $commentChild)
+        ) {
+            $commentChild->update($request->all());
+            return $this->setStatusCode(200)->respond($commentChild);
+        } else {
+            throw (new ModelNotFoundException)->setModel(Comment::class);
+        }
+    }
+
+    /**
+     * @param Topic $topic
+     * @param Comment $comment
+     * @param Comment $commentChild
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function destroyTopicCommentChild(Topic $topic, Comment $comment, Comment $commentChild)
+    {
+        if ($this->isCommentBelongsToTopic($topic, $comment)
+            && $this->isCommentChildBelongsToComment($comment, $commentChild)
+        ) {
+            $commentChild->delete();
+            return $this->setStatusCode(204)->respond();
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -193,6 +295,8 @@ class CommentController extends ApiController
         }
     }
 
+    /**********  Vote CommentChild SECTION START **********/
+
     /**
      * @param Vote $vote
      * @param Comment $comment
@@ -203,6 +307,82 @@ class CommentController extends ApiController
         if ($this->isCommentBelongsToVote($vote, $comment)) {
             $comments = $comment->comments()->get();
             return $this->setStatusCode(200)->respond($comments);
+        } else {
+            throw (new ModelNotFoundException)->setModel(Comment::class);
+        }
+    }
+
+    /**
+     * @param Vote $vote
+     * @param Comment $comment
+     * @param CommentsRequest $childCommentInput
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeVoteCommentChild(Vote $vote, Comment $comment, CommentsRequest $childCommentInput)
+    {
+        if ($this->isCommentBelongsToVote($vote, $comment)) {
+            $childComment = Comment::create($childCommentInput->all());
+            $childComment = $comment->comments()->save($childComment);
+            return $this->setStatusCode(200)->respond($childComment);
+        } else {
+            throw (new ModelNotFoundException)->setModel(Comment::class);
+        }
+    }
+
+    /**
+     * @param Vote $vote
+     * @param Comment $comment
+     * @param Comment $commentChild
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getVoteCommentChild(Vote $vote, Comment $comment, Comment $commentChild)
+    {
+        if ($this->isCommentBelongsToVote($vote, $comment)
+            && $this->isCommentChildBelongsToComment($comment, $commentChild)
+        ) {
+            return $this->setStatusCode(200)->respond($commentChild);
+        } else {
+            throw (new ModelNotFoundException)->setModel(Comment::class);
+        }
+    }
+
+    /**
+     * @param Vote $vote
+     * @param Comment $comment
+     * @param Comment $commentChild
+     * @param CommentsRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateVoteCommentChild(
+        Vote $vote,
+        Comment $comment,
+        Comment $commentChild,
+        CommentsRequest $request
+    ) {
+        if ($this->isCommentBelongsToVote($vote, $comment)
+            && $this->isCommentChildBelongsToComment($comment, $commentChild)
+        ) {
+            $commentChild->update($request->all());
+            return $this->setStatusCode(200)->respond($commentChild);
+        } else {
+            throw (new ModelNotFoundException)->setModel(Comment::class);
+        }
+    }
+
+    /**
+     * @param Vote $vote
+     * @param Comment $comment
+     * @param Comment $commentChild
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function destroyVoteCommentChild(Vote $vote, Comment $comment, Comment $commentChild)
+    {
+        if ($this->isCommentBelongsToVote($vote, $comment)
+            && $this->isCommentChildBelongsToComment($comment, $commentChild)
+        ) {
+            $commentChild->delete();
+            return $this->setStatusCode(204)->respond();
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
