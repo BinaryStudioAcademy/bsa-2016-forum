@@ -110,4 +110,15 @@ class User extends Authenticatable
         return false;
     }
 
+    /**
+     * Is the user the owner of the related model
+     *
+     * @param $related
+     * @return bool
+     */
+    public function owns($related)
+    {
+        return $this->id == $related->user_id;
+    }
+
 }
