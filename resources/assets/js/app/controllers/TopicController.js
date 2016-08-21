@@ -26,5 +26,12 @@ module.exports = Marionette.Object.extend({
                 app.render(new TopicDetailView({model: topicModel}));
             }
         });
+    },
+
+    myTopics: function () {
+        var parentUrl = '/users/' + 2;
+        var topicCollection = new TopicCollection({parentUrl: parentUrl});
+        topicCollection.fetch();
+        app.render(new topicLayout({collection: topicCollection}));
     }
 });
