@@ -118,7 +118,7 @@ class UserController extends ApiController
 
     public function getUser()
     {
-        $user = Auth::authenticate();;
+        $user = Auth::authenticate();
 
         return $this->setStatusCode(200)->respond($user);
     }
