@@ -22,6 +22,8 @@ var logger = require('../instances/logger');
 var Handlebars = require('handlebars');
 var Templates = require('../templates')(Handlebars);
 
+var NavigCollection = require('../initializers/navigationCollection');
+
 var app = Marionette.Application.extend({
     initialize: function (options) {
         logger('My app has been initialized');
@@ -59,7 +61,7 @@ var app = Marionette.Application.extend({
     onStart: function (config) {
         this.config = config;
         this.templateCashing();
-        this.setRootLayout(new mainLayoutView());
+        this.setRootLayout(new mainLayoutView({ collection: NavigCollection }));
         appInstance.setInstance(this);
         this.showRootLayout();
         this.setRouting();

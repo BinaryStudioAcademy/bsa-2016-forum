@@ -6,12 +6,13 @@ use Exception;
 use Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use DCN\RBAC\Exceptions\PermissionDeniedException;
+use \DCN\RBAC\Exceptions\PermissionDeniedException;
 
 class Handler extends ExceptionHandler
 {
@@ -52,7 +53,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        if ($e instanceof PermissionDeniedException) {
+        if ($e instanceof AuthenticationException) {
             return response($e->getMessage(), 401);
         }
 
@@ -79,6 +80,10 @@ class Handler extends ExceptionHandler
             return response('Resource not found', 404);
         }
 
+        if ($e instanceof PermissionDeniedException){
+            return response($e->getMessage(), 403);
+        }
+        
         return parent::render($request, $e);
     }
 }

@@ -1,10 +1,11 @@
 var Marionette = require('backbone.marionette');
 var app = require('../instances/appInstance');
+var UserCollection = require('../collections/userCollection');
 
 module.exports = Marionette.Object.extend({
 
     index: function () {
-        var Users = require('../collections/userCollection');
+        var Users = new UserCollection();
         var UsersView = require('../views/users/userCollection');
         var users = new Users();
 
@@ -15,9 +16,9 @@ module.exports = Marionette.Object.extend({
         }));
     },
     mytopics: function () {
-        var topicCollection = new TopicCollection({ parentUrl: '/topics/' + 2 });
+        var topicCollection = new UserCollection([], { parentUrl: '/topics/' + 2 });
         topicCollection.fetch();
         console.log(topicCollection);
-        app.render(new topicLayout({collection: topicCollection}));
+
     }
 });
