@@ -79,7 +79,9 @@ class Handler extends ExceptionHandler
             return response('Resource not found', 404);
         }
 
-        //TODO use Laravel's Exception for 403 HTTP code
+        if ($e instanceof AuthorizationException) {
+            return response($e->getMessage(), 403);
+        }
 
         return parent::render($request, $e);
     }
