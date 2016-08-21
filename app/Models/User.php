@@ -4,14 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use DCN\RBAC\Traits\HasRoleAndPermission;
-use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
 
 
 
-class User extends Authenticatable implements HasRoleAndPermissionContract
+class User extends Authenticatable
 {
-    use HasRoleAndPermission, SoftDeletes;
+    use SoftDeletes;
 
     protected $table = 'users';
 
@@ -90,4 +88,26 @@ class User extends Authenticatable implements HasRoleAndPermissionContract
     public function getVote($voteId){
         return $this->votes()->where('id',$voteId)->first();
     }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Does user have admin rights
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        $role = $this->role()->first();
+
+        if ($role && $role->name === 'Admin') {
+            return true;
+        }
+
+        return false;
+    }
+
 }

@@ -160,7 +160,6 @@ return [
         /**
          * External providers
          */
-        DCN\RBAC\RBACServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 
     ],
