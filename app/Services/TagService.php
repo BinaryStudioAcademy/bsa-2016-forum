@@ -1,18 +1,15 @@
 <?php
-
 namespace App\Services;
-
 use App\Models\Tag;
-
 class TagService
 {
-
     /**
      * @param $taggableModel
      * @param $tags
      */
     public function TagsHandler($taggableModel, $tags)
     {
+        $tags = json_decode($tags, true);
         foreach ($tags as $tag) {
             if (!empty($tag['id'])) {
                 $tag = Tag::find($tag['id']);

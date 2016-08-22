@@ -12,14 +12,14 @@ module.exports = Marionette.ItemView.extend({
 
     initialize: function () {
         this.model.set({user_id: 2});
-        this.$('.tags').tagsinput();
+        $('.tags').tagsinput();
     },
 
     modelEvents: {
         'invalid': function (model, errors, options) {
-            this.$('.errors').empty();
+            $('.errors').empty();
             for (var error in errors) {
-                this.$('[name="' + error + '"]').siblings('.errors').html(errors[error]);
+                $('[name="' + error + '"]').siblings('.errors').html(errors[error]);
             }
         }
     },

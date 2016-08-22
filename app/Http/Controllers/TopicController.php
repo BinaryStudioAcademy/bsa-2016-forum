@@ -14,7 +14,38 @@ class TopicController extends ApiController
 
     protected $tagIds = [];
 
-     /**
+    /**
+     * @param $topics
+     * @return array
+     */
+    private function getCollectionMetaData($topics)
+    {
+        $data = [];
+
+        if ($topics) {
+            foreach ($topics as $topic) {
+                $data['user'][$topic->id] = $topic->user()->first();
+                $data['likes'][$topic->id] = $topic->likes()->count();
+                $data['comments'][$topic->id] = $topic->comments()->count();
+                $data['tags'][$topic->id] = $topic->tags()->get(['name']);
+            }
+        }
+
+        return $data;
+    }
+
+    private function getItemMetaData($topic)
+    {
+        $data = [];
+        $data['user'] = $topic->user()->first();
+        $data['likes'] = $topic->likes()->count();
+        $data['comments'] = $topic->comments()->count();
+        $data['tags'] = $topic->tags()->get(['name']);
+
+        return $data;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @param  TopicRequest $request
@@ -38,7 +69,8 @@ class TopicController extends ApiController
     public function store(TopicRequest $request)
     {
         $extendedTopic = $topic = Topic::create($request->all());
-        TagService::TagsHandler($topic, explode(',', $request->tags));
+        if ($request->tags)
+            TagService::TagsHandler($topic, explode(',', $request->tags));
         $extendedTopic->tags = $topic->tags()->get();
         return $this->setStatusCode(201)->respond($extendedTopic);
     }
@@ -51,10 +83,9 @@ class TopicController extends ApiController
      */
     public function show($id)
     {
-        $extendedTopic = $topic = Topic::findOrFail($id);
-        $extendedTopic->tags = $topic->tags()->get();
-
-        return $this->setStatusCode(200)->respond($extendedTopic);
+        $topic = Topic::findOrFail($id);
+        $meta = $this->getItemMetaData($topic);
+        return $this->setStatusCode(200)->respond($topic, $meta);
     }
 
     /**
