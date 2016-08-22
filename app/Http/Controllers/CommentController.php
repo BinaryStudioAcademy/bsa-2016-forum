@@ -18,10 +18,7 @@ class CommentController extends ApiController
      */
     protected function isCommentHasAnyChild(Comment $comment)
     {
-        if ($comment->comments()->get()) {
-            return true;
-        }
-        return false;
+        return $comment->comments()->exists();
     }
 
     /**
