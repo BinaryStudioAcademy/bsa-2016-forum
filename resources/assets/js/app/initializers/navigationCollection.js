@@ -28,6 +28,12 @@ module.exports = new navigCollection([
         label: 'Subscribes',
     },
     {
+        href: '#bookmarks',
+        icon: '',
+        name: 'bookmarks',
+        label: 'Bookmarks',
+    },
+    {
         href: '#votes',
         icon: '',
         name: 'votes',

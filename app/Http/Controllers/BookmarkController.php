@@ -18,6 +18,40 @@ class BookmarkController extends ApiController
     }
 
     /**
+     * @param $bookmarks array
+     * @return array $data array
+     */
+    private function getMetaData($bookmarks)
+    {
+        $data = [];
+        foreach ($bookmarks as $bookmark) {
+            $data['topic'][$bookmark->id] = $bookmark->topic()->first();
+        }
+        return $data;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     * @throws PermissionDeniedException
+     */
+    public function index()
+    {
+        $bookmark = new Bookmark();
+
+        if (!(Auth::user()->allowed('view.bookmarks', $bookmark)))
+            throw new PermissionDeniedException('view');
+
+        #TODO: Delete user_id after the authorization implement
+        $bookmarks = Bookmark::where('user_id', 2)->get();
+
+        $meta = $this->getMetaData($bookmarks);
+
+        return $this->setStatusCode(201)->respond($bookmarks, $meta);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param BookmarksRequest $request
