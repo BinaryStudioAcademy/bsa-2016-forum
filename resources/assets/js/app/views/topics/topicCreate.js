@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
-var TopicModel = require('../../Models/TopicModel');
+var TopicModel = require('../../models/TopicModel');
+var bootstrapTags = require('bootstrap-tagsinput');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicCreateNew',
@@ -10,7 +11,8 @@ module.exports = Marionette.ItemView.extend({
     },
 
     initialize: function () {
-        this.model.set({user_id: 2})
+        this.model.set({user_id: 2});
+        this.$('.tags').tagsinput();
     },
 
     modelEvents: {

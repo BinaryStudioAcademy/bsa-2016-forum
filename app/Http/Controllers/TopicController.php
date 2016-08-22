@@ -38,7 +38,7 @@ class TopicController extends ApiController
     public function store(TopicRequest $request)
     {
         $extendedTopic = $topic = Topic::create($request->all());
-        TagService::TagsHandler($topic, $request->tags);
+        TagService::TagsHandler($topic, explode(',', $request->tags));
         $extendedTopic->tags = $topic->tags()->get();
         return $this->setStatusCode(201)->respond($extendedTopic);
     }

@@ -6,14 +6,21 @@
         <input type="text" placeholder="Enter Topic Title" name="name">
         <div class="errors"></div>
     </div>
+
     <div class="topic-new-body">
         <textarea rows="10" name="description"></textarea>
         <div class="errors"></div>
+        <label>
+            Tags:
+            <input class="tags" type="text" data-role="tagsinput" name="tags">
+        </label>
+
         <div class="topic-new-attachment">
             <a>Attach</a>
         </div>
     </div>
     <div class="topic-new-control">
+
         <div class="topic-new-notification checkbox">
             <label>
                 <input type="checkbox" name="report_me">Report me when someone post a reply
@@ -24,4 +31,5 @@
             <input type="submit" value="Start Thread">
         </div>
     </div>
+
 </form>
