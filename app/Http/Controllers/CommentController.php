@@ -235,7 +235,7 @@ class CommentController extends ApiController
         $meta = [];
 
         foreach ($comments as $comment) {
-            $meta['user'][$comment->id] = $comment->user()->first();
+            $meta[$comment->id]['user'] = $comment->user()->first();
         }
 
         return $meta;
@@ -277,7 +277,7 @@ class CommentController extends ApiController
         $comment = Comment::create($request->all());
         $comment = $vote->comments()->save($comment);
 
-        return $this->setStatusCode(201)->respond($comment, ['user' => [$comment->id => $comment->user()->first()]]);
+        return $this->setStatusCode(201)->respond($comment, [$comment->id => ['user' => $comment->user()->first()]]);
     }
 
     /**

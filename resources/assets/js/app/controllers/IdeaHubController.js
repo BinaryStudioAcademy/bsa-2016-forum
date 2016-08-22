@@ -16,6 +16,7 @@ var Votes = require('../instances/Votes');
 module.exports = Marionette.Object.extend({
     initialize: function () {
         this.listenTo(Radio.channel('votesChannel'), 'createComment', function (view) {
+            //TODO: hardcoded user here
             var model = new CommentModel({user_id: 2, rating: 0}, {parentUrl: view.options.collection.parentUrl});
             model.save({content_origin: view.ui.text.val()}, {
                 success: function (data) {

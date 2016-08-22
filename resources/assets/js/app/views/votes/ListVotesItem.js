@@ -17,10 +17,10 @@ module.exports = Marionette.ItemView.extend({
         return {
             model: this.model.toJSON(),
             meta: {
-                user: tempmeta.user[id],
-                likes: tempmeta.likes[id],
-                comments: tempmeta.comments[id],
-                tags: tempmeta.tags[id]
+                user: tempmeta[id].user,
+                likes: tempmeta[id].likes,
+                comments: tempmeta[id].comments,
+                tags: tempmeta[id].tags
             }
         };
     }

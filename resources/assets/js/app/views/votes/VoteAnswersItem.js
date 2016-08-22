@@ -6,7 +6,6 @@ module.exports = Marionette.ItemView.extend({
         return {
             model: this.model.toJSON(),
             meta: this.model.getMeta()
-
         };
     }
 });

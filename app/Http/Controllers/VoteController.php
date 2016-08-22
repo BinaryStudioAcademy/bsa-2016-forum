@@ -18,7 +18,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
 
     protected $searchStr = null;
     protected $tagIds = [];
-    
+
     /**
      * @param $votes array
      * @return array $data array
@@ -29,10 +29,13 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
 
         foreach ($votes as $vote) {
 
-            $data['user'][$vote->id] = $vote->user()->first();
-            $data['likes'][$vote->id] = $vote->likes()->count();
-            $data['comments'][$vote->id] = $vote->comments()->count();
-            $data['tags'][$vote->id] = $vote->tags()->get(['name']);
+            $data[$vote->id] =
+                [
+                    'user' => $vote->user()->first(),
+                    'likes' => $vote->likes()->count(),
+                    'comments' => $vote->comments()->count(),
+                    'tags' => $vote->tags()->get(['name'])
+                ];
         }
         return $data;
     }
@@ -94,10 +97,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
 
         return $this->setStatusCode(200)->respond($vote,
             [
-                'user' => [$vote->id => $user],
-                'likes' => [$vote->id => $likeCount],
-                'comments' => [$vote->id => $commentCount],
-                'tags' => [$vote->id => $tags]
+                $vote->id => ['user' => $user, 'likes' => $likeCount, 'comments' => $commentCount, 'tags' => $tags]
             ]
         );
     }
