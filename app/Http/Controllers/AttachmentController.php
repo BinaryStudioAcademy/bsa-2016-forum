@@ -134,6 +134,8 @@ class AttachmentController extends ApiController
      */
     public function storeVoteAttachment(Vote $vote, Request $request)
     {
+        $this->authorize('createVoteAttachment', $vote);
+
         $attachment_data = AttachmentService::uploadAttachmentToCloud($request);
         $attachment = Attachment::create($attachment_data);
         $attachment = $vote->attachments()->save($attachment);
@@ -149,6 +151,9 @@ class AttachmentController extends ApiController
     public function destroyVoteAttachment(Vote $vote, Attachment $attachment)
     {
         if ($this->isAttachmentBelongsToVote($vote, $attachment)) {
+
+            $this->authorize('deleteVoteAttachment', $vote);
+
             AttachmentService::deleteAttachmentFromCloud($attachment->cloud_public_id);
             $attachment->delete();
             return $this->setStatusCode(204)->respond();
