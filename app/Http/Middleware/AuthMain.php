@@ -4,14 +4,12 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Response;
-use Cookie;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Emarref\Jwt\Claim;
 
 
 class AuthMain extends AuthService
 {
+    protected $urlAuth = 'http://team.binary-studio.com/auth/';
     /**
      * Run the request filter.
      *
@@ -19,9 +17,20 @@ class AuthMain extends AuthService
      * @param  \Closure  $next
      * @return mixed
      */
+
     public function handle($request, Closure $next)
     {
-        $this->loginUser();
+        if (env('APP_ENV') == 'local') {
+            $this->loginUser();
+        } else {
+            $userData = $this->checkCookie();
+            if  (!$userData){
+                $url = $request->fullUrl();
+                return redirect($this->urlAuth)->withCookie("referer", $url);
+            }
+            $user = $this->checkUser($userData);
+            Auth::login($user);
+        }
         return $next($request);
     }
 
