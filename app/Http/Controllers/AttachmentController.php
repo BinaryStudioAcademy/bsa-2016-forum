@@ -61,6 +61,8 @@ class AttachmentController extends ApiController
      */
     public function storeTopicAttachment(Topic $topic, Request $request)
     {
+        $this->authorize('createTopicAttachment', $topic);
+
         $attachment_data = AttachmentService::uploadAttachmentToCloud($request);
         $attachment = Attachment::create($attachment_data);
         $attachment = $topic->attachments()->save($attachment);
@@ -76,6 +78,9 @@ class AttachmentController extends ApiController
     public function destroyTopicAttachment(Topic $topic, Attachment $attachment)
     {
         if ($this->isAttachmentBelongsToTopic($topic, $attachment)) {
+
+            $this->authorize('deleteTopicAttachment', $topic);
+
             AttachmentService::deleteAttachmentFromCloud($attachment->cloud_public_id);
             $attachment->delete();
             return $this->setStatusCode(204)->respond();

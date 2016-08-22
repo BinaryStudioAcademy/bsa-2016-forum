@@ -19,19 +19,21 @@ class TopicPolicy
 
     public function delete(User $user, Topic $topic)
     {
-        if ($user->owns($topic)) {
-            return true;
-        }
-
-        return false;
+        return $user->owns($topic);
     }
 
     public function update(User $user, Topic $topic)
     {
-        if ($user->owns($topic)) {
-            return true;
-        }
+        return $user->owns($topic);
+    }
 
-        return false;
+    public function createTopicAttachment(User $user, Topic $topic)
+    {
+        return $user->owns($topic);
+    }
+
+    public function deleteTopicAttachment(User $user, Topic $topic)
+    {
+        return $user->owns($topic);
     }
 }
