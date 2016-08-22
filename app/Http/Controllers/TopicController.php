@@ -71,9 +71,7 @@ class TopicController extends ApiController
     {
         $topic = Topic::findOrFail($id);
 
-        if (Gate::denies('update', $topic)) {
-            throw new AuthorizationException('This user cannot update this topic');
-        }
+        $this->authorize('update', $topic);
 
         $topic->update($request->all());
 
@@ -91,9 +89,7 @@ class TopicController extends ApiController
     {
         $topic = Topic::findOrFail($id);
 
-        if (Gate::denies('delete', $topic)) {
-            throw new AuthorizationException('This user cannot delete this topic');
-        }
+        $this->authorize('delete', $topic);
 
         $topic->delete();
 
