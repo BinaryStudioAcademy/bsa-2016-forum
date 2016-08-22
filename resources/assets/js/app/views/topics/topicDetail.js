@@ -1,3 +1,4 @@
+var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 var CommentsCollectionView = require('../comments/TopicCommentsCollection');
 var _ = require('underscore');
@@ -16,18 +17,24 @@ module.exports = Marionette.LayoutView.extend({
     regions: {
         'newComment': '#newcomment',
         'topicHeader': '.topic-head',
-        'comments': '.topic-comments',
+        'comments': '.topic-comments'
     },
 
     ui: {
         'answer': '.topic-answer-btn',
         'share': '.topic-share-btn',
-        'notification': '.topic-notification-btn'
+        'notification': '.topic-notification-btn',
+        'topic_delete': '.topic-delete-btn'
     },
 
     events: {
         'click @ui.answer': function (event) {
             Radio.channel('newComment').trigger('showCommentForm', this, false);
+        },
+        'click @ui.topic_delete': function (event) {
+            this.model.destroy();
+            this.$('#delete-topic-form').remove();
+            Backbone.history.navigate('topics', {trigger: true});
         }
     },
 
