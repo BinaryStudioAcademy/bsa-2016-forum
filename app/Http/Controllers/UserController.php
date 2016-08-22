@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 
 use Auth;
@@ -31,6 +32,8 @@ class UserController extends ApiController
 
         $user = User::create($request->all());
 
+        $this->authorize('store', $user);
+
         return $this->setStatusCode(201)->respond($user);
     }
 
@@ -43,6 +46,8 @@ class UserController extends ApiController
     public function show($id)
     {
         $user = User::findOrFail($id);
+
+        $this->authorize('show', $user);
 
         return $this->setStatusCode(200)->respond($user);
     }
@@ -76,6 +81,7 @@ class UserController extends ApiController
 
         $user = User::findOrFail($id);
 
+        $this->authorize('delete', $user);
         $user->delete();
         if ($user->trashed()) {
             return $this->setStatusCode(204)->respond();
@@ -91,11 +97,11 @@ class UserController extends ApiController
      */
     public function updateRole($userId, $roleId)
     {
-//        Auth::login(User::find(1));   //uncomment for test when there is no user Admin login in
-
-        //TODO use permissions policies
 
         $user = User::findOrFail($userId);
+
+        $this->authorize('updateRole', $user);
+
         $role = Role::findOrFail($roleId);
         $user->role()->associate($role);
         $user->save();
@@ -110,7 +116,10 @@ class UserController extends ApiController
     public function getUserRole($userId)
     {
         $user = User::findOrFail($userId);
-        $role = $user->grantedRoles()->get();
+
+        $this->authorize('getUserRole', $user);
+
+        $role = $user->role()->first();
 
         return $this->setStatusCode(200)->respond($role, ['user' => $user]);
 

@@ -45,8 +45,6 @@ class VoteItemController extends ApiController
         $voteItem = new VoteItem($request->all());
         $user = User::findOrFail($request->user_id);
 
-        //TODO use permissions policies
-
         $voteItem->user()->associate($user);
         $voteItem->vote()->associate($vote);
         $voteItem->save();
@@ -68,8 +66,6 @@ class VoteItemController extends ApiController
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
-
-        //TODO use permissions policies
 
         $user = $voteItem->user()->first();
         return $this->setStatusCode(200)->respond($voteItem, ['vote' => $vote, 'user' => $user]);
@@ -93,7 +89,7 @@ class VoteItemController extends ApiController
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
 
-        //TODO use permissions policies
+        $this->authorize('update', $voteItem);
 
         $voteItem->update($request->all());
         return $this->setStatusCode(200)->respond($voteItem, ['vote' => $vote]);
@@ -115,7 +111,7 @@ class VoteItemController extends ApiController
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
 
-        //TODO use permissions policies
+        $this->authorize('delete', $voteItem);
 
         $voteItem->delete();
         return $this->setStatusCode(204)->respond();
