@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Topic;
 use App\Http\Requests\TopicRequest;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Gate;
+use Illuminate\Support\Facades\Auth;
 
 class TopicController extends ApiController
 {
@@ -21,6 +24,8 @@ class TopicController extends ApiController
      */
     public function index(TopicRequest $request)
     {
+        dd(\Auth::authenticate());
+
         $this->setFiltersData($request);
 
         $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
@@ -60,10 +65,16 @@ class TopicController extends ApiController
      * @param  int  $id
      * @param  TopicRequest  $request
      * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
      */
     public function update($id, TopicRequest $request)
     {
         $topic = Topic::findOrFail($id);
+
+        if (Gate::denies('update', $topic)) {
+            throw new AuthorizationException('This user cannot update this topic');
+        }
+
         $topic->update($request->all());
 
         return $this->setStatusCode(200)->respond($topic);
@@ -74,10 +85,15 @@ class TopicController extends ApiController
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
      */
     public function destroy($id)
     {
         $topic = Topic::findOrFail($id);
+
+        if (Gate::denies('delete', $topic)) {
+            throw new AuthorizationException('This user cannot delete this topic');
+        }
 
         $topic->delete();
 
