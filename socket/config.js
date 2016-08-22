@@ -3,7 +3,8 @@
  */
 
 module.exports = {
-    port: 3000,
-    authUrl: "localhost:8000/socket/checkAuth",
-    authKey: "b39md8u83md9wermk0834sdmfdv"
+    socketPort: 3000,
+    authUrl: "/api/v1/user/",
+    authHost: "localhost",
+    authPort: 8000
 };

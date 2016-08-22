@@ -7,8 +7,9 @@ var io = require('socket.io');
 var Redis = require('ioredis');
 var redis = new Redis();
 var users = require('./userContainer');
+var checkAuth = require('./checkAuth');
 
-io = io.listen(config.port);
+io = io.listen(config.socketPort);
 
 redis.subscribe('messagesChannel', function(err, count) {
 });
@@ -27,24 +28,23 @@ redis.on('message', function(channel, eventData) {
 
 io.sockets.on('connection', function (socket) {
 
-    socket.on('login', function (data) {
+    socket.on('login', function (loginData) {
 
-        // check user id and it token
-        var status = true; data.token; data.user_id; config.authUrl; config.authKey;
+        if(!!loginData.token)
+        {
+            checkAuth(loginData.token, function (data) {
 
-        if(status) {
-            console.log("User id: " + data.user_id + " connected");
-            users.Add(data.user_id, socket.id);
-            socket.emit('logged', {status: 'success'});
-            
-            socket.on('disconnect', function() {
-                console.log("User id: " + users.getUserId(socket.id) + " disconnected");
-                users.Remove(socket.id);
+                console.log("User id: " + data.id + " connected");
+
+                users.Add(data.id, socket.id);
+
+                socket.emit('logged', {status: 'OK'});
+
+                socket.on('disconnect', function() {
+                    console.log("User id: " + users.getUserId(socket.id) + " disconnected");
+                    users.Remove(socket.id);
+                });
             });
-            
-        } else {
-            console.log("User id: " + data.user_id + " authentication error");
-            socket.emit('logged', {status: 'failure'});
         }
     });
 });
