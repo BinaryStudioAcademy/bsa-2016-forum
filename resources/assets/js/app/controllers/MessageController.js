@@ -28,6 +28,12 @@ module.exports = Marionette.Object.extend({
                 Radio.channel('messagesChannel').trigger('newMessageScroll');
             }
         });
+        messageCollection.listenTo(Radio.channel('messagesChannel'), 'newMessage', function (message) {
+            if(message.user_from_id == id) {
+                messageCollection.add(new MessageModel(message));
+                Radio.channel('messagesChannel').trigger('newMessageScroll');
+            }
+        });
         app.render(new MessageDialogLayout({
             currentUser: currentUser,
             collection: messageCollection

@@ -9,6 +9,8 @@ Marionette.Application.prototype._initChannel = function () {
     this.channel = _.result(this, 'channel') || Radio.channel(this.channelName);
 };
 
+var socket = require('./socketClient');
+
 var $ = require('jquery');
 
 var appRouter = require('../router');
