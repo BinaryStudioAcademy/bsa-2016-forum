@@ -1,6 +1,10 @@
 var UserModel = require('../models/UserModel');
 
-var currentUser = new UserModel({id: 2});
+var currentUserModel = UserModel.extend({
+    url: '/user'
+});
+
+var currentUser = new currentUserModel();
 
 currentUser.fetch();
 
