@@ -36,4 +36,15 @@ class TopicPolicy
     {
         return $user->owns($topic);
     }
+
+    public function createTopicTag(User $user, Topic $topic)
+    {
+        return $user->owns($topic);
+    }
+
+    public function deleteTopicTag(User $user, Topic $topic)
+    {
+        return $user->owns($topic);
+    }
+
 }
