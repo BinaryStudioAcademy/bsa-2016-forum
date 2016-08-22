@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 use App\Models\Vote;
 use App\Models\User;
 use App\Http\Requests\VotesRequest;
+use Gate;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -43,9 +45,6 @@ class VoteController extends ApiController
      */
     public function index(Request $request)
     {
-        $vote = new Vote();
-        //TODO use permissions policies
-
         $this->setFiltersParameters($request);
 
         $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
@@ -61,9 +60,6 @@ class VoteController extends ApiController
      */
     public function store(VotesRequest $request)
     {
-        $vote = new Vote();
-        //TODO use permissions policies
-
         $vote = Vote::create($request->all());
         return $this->setStatusCode(201)->respond($vote);
     }
@@ -77,8 +73,6 @@ class VoteController extends ApiController
     public function show($id)
     {
         $vote = Vote::findOrFail($id);
-
-        //TODO use permissions policies
 
         $user = $vote->user()->first();
         $likeCount = $vote->likes()->count();
@@ -97,12 +91,13 @@ class VoteController extends ApiController
      * @param VotesRequest|Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
      */
     public function update(VotesRequest $request, $id)
     {
         $vote = Vote::findOrFail($id);
 
-        //TODO use permissions policies
+        $this->authorize('update', $vote);
 
         $vote->update($request->all());
         return $this->setStatusCode(200)->respond($vote);
@@ -113,12 +108,13 @@ class VoteController extends ApiController
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
      */
     public function destroy($id)
     {
         $vote = Vote::findOrFail($id);
 
-        //TODO use permissions policies
+        $this->authorize('delete', $vote);
 
         $vote->delete();
 
@@ -138,9 +134,6 @@ class VoteController extends ApiController
     public function getUserVotes($userId, Request $request)
     {
         $user = User::findOrFail($userId);
-
-        $vote = new Vote();
-        //TODO use permissions policies
 
         $this->setFiltersParameters($request);
         $votes = $user->votes()
@@ -170,8 +163,6 @@ class VoteController extends ApiController
         if(!$vote){
             throw (new ModelNotFoundException)->setModel(Vote::class);
         }
-
-        //TODO use permissions policies
 
         return $this->setStatusCode(200)->respond($vote, ['user' => $user]);
     }
