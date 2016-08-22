@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use DCN\RBAC\Traits\HasRoleAndPermission;
 use DCN\RBAC\Exceptions\PermissionDeniedException;
 use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
+use Carbon\Carbon;
 
 
 class VoteController extends ApiController implements HasRoleAndPermissionContract
@@ -29,12 +30,20 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
 
         foreach ($votes as $vote) {
 
+            //find the difference between two days
+            $created = new Carbon($vote->created_at);
+            $now = Carbon::now();
+            $difference = ($created->diff($now)->days < 1)
+                ? 'today'
+                : $created->diffForHumans($now);
+
             if ($vote->is_saved) {
                 $data[$i]['data'] = $vote;
                 $data[$i]['_meta']['user'] = $vote->user()->first();
                 $data[$i]['_meta']['likes'] = $vote->likes()->count();
                 $data[$i]['_meta']['tags'] = $vote->tags()->count();
                 $data[$i]['_meta']['comments'] = $vote->comments()->count();
+                $data[$i]['_meta']['days_ago'] = $difference;
                 $i++;
             }
         }
@@ -171,7 +180,9 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
             return $this->setStatusCode(200)->respond();
         }
 
-        return $this->setStatusCode(200)->respond($votes, ['user' => $user]);
+        $data=$this->getMetaData($votes);
+
+        return $this->setStatusCode(200)->respond($data, ['user' => $user]);
     }
 
     /**
