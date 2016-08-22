@@ -17,11 +17,7 @@ module.exports = Marionette.Object.extend({
     },
 
     showUserVotes: function(id) {
-        // var usersVotesCollection = require('../collections/UsersVotesCollection');
-        // var showUsersVotesView = require('../views/votes/ShowUsersVotesView');
-        // alert('id='+id);
-        // var usersVotes = new usersVotesCollection({url:'/users/'+id+'/votes'});
-        
+
         var showUsersVotesView = require('../views/votes/ShowUsersVotesView');
         var usersVoteModel=require('../models/UsersVoteModel');
         var usersVotesCollection=baseCollection.extend({
