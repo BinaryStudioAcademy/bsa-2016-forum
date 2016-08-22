@@ -43,12 +43,11 @@ class BookmarkController extends ApiController
         if (!(Auth::user()->allowed('view.bookmarks', $bookmark)))
             throw new PermissionDeniedException('view');
 
-        #TODO: Delete user_id after the authorization implement
-        $bookmarks = Bookmark::where('user_id', 2)->get();
+        $bookmarks = Bookmark::where('user_id', Auth::user()->id)->get();
 
         $meta = $this->getMetaData($bookmarks);
 
-        return $this->setStatusCode(201)->respond($bookmarks, $meta);
+        return $this->setStatusCode(200)->respond($bookmarks, $meta);
     }
 
     /**
@@ -73,18 +72,21 @@ class BookmarkController extends ApiController
     /**
      * Remove the specified resource from storage.
      *
-     * @param BookmarksRequest $request
+     * @param $bookmarkId
      * @return \Illuminate\Http\Response
      * @throws PermissionDeniedException
      */
-    public function destroy(BookmarksRequest $request)
+    public function destroy($bookmarkId)
     {
         $bookmark = new Bookmark();
 
         if (!(Auth::user()->allowed('delete.bookmarks', $bookmark)))
             throw new PermissionDeniedException('delete');
 
-        $bookmark = Bookmark::where($request->all())->first();
+        $bookmark = Bookmark::where('id', $bookmarkId)
+            ->where('user_id', Auth::user()->id)
+            ->first();
+
         $bookmark->delete();
 
         return $this->setStatusCode(204)->respond();

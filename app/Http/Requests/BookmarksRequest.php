@@ -21,24 +21,10 @@ class BookmarksRequest extends ApiRequest
      */
     public function rules()
     {
-        switch($this->method()) {
-            case 'POST':
-                return [
-                    'user_id' => 'required|integer|is_current_user',
-                    'topic_id' => 'required|integer|unique_with:bookmarks,user_id,deleted_at',
-                ];
-                break;
-
-            case 'DELETE':
-                return [
-                    'user_id' => 'required|integer|is_current_user',
-                    'topic_id' => 'required|integer',
-                ];
-                break;
-
-            default:
-                return [];
-        }
+        return [
+            'user_id' => 'required|integer|is_current_user',
+            'topic_id' => 'required|integer|unique_with:bookmarks,user_id,deleted_at',
+        ];
     }
 
     public function messages()

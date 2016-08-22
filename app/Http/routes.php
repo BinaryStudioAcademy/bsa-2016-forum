@@ -90,7 +90,7 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
     Route::group(['prefix' => 'bookmarks'], function () {
         Route::get('', 'BookmarkController@index')->name('bookmarks.index');
         Route::post('', 'BookmarkController@store')->name('bookmarks.store');
-        Route::delete('', 'BookmarkController@destroy')->name('bookmarks.destroy');
+        Route::delete('{id}', 'BookmarkController@destroy')->name('bookmarks.destroy');
     });
 
     /*Routes for users topics*/
