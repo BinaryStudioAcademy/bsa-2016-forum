@@ -207,6 +207,8 @@ class AttachmentController extends ApiController
      */
     public function storeCommentAttachment(Comment $comment, Request $request)
     {
+        $this->authorize('createCommentAttachment', $comment);
+
         $attachment_data = AttachmentService::uploadAttachmentToCloud($request);
         $attachment = Attachment::create($attachment_data);
         $attachment = $comment->attachments()->save($attachment);
@@ -222,6 +224,9 @@ class AttachmentController extends ApiController
     public function destroyCommentAttachment(Comment $comment, Attachment $attachment)
     {
         if ($this->isAttachmentBelongsToComment($comment, $attachment)) {
+
+            $this->authorize('deleteCommentAttachment', $comment);
+
             AttachmentService::deleteAttachmentFromCloud($attachment->cloud_public_id);
             $attachment->delete();
             return $this->setStatusCode(204)->respond();

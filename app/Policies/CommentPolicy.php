@@ -55,4 +55,14 @@ class CommentPolicy
         return ($user->owns($comment) && !$comment->hasChildComments())
         || ($user->owns($voteItem));
     }
+
+    public function createCommentAttachment(User $user, Comment $comment)
+    {
+        return $user->owns($comment);
+    }
+
+    public function deleteCommentAttachment(User $user, Comment $comment)
+    {
+        return $user->owns($comment);
+    }
 }
