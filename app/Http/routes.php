@@ -85,6 +85,13 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
             'destroy' => 'voteItems.destroy'
         ]
     ]);
+
+    /*Routes for bookmarks*/
+    Route::group(['prefix' => 'bookmarks'], function () {
+        Route::post('', 'BookmarkController@store')->name('bookmarks.store');
+        Route::delete('', 'BookmarkController@destroy')->name('bookmarks.destroy');
+    });
+
     /*Routes for users topics*/
     Route::group(['prefix' => 'users/{user}/topics'], function () {
         Route::get('', 'TopicController@getUserTopics')->name('userTopics');
