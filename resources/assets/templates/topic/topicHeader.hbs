@@ -14,11 +14,11 @@
         <div class="topic-msg">
             <p> {{ model.description }}</p>
         </div>
-        <div class="topic-tags">
-            {{#each meta.tags}}
-                <span>#{{ name }}</span>
-            {{/each}}
-        </div>
+        {{#each meta.tags}}
+            <div class="tag">
+                {{ name }}
+            </div>
+        {{/each}}
     </div>
 </div>
 <div class="topic-control">

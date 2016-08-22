@@ -9,7 +9,7 @@ module.exports = Marionette.LayoutView.extend({
 
     template: 'topicDetail',
 
-    initialize: function(options) {
+    initialize: function (options) {
         //console.log('topic show', options);
     },
 
@@ -37,7 +37,7 @@ module.exports = Marionette.LayoutView.extend({
         }));
 
         this.getRegion('comments').show(new CommentsCollectionView({
-          collection: this.collection
+            collection: this.collection
         }));
     },
 

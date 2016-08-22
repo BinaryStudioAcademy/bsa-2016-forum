@@ -8,7 +8,7 @@ class TagService
 {
 
     /**
-     * Attach array of tags to topic
+     * Attach array of tags to entity
      *
      * @param $taggableModel
      * @param $tags
