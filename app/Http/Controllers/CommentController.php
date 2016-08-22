@@ -44,9 +44,7 @@ class CommentController extends ApiController
      */
     protected function isCommentBelongsToTopic(Topic $topic, Comment $comment)
     {
-        $topicWhichHasThisComment = $comment->topics()->get()->first();
-
-        return ($topicWhichHasThisComment && $topicWhichHasThisComment->id === $topic->id);
+        return !!$topic->comments()->find($comment->id);
     }
 
     /**
