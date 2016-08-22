@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Comment;
 use App\Models\Topic;
 use App\Models\Vote;
 use App\Models\VoteItem;
+use App\Policies\CommentPolicy;
 use App\Policies\TopicPolicy;
 use App\Policies\VoteItemPolicy;
 use App\Policies\VotePolicy;
@@ -21,7 +23,8 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Topic::class => TopicPolicy::class,
         Vote::class => VotePolicy::class,
-        VoteItem::class => VoteItemPolicy::class
+        VoteItem::class => VoteItemPolicy::class,
+        Comment::class => CommentPolicy::class
     ];
 
     /**

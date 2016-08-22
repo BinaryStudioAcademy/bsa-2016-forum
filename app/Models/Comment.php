@@ -105,4 +105,9 @@ class Comment extends Model
     {
         return $this->morphToMany(Notification::class, 'notificationable');
     }
+
+    public function hasChildComments()
+    {
+        return $this->comments()->exists();
+    }
 }
