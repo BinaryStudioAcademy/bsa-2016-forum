@@ -44,6 +44,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
                 $data[$i]['_meta']['tags'] = $vote->tags()->count();
                 $data[$i]['_meta']['comments'] = $vote->comments()->count();
                 $data[$i]['_meta']['days_ago'] = $difference;
+                $data[$i]['_meta']['tags'] = $vote->tags()->get();
                 $i++;
             }
         }

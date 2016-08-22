@@ -13,7 +13,9 @@
             <a>Finished at {{data.finished_at}}</a><a>{{data.views}} Views</a>
         </div>
         <div class="votes-item-tags">
-            <span>#Vote</span><span>#Votes</span>
+            {{#each _meta.tags}}
+                <span>{{ name }}</span>
+            {{/each}}
         </div>
         <span class="votes-item-time">Asked {{_meta.days_ago}}</span>
     </div>
