@@ -67,9 +67,9 @@ class Handler extends ExceptionHandler
             return response($validationErrors, 400);
         }
 
-      //  if ($e instanceof \PDOException) {
-      //      return response('Internal Server Error', 500);
-      //  }
+        if ($e instanceof \PDOException) {
+            return response('Internal Server Error', 500);
+        }
 
         if ($e instanceof ModelNotFoundException) {
             $modelPathAsArray = explode('\\', $e->getModel());

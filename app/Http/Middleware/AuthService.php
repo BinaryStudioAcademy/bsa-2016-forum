@@ -7,7 +7,6 @@ use Illuminate\Http\Response;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Emarref\Jwt\Claim;
-use Emarref\Jwt\Encryption\Factory;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 
@@ -32,7 +31,7 @@ class AuthService
             "content-type: application/x-www-form-urlencoded",
         ],
     ];
-    
+
     public function loginUser()
     {
         $users = User::all();
@@ -45,21 +44,31 @@ class AuthService
      */
     public function checkCookie()
     {
+        $userData = null;
         if (array_key_exists ($this->cookieName, $_COOKIE)) {
+
             $tokenSerialized = $_COOKIE[$this->cookieName];
-            // $tokenSerialized = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjU3N2ExNjY1OTgyOWZlMDUwYWRiM2Y1YyIsImVtYWlsIjoidGVzdGVyX2FAZXhhbXBsZS5jb20iLCJyb2xlIjoiREVWRUxPUEVSIiwiaWF0IjoxNDcxNDc1ODgxfQ.rdfhnVY-ZJWl3OoRgZ712h9bGPagiXHmoRdFcBIPfDo';
             $jwt = new \Emarref\Jwt\Jwt();
+        
+        try {
             $token = $jwt->deserialize($tokenSerialized);
+        } 
+        catch (\Exception $e){
+            return false;
+        }
             $algorithm = new \Emarref\Jwt\Algorithm\Hs256($this->secretKey);
             $encryption = \Emarref\Jwt\Encryption\Factory::create($algorithm);
             $context = new \Emarref\Jwt\Verification\Context($encryption);
-            
-            if ($jwt->verify($token, $context)){
+
+            try {
+                $jwt->verify($token, $context);
                 $userData = json_decode($token->getPayload()->getClaims()->jsonSerialize());
-                return  $userData;
+            }
+            catch (\Exception $e){
+                return false;
             };
         }
-        return false;
+        return  $userData;
     }
 
     /**
@@ -96,29 +105,35 @@ class AuthService
     public function checkUser($userData)
     {
         if (!$user =  User::findUserByGlobalId($userData->id)) {
-
             $user = User::findUserByEmail($userData->email);
-
             $userInfo= $this->getUserInfo($userData->id);
 
             if (!$user ){
-                var_dump('new');
                 $user = new User();
                 $user->first_name = $userInfo[0]['name'];
-                $user->display_name = $userInfo[0]['name'];
+                $user->display_name = $userInfo[0]['name'].(string)random_int(1,1000);
                 $user->last_name = $userInfo[0]['surname'];
                 $user->email = $userInfo[0]['email'];
                 $user->global_id = $userInfo[0]['serverUserId'];
                 $user->status_id = 1;
                 $user->save();
             } else {
-                var_dump('update');
+                
+                if ($user->deleted_at != null) {
+                    $user->restore();
+                }
                 $user->first_name = $userInfo[0]['name'];
                 $user->last_name = $userInfo[0]['surname'];
                 $user->global_id = $userInfo[0]['serverUserId'];
                 $user->status_id = 1;
                 $user->save();
             }
+
+            $roleUser = \DB::table('roles')->where('name', 'User')->value('id');
+            $user->attachRole($roleUser);
+        };
+        if ($user->deleted_at != null) {
+            $user->restore();
         };
         return $user;
     }

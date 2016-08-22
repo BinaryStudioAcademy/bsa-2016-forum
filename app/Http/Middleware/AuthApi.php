@@ -5,10 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Response;
-use Cookie;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Emarref\Jwt\Claim;
 
 
 class AuthApi extends AuthService
@@ -22,17 +19,15 @@ class AuthApi extends AuthService
      */
     public function handle($request, Closure $next)
     {
-        if (env('APP_ENV') !== 'local') {
+        if (env('APP_ENV') == 'local') {
+            $this->loginUser();
+        } else {
             $userData = $this->checkCookie();
-
             if  (!$userData) {
                 throw new AuthenticationException;
             }
             $user = $this->checkUser($userData);
             Auth::login($user);
-            
-        } else {
-            $this->loginUser();
         }
         return $next($request);
     }

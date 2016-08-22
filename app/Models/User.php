@@ -97,7 +97,7 @@ class User extends Authenticatable implements HasRoleAndPermissionContract
     {
         $_this = new self;
         try {
-            $user = $_this->where('global_id',$globalId)->firstOrFail();
+            $user = $_this->withTrashed()->where('global_id',$globalId)->firstOrFail();
         }
         catch  (ModelNotFoundException $e){
             return null;
@@ -109,7 +109,7 @@ class User extends Authenticatable implements HasRoleAndPermissionContract
     {
         $_this = new self;
         try {
-            $user = $_this->where('email',$email)->firstOrFail();
+            $user = $_this->withTrashed()->where('email',$email)->firstOrFail();
         }
         catch  (ModelNotFoundException $e){
             return null;
