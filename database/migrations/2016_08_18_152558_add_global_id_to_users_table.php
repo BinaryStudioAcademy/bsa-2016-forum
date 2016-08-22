@@ -13,7 +13,7 @@ class AddGlobalIdToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('global_id')->nullable();
+            $table->string('global_id')->nullable()->unique();
         });
     }
 

@@ -32,6 +32,9 @@ class AuthService
         ],
     ];
 
+    /**
+     * Login User if APP_ENV = local for developing
+     */
     public function loginUser()
     {
         $users = User::all();
