@@ -18,10 +18,7 @@ class CommentController extends ApiController
      */
     protected function isCommentHasAnyChild(Comment $comment)
     {
-        if ($comment->comments()->get()) {
-            return true;
-        }
-        return false;
+        return $comment->comments()->exists();
     }
 
     /**
@@ -47,9 +44,7 @@ class CommentController extends ApiController
      */
     protected function isCommentBelongsToTopic(Topic $topic, Comment $comment)
     {
-        $topicWhichHasThisComment = $comment->topics()->get()->first();
-
-        return ($topicWhichHasThisComment && $topicWhichHasThisComment->id === $topic->id);
+        return !!$topic->comments()->find($comment->id);
     }
 
     /**
@@ -147,6 +142,7 @@ class CommentController extends ApiController
     {
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $childComment = Comment::create($childCommentInput->all());
+            $topic->comments()->save($childComment);
             $childComment = $comment->comments()->save($childComment);
             return $this->setStatusCode(201)->respond($childComment);
         } else {
