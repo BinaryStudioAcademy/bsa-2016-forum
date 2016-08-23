@@ -161,9 +161,7 @@ class AttachmentController extends ApiController
      */
     protected function isAttachmentBelongsToComment(Comment $comment, Attachment $attachment)
     {
-        $commentWhichHasThisAttachment = $attachment->comments()->get()->first();
-
-        return ($commentWhichHasThisAttachment && $commentWhichHasThisAttachment->id === $comment->id);
+        return !!$comment->attachments()->find($attachment->id);
     }
 
     /**
