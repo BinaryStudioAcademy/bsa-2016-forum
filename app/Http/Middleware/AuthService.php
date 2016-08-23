@@ -12,25 +12,31 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class AuthService
 {
-    protected $cookieName = 'x-access-token';
+    protected $cookieName;
+    protected $secretKey;
+    protected $urlUserInfo;
+    protected $curl_params;
 
-    protected $secretKey = 'superpupersecret';
-
-    protected $urlUserInfo = 'http://team.binary-studio.com/profile/user/getByCentralId/';
-
-    protected $curl_params = [
-        CURLOPT_URL => null,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT => 30,
-        CURLOPT_MAXREDIRS => 5,
-        CURLOPT_USERAGENT => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0",
-        CURLOPT_CUSTOMREQUEST => "GET",
-        CURLOPT_HTTPHEADER => [
-            "cache-control: no-cache",
-            "Accept: text/html,application/xhtml+xml,application/xml",
-            "content-type: application/x-www-form-urlencoded",
-        ],
-    ];
+    public function __construct()
+    {
+        $this->cookieName = config('authserver.cookieName');
+        $this->secretKey = config('authserver.secretKey');
+        $this->urlUserInfo = config('authserver.urlUserInfo');
+        $this->urlAuth = config('authserver.urlAuth');
+        $this->curl_params = [
+            CURLOPT_URL => null,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_MAXREDIRS => 5,
+            CURLOPT_USERAGENT => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0",
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => [
+                "cache-control: no-cache",
+                "Accept: text/html,application/xhtml+xml,application/xml",
+                "content-type: application/x-www-form-urlencoded",
+            ],
+        ];
+    }
 
     /**
      * Login User if APP_ENV = local for developing

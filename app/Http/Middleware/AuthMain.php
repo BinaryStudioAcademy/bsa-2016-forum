@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthMain extends AuthService
 {
-    protected $urlAuth = 'http://team.binary-studio.com/auth/';
+
     /**
      * Run the request filter.
      *
