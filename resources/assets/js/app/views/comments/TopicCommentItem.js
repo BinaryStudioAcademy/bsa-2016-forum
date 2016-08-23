@@ -41,7 +41,6 @@ module.exports = Marionette.LayoutView.extend({
                 user: tempmeta.user[id],
                 likes: tempmeta.likes[id],
                 attachments: tempmeta.attachments[id],
-                tags: tempmeta.tags[id]
             }
         };
     },

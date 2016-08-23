@@ -31,10 +31,11 @@ module.exports = Marionette.ItemView.extend({
     },
 
     attachFile: function (event) {
-        if (this.$('.dropzone-container').hasClass('hidden')) {
-            this.$('.dropzone-container').removeClass('hidden')
+        var dropz = this.$('.dropzone-container');
+        if (dropz.hasClass('hidden')) {
+            dropz.removeClass('hidden');
         } else {
-            this.$('.dropzone-container').addClass('hidden')
+            dropz.addClass('hidden');
         }
     },
 
