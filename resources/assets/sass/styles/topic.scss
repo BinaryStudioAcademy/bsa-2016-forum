@@ -211,14 +211,20 @@ TOPIC DETAILS
   float: right;
 }
 
-.topic-control-btn a {
+.topic-control-btn button {
+  border: 0;
+  background: transparent;
+//  color: #337ab7;
+}
+
+.topic-control-btn a, .topic-control-btn button {
   padding: 10px;
   vertical-align: middle;
   display: inline-block;
   height: 100%;
 }
 
-.topic-control-btn a:hover {
+.topic-control-btn a:hover, .topic-control-btn button:hover {
   cursor: pointer;
   text-decoration: none;
   background: #ddd;
