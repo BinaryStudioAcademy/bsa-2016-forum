@@ -6,8 +6,22 @@ module.exports = Marionette.ItemView.extend({
     className: 'row post-item',
     tagName: 'div',
 
+    ui: {
+        bookmarkTopic: '.bookmark-btn'
+    },
+
     events: {
-        'click .bookmark-btn': 'addBookmark'
+        'click @ui.bookmarkTopic': 'addBookmark'
+    },
+
+    onRender: function () {
+        var meta = this.model.getMeta();
+
+        if (!meta.bookmark) return;
+
+        if (meta.bookmark[this.model.attributes.id] !== undefined) {
+            this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok"></i>');
+        }
     },
 
     addBookmark: function (e) {

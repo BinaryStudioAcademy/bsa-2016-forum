@@ -8,6 +8,7 @@ use App\Http\Requests\TopicRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Collection;
 
 class TopicController extends ApiController
 {
@@ -33,12 +34,23 @@ class TopicController extends ApiController
             throw new PermissionDeniedException('view');
 
         $data = [];
-        foreach ($topics as $topic) {
-            $bookmark = $topic->bookmarks(Auth::user()->id)->first();
-            if ($bookmark !== null) {
-                $data['bookmark'][$topic->id] = $topic->bookmarks(Auth::user()->id)->first();
+
+        if ($topics instanceof Collection) {
+            foreach ($topics as $topic) {
+                $bookmark = $topic->bookmarks(Auth::user()->id)->first();
+                if ($bookmark !== null) {
+                    $data['bookmark'][$topic->id] = $topic->bookmarks(Auth::user()->id)->first();
+                }
             }
+
+            return $data;
         }
+
+        $bookmark = $topics->bookmarks(Auth::user()->id)->first();
+        if ($bookmark !== null) {
+            $data['bookmark'] = $topics->bookmarks(Auth::user()->id)->first();
+        }
+
         return $data;
     }
 
@@ -82,7 +94,9 @@ class TopicController extends ApiController
     {
         $topic = Topic::findOrFail($id);
 
-        return $this->setStatusCode(200)->respond($topic);
+        $meta = $this->getMetaData($topic);
+
+        return $this->setStatusCode(200)->respond($topic, $meta);
     }
 
     /**

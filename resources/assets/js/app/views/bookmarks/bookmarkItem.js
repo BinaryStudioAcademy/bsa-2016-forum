@@ -4,8 +4,13 @@ var _ = require('underscore');
 module.exports = Marionette.ItemView.extend({
     template: 'bookmarkItem',
     tagName: 'div',
+
+    ui: {
+        bookmarkDelete: '.delete-button'
+    },
+
     events: {
-        'click .delete-button': 'delete'
+        'click @ui.bookmarkDelete': 'delete'
     },
 
     serializeData: function () {
