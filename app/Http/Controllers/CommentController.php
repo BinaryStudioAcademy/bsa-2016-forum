@@ -144,7 +144,7 @@ class CommentController extends ApiController
             $childComment = Comment::create($childCommentInput->all());
             $topic->comments()->save($childComment);
             $childComment = $comment->comments()->save($childComment);
-            return $this->setStatusCode(200)->respond($childComment);
+            return $this->setStatusCode(201)->respond($childComment);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -319,7 +319,7 @@ class CommentController extends ApiController
         if ($this->isCommentBelongsToVote($vote, $comment)) {
             $childComment = Comment::create($childCommentInput->all());
             $childComment = $comment->comments()->save($childComment);
-            return $this->setStatusCode(200)->respond($childComment);
+            return $this->setStatusCode(201)->respond($childComment);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
