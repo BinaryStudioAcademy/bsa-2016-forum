@@ -85,9 +85,7 @@ class TagController extends ApiController
      */
     protected function isTagBelongsToVote(Vote $vote, Tag $tag)
     {
-        $voteWhichHasThisTag = $tag->votes()->get()->first();
-
-        return ($voteWhichHasThisTag && $voteWhichHasThisTag->id === $vote->id);
+        return !!$vote->tags()->find($tag->id);
     }
 
     public function getAllVoteTags(Vote $vote)
