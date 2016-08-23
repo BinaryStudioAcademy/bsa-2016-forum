@@ -1,20 +1,14 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\Vote;
 use App\Models\User;
 use App\Http\Requests\VotesRequest;
-use Gate;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-use DCN\RBAC\Traits\HasRoleAndPermission;
-use DCN\RBAC\Exceptions\PermissionDeniedException;
-use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
 use App\Facades\TagService;
-
-
 
 class VoteController extends ApiController
 {
