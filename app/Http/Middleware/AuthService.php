@@ -102,7 +102,7 @@ class AuthService
         } else {
             $userInfo = json_decode($result, true);
         }
-        return $userInfo;
+        return array_shift($userInfo);
     }
 
     /**
@@ -115,15 +115,14 @@ class AuthService
     {
         if (!$user =  User::findUserByGlobalId($userData->id)) {
             $user = User::findUserByEmail($userData->email);
-            $userInfo= $this->getUserInfo($userData->id);
-
+            $userInfo= ($this->getUserInfo($userData->id));
             if (!$user ){
                 $user = new User();
-                $user->first_name = $userInfo[0]['name'];
-                $user->display_name = $userInfo[0]['name'].(string)random_int(1,1000);
-                $user->last_name = $userInfo[0]['surname'];
-                $user->email = $userInfo[0]['email'];
-                $user->global_id = $userInfo[0]['serverUserId'];
+                $user->first_name = $userInfo['name'];
+                $user->display_name = $userInfo['name'].(string)random_int(1,1000);
+                $user->last_name = $userInfo['surname'];
+                $user->email = $userInfo['email'];
+                $user->global_id = $userInfo['serverUserId'];
                 $user->status_id = 1;
                 $user->save();
             } else {
@@ -131,9 +130,9 @@ class AuthService
                 if ($user->deleted_at != null) {
                     $user->restore();
                 }
-                $user->first_name = $userInfo[0]['name'];
-                $user->last_name = $userInfo[0]['surname'];
-                $user->global_id = $userInfo[0]['serverUserId'];
+                $user->first_name = $userInfo['name'];
+                $user->last_name = $userInfo['surname'];
+                $user->global_id = $userInfo['serverUserId'];
                 $user->status_id = 1;
                 $user->save();
             }
