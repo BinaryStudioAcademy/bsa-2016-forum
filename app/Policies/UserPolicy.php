@@ -23,7 +23,7 @@ class UserPolicy
 
     public function getUserRole(User $user, User $selectedUser)
     {
-        return false;
+        return $user->id == $selectedUser->id;
     }
 
     public function delete(User $user, User $selectedUser)
