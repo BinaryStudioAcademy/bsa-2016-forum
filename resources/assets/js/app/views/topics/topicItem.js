@@ -21,6 +21,7 @@ module.exports = Marionette.ItemView.extend({
 
         if (meta.bookmark[this.model.attributes.id] !== undefined) {
             this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok"></i>');
+            this.ui.bookmarkTopic.addClass('bookmarked');
         }
     },
 
