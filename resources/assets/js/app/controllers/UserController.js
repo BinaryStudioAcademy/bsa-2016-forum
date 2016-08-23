@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 var app = require('../instances/appInstance');
+var baseCollection = require('../instances/Collection');
 
 module.exports = Marionette.Object.extend({
 
@@ -12,6 +13,24 @@ module.exports = Marionette.Object.extend({
 
         app.render(new UsersView({
             collection: users
+        }));
+    },
+
+    showUserVotes: function(id) {
+
+        var showUsersVotesView = require('../views/votes/ShowUsersVotesView');
+        var usersVoteModel=require('../models/UsersVoteModel');
+        var usersVotesCollection=baseCollection.extend({
+            url: '/users/'+id+'/votes',
+            model: usersVoteModel,
+        });
+
+        var usersVotes=new usersVotesCollection();
+
+        usersVotes.fetch();
+
+        app.render(new showUsersVotesView({
+            collection: usersVotes
         }));
     }
 });

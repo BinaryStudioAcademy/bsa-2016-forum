@@ -33,5 +33,4 @@ module.exports = new navigCollection([
         name: 'votes',
         label: 'Votes',
     }
-
 ]);

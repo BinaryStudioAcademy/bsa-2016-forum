@@ -6,14 +6,17 @@
     </div>
     <div class="votes-item-body">
         <div class="votes-item-title">
-            <span>Vote title</span>
+            <span>{{data.title}}</span>
         </div>
         <div class="votes-item-details">
-            <a>0 Comments</a><a>0 Votes</a><a>0 Views</a>
+            <a>{{_meta.likes}} Likes</a><a>{{_meta.comments}} Comments</a>
+            <a>Finished at {{data.finished_at}}</a><a>{{data.views}} Views</a>
         </div>
         <div class="votes-item-tags">
-            <span>#Vote</span><span>#Votes</span><span>#Vote</span>
+            {{#each _meta.tags}}
+                <span>{{ name }}</span>
+            {{/each}}
         </div>
-        <span class="votes-item-time">Asked 1 day ago</span>
+        <span class="votes-item-time">Asked {{_meta.days_ago}}</span>
     </div>
 </div>
