@@ -24,8 +24,6 @@ class TopicController extends ApiController
      */
     public function index(TopicRequest $request)
     {
-        dd(\Auth::authenticate());
-
         $this->setFiltersData($request);
 
         $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
