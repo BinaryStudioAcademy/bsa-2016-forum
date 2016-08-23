@@ -15,8 +15,8 @@ module.exports = baseModel.extend({
             message: [],
         };
 
-        if (! attrs.content_origin.trim() ) {
-            error.message = 'Message cant be empty';
+        if (!attrs.content_origin.trim()) {
+            error.message.push('Message cant be empty');
         }
 
         if (error.message.length) return error;

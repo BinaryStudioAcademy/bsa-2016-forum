@@ -19,10 +19,9 @@ class CommentController extends ApiController
 
         if ($comments) {
             foreach ($comments as $comment) {
-                $data['user'][$comment->id] = $comment->user()->first();
-                $data['likes'][$comment->id] = $comment->likes()->count();
-                $data['attachments'][$comment->id] = $comment->attachments()->get();
-                $data['tags'][$comment->id] = $comment->tags()->get(['name']);
+                $data[$comment->id]['user'] = $comment->user()->first();
+                $data[$comment->id]['likes'] = $comment->likes()->count();
+                $data[$comment->id]['attachments'] = $comment->attachments()->get();
             }
         }
 
@@ -32,10 +31,9 @@ class CommentController extends ApiController
     private function getItemMetaData($comment)
     {
         $data = [];
-        $data['user'][$comment->id] = $comment->user()->first();
-        $data['likes'][$comment->id] = $comment->likes()->count();
-        $data['attachments'][$comment->id] = $comment->attachments()->get();
-        $data['tags'][$comment->id] = $comment->tags()->get(['name']);
+        $data[$comment->id]['user'] = $comment->user()->first();
+        $data[$comment->id]['likes'] = $comment->likes()->count();
+        $data[$comment->id]['attachments'] = $comment->attachments()->get();
 
         return $data;
     }
@@ -130,7 +128,8 @@ class CommentController extends ApiController
     {
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comment->update($request->all());
-            return $this->setStatusCode(200)->respond($comment);
+            $meta = $this->getItemMetaData($comment);
+            return $this->setStatusCode(200)->respond($comment, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }

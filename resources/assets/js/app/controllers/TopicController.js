@@ -30,7 +30,6 @@ module.exports = Marionette.Object.extend({
         if (Topics.get(id)) {
             console.log(id);
             topicModel = Topics.get(id);
-
         } else {
             topicModel = new TopicModel({
                 id: id,
@@ -48,7 +47,7 @@ module.exports = Marionette.Object.extend({
             collection: collection
         });
 
-        view.listenTo(Radio.channel('newComment'), 'showCommentForm', function (parentView, childCommentId) {
+        view.listenTo(Radio.channel('comment'), 'addComment', function (parentView, childCommentId) {
             var model = new TopicCommentModel();
 
             // maybe choose some better method to get child comment url
@@ -56,12 +55,23 @@ module.exports = Marionette.Object.extend({
                     '/' + childCommentId :
                 model.parentUrl = _.result(topicModel, 'url');
 
-
-            //console.log(model.parentUrl);
-
             parentView.getRegion('newComment').show(new NewTopicCommentView({
                 model: model
             }));
+        });
+
+        view.listenTo(Radio.channel('comment'), 'editComment', function (parentView, commentModel) {
+            if (!commentModel.parentUrl) commentModel.parentUrl = collection.parentUrl;
+            //console.log(commentModel);
+            parentView.getRegion('newComment').show(new NewTopicCommentView({
+                model: commentModel
+            }));
+        });
+
+        view.listenTo(Radio.channel('comment'), 'removeComment', function (commentModel) {
+            //console.log(commentModel);
+            commentModel.parentUrl = _.result(topicModel, 'url');
+            commentModel.destroy();
         });
 
         app.render(view);

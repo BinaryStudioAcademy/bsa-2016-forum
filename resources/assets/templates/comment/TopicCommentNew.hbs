@@ -1,7 +1,11 @@
 <form action="">
     <div class="topic-comment-main">
         <div class="close-btn text-right"><button type="button" class="btn btn-warning btn-sm">
-            <span class="glyphicon glyphicon-remove"></span></button></div>
+            <span class="glyphicon glyphicon-remove"></span></button>
+        </div>
+        <div class="container-fluid">
+            <div class="alert alert-danger errors hidden"></div>
+        </div>
         <div class="topic-comment-flex">
             <div class="topic-bar hidden-xs">
                 <div class="topic-avatar">
@@ -12,7 +16,7 @@
                 </div>
             </div>
             <div class="topic-body">
-                <textarea class="form-control" rows="3" placeholder="Comment..." name="content_origin"></textarea>
+                <textarea class="form-control" rows="3" placeholder="Comment..." name="content_origin">{{ content_origin }}</textarea>
                 <div class="topic-attachment">
                     <button type="button" class="btn btn-default">Attach</button>
                 </div>

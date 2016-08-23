@@ -20,10 +20,10 @@ class TopicController extends ApiController
 
         if ($topics) {
             foreach ($topics as $topic) {
-                $data['user'][$topic->id] = $topic->user()->first();
-                $data['likes'][$topic->id] = $topic->likes()->count();
-                $data['comments'][$topic->id] = $topic->comments()->count();
-                $data['tags'][$topic->id] = $topic->tags()->get(['name']);
+                $data[$topic->id]['user'] = $topic->user()->first();
+                $data[$topic->id]['likes'] = $topic->likes()->count();
+                $data[$topic->id]['comments'] = $topic->comments()->count();
+//                $data[$topic->id]['tags'] = $topic->tags()->get(['name']);
             }
         }
 
@@ -36,7 +36,7 @@ class TopicController extends ApiController
         $data['user'] = $topic->user()->first();
         $data['likes'] = $topic->likes()->count();
         $data['comments'] = $topic->comments()->count();
-        $data['tags'] = $topic->tags()->get(['name']);
+//        $data['tags'] = $topic->tags()->get(['name']);
 
         return $data;
     }

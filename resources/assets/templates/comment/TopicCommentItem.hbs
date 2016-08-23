@@ -11,7 +11,8 @@
             </div>
             <div class="topic-body">
                 <div class="topic-msg">
-                    <a href="{{ comment_url }}">{{ model.content_origin }}</a>
+                    <h4>{{ model.content_origin }}</h4>
+                    <!--<a href="{{ comment_url }}">{{ model.content_origin }}</a>-->
                 </div>
                 <div class="attachments-container">
                     {{#each meta.attachments}}
@@ -26,14 +27,20 @@
         </div>
         <div class="topic-control">
             <div class="topic-bar hidden-xs"></div>
-            <div class="topic-history">{{ model.created_at }}: usernik</div>
+            <div class="topic-history">{{ model.created_at }}</div>
             <div class="topic-history">{{ meta.user.display_name }}</div>
             <div class="topic-history">Rating {{ model.rating }}</div>
             <div class="topic-control-btn">
-                <a class="edit-btn">Edit</a>
+                {{!-- only output if user comment belongs to current user --}}
+                {{#if meta.isUserComment}}
+                    <button class="btn btn-primary comment-edit-btn">Edit</button>
+                    <button class="btn btn-danger comment-remove-btn">Remove</button>
+                    <!--<button data-toggle="modal" data-target="#delete-comment-dialog" class="btn btn-danger">Remove</button>-->
+                {{else}}
+                    <a class="answer-btn">Reply</a>
+                {{/if}}
                 <a class="bookmark-btn">Bookmark</a>
                 <a class="share-btn">Share</a>
-                <a class="answer-btn">Reply</a>
                 <a class="notification-btn">Notification</a>
             </div>
         </div>
@@ -48,3 +55,20 @@
     </div>
 </div>
 <div class="new-comment-container"></div>
+<div id="delete-comment-dialog" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm delete</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger comment-remove-btn"
+                        data-dismiss="modal">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

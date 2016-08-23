@@ -27,7 +27,7 @@ module.exports = Marionette.LayoutView.extend({
 
     events: {
         'click @ui.answer': function (event) {
-            Radio.channel('newComment').trigger('showCommentForm', this, false);
+            Radio.channel('comment').trigger('addComment', this, false);
         }
     },
 

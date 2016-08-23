@@ -8,10 +8,14 @@ module.exports = Marionette.CollectionView.extend({
     childView: CommentItem,
 
     initialize: function (options) {
-        this.listenTo(Radio.channel('newComment'), 'addCommentModel', this.addCommentModel);
+        this.listenTo(Radio.channel('сommentCollection'), 'addComment', this.addComment);
     },
 
-    addCommentModel: function (model) {
+    collectionEvents: {
+        'change': 'render'
+    },
+
+    addComment: function (model) {
         //logger(model);
         this.collection.add(model);
     },

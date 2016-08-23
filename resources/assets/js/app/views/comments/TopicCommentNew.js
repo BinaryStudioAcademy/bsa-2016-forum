@@ -3,6 +3,7 @@ var logger = require('../../instances/logger');
 var _ = require('underscore');
 var Radio = require('backbone.radio');
 var Dropzone = require('dropzone');
+var currentUser = require('../../initializers/currentUser');
 
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentNew',
@@ -16,6 +17,19 @@ module.exports = Marionette.ItemView.extend({
         'close': '.close-btn button'
     },
 
+    modelEvents: {
+        'invalid': function (model, errors, options) {
+            //logger('model is invalid', errors, options);
+            this.showLoader(false);
+            this.$('.errors').empty();
+            errors.message.forEach(function (message, i) {
+                logger(message);
+                this.$('.errors').append(message);
+            });
+            this.showErrors(true);
+        }
+    },
+
     events: {
         'click @ui.attach': 'attachFile',
         'click @ui.submit': 'submitComment',
@@ -23,7 +37,7 @@ module.exports = Marionette.ItemView.extend({
     },
 
     initialize: function (options) {
-        console.log(options);
+
     },
 
     close: function (event) {
@@ -31,10 +45,12 @@ module.exports = Marionette.ItemView.extend({
     },
 
     attachFile: function (event) {
-        if (this.$('.dropzone-container').hasClass('hidden')) {
-            this.$('.dropzone-container').removeClass('hidden')
+        var dropz = this.$('.dropzone-container');
+
+        if (dropz.hasClass('hidden')) {
+            dropz.removeClass('hidden');
         } else {
-            this.$('.dropzone-container').addClass('hidden')
+            dropz.addClass('hidden');
         }
     },
 
@@ -43,42 +59,44 @@ module.exports = Marionette.ItemView.extend({
             .removeClass('hidden') : this.$('.topic-control-add .loader').addClass('hidden');
     },
 
+    showErrors: function (show) {
+        return show ? this.$('.errors')
+            .removeClass('hidden') : this.$('.errors').addClass('hidden');
+    },
+
     submitComment: function (event) {
         event.preventDefault();
+        this.showErrors(false);
 
         var data = {
-            // user id from server is default
-            user_id: 2,
+            user_id: currentUser.get('id'),
         };
 
         _.each(this.$('form').serializeArray(), function(input) {
             data[ input.name ] = input.value;
         });
 
-        this.model.set(data);
-
+        //this.model.set(data);
         var parent = this;
+        this.showLoader(true);
+        this.model.save(data, {
+            success: function (model) {
+                logger('comment saved successfully');
 
-        if (this.model.isValid()) {
-            this.showLoader(true);
+                //console.log(model, model.getMeta());
 
-            this.model.save({}, {
-                success: function (model) {
-                    logger('comment saved successfully');
-                    //console.log(model, model.getMeta());
-                    if (parent._dropZone && parent._dropZone.files.length) {
-                        parent._dropZone.processQueue();
-                    } else {
-                        Radio.channel('newComment').trigger('addCommentModel', model);
-                        parent.remove();
-                    }
-                },
-
-                error: function (response) {
-                    console.error(response.responseText);
+                if (parent._dropZone && parent._dropZone.files.length) {
+                    parent._dropZone.processQueue();
+                } else {
+                    Radio.channel('сommentCollection').trigger('addComment', model);
+                    parent.remove();
                 }
-            });
-        }
+            },
+
+            error: function (response) {
+                console.error(response.responseText);
+            }
+        });
     },
 
     initDropZone: function () {
@@ -86,7 +104,6 @@ module.exports = Marionette.ItemView.extend({
         var model = this.model;
 
         this._dropZone = new Dropzone(this.$('#drop')[0], {
-
             url: function(file) {
                 return model.getSelfUrl() + '/attachments';
             },
@@ -133,9 +150,9 @@ module.exports = Marionette.ItemView.extend({
             // event triggers when all files has been uploaded
             queuecomplete: function () {
                 parent.remove();
-                //console.log(model.getMeta());
-                model.getMeta().attachments[model.get('id')] = parent._files;
-                Radio.channel('newComment').trigger('addCommentModel', model);
+                console.log(model.getMeta());
+                model.getMeta()[model.get('id')].attachments = parent._files;
+                Radio.channel('сommentCollection').trigger('addComment', model);
                 parent._files = [];
             }
         });
