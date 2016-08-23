@@ -14,7 +14,7 @@ class TopicController extends ApiController
 
     protected $tagIds = [];
 
-     /**
+    /**
      * Display a listing of the resource.
      *
      * @param  TopicRequest $request
@@ -37,10 +37,12 @@ class TopicController extends ApiController
      */
     public function store(TopicRequest $request)
     {
-        $extendedTopic = $topic = Topic::create($request->all());
-        TagService::TagsHandler($topic, $request->tags);
-        $extendedTopic->tags = $topic->tags()->get();
-        return $this->setStatusCode(201)->respond($extendedTopic);
+        $topic = Topic::create($request->all());
+        if (isset($request->tags) && $request->tags) {
+            TagService::TagsHandler($topic, $request->tags);
+        }
+        $topic->tags = $topic->tags()->get();
+        return $this->setStatusCode(201)->respond($topic);
     }
 
     /**
@@ -51,10 +53,9 @@ class TopicController extends ApiController
      */
     public function show($id)
     {
-        $extendedTopic = $topic = Topic::findOrFail($id);
-        $extendedTopic->tags = $topic->tags()->get();
-
-        return $this->setStatusCode(200)->respond($extendedTopic);
+        $topic = Topic::findOrFail($id);
+        $topic->tags = $topic->tags()->get();
+        return $this->setStatusCode(200)->respond($topic);
     }
 
     /**
@@ -69,10 +70,12 @@ class TopicController extends ApiController
         $topic = Topic::findOrfail($id);
         $topic->update($request->all());
 
-        $extendedTopic = $topic = Topic::findOrfail($id);
-        TagService::TagsHandler($topic, $request->tags);
-        $extendedTopic->tags = $topic->tags()->get();
-        return $this->setStatusCode(200)->respond($extendedTopic);
+        $topic = Topic::findOrfail($id);
+        if (isset($request->tags)) {
+            TagService::TagsHandler($topic, $request->tags);
+        }
+        $topic->tags = $topic->tags()->get();
+        return $this->setStatusCode(200)->respond($topic);
     }
 
     /**
