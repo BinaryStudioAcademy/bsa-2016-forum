@@ -21,7 +21,7 @@ redis.on('message', function(channel, eventData) {
     var socketId = users.getSocketId(message.user_to_id);
 
     if (io.sockets.sockets[socketId]) {
-        io.sockets.sockets[socketId].emit('newMessage', message);
+        io.sockets.sockets[socketId].emit(eventData.data.socketEvent, message);
         console.log("Message send to user id: " + message.user_to_id);
     }
 });

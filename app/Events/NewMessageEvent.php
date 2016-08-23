@@ -2,34 +2,7 @@
 
 namespace App\Events;
 
-use App\Events\Event;
-use App\Models\Message;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-
-class NewMessageEvent extends Event implements ShouldBroadcast
+class NewMessageEvent extends MessageEvent
 {
-    use SerializesModels;
-
-    public $message;
-
-    /**
-     * Create a new event instance.
-     *
-     * @param Message $message
-     */
-    public function __construct(Message $message)
-    {
-        $this->message=$message->toJson();
-    }
-
-    /**
-     * Get the channels the event should be broadcast on.
-     *
-     * @return array
-     */
-    public function broadcastOn()
-    {
-        return ['messagesChannel'];
-    }
+    public $socketEvent = 'newMessage';
 }
