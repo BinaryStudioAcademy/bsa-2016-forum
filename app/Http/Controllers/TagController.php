@@ -20,9 +20,7 @@ class TagController extends ApiController
      */
     protected function isTagBelongsToTopic(Topic $topic, Tag $tag)
     {
-        $topicWhichHasThisTag = $tag->topics()->get()->first();
-
-        return ($topicWhichHasThisTag && $topicWhichHasThisTag->id === $topic->id);
+        return !!$topic->tags()->find($tag->id);
     }
 
     /**
