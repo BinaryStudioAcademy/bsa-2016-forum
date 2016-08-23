@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\Models\Vote;
 use App\Models\User;
 use App\Http\Requests\VotesRequest;
@@ -18,14 +19,14 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
 
     protected $searchStr = null;
     protected $tagIds = [];
-    
+
     /**
      * @param $votes array
      * @return array $data array
      */
     private function getMetaData($votes)
     {
-        $data =[];
+        $data = [];
         $i = 0;
 
         foreach ($votes as $vote) {
@@ -51,8 +52,9 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function index(Request $request)
     {
         $vote = new Vote();
-        if (!(Auth::user()->allowed('view.votes', $vote)))
+        if (!(Auth::user()->allowed('view.votes', $vote))) {
             throw new PermissionDeniedException('index');
+        }
 
         $this->setFiltersParameters($request);
 
@@ -71,13 +73,16 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     public function store(VotesRequest $request)
     {
         $vote = new Vote();
-        if (!(Auth::user()->allowed('create.votes', $vote)))
+        if (!(Auth::user()->allowed('create.votes', $vote))) {
             throw new PermissionDeniedException('create');
+        }
 
-        $extendedVote = $vote = Vote::create($request->all());
-        TagService::TagsHandler($vote, $request->tags);
-        $extendedVote->tags = $vote->tags()->get();
-        return $this->setStatusCode(201)->respond($extendedVote);
+        $vote = Vote::create($request->all());
+        if (isset($request->tags) && $request->tags) {
+            TagService::TagsHandler($vote, $request->tags);
+        }
+        $vote->tags = $vote->tags()->get();
+        return $this->setStatusCode(201)->respond($vote);
     }
 
     /**
@@ -91,18 +96,21 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     {
         $vote = Vote::findOrFail($id);
 
-        if (!(Auth::user()->allowed('view.votes', $vote)))
+        if (!(Auth::user()->allowed('view.votes', $vote))) {
             throw new PermissionDeniedException('view');
+        }
 
         $user = $vote->user()->first();
         $likeCount = $vote->likes()->count();
         $tagCount = $vote->tags()->count();
         $commentCount = $vote->comments()->count();
 
-        return $this->setStatusCode(200)->respond($vote, ['user' => $user,
+        return $this->setStatusCode(200)->respond($vote, [
+            'user' => $user,
             'likes' => $likeCount,
             'tags' => $tagCount,
-            'comments' => $commentCount]);
+            'comments' => $commentCount
+        ]);
     }
 
     /**
@@ -117,14 +125,17 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     {
         $vote = Vote::findOrFail($id);
 
-        if (!(Auth::user()->allowed('update.votes', $vote)))
+        if (!(Auth::user()->allowed('update.votes', $vote))) {
             throw new PermissionDeniedException('update');
+        }
 
         $vote->update($request->all());
-        $extendedVote = $vote = Vote::findOrfail($id);
-        TagService::TagsHandler($vote, $request->tags);
-        $extendedVote->tags = $vote->tags()->get();
-        return $this->setStatusCode(200)->respond($extendedVote);
+        $vote = Vote::findOrfail($id);
+        if (isset($request->tags)) {
+            TagService::TagsHandler($vote, $request->tags);
+        }
+        $vote->tags = $vote->tags()->get();
+        return $this->setStatusCode(200)->respond($vote);
     }
 
     /**
@@ -138,8 +149,9 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
     {
         $vote = Vote::findOrFail($id);
 
-        if (!(Auth::user()->allowed('delete.votes', $vote)))
+        if (!(Auth::user()->allowed('delete.votes', $vote))) {
             throw new PermissionDeniedException('delete');
+        }
 
         $vote->delete();
 
@@ -162,7 +174,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $user = User::findOrFail($userId);
 
         $vote = new Vote();
-        if (!(Auth::user()->allowed('view.votes', $vote))){
+        if (!(Auth::user()->allowed('view.votes', $vote))) {
             throw new PermissionDeniedException('index');
         }
 
@@ -173,7 +185,7 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
             ->filterByTags($this->tagIds)
             ->get();
 
-        if(!$votes){
+        if (!$votes) {
             return $this->setStatusCode(200)->respond();
         }
 
@@ -192,11 +204,11 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $user = User::findOrFail($userId);
         $vote = $user->getVote($voteId);
 
-        if(!$vote){
+        if (!$vote) {
             throw (new ModelNotFoundException)->setModel(Vote::class);
         }
 
-        if (!(Auth::user()->allowed('view.votes', $vote))){
+        if (!(Auth::user()->allowed('view.votes', $vote))) {
             throw new PermissionDeniedException('view');
         }
 
