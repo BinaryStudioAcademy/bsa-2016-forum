@@ -32,6 +32,11 @@ class VotePolicy
         return $user->owns($vote);
     }
 
+    public function deleteVoteTag(User $user, Vote $vote)
+    {
+        return $user->owns($vote);
+    }
+
     public function createVoteAttachment(User $user, Vote $vote)
     {
         return $user->owns($vote);
