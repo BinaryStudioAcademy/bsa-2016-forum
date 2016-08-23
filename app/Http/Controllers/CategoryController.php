@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
+use App\Http\Requests\CategoryRequest;
 
 class CategoryController extends ApiController
 {
@@ -24,12 +24,13 @@ class CategoryController extends ApiController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\CategoryRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(CategoryRequest $request)
     {
-        //
+        $category = Category::create($request->all());
+        return $this->setStatusCode(201)->respond($category);
     }
 
     /**
@@ -40,19 +41,22 @@ class CategoryController extends ApiController
      */
     public function show($id)
     {
-        //
+        $category = Category::findOrFail($id);
+        return $this->setStatusCode(200)->respond($category);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\CategoryRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
-        //
+        $category = Category::findOrFail($id);
+        $category->update($request->all());
+        return $this->setStatusCode(200)->respond($category);
     }
 
     /**
@@ -63,6 +67,8 @@ class CategoryController extends ApiController
      */
     public function destroy($id)
     {
-        //
+        $category = Category::findOrFail($id);
+        $category->delete();
+        return $this->setStatusCode(204)->respond();
     }
 }
