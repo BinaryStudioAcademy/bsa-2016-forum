@@ -12,7 +12,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use \DCN\RBAC\Exceptions\PermissionDeniedException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class Handler extends ExceptionHandler
@@ -81,7 +80,7 @@ class Handler extends ExceptionHandler
             return response('Resource not found', 404);
         }
 
-        if ($e instanceof PermissionDeniedException){
+        if ($e instanceof AuthorizationException) {
             return response($e->getMessage(), 403);
         }
 
