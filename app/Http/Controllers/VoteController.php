@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+use DCN\RBAC\Traits\HasRoleAndPermission;
+use DCN\RBAC\Exceptions\PermissionDeniedException;
+use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
+use App\Facades\TagService;
+
+
 
 class VoteController extends ApiController
 {
@@ -60,8 +66,10 @@ class VoteController extends ApiController
      */
     public function store(VotesRequest $request)
     {
-        $vote = Vote::create($request->all());
-        return $this->setStatusCode(201)->respond($vote);
+        $extendedVote = $vote = Vote::create($request->all());
+        TagService::TagsHandler($vote, $request->tags);
+        $extendedVote->tags = $vote->tags()->get();
+        return $this->setStatusCode(201)->respond($extendedVote);
     }
 
     /**
@@ -100,7 +108,10 @@ class VoteController extends ApiController
         $this->authorize('update', $vote);
 
         $vote->update($request->all());
-        return $this->setStatusCode(200)->respond($vote);
+        $extendedVote = $vote = Vote::findOrfail($id);
+        TagService::TagsHandler($vote, $request->tags);
+        $extendedVote->tags = $vote->tags()->get();
+        return $this->setStatusCode(200)->respond($extendedVote);
     }
 
     /**
