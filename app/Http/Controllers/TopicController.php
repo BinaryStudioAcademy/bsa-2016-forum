@@ -37,18 +37,21 @@ class TopicController extends ApiController
 
         if ($topics instanceof Collection) {
             foreach ($topics as $topic) {
-                $bookmark = $topic->bookmarks(Auth::user()->id)->first();
+                $bookmark = $topic->bookmarks()
+                    ->where('user_id', Auth::user()->id)->first();
+
                 if ($bookmark !== null) {
-                    $data['bookmark'][$topic->id] = $topic->bookmarks(Auth::user()->id)->first();
+                    $data['bookmark'][$topic->id] = $topic->bookmarks()
+                        ->where('user_id', Auth::user()->id)->first();
                 }
             }
 
             return $data;
         }
 
-        $bookmark = $topics->bookmarks(Auth::user()->id)->first();
+        $bookmark = $topics->bookmarks()->where('user_id', Auth::user()->id)->first();
         if ($bookmark !== null) {
-            $data['bookmark'] = $topics->bookmarks(Auth::user()->id)->first();
+            $data['bookmark'] = $topics->bookmarks()->where('user_id', Auth::user()->id)->first();
         }
 
         return $data;
