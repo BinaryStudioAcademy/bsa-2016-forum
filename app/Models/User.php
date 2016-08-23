@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
 class User extends Authenticatable
@@ -85,7 +85,8 @@ class User extends Authenticatable
         return $this->hasMany(Like::class);
     }
 
-    public function getVote($voteId){
+    public function getVote($voteId)
+    {
         return $this->votes()->where('id',$voteId)->first();
     }
 
@@ -121,4 +122,27 @@ class User extends Authenticatable
         return $this->id == $related->user_id;
     }
 
+    public static function findUserByGlobalId($globalId)
+    {
+        $_this = new self;
+        try {
+            $user = $_this->withTrashed()->where('global_id',$globalId)->firstOrFail();
+        }
+        catch  (ModelNotFoundException $e){
+            return null;
+        }
+        return $user;
+    }
+
+    public static function findUserByEmail($email)
+    {
+        $_this = new self;
+        try {
+            $user = $_this->withTrashed()->where('email',$email)->firstOrFail();
+        }
+        catch  (ModelNotFoundException $e){
+            return null;
+        }
+        return $user;
+    }
 }
