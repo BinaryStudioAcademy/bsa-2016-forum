@@ -23,6 +23,11 @@ class CreateCommentsTable extends Migration
 
 
             $table->text('content_generated')->nullable();
+
+            //PolyMorph relation Many to One
+            $table->integer('commentable_id')->unsigned();
+            $table->string('commentable_type');
+
             $table->softDeletes();
             $table->timestamps();
         });

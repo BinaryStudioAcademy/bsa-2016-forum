@@ -47,8 +47,7 @@ class CommentController extends ApiController
      */
     protected function isCommentBelongsToTopic(Topic $topic, Comment $comment)
     {
-        $topicWhichHasThisComment = $comment->topics()->get()->first();
-
+        $topicWhichHasThisComment = $comment->commentable()->get()->first();
         return ($topicWhichHasThisComment && $topicWhichHasThisComment->id === $topic->id);
     }
 
@@ -222,7 +221,7 @@ class CommentController extends ApiController
      */
     protected function isCommentBelongsToVote(Vote $vote, Comment $comment)
     {
-        $voteWhichHasThisComment = $comment->votes()->get()->first();
+        $voteWhichHasThisComment = $comment->commentable()->get()->first();
 
         return ($voteWhichHasThisComment && $voteWhichHasThisComment->id === $vote->id);
     }
@@ -397,7 +396,7 @@ class CommentController extends ApiController
      */
     protected function isCommentBelongsToVoteItem(VoteItem $voteItem, Comment $comment)
     {
-        $voteItemWhichHasThisComment = $comment->voteItems()->get()->first();
+        $voteItemWhichHasThisComment = $comment->commentable()->get()->first();
 
         return ($voteItemWhichHasThisComment && $voteItemWhichHasThisComment->id === $voteItem->id);
     }

@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Comment extends Model
 {
     use SoftDeletes;
-    
-    protected $fillable = ['content_origin','rating','user_id','content_generated'];
+
+    protected $fillable = ['content_origin', 'rating', 'user_id', 'content_generated'];
 
     protected $dates = ['deleted_at'];
 
@@ -26,34 +26,19 @@ class Comment extends Model
     }
 
     /**
-     * Get all of the topics that are assigned this comment.
+     * Get all of the owning commentable models.
      */
-    public function topics()
+    public function commentable()
     {
-        return $this->morphedByMany(Topic::class, 'commentable');
-    }
-    /**
-     * Get all of the votes that are assigned this comment.
-     */
-    public function votes()
-    {
-        return $this->morphedByMany(Vote::class, 'commentable');
+        return $this->morphTo();
     }
 
     /**
-     * Get all of the comments that are assigned this comment.
+     * Get all of the comment's comments.
      */
     public function comments()
     {
-        return $this->morphedByMany(Comment::class, 'commentable');
-    }
-
-    /**
-     * Get all of the tags that are assigned this comment.
-     */
-    public function tags()
-    {
-        return $this->morphedByMany(Tag::class, 'commentable');
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     /**
@@ -61,47 +46,21 @@ class Comment extends Model
      */
     public function attachments()
     {
-        return $this->morphedByMany(Attachment::class, 'commentable');
+        return $this->morphToMany(Attachment::class, 'attachmenttable');
     }
 
     /**
-     * Get all of the attachments that are assigned this comment.
+     * Get all of the likes that are assigned this comment.
      */
     public function likes()
     {
-        return $this->morphedByMany(Like::class, 'commentable');
+        return $this->morphToMany(Like::class, 'likeable');
     }
 
     /**
      * Get all of the notifications that are assigned this comment.
      */
     public function notifications()
-    {
-        return $this->morphedByMany(Notification::class, 'commentable');
-    }
-    /////////////
-
-    public function tags_rel()
-    {
-        return $this->morphToMany(Tag::class, 'taggable');
-    }
-
-    public function attachments_rel()
-    {
-        return $this->morphToMany(Attachment::class, 'attachmenttable');
-    }
-
-    public function likes_rel()
-    {
-        return $this->morphToMany(Like::class, 'likeable');
-    }
-
-    public function comments_rel()
-    {
-        return $this->morphToMany(Comment::class, 'commentable');
-    }
-
-    public function notifications_rel()
     {
         return $this->morphToMany(Notification::class, 'notificationable');
     }
