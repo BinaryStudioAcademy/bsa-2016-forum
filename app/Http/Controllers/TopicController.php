@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Topic;
+use App\Models\Bookmark;
 use App\Http\Requests\TopicRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TopicController extends ApiController
@@ -12,6 +14,33 @@ class TopicController extends ApiController
     protected $searchStr = null;
 
     protected $tagIds = [];
+
+    #TODO: Delete this after the authorization implement
+    public function __construct()
+    {
+        $users = User::all();
+        Auth::login($users[1]);
+    }
+
+    /**
+     * @param $topics array
+     * @return array $data array
+     */
+    private function getMetaData($topics)
+    {
+        $bookmark = new Bookmark();
+        if (!(Auth::user()->allowed('view.bookmarks', $bookmark)))
+            throw new PermissionDeniedException('view');
+
+        $data = [];
+        foreach ($topics as $topic) {
+            $bookmark = $topic->bookmarks(Auth::user()->id)->first();
+            if ($bookmark !== null) {
+                $data['bookmark'][$topic->id] = $topic->bookmarks(Auth::user()->id)->first();
+            }
+        }
+        return $data;
+    }
 
     /**
      * Display a listing of the resource.
@@ -25,7 +54,9 @@ class TopicController extends ApiController
 
         $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
 
-        return $this->setStatusCode(200)->respond($topics);
+        $meta = $this->getMetaData($topics);
+
+        return $this->setStatusCode(200)->respond($topics, $meta);
     }
 
     /**

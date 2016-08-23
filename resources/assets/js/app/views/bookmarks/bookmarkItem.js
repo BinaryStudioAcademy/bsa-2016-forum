@@ -1,4 +1,5 @@
 var Marionette = require('backbone.marionette');
+var _ = require('underscore');
 
 module.exports = Marionette.ItemView.extend({
     template: 'bookmarkItem',
@@ -12,21 +13,15 @@ module.exports = Marionette.ItemView.extend({
 
         if (!meta) return {};
 
-        var id = this.model.get('id');
-
         return {
             model: this.model.toJSON(),
             meta: {
-                user: meta.user,
-                likes: meta.likes,
-                comments: meta.comments,
-                tags: meta.tags
+                topic: meta.topic[this.model.attributes.id]
             }
         };
     },
 
     delete: function() {
-        console.log(this);
-        //this.model.destroy();
+        this.model.destroy();
     }
 });

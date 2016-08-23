@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Requests\BookmarksRequest;
 use Illuminate\Support\Facades\Auth;
 use DCN\RBAC\Exceptions\PermissionDeniedException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BookmarkController extends ApiController
 {
@@ -87,8 +88,11 @@ class BookmarkController extends ApiController
             ->where('user_id', Auth::user()->id)
             ->first();
 
-        $bookmark->delete();
+        if (!$bookmark) {
+            throw (new ModelNotFoundException)->setModel(Bookmark::class);
+        }
 
+        $bookmark->delete();
         return $this->setStatusCode(204)->respond();
     }
 }

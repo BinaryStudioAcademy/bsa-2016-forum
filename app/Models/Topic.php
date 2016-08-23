@@ -41,9 +41,10 @@ class Topic extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function bookmarks()
+    public function bookmarks($userId)
     {
-        return $this->belongsToMany(User::class, 'bookmarks', 'topic_id', 'user_id');
+        return $this->belongsToMany(User::class, 'bookmarks', 'topic_id', 'user_id')
+            ->wherePivot('user_id', '=', $userId);
     }
 
     public function attachments()
