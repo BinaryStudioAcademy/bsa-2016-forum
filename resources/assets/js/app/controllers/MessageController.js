@@ -34,10 +34,19 @@ module.exports = Marionette.Object.extend({
                 Radio.channel('messagesChannel').trigger('newMessageScroll');
             }
         });
-        app.render(new MessageDialogLayout({
+
+        messageCollection.listenTo(Radio.channel('messagesChannel'), 'updatedMessage', function (message) {
+            if(message.user_from_id == id) {
+                messageCollection.set([new MessageModel(message)], {remove: false});
+            }
+        });
+
+        var DialogView = new MessageDialogLayout({
             currentUser: currentUser,
             collection: messageCollection
-        }).listenTo(Radio.channel('messagesChannel'),'sendMessage', function (ui) {
+        });
+
+        DialogView.listenTo(Radio.channel('messagesChannel'),'sendMessage', function (ui) {
             var message = new MessageModel ({
                 message: ui.message.val(),
                 user_from_id: currentUser.get('id'),
@@ -60,6 +69,17 @@ module.exports = Marionette.Object.extend({
                     ui.button.prop('disabled', false);
                 }
             });
-        }));
+        });
+
+        DialogView.listenTo(Radio.channel('messagesChannel'),'deleteMessage', function (message){
+            message.parentUrl = _.result(currentUser, 'url');
+            message.destroy();
+        });
+
+        DialogView.listenTo(Radio.channel('messagesChannel'),'editMessage', function (message){
+            // edit/update
+        });
+
+        app.render(DialogView);
     }
 });

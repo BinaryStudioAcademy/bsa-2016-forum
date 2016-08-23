@@ -62,9 +62,11 @@ var app = Marionette.Application.extend({
     },
     onStart: function (config) {
         this.config = config;
+        this.socket = socket;
         this.templateCashing();
         this.setRootLayout(new mainLayoutView({ collection: NavigCollection }));
         appInstance.setInstance(this);
+        socket.Login();
         this.showRootLayout();
         this.setRouting();
 
