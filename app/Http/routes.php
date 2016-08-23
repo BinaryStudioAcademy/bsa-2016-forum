@@ -34,6 +34,16 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
             'destroy' => 'users.destroy',
         ],
     ]);
+    Route::resource('categories', 'CategoryController', [
+        'except' => ['edit', 'create'],
+        'names' => [
+            'index' => 'users.index',
+            'store' => 'users.store',
+            'show' => 'users.show',
+            'update' => 'users.update',
+            'destroy' => 'users.destroy',
+        ],
+    ]);
     /*Routes for users Role*/
     Route::group(['prefix' => 'users/{user}/roles'], function () {
         Route::get('', 'UserController@getUserRole')->name('userRole');
