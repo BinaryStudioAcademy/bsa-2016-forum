@@ -52,7 +52,6 @@ module.exports = Marionette.LayoutView.extend({
                 user: meta[id].user,
                 likes: meta[id].likes,
                 attachments: meta[id].attachments,
-                tags: meta[id].tags,
                 isUserComment: currentUser.get('id') === meta[id].user.id
             }
         };

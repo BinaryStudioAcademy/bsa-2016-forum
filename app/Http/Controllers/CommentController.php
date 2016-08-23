@@ -183,7 +183,7 @@ class CommentController extends ApiController
             $childComment = $comment->comments()->save($childComment);
             // set meta data
             $meta = $this->getItemMetaData($childComment);
-            return $this->setStatusCode(200)->respond($childComment, $meta);
+            return $this->setStatusCode(201)->respond($childComment, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -358,7 +358,7 @@ class CommentController extends ApiController
         if ($this->isCommentBelongsToVote($vote, $comment)) {
             $childComment = Comment::create($childCommentInput->all());
             $childComment = $comment->comments()->save($childComment);
-            return $this->setStatusCode(200)->respond($childComment);
+            return $this->setStatusCode(201)->respond($childComment);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }

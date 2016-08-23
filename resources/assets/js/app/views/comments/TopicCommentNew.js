@@ -150,7 +150,6 @@ module.exports = Marionette.ItemView.extend({
             // event triggers when all files has been uploaded
             queuecomplete: function () {
                 parent.remove();
-                console.log(model.getMeta());
                 model.getMeta()[model.get('id')].attachments = parent._files;
                 Radio.channel('сommentCollection').trigger('addComment', model);
                 parent._files = [];

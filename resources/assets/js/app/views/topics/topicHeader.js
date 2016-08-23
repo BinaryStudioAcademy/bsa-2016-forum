@@ -11,10 +11,9 @@ module.exports = Marionette.ItemView.extend({
 
     serializeData: function () {
         var meta = this.model.getMeta();
+        var id = this.model.get('id');
 
         if (!meta) return {};
-
-        var id = this.model.get('id');
 
         return {
             model: this.model.toJSON(),
@@ -22,7 +21,6 @@ module.exports = Marionette.ItemView.extend({
                 user: meta.user,
                 likes: meta.likes,
                 comments: meta.comments,
-                tags: meta.tags
             }
         };
     }
