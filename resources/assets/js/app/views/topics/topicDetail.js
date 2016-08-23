@@ -20,7 +20,7 @@ module.exports = Marionette.ItemView.extend({
         }
 
         if (this.model.bookmarkId) {
-            this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok"></i>');
+            this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
             this.ui.bookmarkTopic.addClass('bookmarked');
         }
     },
@@ -37,13 +37,13 @@ module.exports = Marionette.ItemView.extend({
                 id: this.model.bookmarkId
             });
             bookmark.destroy({
-                success: function (self) {
+                success: function () {
                     $('.bookmark-btn').removeAttr('disabled');
                     $('.bookmark-btn').addClass('text-info');
                     $('.bookmark-btn').removeClass('text-muted');
-                    $('.bookmark-btn').remove('i');
+                    $('i.bookmarked').remove();
 
-                    this.model.bookmarkId = undefined;
+                    //this.model.bookmarkId = undefined;
                 },
                 error: function (response, xhr) {
                     var errorMsg = '';
@@ -60,11 +60,13 @@ module.exports = Marionette.ItemView.extend({
                 topic_id: this.model.id,
                 user_id: 2,
             }, {
-                success: function () {
+                success: function (response) {
+                    //this.model.bookmarkId = response.id;
+
                     $('.bookmark-btn').removeAttr('disabled');
                     $('.bookmark-btn').addClass('text-info');
                     $('.bookmark-btn').removeClass('text-muted');
-                    $('.bookmark-btn').append(' <i class="glyphicon glyphicon-ok"></i>');
+                    $('.bookmark-btn').append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
                 },
                 error: function (response, xhr) {
                     var errorMsg = '';
