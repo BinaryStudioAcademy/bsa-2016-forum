@@ -115,8 +115,7 @@ class TagController extends ApiController
      */
     public function storeVoteTag(Vote $vote, TagRequest $request)
     {
-        $tag = Tag::create($request->all());
-        $tag = $vote->tags()->save($tag);
+        $tag = TagService::storeTag($vote, $request->name);
         return $this->setStatusCode(201)->respond($tag);
     }
 

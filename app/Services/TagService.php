@@ -36,6 +36,11 @@ class TagService
         }
     }
 
+    /**
+     * @param $taggableModel
+     * @param string $tagName
+     * @return static
+     */
     public function storeTag($taggableModel, string $tagName)
     {
         $existedTag = Tag::where('name', $tagName)->get()->first();
