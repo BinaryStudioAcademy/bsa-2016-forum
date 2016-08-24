@@ -1,7 +1,6 @@
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 var TopicModel = require('../../models/TopicModel');
-var currentUser = require('../../initializers/currentUser');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicCreateNew',
@@ -11,8 +10,7 @@ module.exports = Marionette.ItemView.extend({
     },
 
     initialize: function () {
-        this.model.set({user_id: currentUser.id})
-        console.log(currentUser.id);
+        this.model.set({user_id: 2});
     },
 
     modelEvents: {
