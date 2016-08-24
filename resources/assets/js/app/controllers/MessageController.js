@@ -47,6 +47,7 @@ module.exports = Marionette.Object.extend({
             data.view.ui.save.html('Saving..');
             data.view.disableButton();
             message.parentUrl = _.result(currentUser, 'url');
+            //add check on msg change
             message.save({message: text}, {
                 success: function () {
                     data.view.$('.modal').modal('hide');

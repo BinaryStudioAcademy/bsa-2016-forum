@@ -157,7 +157,7 @@ MESSAGE DIALOG
   padding: 10px 0;
 }
 
-.message-new textarea {
+.message-new textarea, .message-edit textarea {
   resize: vertical;
   width: 100%;
   margin: 5px 0 5px;
@@ -185,6 +185,7 @@ MESSAGE DIALOG
   font-size: 14px;
   font-weight: 800;
   background-color: #ffd992;
+  margin-left: 10px;
 }
 
 .message-new-control button:hover {
@@ -193,4 +194,10 @@ MESSAGE DIALOG
 
 .message-new-control button:disabled {
   background-color: #DDDDDD
+}
+
+.message-edit {
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 0;
 }
