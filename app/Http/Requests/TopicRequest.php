@@ -21,7 +21,7 @@ class TopicRequest extends ApiRequest
      */
     function rules()
     {
-       switch($this->method()) {
+        switch ($this->method()) {
             case 'POST':
                 return [
                     'name' => 'required|unique:topics,name',
@@ -50,10 +50,10 @@ class TopicRequest extends ApiRequest
     {
         return [
             'name.required' => 'Name is required',
-            'description.required'  => 'Description is required',
-            'user_id.required'  => 'User ID is required',
+            'description.required' => 'Description is required',
+            'user_id.required' => 'User ID is required',
             'user_id.is_current_user' => 'User not is authorized',
-            'category_id.required'  => 'Category is required'
+            'category_id.required' => 'Category is required'
         ];
     }
 }
