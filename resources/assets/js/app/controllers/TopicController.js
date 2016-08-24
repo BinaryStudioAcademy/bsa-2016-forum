@@ -2,7 +2,7 @@ var Marionette = require('backbone.marionette');
 var app = require('../instances/appInstance');
 var topicLayout = require('../views/topics/topicLayout');
 var topicCategoryLayout = require('../views/topics/topicCategoryLayout');
-var topicCategoryCollection = require('../collections/topicCategoryCollection');
+var TopicCategoryCollection = require('../collections/topicCategoryCollection');
 var TopicCollection = require('../collections/topicCollection');
 var TopicCreate = require('../views/topics/topicCreate');
 var TopicModel = require('../models/TopicModel');
@@ -11,7 +11,20 @@ var TopicDetailView = require('../views/topics/topicDetail');
 module.exports = Marionette.Object.extend({
 
     index: function () {
-        var topicCategoryCollection = new topicCategoryCollection();
+        var topicCollection = new TopicCollection();
+        topicCollection.url = '/topics';
+        topicCollection.fetch();
+        app.render(new topicLayout({collection: topicCollection}));
+    },
+
+    indexInCategory: function (catId) {
+        var topicCollection = new TopicCollection({catId: catId});
+        topicCollection.fetch();
+        app.render(new topicLayout({collection: topicCollection}));
+    },
+
+    indexCategories: function () {
+        var topicCategoryCollection = new TopicCategoryCollection();
         topicCategoryCollection.fetch();
         app.render(new topicCategoryLayout({collection: topicCategoryCollection}));
     },

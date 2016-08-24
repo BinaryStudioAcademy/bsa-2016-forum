@@ -10,7 +10,7 @@ module.exports = new navigCollection([
     },
 
     {
-        href: '#topics',
+        href: '#topicCategories',
         icon: '',
         name: 'topics',
         label: 'Topics',

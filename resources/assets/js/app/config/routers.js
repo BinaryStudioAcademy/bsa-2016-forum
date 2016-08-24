@@ -17,6 +17,8 @@ module.exports = {
             controller: new TopicController(),
             appRoutes: {
                 'topics': 'index',
+                'categories/:catId/topics': 'indexInCategory',
+                'topicCategories': 'indexCategories',
                 'topics/:id' : 'show',
                 'topic/create': 'create'
             }
