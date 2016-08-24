@@ -5,13 +5,14 @@
             <img src="/images/user.png">
         </div>
         <div class="messages-msg">
-            <span>{{user_from_id}}</span>
+            <span>{{user.display_name}}</span>
             <!-- if unread add class .unread -->
             <div class="messages-msg-body">
                 <div>
-                    <p>{{message}}</p>
+                    <p>{{model.message}}</p>
                 </div>
             </div>
+            <i>{{model.updated_at}}</i>
         </div>
     </a>
 </div>

@@ -60,7 +60,7 @@ class MessageController extends ApiController
 
         return $this->setStatusCode(200)->respond(
             $messages,
-            ['users_to' => $usersTo]
+            ['users_from' => $usersTo]
         );
     }
 
