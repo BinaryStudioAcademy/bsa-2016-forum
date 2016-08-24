@@ -62,6 +62,7 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
             'destroy' => 'topics.destroy',
         ],
     ]);
+    Route::get('categories/{category}/topics', 'TopicController@indexInCategory')->name('topicsInCategory');
     /*Routes for Votes*/
     Route::resource('votes', 'VoteController', [
         'except' => ['edit', 'create'],

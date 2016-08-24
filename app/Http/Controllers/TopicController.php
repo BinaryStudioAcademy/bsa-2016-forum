@@ -35,12 +35,14 @@ class TopicController extends ApiController
      * @param TopicRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function indexInCategory(Category $cat, TopicRequest $request)
+    public function indexInCategory($catId, TopicRequest $request)
     {
         $this->setFiltersData($request);
 
-        $topics = Topic::where('categoty_id', $cat->id)->filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
-
+        $topics = Topic::where('category_id', $catId)
+                ->filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)->get();
+        
         return $this->setStatusCode(200)->respond($topics);
     }
 
