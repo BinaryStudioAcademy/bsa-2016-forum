@@ -11,47 +11,83 @@ module.exports = Marionette.ItemView.extend({
     },
 
     events: {
-        'click @ui.bookmarkTopic': 'addBookmark'
+        'click @ui.bookmarkTopic': 'bookmarkTopic'
+    },
+
+    unlockButton: function () {
+        this.ui.bookmarkTopic.removeAttr('disabled');
+        this.ui.bookmarkTopic.addClass('text-info');
+        this.ui.bookmarkTopic.removeClass('text-muted');
+    },
+
+    lockButton: function () {
+        this.ui.bookmarkTopic.attr('disabled', 'disabled');
+        this.ui.bookmarkTopic.removeClass('text-info');
+        this.ui.bookmarkTopic.addClass('text-muted');
+    },
+
+    addOkIcon: function () {
+        this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
     },
 
     onRender: function () {
         var meta = this.model.getMeta();
 
-        if (!meta.bookmark) return;
+        if (meta.bookmark[this.model.attributes.id]) {
+            this.model.bookmarkId = meta.bookmark[this.model.attributes.id].id;
+        }
 
-        if (meta.bookmark[this.model.attributes.id] !== undefined) {
-            this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok"></i>');
-            this.ui.bookmarkTopic.addClass('bookmarked');
+        if (this.model.bookmarkId) {
+            this.addOkIcon();
         }
     },
 
-    addBookmark: function (e) {
-        e.preventDefault();
-        var element = $(e.currentTarget);
+    bookmarkTopic: function () {
         var bookmark = new Bookmark();
 
-        element.attr('disabled', 'disabled');
-        element.removeClass('text-info');
-        element.addClass('text-muted');
+        this.lockButton();
 
-        bookmark.save({
-            topic_id: this.model.id,
-            user_id: 2,
-        }, {
-            success: function () {
-                element.removeAttr('disabled');
-                element.addClass('text-info');
-                element.removeClass('text-muted');
-                element.append(' <i class="glyphicon glyphicon-ok"></i>');
-            },
-            error: function (response, xhr) {
-                var errorMsg = '';
-                $.each(xhr.responseJSON, function(index, value) {
-                    errorMsg += index + ': ' + value;
-                });
+        var that = this;
 
-                alert(errorMsg);
-            }
-        });
+        if (this.model.bookmarkId) {
+            bookmark.set({
+                id: this.model.bookmarkId
+            });
+            bookmark.destroy({
+                success: function () {
+                    that.unlockButton();
+                    that.$('i.bookmarked').remove();
+                    that.model.bookmarkId = undefined;
+                },
+                error: function (response, xhr) {
+                    var errorMsg = '';
+                    $.each(xhr.responseJSON, function(index, value) {
+                        errorMsg += index + ': ' + value;
+                    });
+
+                    alert(errorMsg);
+                }
+            });
+
+        } else {
+            bookmark.save({
+                topic_id: this.model.id,
+                user_id: 2
+            }, {
+                success: function (response) {
+                    that.model.bookmarkId = response.id;
+                    that.unlockButton();
+                    that.addOkIcon();
+                },
+                error: function (response, xhr) {
+                    var errorMsg = '';
+                    $.each(xhr.responseJSON, function(index, value) {
+                        errorMsg += index + ': ' + value;
+                    });
+
+                    alert(errorMsg);
+                }
+            });
+        }
     }
 });
