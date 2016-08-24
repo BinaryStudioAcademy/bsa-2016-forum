@@ -8,6 +8,7 @@ class TagService
 {
 
     /**
+     * Store and update collection of tags for taggable model
      * @param $taggableModel
      * @param $tags
      */
@@ -20,12 +21,14 @@ class TagService
         foreach ($tags as $tag) {
             if (!empty($tag['id'])) {
                 $tag = Tag::find($tag['id']);
-                $taggableModel->tags()->save($tag);
+                if ($tag && !$taggableModel->tags()->find($tag->id)) {
+                    $taggableModel->tags()->save($tag);
+                }
             } elseif (!empty($tag['name'])) {
                 $existedTag = Tag::where('name', $tag['name'])->get()->first();
-                if ($existedTag) {
+                if ($existedTag && !$taggableModel->tags()->get()->find($existedTag->id)) {
                     $taggableModel->tags()->save($existedTag);
-                } else {
+                } elseif (!$existedTag) {
                     $newTag = Tag::create($tag);
                     $taggableModel->tags()->save($newTag);
                 }
