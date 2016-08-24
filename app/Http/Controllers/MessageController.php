@@ -47,7 +47,7 @@ class MessageController extends ApiController
          * ->where('id', '!=', 7)
          * ->get();
          **/
-        
+
         $messages = Message::where('user_to_id', $userFrom->id)
             ->groupBy('user_from_id')
             ->get();
@@ -77,7 +77,7 @@ class MessageController extends ApiController
         $userFrom = User::findOrFail($userId);
         $message = new Message($request->all());
         $message->save();
-        event(new UpdatedMessageEvent($message));
+        event(new NewMessageEvent($message));
         return $this->setStatusCode(201)->respond($message);
     }
 
@@ -119,7 +119,7 @@ class MessageController extends ApiController
             throw (new ModelNotFoundException)->setModel(Message::class);
         }
         $message->update($request->all());
-        event(new NewMessageEvent($message));
+        event(new UpdatedMessageEvent($message));
         return $this->setStatusCode(200)->respond($message);
     }
 
@@ -136,6 +136,8 @@ class MessageController extends ApiController
         if (!$message) {
             throw (new ModelNotFoundException)->setModel(Message::class);
         }
+        $message->message = "Deleted..";
+        event(new UpdatedMessageEvent($message));
         $message->delete();
         return $this->setStatusCode(204)->respond();
     }

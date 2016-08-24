@@ -41,6 +41,19 @@ module.exports = Marionette.Object.extend({
             }
         });
 
+        messageCollection.listenTo(Radio.channel('messagesChannel'), 'saveEditedMessage', function (data) {
+            var message = data.model;
+            var text = data.view.ui.message.val();
+            data.view.ui.save.html('Saving..');
+            data.view.disableButton();
+            message.parentUrl = _.result(currentUser, 'url');
+            message.save({message: text}, {
+                success: function () {
+                    data.view.$('.modal').modal('hide');
+                }
+            });
+        });
+
         var DialogView = new MessageDialogLayout({
             currentUser: currentUser,
             collection: messageCollection
@@ -77,7 +90,8 @@ module.exports = Marionette.Object.extend({
         });
 
         DialogView.listenTo(Radio.channel('messagesChannel'),'editMessage', function (message){
-            // edit/update
+            var EditView = require('../views/messages/messageDialogEditItem');
+            DialogView.editModal.show(new EditView({model: message}));
         });
 
         app.render(DialogView);

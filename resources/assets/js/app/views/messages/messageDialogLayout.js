@@ -6,7 +6,8 @@ var messageDialogCollection = require('./messageDialogCollection');
 module.exports = Marionette.LayoutView.extend({
     template: 'messageDialogLayout',
     regions: {
-        container: '#dialog-messages'
+        container: '#dialog-messages',
+        editModal: '#edit-msg-modal'
     },
     events: {
         'submit form': function (e) {
