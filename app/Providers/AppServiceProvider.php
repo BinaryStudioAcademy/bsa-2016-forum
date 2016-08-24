@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\VoteItem;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\DB;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,8 +26,20 @@ class AppServiceProvider extends ServiceProvider
             return $value != Auth::id();
         });
 
-        Validator::extend('file_isset', function ($attribute, $value, $parameters, $validator) {
-            return file_exists($value);
+        Validator::extend('multi_unique', function ($attribute, $value, $parameters, $validator) {
+            $request = Input::all();
+            $record = DB::table('vote_results')
+                ->where($attribute, '=', $value)
+                ->where('vote_item_id', '=', $request['vote_item_id'])
+                ->where('vote_id', '=', $request['vote_id'])
+                ->get();
+            return !count($record);
+        });
+
+        Validator::extend('voteitem_exist', function ($attribute, $value, $parameters, $validator) {
+            $request = Input::all();
+            $voteitem = VoteItem::findOrFail($value);
+            return $voteitem->vote_id == $request['vote_id'];
         });
     }
 

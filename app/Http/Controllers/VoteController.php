@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 use App\Models\Vote;
 use App\Models\User;
 use App\Http\Requests\VotesRequest;
+use App\Http\Requests\VoteResultRequest;
+use App\Models\VoteResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -209,5 +211,37 @@ class VoteController extends ApiController implements HasRoleAndPermissionContra
         $this->searchStr = $request->get('query');
         $tagIds = $request->get('tag_ids');
         $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+    }
+
+    /**
+     * Display the specific vote all results
+     * @param $voteId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUserVoteResult($voteId)
+    {
+        $vote = Vote::findOrFail($voteId);
+
+        if(!$vote){
+            throw (new ModelNotFoundException)->setModel(Vote::class);
+        }
+
+        $voteResults = $vote->voteResults()->get();
+
+        if(!$voteResults){
+            throw (new ModelNotFoundException)->setModel(VoteResult::class);
+        }
+
+        return $this->setStatusCode(200)->respond($voteResults, ['vote' => $vote]);
+    }
+
+    /**
+     * Display the specific vote all results
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function createUserVoteResult(VoteResultRequest $request)
+    {
+        $voteresult = VoteResult::create($request->all());
+        return $this->setStatusCode(201)->respond($voteresult);
     }
 }
