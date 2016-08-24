@@ -85,8 +85,12 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
         if(!$user){
             return $this->setStatusCode(401)->respond();
         }
-        $userProfile = CurlService::sendUserRequest($user->global_id);
-        $userProfile['id'] = $user->id;
-        return $this->setStatusCode(200)->respond($userProfile);
+        if (strtolower(env('APP_ENV')) == 'local') {
+            return $this->setStatusCode(200)->respond($user);
+        } else {
+            $userProfile = CurlService::sendUserRequest($user->global_id);
+            $userProfile['id'] = $user->id;
+            return $this->setStatusCode(200)->respond($userProfile);
+        }
     }
 }

@@ -19,7 +19,7 @@ class AuthApi extends AuthService
      */
     public function handle($request, Closure $next)
     {
-        if (env('APP_ENV') == 'local') {
+        if (strtolower(env('APP_ENV')) == 'local') {
             $this->loginUser();
         } else {
             $userData = $this->checkCookie();
