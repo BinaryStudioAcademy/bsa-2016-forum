@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Topic;
 use App\Http\Requests\TopicRequest;
 use App\Models\User;
@@ -25,6 +26,20 @@ class TopicController extends ApiController
         $this->setFiltersData($request);
 
         $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
+
+        return $this->setStatusCode(200)->respond($topics);
+    }
+
+    /**
+     * @param Category $cat
+     * @param TopicRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function indexInCategory(Category $cat, TopicRequest $request)
+    {
+        $this->setFiltersData($request);
+
+        $topics = Topic::where('categoty_id', $cat->id)->filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
 
         return $this->setStatusCode(200)->respond($topics);
     }
@@ -70,7 +85,6 @@ class TopicController extends ApiController
         $topic = Topic::findOrfail($id);
         $topic->update($request->all());
 
-        $topic = Topic::findOrfail($id);
         if (isset($request->tags)) {
             TagService::TagsHandler($topic, $request->tags);
         }
@@ -87,9 +101,7 @@ class TopicController extends ApiController
     public function destroy($id)
     {
         $topic = Topic::findOrFail($id);
-
         $topic->delete();
-
         return $this->setStatusCode(204)->respond();
     }
 
@@ -103,7 +115,6 @@ class TopicController extends ApiController
     public function getUserTopics($userId, TopicRequest $request)
     {
         $user = User::findOrFail($userId);
-
         $this->setFiltersData($request);
 
         $topics = $user->topics()
