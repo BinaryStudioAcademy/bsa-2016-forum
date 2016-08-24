@@ -7,6 +7,7 @@ use App\Models\Topic;
 use App\Models\Vote;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\TagRequest;
+use App\Facades\TagService;
 
 class TagController extends ApiController
 {
@@ -55,8 +56,7 @@ class TagController extends ApiController
      */
     public function storeTopicTag(Topic $topic, TagRequest $request)
     {
-        $tag = Tag::create($request->all());
-        $tag = $topic->tags()->save($tag);
+        $tag = TagService::storeTag($topic, $request->name);
         return $this->setStatusCode(201)->respond($tag);
     }
 

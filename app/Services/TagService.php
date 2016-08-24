@@ -35,4 +35,22 @@ class TagService
             }
         }
     }
+
+    public function storeTag($taggableModel, string $tagName)
+    {
+        $existedTag = Tag::where('name', $tagName)->get()->first();
+        if($existedTag && !$taggableModel->tags()->find($existedTag->id)){
+            $taggableModel->tags()->save($existedTag);
+            return $existedTag;
+        }elseif ($existedTag && $taggableModel->tags()->find($existedTag->id)){
+            return $existedTag;
+        }
+
+        if(!$existedTag){
+            $newTag = Tag::create(['name'=>$tagName]);
+            $taggableModel->tags()->save($newTag);
+            return $newTag;
+
+        }
+    }
 }
