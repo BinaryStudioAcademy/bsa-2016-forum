@@ -10,6 +10,7 @@ use App\Models\Vote;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Facades\AttachmentService;
+use App\Http\Requests\AttachmentRequest;
 
 use App\Http\Requests;
 
@@ -59,7 +60,7 @@ class AttachmentController extends ApiController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeTopicAttachment(Topic $topic, Request $request)
+    public function storeTopicAttachment(Topic $topic, AttachmentRequest $request)
     {
         $this->authorize('createTopicAttachment', $topic);
 
@@ -132,7 +133,7 @@ class AttachmentController extends ApiController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeVoteAttachment(Vote $vote, Request $request)
+    public function storeVoteAttachment(Vote $vote, AttachmentRequest $request)
     {
         $this->authorize('createVoteAttachment', $vote);
 
@@ -203,7 +204,7 @@ class AttachmentController extends ApiController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeCommentAttachment(Comment $comment, Request $request)
+    public function storeCommentAttachment(Comment $comment, AttachmentRequest $request)
     {
         $this->authorize('createCommentAttachment', $comment);
 
@@ -276,7 +277,7 @@ class AttachmentController extends ApiController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeMessageAttachment(Message $message, Request $request)
+    public function storeMessageAttachment(Message $message, AttachmentRequest $request)
     {
         $attachment_data = AttachmentService::uploadAttachmentToCloud($request);
         $attachment = Attachment::create($attachment_data);
