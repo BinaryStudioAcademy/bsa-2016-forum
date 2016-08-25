@@ -1,19 +1,34 @@
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 var TopicModel = require('../../models/TopicModel');
+var topicCategoryCollection = require('../../views/topics/topicCategoryCollection');
+var topicCategoryItemForSelector = require('../../views/topics/topicCategoryItemForSelector');
 
-module.exports = Marionette.ItemView.extend({
+module.exports = Marionette.LayoutView.extend({
   template: 'topicCreateNew',
 
   ui: {
     createForm: '.topic-form'
   },
 
+  regions: {
+    categories: '#categories'
+  },
+
+  onRender: function() {
+    this.categories.show(new topicCategoryCollection({
+      childView: topicCategoryItemForSelector,
+      collection: this.collection
+    }))},
+
+  collectionEvents: {
+    'sync': 'render',
+    'add': 'render',
+    'remove': 'render'
+  },
+
   initialize: function (options) {
     this.model.set({user_id: 2});
-    var categories = options.categoryCollection;
-    this.listenTo(options.categoryCollection, 'sync', this.onSync);
-    console.log(categories);
   },
 
   modelEvents: {
