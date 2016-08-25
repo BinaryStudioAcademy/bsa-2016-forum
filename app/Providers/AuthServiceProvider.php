@@ -2,6 +2,16 @@
 
 namespace App\Providers;
 
+use App\Models\Comment;
+use App\Models\Topic;
+use App\Models\User;
+use App\Models\Vote;
+use App\Models\VoteItem;
+use App\Policies\CommentPolicy;
+use App\Policies\TopicPolicy;
+use App\Policies\UserPolicy;
+use App\Policies\VoteItemPolicy;
+use App\Policies\VotePolicy;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -13,7 +23,11 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
+        Topic::class => TopicPolicy::class,
+        Vote::class => VotePolicy::class,
+        VoteItem::class => VoteItemPolicy::class,
+        Comment::class => CommentPolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**
@@ -25,7 +39,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(GateContract $gate)
     {
         $this->registerPolicies($gate);
-
-        //
     }
 }

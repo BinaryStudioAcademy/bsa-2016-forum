@@ -6,7 +6,7 @@ module.exports = new navigCollection([
         icon: '',
         name: 'dashboard',
         label: 'Dashboard',
-        active: true
+        //active: true
     },
 
     {
