@@ -13,6 +13,8 @@ var socket = require('./socketClient');
 
 var $ = require('jquery');
 
+var currentUser = require('../initializers/currentUser');
+
 var appRouter = require('../router');
 
 var mainLayoutView = require('../views/mainLayout');
@@ -63,6 +65,7 @@ var app = Marionette.Application.extend({
     onStart: function (config) {
         this.config = config;
         this.socket = socket;
+        currentUser.fetch({url: this.config.baseUrl + '/user', async:false});
         this.templateCashing();
         this.setRootLayout(new mainLayoutView({ collection: NavigCollection }));
         appInstance.setInstance(this);
