@@ -29,8 +29,6 @@ module.exports = {
             appRoutes: {
                 'votes': 'index',
                 'votes/:id': 'showVote'
-            }
-                'ideahub': 'index'
             },
             navigItemName: 'votes'
         },
