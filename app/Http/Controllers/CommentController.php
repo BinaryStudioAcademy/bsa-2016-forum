@@ -9,7 +9,7 @@ use App\Http\Requests\CommentsRequest;
 use App\Models\Topic;
 use App\Http\Requests;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-
+use Gate;
 class CommentController extends ApiController
 {
     /**
@@ -96,6 +96,8 @@ class CommentController extends ApiController
      */
     public function updateTopicComment(Topic $topic, Comment $comment, CommentsRequest $request)
     {
+        $this->authorize('updateTopicsComment', [$comment, $topic]);
+
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comment->update($request->all());
             return $this->setStatusCode(200)->respond($comment);
@@ -112,6 +114,8 @@ class CommentController extends ApiController
      */
     public function destroyTopicComment(Topic $topic, Comment $comment)
     {
+        $this->authorize('deleteTopicsComment', [$comment, $topic]);
+
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comment->delete();
             return $this->setStatusCode(204)->respond();
@@ -184,6 +188,9 @@ class CommentController extends ApiController
         Comment $commentChild,
         CommentsRequest $request
     ) {
+
+        $this->authorize('updateTopicsComment', [$comment, $topic]);
+
         if ($this->isCommentBelongsToTopic($topic, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
@@ -203,6 +210,8 @@ class CommentController extends ApiController
      */
     public function destroyTopicCommentChild(Topic $topic, Comment $comment, Comment $commentChild)
     {
+        $this->authorize('deleteTopicsComment', [$comment, $topic]);
+
         if ($this->isCommentBelongsToTopic($topic, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
@@ -271,6 +280,8 @@ class CommentController extends ApiController
      */
     public function updateVoteComment(Vote $vote, Comment $comment, CommentsRequest $request)
     {
+        $this->authorize('updateVotesComment', [$comment, $vote]);
+
         if ($this->isCommentBelongsToVote($vote, $comment)) {
             $comment->update($request->all());
             return $this->setStatusCode(200)->respond($comment);
@@ -287,6 +298,8 @@ class CommentController extends ApiController
      */
     public function destroyVoteComment(Vote $vote, Comment $comment)
     {
+        $this->authorize('deleteVotesComment', [$comment, $vote]);
+
         if ($this->isCommentBelongsToVote($vote, $comment)) {
             $comment->delete();
             return $this->setStatusCode(204)->respond();
@@ -359,6 +372,8 @@ class CommentController extends ApiController
         Comment $commentChild,
         CommentsRequest $request
     ) {
+        $this->authorize('updateVotesComment', [$comment, $vote]);
+
         if ($this->isCommentBelongsToVote($vote, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
@@ -378,6 +393,8 @@ class CommentController extends ApiController
      */
     public function destroyVoteCommentChild(Vote $vote, Comment $comment, Comment $commentChild)
     {
+        $this->authorize('deleteVotesComment', [$comment, $vote]);
+
         if ($this->isCommentBelongsToVote($vote, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
@@ -446,6 +463,8 @@ class CommentController extends ApiController
      */
     public function updateVoteItemComment(VoteItem $voteItem, Comment $comment, CommentsRequest $request)
     {
+        $this->authorize('updateVoteItemsComment', [$comment, $voteItem]);
+
         if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
             $comment->update($request->all());
             return $this->setStatusCode(200)->respond($comment);
@@ -462,6 +481,8 @@ class CommentController extends ApiController
      */
     public function destroyVoteItemComment(VoteItem $voteItem, Comment $comment)
     {
+        $this->authorize('deleteVoteItemsComment', [$comment, $voteItem]);
+
         if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
             $comment->delete();
             return $this->setStatusCode(204)->respond();

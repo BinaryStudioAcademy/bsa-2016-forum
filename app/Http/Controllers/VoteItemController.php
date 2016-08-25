@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\Vote;
 use App\Models\VoteItem;
 use Auth;
-use DCN\RBAC\Exceptions\PermissionDeniedException;
 use Illuminate\Contracts\Validation\UnauthorizedException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -39,7 +38,6 @@ class VoteItemController extends ApiController
      * @param $voteId
      * @param VoteItemRequest|\Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
-     * @throws PermissionDeniedException
      */
     public function store($voteId, VoteItemRequest $request)
     {
@@ -47,9 +45,6 @@ class VoteItemController extends ApiController
         $voteItem = new VoteItem($request->all());
         $user = User::findOrFail($request->user_id);
 
-        if (!$user->allowed('create.voteitems', $voteItem)) {
-            throw (new PermissionDeniedException('voteitems'));
-        }
         $voteItem->user()->associate($user);
         $voteItem->vote()->associate($vote);
         $voteItem->save();
@@ -63,7 +58,6 @@ class VoteItemController extends ApiController
      * @param $voteId
      * @param  int $id
      * @return \Illuminate\Http\Response
-     * @throws PermissionDeniedException
      */
     public function show($voteId, $id)
     {
@@ -72,9 +66,7 @@ class VoteItemController extends ApiController
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
-        if (!Auth::user()->allowed('view.voteitems', $voteItem)) {
-            throw (new PermissionDeniedException('voteitems'));
-        }
+
         $user = $voteItem->user()->first();
         return $this->setStatusCode(200)->respond($voteItem, ['vote' => $vote, 'user' => $user]);
 
@@ -87,7 +79,6 @@ class VoteItemController extends ApiController
      * @param VoteItemRequest|\Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
-     * @throws PermissionDeniedException
      */
     public function update($voteId, VoteItemRequest $request, $id)
     {
@@ -97,9 +88,9 @@ class VoteItemController extends ApiController
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
-        if (!Auth::user()->allowed('update.voteitems', $voteItem)) {
-            throw (new PermissionDeniedException('voteitems'));
-        }
+
+        $this->authorize('update', $voteItem);
+
         $voteItem->update($request->all());
         return $this->setStatusCode(200)->respond($voteItem, ['vote' => $vote]);
 
@@ -111,7 +102,6 @@ class VoteItemController extends ApiController
      * @param $voteId
      * @param  int $id
      * @return \Illuminate\Http\Response
-     * @throws PermissionDeniedException
      */
     public function destroy($voteId, $id)
     {
@@ -120,9 +110,9 @@ class VoteItemController extends ApiController
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
-        if (!Auth::user()->allowed('delete.voteitems', $voteItem)) {
-            throw (new PermissionDeniedException('voteitems'));
-        }
+
+        $this->authorize('delete', $voteItem);
+
         $voteItem->delete();
         return $this->setStatusCode(204)->respond();
     }

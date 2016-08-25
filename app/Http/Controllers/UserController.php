@@ -2,20 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 
 use Auth;
-use DCN\RBAC\Exceptions\RoleDeniedException;
-use DCN\RBAC\Models\Role;
 use Illuminate\Http\Request;
 
-use DCN\RBAC\Traits\HasRoleAndPermission;
-use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
-
-class UserController extends ApiController implements HasRoleAndPermissionContract
+class UserController extends ApiController
 {
-    use HasRoleAndPermission;
-
     /**
      * Display a listing of the resource.
      *
@@ -38,6 +32,8 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
 
         $user = User::create($request->all());
 
+        $this->authorize('store', $user);
+
         return $this->setStatusCode(201)->respond($user);
     }
 
@@ -50,6 +46,8 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
     public function show($id)
     {
         $user = User::findOrFail($id);
+
+        $this->authorize('show', $user);
 
         return $this->setStatusCode(200)->respond($user);
     }
@@ -83,6 +81,7 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
 
         $user = User::findOrFail($id);
 
+        $this->authorize('delete', $user);
         $user->delete();
         if ($user->trashed()) {
             return $this->setStatusCode(204)->respond();
@@ -93,22 +92,20 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
 
     /**
      * @param $userId
-     * @param Request $requestst
      * @param $roleId
      * @return \Illuminate\Http\JsonResponse
-     * @throws RoleDeniedException
      */
-    public function updateRole($userId, Request $requestst, $roleId)
+    public function updateRole($userId, $roleId)
     {
-//        Auth::login(User::find(1));   //uncomment for test when there is no user Admin login in
 
-        if(!Auth::user()->is('admin')){
-            throw (new RoleDeniedException('Admin'));
-        }
         $user = User::findOrFail($userId);
+
+        $this->authorize('updateRole', $user);
+
         $role = Role::findOrFail($roleId);
-        $user->detachAllRoles();
-        $user->attachRole($role);
+        $user->role()->associate($role);
+        $user->save();
+
         return $this->setStatusCode(200)->respond(['user' => $user, 'role' => $role] );
     }
 
@@ -119,7 +116,10 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
     public function getUserRole($userId)
     {
         $user = User::findOrFail($userId);
-        $role = $user->grantedRoles()->get();
+
+        $this->authorize('getUserRole', $user);
+
+        $role = $user->role()->first();
 
         return $this->setStatusCode(200)->respond($role, ['user' => $user]);
 
@@ -127,10 +127,8 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
 
     public function getUser()
     {
-        $user = Auth::user();
-        if(!$user){
-            return $this->setStatusCode(401)->respond();
-        }
+        $user = Auth::authenticate();
+
         return $this->setStatusCode(200)->respond($user);
     }
 }
