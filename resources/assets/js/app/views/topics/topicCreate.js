@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 var TopicModel = require('../../models/TopicModel');
+var currentUser = require('../../initializers/currentUser');
 var topicCategoryCollectionForSelector = require('../../views/topics/topicCategoryCollectionForSelector');
 var topicCategoryItemForSelector = require('../../views/topics/topicCategoryItemForSelector');
 
@@ -11,6 +12,9 @@ module.exports = Marionette.LayoutView.extend({
         createForm: '.topic-form'
     },
 
+    initialize: function () {
+        this.model.set({user_id: currentUser.id});
+    
     regions: {
         categories: '#categories'
     },
@@ -22,10 +26,6 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onRender: function () {
-    },
-
-    initialize: function (options) {
-        this.model.set({user_id: 2});
     },
 
     modelEvents: {

@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Emarref\Jwt\Claim;
-use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use App\Facades\CurlService;
 
 
 class AuthService
@@ -21,21 +21,7 @@ class AuthService
     {
         $this->cookieName = config('authserver.cookieName');
         $this->secretKey = config('authserver.secretKey');
-        $this->urlUserInfo = config('authserver.urlUserInfo');
         $this->urlAuth = config('authserver.urlAuth');
-        $this->curl_params = [
-            CURLOPT_URL => null,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_MAXREDIRS => 5,
-            CURLOPT_USERAGENT => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0",
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => [
-                "cache-control: no-cache",
-                "Accept: text/html,application/xhtml+xml,application/xml",
-                "content-type: application/x-www-form-urlencoded",
-            ],
-        ];
     }
 
     /**
@@ -87,22 +73,8 @@ class AuthService
      */
     public function getUserInfo($globalId)
     {
-        $userInfo = null;
-
-        $this->curl_params[CURLOPT_URL] = $this->urlUserInfo . $globalId;
-        array_push($this->curl_params[CURLOPT_HTTPHEADER], 'Cookie: '.$this->cookieName.'='.$_COOKIE[$this->cookieName]);
-        $curl = curl_init();
-        curl_setopt_array($curl, $this->curl_params);
-        $result = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
-
-        if ($err) {
-            throw new ServiceUnavailableHttpException;
-        } else {
-            $userInfo = json_decode($result, true);
-        }
-        return array_shift($userInfo);
+        $userInfo = CurlService::sendUserRequest($globalId);
+        return $userInfo;
     }
 
     /**
@@ -115,14 +87,16 @@ class AuthService
     {
         if (!$user =  User::findUserByGlobalId($userData->id)) {
             $user = User::findUserByEmail($userData->email);
-            $userInfo= ($this->getUserInfo($userData->id));
+            
+            $userInfo = ($this->getUserInfo($userData->id));
+            
             if (!$user ){
                 $user = new User();
-                $user->first_name = $userInfo['name'];
-                $user->display_name = $userInfo['name'].(string)random_int(1,1000);
-                $user->last_name = $userInfo['surname'];
+                $user->first_name = $userInfo['first_name'];
+                $user->display_name = $userInfo['first_name'].(string)random_int(1,1000);
+                $user->last_name = $userInfo['last_name'];
                 $user->email = $userInfo['email'];
-                $user->global_id = $userInfo['serverUserId'];
+                $user->global_id = $userInfo['global_id'];
                 $user->status_id = 1;
                 $user->save();
             } else {
@@ -130,9 +104,9 @@ class AuthService
                 if ($user->deleted_at != null) {
                     $user->restore();
                 }
-                $user->first_name = $userInfo['name'];
-                $user->last_name = $userInfo['surname'];
-                $user->global_id = $userInfo['serverUserId'];
+                $user->first_name = $userInfo['first_name'];
+                $user->last_name = $userInfo['last_name'];
+                $user->global_id = $userInfo['global_id'];
                 $user->status_id = 1;
                 $user->save();
             }
