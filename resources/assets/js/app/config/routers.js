@@ -39,7 +39,6 @@ module.exports = {
                 'users': 'index'
             },
             navigItemName: 'users'
-            }
         },
 
         {
@@ -47,7 +46,8 @@ module.exports = {
             appRoutes: {
                 'messages': 'index',
                 'messages/user/:user': 'show'
-            }
+            },
+            navigItemName: 'messages'
         }
     ],
 
