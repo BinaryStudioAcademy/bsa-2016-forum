@@ -3,16 +3,63 @@
 namespace App\Http\Controllers;
 
 use App\Models\Topic;
+use App\Models\Bookmark;
 use App\Http\Requests\TopicRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Collection;
 use App\Facades\TagService;
+use DCN\RBAC\Exceptions\PermissionDeniedException;
+
 
 class TopicController extends ApiController
 {
     protected $searchStr = null;
 
     protected $tagIds = [];
+
+    #TODO: Delete this after the authorization implement
+    public function __construct()
+    {
+        $users = User::all();
+        Auth::login($users[1]);
+    }
+
+    /**
+     * @param $topics array
+     * @return array $data array
+     * @throws PermissionDeniedException
+     */
+    private function getMetaData($topics)
+    {
+        $bookmark = new Bookmark();
+        if (!(Auth::user()->allowed('view.bookmarks', $bookmark)))
+            throw new PermissionDeniedException('view');
+
+        $data = [];
+
+        if ($topics instanceof Collection) {
+            foreach ($topics as $topic) {
+                $bookmark = $topic->bookmarks()
+                    ->where('user_id', Auth::user()->id)->first();
+
+                if ($bookmark !== null) {
+                    $data['bookmark'][$topic->id] = $topic->bookmarks()
+                        ->where('user_id', Auth::user()->id)->first();
+                }
+            }
+
+            return $data;
+        }
+
+        $bookmark = $topics->bookmarks()->where('user_id', Auth::user()->id)->first();
+        if ($bookmark !== null) {
+            $data['bookmark'] = $topics->bookmarks()->where('user_id', Auth::user()->id)->first();
+        }
+
+        return $data;
+    }
 
      /**
      * Display a listing of the resource.
@@ -26,7 +73,9 @@ class TopicController extends ApiController
 
         $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
 
-        return $this->setStatusCode(200)->respond($topics);
+        $meta = $this->getMetaData($topics);
+
+        return $this->setStatusCode(200)->respond($topics, $meta);
     }
 
     /**
@@ -54,7 +103,8 @@ class TopicController extends ApiController
         $extendedTopic = $topic = Topic::findOrFail($id);
         $extendedTopic->tags = $topic->tags()->get();
 
-        return $this->setStatusCode(200)->respond($extendedTopic);
+        $meta = $this->getMetaData($topic);
+        return $this->setStatusCode(200)->respond($extendedTopic, $meta);
     }
 
     /**
