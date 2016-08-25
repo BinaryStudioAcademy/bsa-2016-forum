@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Topic;
 use App\Http\Requests\TopicRequest;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Facades\TagService;
 
@@ -81,10 +82,15 @@ class TopicController extends ApiController
      * @param  int $id
      * @param  TopicRequest $request
      * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
      */
     public function update($id, TopicRequest $request)
     {
-        $topic = Topic::findOrfail($id);
+
+        $topic = Topic::findOrFail($id);
+
+        $this->authorize('update', $topic);
+
         $topic->update($request->all());
 
         if (isset($request->tags)) {
@@ -99,10 +105,14 @@ class TopicController extends ApiController
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
      */
     public function destroy($id)
     {
         $topic = Topic::findOrFail($id);
+
+        $this->authorize('delete', $topic);
+
         $topic->delete();
         return $this->setStatusCode(204)->respond();
     }

@@ -56,6 +56,7 @@ class TagController extends ApiController
      */
     public function storeTopicTag(Topic $topic, TagRequest $request)
     {
+        $this->authorize('createTopicTag', $topic);
         $tag = TagService::storeTag($topic, $request->name);
         return $this->setStatusCode(201)->respond($tag);
     }
@@ -69,6 +70,9 @@ class TagController extends ApiController
     public function destroyTopicTag(Topic $topic, Tag $tag)
     {
         if ($this->isTagBelongsToTopic($topic, $tag)) {
+
+            $this->authorize('deleteTopicTag', $topic);
+
             $tag->delete();
             return $this->setStatusCode(204)->respond();
         } else {
@@ -115,6 +119,8 @@ class TagController extends ApiController
      */
     public function storeVoteTag(Vote $vote, TagRequest $request)
     {
+        $this->authorize('createVoteTag', $vote);
+        
         $tag = TagService::storeTag($vote, $request->name);
         return $this->setStatusCode(201)->respond($tag);
     }
@@ -128,6 +134,9 @@ class TagController extends ApiController
     public function destroyVoteTag(Vote $vote, Tag $tag)
     {
         if ($this->isTagBelongsToVote($vote, $tag)) {
+
+            $this->authorize('deleteVoteTag', $vote);
+
             $tag->delete();
             return $this->setStatusCode(204)->respond();
         } else {
