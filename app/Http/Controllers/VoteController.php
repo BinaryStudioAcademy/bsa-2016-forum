@@ -15,7 +15,7 @@ class VoteController extends ApiController
 {
     protected $searchStr = null;
     protected $tagIds = [];
-    
+
     /**
      * @param $votes array
      * @return array $data array
@@ -80,9 +80,13 @@ class VoteController extends ApiController
         $commentCount = $vote->comments()->count();
         $tags = $vote->tags()->get(['name']);
 
-        return $this->setStatusCode(200)->respond($vote,
-            [
-                $vote->id => ['user' => $user, 'likes' => $likeCount, 'comments' => $commentCount, 'tags' => $tags]
+        return $this->setStatusCode(200)->respond($vote, [
+                $vote->id => [
+                    'user' => $user,
+                    'likes' => $likeCount,
+                    'comments' => $commentCount,
+                    'tags' => $tags
+                ]
             ]
         );
     }
