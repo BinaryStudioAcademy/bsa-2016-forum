@@ -11,7 +11,7 @@ module.exports = Marionette.ItemView.extend({
         'sync': 'render'
     },
 
-    initialize: function(options) {
+    initialize: function (options) {
     }
 
 });
