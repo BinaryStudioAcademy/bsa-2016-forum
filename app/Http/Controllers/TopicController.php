@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Topic;
-use App\Models\Bookmark;
 use App\Http\Requests\TopicRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Collection;
 use App\Facades\TagService;
-use DCN\RBAC\Exceptions\PermissionDeniedException;
 
 
 class TopicController extends ApiController
@@ -19,24 +18,12 @@ class TopicController extends ApiController
 
     protected $tagIds = [];
 
-    #TODO: Delete this after the authorization implement
-    public function __construct()
-    {
-        $users = User::all();
-        Auth::login($users[1]);
-    }
-
     /**
      * @param $topics array
      * @return array $data array
-     * @throws PermissionDeniedException
      */
     private function getMetaData($topics)
     {
-        $bookmark = new Bookmark();
-        if (!(Auth::user()->allowed('view.bookmarks', $bookmark)))
-            throw new PermissionDeniedException('view');
-
         $data = [];
 
         if ($topics instanceof Collection) {
@@ -113,10 +100,15 @@ class TopicController extends ApiController
      * @param  int $id
      * @param  TopicRequest $request
      * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
      */
     public function update($id, TopicRequest $request)
     {
-        $topic = Topic::findOrfail($id);
+
+        $topic = Topic::findOrFail($id);
+
+        $this->authorize('update', $topic);
+
         $topic->update($request->all());
 
         $extendedTopic = $topic = Topic::findOrfail($id);
@@ -130,10 +122,13 @@ class TopicController extends ApiController
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
      */
     public function destroy($id)
     {
         $topic = Topic::findOrFail($id);
+
+        $this->authorize('delete', $topic);
 
         $topic->delete();
 

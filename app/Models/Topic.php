@@ -61,9 +61,12 @@ class Topic extends Model
         return $this->morphToMany(Tag::class, 'taggable');
     }
 
+    /**
+     * Get all of the topic's comments.
+     */
     public function comments()
     {
-        return $this->morphToMany(Comment::class, 'commentable');
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     public function notifications()
