@@ -14,7 +14,7 @@ module.exports = new function () {
         if (parts.length == 2) return parts.pop().split(";").shift();
     };
 
-    this.socket = io.connect(config.sokcetUrl);
+    this.socket = io.connect(config.socketUrl);
 
     this.socket.on('logged', function (msg) {
         logger("Socket: login status: " + msg.status)
