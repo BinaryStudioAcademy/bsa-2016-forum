@@ -33,11 +33,6 @@ class Vote extends Model
         return $this->hasMany(VoteItem::class);
     }
 
-    public function votePermissions()
-    {
-        return $this->hasMany(VotePermission::class);
-    }
-
     public function voteResults()
     {
         return $this->hasMany(VoteResult::class);
@@ -69,6 +64,11 @@ class Vote extends Model
     public function notifications()
     {
         return $this->morphToMany(Notification::class, 'notificationable');
+    }
+
+    public function usersDenied()
+    {
+        return $this->belongsToMany(User::class,'user_vote_denied', 'vote_id', 'user_id')->withTimestamps();
     }
 
     /**

@@ -57,7 +57,7 @@ class User extends Authenticatable
 
     public function bookmarks()
     {
-        return $this->belongsToMany(Topic::class, 'bookmarks', 'user_id', 'topic_id');
+        return $this->belongsToMany(Topic::class, 'bookmarks', 'user_id', 'topic_id')->withTimestamps();
     }
 
     public function votes()
@@ -68,11 +68,6 @@ class User extends Authenticatable
     public function voteItems()
     {
         return $this->hasMany(VoteItem::class);
-    }
-
-    public function votePermissions()
-    {
-        return $this->hasMany(VotePermission::class);
     }
 
     public function voteResults()
@@ -93,6 +88,11 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function votesDenied()
+    {
+        return $this->belongsToMany(Vote::class,'user_vote_denied', 'user_id', 'vote_id');
     }
 
     /**
