@@ -65,9 +65,9 @@ class Comment extends Model
     }
 
     /**
-     * Get all of the attachments that are assigned this comment.
+     * Get all of the likes that are assigned this comment.
      */
-    public function likes()
+    public function likes_this_method_should_be_deleted()
     {
         return $this->morphedByMany(Like::class, 'commentable');
     }
@@ -79,7 +79,6 @@ class Comment extends Model
     {
         return $this->morphedByMany(Notification::class, 'commentable');
     }
-    /////////////
 
     public function tags_rel()
     {
@@ -91,9 +90,12 @@ class Comment extends Model
         return $this->morphToMany(Attachment::class, 'attachmenttable');
     }
 
-    public function likes_rel()
+    /**
+     * Get all of the comment's likes.
+     */
+    public function likes()
     {
-        return $this->morphToMany(Like::class, 'likeable');
+        return $this->morphMany(Like::class, 'likeable');
     }
 
     public function comments_rel()

@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionsVoteTableSeeder::class);
         $this->call(VoteItemSeeder::class);
         $this->call(PermissionsVoteItemTableSeeder::class);
+        $this->call(LikeTableSeeder::class);
 
         Model::reguard();
     }
