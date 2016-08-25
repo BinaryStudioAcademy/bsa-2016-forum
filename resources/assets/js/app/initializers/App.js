@@ -11,6 +11,8 @@ Marionette.Application.prototype._initChannel = function () {
 
 var $ = require('jquery');
 
+var currentUser = require('../initializers/currentUser');
+
 var appRouter = require('../router');
 
 var mainLayoutView = require('../views/mainLayout');
@@ -60,6 +62,7 @@ var app = Marionette.Application.extend({
     },
     onStart: function (config) {
         this.config = config;
+        currentUser.fetch({url: this.config.baseUrl + '/user', async:false});
         this.templateCashing();
         this.setRootLayout(new mainLayoutView({ collection: NavigCollection }));
         appInstance.setInstance(this);

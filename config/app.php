@@ -157,6 +157,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\AttachmentServiceProvider::class,
         App\Providers\TagServiceProvider::class,
+        App\Providers\CurlServiceProvider::class,
 
         /**
          * External providers
