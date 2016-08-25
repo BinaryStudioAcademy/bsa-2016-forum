@@ -53,21 +53,23 @@ class CurlService
         $url = config('authserver.urlUserInfo').$id;
         $cookie = 'Cookie: '.$cookieName.'='.$_COOKIE[$cookieName];
 
-        $userProfile = null;
-
         $response = $this->sendRequest('GET', $url, $cookie);
         
         if (!$response){
             throw new NotFoundHttpException;
         }
+
         $response = array_shift($response);
-        $userProfile['first_name'] = $response['name'];
-        $userProfile['last_name'] = $response['surname'];
-        $userProfile['email'] = $response['email'];
-        $userProfile['city']= $response['city'];
-        $userProfile['country']= $response['country'];
-        $userProfile['birthday']= $response['birthday'];
-        $userProfile['global_id']= $response['serverUserId'];
+
+        $userProfile = [
+            'first_name' => $response['name'],
+            'last_name' => $response['surname'],
+            'email' => $response['email'],
+            'city' => $response['city'],
+            'country' => $response['country'],
+            'birthday' => $response['birthday'],
+            'global_id' => $response['serverUserId']
+        ];
         return $userProfile;
     }
 }
