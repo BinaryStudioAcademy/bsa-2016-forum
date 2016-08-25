@@ -31,26 +31,7 @@ class MessageController extends ApiController
             return $this->setStatusCode(200)->respond($messages, ['with_user' => $userTo]);
         }
 
-
-        /**
-         * $messages = Message::where('user_from_id', $userId)->orWhere('user_to_id', $userId)->get();
-         * $usersToIds = $messages->pluck('user_to_id');
-         * $usersFromIds = $messages->pluck('user_from_id');
-         *
-         * $usersTo = User::where(function ($users) use($usersToIds, $usersFromIds) {
-         * $users->where(function ($user) use ($usersToIds) {
-         * $user->whereIn('id', $usersToIds);
-         * })->orWhere(function ($user) use ($usersFromIds) {
-         * $user->whereIn('id', $usersFromIds);
-         * });
-         * })
-         * ->where('id', '!=', 7)
-         * ->get();
-         **/
-
-        $messages = Message::where('user_to_id', $userFrom->id)
-            ->groupBy('user_from_id')
-            ->get();
+        $messages = Message::getLastIncoming($userFrom->id);
 
         if (!$messages) {
             return $this->setStatusCode(200)->respond();
