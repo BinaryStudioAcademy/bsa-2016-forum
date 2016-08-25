@@ -24,16 +24,6 @@ class Like extends Model
     {
         return $this->morphTo();
     }
-
-    public function topics()
-    {
-        return $this->morphedByMany(Topic::class, 'likeable');
-    }
-
-    public function votes()
-    {
-        return $this->morphedByMany(Vote::class, 'likeable');
-    }
     
     public function comments_this_method_should_be_deleted()
     {

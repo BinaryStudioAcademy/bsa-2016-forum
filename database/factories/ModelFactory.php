@@ -81,8 +81,21 @@ $factory->define(App\Models\Tag::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Models\Like::class, function () {
+$factory->define(App\Models\Like::class, function (Faker\Generator $faker) {
+    $likeable_type=['App\Models\Topic','App\Models\Vote'];
+
+    $likeable_type_id=array_rand ($likeable_type,1);
+
+    if($likeable_type[$likeable_type_id]=='App\Models\Topic')
+    {
+        $likeable_id=App\Models\Topic::all()->random(1)->id;
+    }
+    else
+        $likeable_id=App\Models\Vote::all()->random(1)->id;
+
     return [
         'user_id' => App\Models\User::all()->random(1)->id,
+        'likeable_id'=>$likeable_id,
+        'likeable_type' => $likeable_type[$likeable_type_id]
     ];
 });
