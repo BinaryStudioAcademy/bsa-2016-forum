@@ -1,7 +1,7 @@
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 var TopicModel = require('../../models/TopicModel');
-var topicCategoryCollection = require('../../views/topics/topicCategoryCollection');
+var topicCategoryCollectionForSelector = require('../../views/topics/topicCategoryCollectionForSelector');
 var topicCategoryItemForSelector = require('../../views/topics/topicCategoryItemForSelector');
 
 module.exports = Marionette.LayoutView.extend({
@@ -16,9 +16,7 @@ module.exports = Marionette.LayoutView.extend({
   },
 
   onRender: function() {
-    this.categories.show(new topicCategoryCollection({
-      childView: topicCategoryItemForSelector,
-      tagName: 'select',
+    this.categories.show(new topicCategoryCollectionForSelector({
       collection: this.collection
     }))},
 
