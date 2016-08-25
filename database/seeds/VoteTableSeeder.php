@@ -20,10 +20,6 @@ class VoteTableSeeder extends Seeder
             
                 $tag = factory(App\Models\Tag::class)->make();
                 $comment = $vote->tags()->save($tag);
-
-                $like = factory(App\Models\Like::class)->make();
-                $vote = $vote->likes()->save($like);
-
         });
 
     }
