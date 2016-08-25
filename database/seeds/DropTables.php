@@ -11,8 +11,6 @@ class DropTables extends Seeder
      */
     public function run()
     {
-        \DB::table('permission_user')->delete();
-        \DB::table('permissions')->delete();
         \DB::table('likes')->delete();
         \DB::table('comments')->delete();
         \DB::table('vote_items')->delete();
