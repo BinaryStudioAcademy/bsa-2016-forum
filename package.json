@@ -5,6 +5,7 @@
     "backbone.marionette": "^2.4.7",
     "backbone.radio": "^1.0.5",
     "bootstrap-sass": "^3.3.7",
+    "dropzone": "^4.3.0",
     "font-awesome": "^4.6.3",
     "grunt": "^1.0.1",
     "grunt-browserify": "^5.0.0",

@@ -15,6 +15,31 @@ class TopicController extends ApiController
 
     protected $tagIds = [];
 
+    private function getCollectionMetaData($topics)
+    {
+        $data = [];
+
+        if ($topics) {
+            foreach ($topics as $topic) {
+                $data['user'][$topic->id] = $topic->user()->first();
+                $data['likes'][$topic->id] = $topic->likes()->count();
+                $data['comments'][$topic->id] = $topic->comments()->count();
+            }
+        }
+
+        return $data;
+    }
+
+    private function getItemMetaData($topic)
+    {
+        $data = [];
+        $data['user'] = $topic->user()->first();
+        $data['likes'] = $topic->likes()->count();
+        $data['comments'] = $topic->comments()->count();
+
+        return $data;
+    }
+
      /**
      * Display a listing of the resource.
      *
@@ -54,8 +79,8 @@ class TopicController extends ApiController
     {
         $extendedTopic = $topic = Topic::findOrFail($id);
         $extendedTopic->tags = $topic->tags()->get();
-
-        return $this->setStatusCode(200)->respond($extendedTopic);
+        $meta = $this->getItemMetaData($extendedTopic);
+        return $this->setStatusCode(200)->respond($extendedTopic, $meta);
     }
 
     /**
