@@ -41,9 +41,9 @@ class TopicController extends ApiController
         $this->setFiltersData($request);
 
         $topics = Topic::where('category_id', $catId)
-                ->filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)->get();
-        
+            ->filterByQuery($this->searchStr)
+            ->filterByTags($this->tagIds)->get();
+
         return $this->setStatusCode(200)->respond($topics);
     }
 
@@ -56,7 +56,7 @@ class TopicController extends ApiController
     public function store(TopicRequest $request)
     {
         $topic = Topic::create($request->all());
-        if (isset($request->tags) && $request->tags) {
+        if ($request->tags) {
             TagService::TagsHandler($topic, $request->tags);
         }
         $topic->tags = $topic->tags()->get();
@@ -93,7 +93,7 @@ class TopicController extends ApiController
 
         $topic->update($request->all());
 
-        if (isset($request->tags)) {
+        if ($request->tags) {
             TagService::TagsHandler($topic, $request->tags);
         }
         $topic->tags = $topic->tags()->get();

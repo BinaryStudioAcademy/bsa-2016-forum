@@ -73,7 +73,7 @@ class VoteController extends ApiController
         }
 
         $vote = Vote::create($request->all());
-        if (isset($request->tags) && $request->tags) {
+        if ($request->tags) {
             TagService::TagsHandler($vote, $request->tags);
         }
         $vote->tags = $vote->tags()->get();
@@ -123,7 +123,7 @@ class VoteController extends ApiController
 
         $vote->update($request->all());
         $vote = Vote::findOrfail($id);
-        if (isset($request->tags)) {
+        if ($request->tags) {
             TagService::TagsHandler($vote, $request->tags);
         }
         $vote->tags = $vote->tags()->get();
