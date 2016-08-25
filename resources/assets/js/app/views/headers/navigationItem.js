@@ -8,12 +8,6 @@ module.exports = Marionette.ItemView.extend({
         'change:active': 'setActive'
     },
 
-    events: {
-        'click': function (event) {
-            this.model.collection.setActive(this.model.get('name'));
-        }
-    },
-
     initialize: function (options) {
         this.setActive();
     },

@@ -58,9 +58,12 @@ class Vote extends Model
         return $this->morphToMany(Like::class, 'likeable');
     }
 
+    /**
+     * Get all of the vote's comments.
+     */
     public function comments()
     {
-        return $this->morphToMany(Comment::class, 'commentable');
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     public function notifications()

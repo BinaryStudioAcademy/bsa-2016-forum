@@ -11,7 +11,8 @@ module.exports = {
             appRoutes: {
                 '': 'index',
                 'dashboard': 'index'
-            }
+            },
+            navigItemName: 'dashboard'
         },
         {
             controller: new TopicController(),
@@ -19,7 +20,8 @@ module.exports = {
                 'topics': 'index',
                 'topics/:id' : 'show',
                 'topic/create': 'create'
-            }
+            },
+            navigItemName: 'topics'
         },
 
         {
@@ -28,13 +30,17 @@ module.exports = {
                 'votes': 'index',
                 'votes/:id': 'showVote'
             }
+                'ideahub': 'index'
+            },
+            navigItemName: 'votes'
         },
 
         {
             controller: new UserController(),
             appRoutes: {
                 'users': 'index'
-            }
+            },
+            navigItemName: 'users'
         }
     ],
 
