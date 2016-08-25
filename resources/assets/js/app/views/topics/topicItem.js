@@ -1,6 +1,6 @@
 var Marionette = require('backbone.marionette');
 var Bookmark = require('../../models/BookmarkModel');
-var currentUser = require('../initializers/currentUser');
+var currentUser = require('../../initializers/currentUser');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicItem',
