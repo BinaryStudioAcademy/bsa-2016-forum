@@ -5,54 +5,54 @@ var topicCategoryCollectionForSelector = require('../../views/topics/topicCatego
 var topicCategoryItemForSelector = require('../../views/topics/topicCategoryItemForSelector');
 
 module.exports = Marionette.LayoutView.extend({
-  template: 'topicCreateNew',
+    template: 'topicCreateNew',
 
-  ui: {
-    createForm: '.topic-form'
-  },
-
-  regions: {
-    categories: '#categories'
-  },
-
-  onBeforeShow: function() {
-    this.categories.show(new topicCategoryItemForSelector({
-      collection: this.collection
-    }))
-  },
-
-  onRender: function() {
-  },
-
-  initialize: function (options) {
-    this.model.set({user_id: 2});
-  },
-
-  modelEvents: {
-    'invalid': function (model, errors, options) {
-      this.$('.errors').empty();
-      for (var error in errors) {
-        this.$('[name="' + error + '"]').siblings('.errors').html(errors[error]);
-      }
-    }
-  },
-
-  events: {
-    'change @ui.createForm': function (e) {
-      var updateModel = {};
-      var value = e.target.value;
-      var attr = e.target.name;
-      updateModel[attr] = value;
-      this.model.set(updateModel);
+    ui: {
+        createForm: '.topic-form'
     },
-    'submit @ui.createForm': function (e) {
-      e.preventDefault();
-      this.model.save({}, {
-        success: function (model, response) {
-          Backbone.history.navigate('topics/' + model.get('id'), {trigger: true});
+
+    regions: {
+        categories: '#categories'
+    },
+
+    onBeforeShow: function () {
+        this.categories.show(new topicCategoryItemForSelector({
+            collection: this.collection
+        }))
+    },
+
+    onRender: function () {
+    },
+
+    initialize: function (options) {
+        this.model.set({user_id: 2});
+    },
+
+    modelEvents: {
+        'invalid': function (model, errors, options) {
+            this.$('.errors').empty();
+            for (var error in errors) {
+                this.$('[name="' + error + '"]').siblings('.errors').html(errors[error]);
+            }
         }
-      });
+    },
+
+    events: {
+        'change @ui.createForm': function (e) {
+            var updateModel = {};
+            var value = e.target.value;
+            var attr = e.target.name;
+            updateModel[attr] = value;
+            this.model.set(updateModel);
+        },
+        'submit @ui.createForm': function (e) {
+            e.preventDefault();
+            this.model.save({}, {
+                success: function (model, response) {
+                    Backbone.history.navigate('topics/' + model.get('id'), {trigger: true});
+                }
+            });
+        }
     }
-  }
 
 });
