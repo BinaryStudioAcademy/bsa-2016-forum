@@ -25,11 +25,6 @@ class Like extends Model
         return $this->morphTo();
     }
     
-    public function comments_this_method_should_be_deleted()
-    {
-        return $this->morphedByMany(Comment::class, 'likeable');
-    }
-    
     public function user()
     {
         return $this->belongsTo(User::class);

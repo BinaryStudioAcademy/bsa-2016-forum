@@ -65,14 +65,6 @@ class Comment extends Model
     }
 
     /**
-     * Get all of the likes that are assigned this comment.
-     */
-    public function likes_this_method_should_be_deleted()
-    {
-        return $this->morphedByMany(Like::class, 'commentable');
-    }
-
-    /**
      * Get all of the notifications that are assigned this comment.
      */
     public function notifications()
