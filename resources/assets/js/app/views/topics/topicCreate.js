@@ -10,7 +10,7 @@ module.exports = Marionette.ItemView.extend({
     },
 
     initialize: function () {
-        this.model.set({user_id: 2})
+        this.model.set({user_id: 2});
     },
 
     modelEvents: {
