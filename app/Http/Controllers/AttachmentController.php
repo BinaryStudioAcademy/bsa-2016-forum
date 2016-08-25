@@ -7,6 +7,7 @@ use App\Models\Comment;
 use App\Models\Message;
 use App\Models\Topic;
 use App\Models\Vote;
+use App\Models\VoteItem;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Facades\AttachmentService;
@@ -17,19 +18,17 @@ use App\Http\Requests;
 class AttachmentController extends ApiController
 {
 
-    /**********  TOPIC SECTION START **********/
-
     /**
-     * @param Topic $topic
+     * @param $model
      * @param Attachment $attachment
      * @return bool
      */
-    protected function isAttachmentBelongsToTopic(Topic $topic, Attachment $attachment)
+    protected function isAttachmentBelongsToModel($model, Attachment $attachment)
     {
-        $topicWhichHasThisAttachment = $attachment->topics()->get()->first();
-
-        return ($topicWhichHasThisAttachment && $topicWhichHasThisAttachment->id === $topic->id);
+        return !!$model->attachments()->find($attachment->id);
     }
+
+    /**********  TOPIC SECTION START **********/
 
     /**
      * @param Topic $topic
@@ -48,16 +47,17 @@ class AttachmentController extends ApiController
      */
     public function getTopicAttachment(Topic $topic, Attachment $attachment)
     {
-        if ($this->isAttachmentBelongsToTopic($topic, $attachment)) {
+        if ($this->isAttachmentBelongsToModel($topic, $attachment)) {
             return $this->setStatusCode(200)->respond($attachment);
         } else {
             throw (new ModelNotFoundException)->setModel(Attachment::class);
         }
     }
 
+
     /**
      * @param Topic $topic
-     * @param Request $request
+     * @param AttachmentRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function storeTopicAttachment(Topic $topic, AttachmentRequest $request)
@@ -78,31 +78,21 @@ class AttachmentController extends ApiController
      */
     public function destroyTopicAttachment(Topic $topic, Attachment $attachment)
     {
-        if ($this->isAttachmentBelongsToTopic($topic, $attachment)) {
+        if ($this->isAttachmentBelongsToModel($topic, $attachment)) {
 
             $this->authorize('deleteTopicAttachment', $topic);
 
-            AttachmentService::deleteAttachmentFromCloud($attachment->cloud_public_id);
-            $attachment->delete();
-            return $this->setStatusCode(204)->respond();
-        } else {
-            throw (new ModelNotFoundException)->setModel(Attachment::class);
+            if ($this->isAttachmentBelongsToModel($topic, $attachment)) {
+                AttachmentService::deleteAttachmentFromCloud($attachment->cloud_public_id);
+                $attachment->delete();
+                return $this->setStatusCode(204)->respond();
+            } else {
+                throw (new ModelNotFoundException)->setModel(Attachment::class);
+            }
         }
     }
 
     /**********  VOTE SECTION START **********/
-
-    /**
-     * @param Vote $vote
-     * @param Attachment $attachment
-     * @return bool
-     */
-    protected function isAttachmentBelongsToVote(Vote $vote, Attachment $attachment)
-    {
-        $voteWhichHasThisAttachment = $attachment->votes()->get()->first();
-
-        return ($voteWhichHasThisAttachment && $voteWhichHasThisAttachment->id === $vote->id);
-    }
 
     /**
      * @param Vote $vote
@@ -121,7 +111,7 @@ class AttachmentController extends ApiController
      */
     public function getVoteAttachment(Vote $vote, Attachment $attachment)
     {
-        if ($this->isAttachmentBelongsToVote($vote, $attachment)) {
+        if ($this->isAttachmentBelongsToModel($vote, $attachment)) {
             return $this->setStatusCode(200)->respond($attachment);
         } else {
             throw (new ModelNotFoundException)->setModel(Attachment::class);
@@ -130,7 +120,7 @@ class AttachmentController extends ApiController
 
     /**
      * @param Vote $vote
-     * @param Request $request
+     * @param AttachmentRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function storeVoteAttachment(Vote $vote, AttachmentRequest $request)
@@ -151,29 +141,21 @@ class AttachmentController extends ApiController
      */
     public function destroyVoteAttachment(Vote $vote, Attachment $attachment)
     {
-        if ($this->isAttachmentBelongsToVote($vote, $attachment)) {
+        if ($this->isAttachmentBelongsToModel($vote, $attachment)) {
 
             $this->authorize('deleteVoteAttachment', $vote);
 
-            AttachmentService::deleteAttachmentFromCloud($attachment->cloud_public_id);
-            $attachment->delete();
-            return $this->setStatusCode(204)->respond();
-        } else {
-            throw (new ModelNotFoundException)->setModel(Attachment::class);
+            if ($this->isAttachmentBelongsToModel($vote, $attachment)) {
+                AttachmentService::deleteAttachmentFromCloud($attachment->cloud_public_id);
+                $attachment->delete();
+                return $this->setStatusCode(204)->respond();
+            } else {
+                throw (new ModelNotFoundException)->setModel(Attachment::class);
+            }
         }
     }
 
     /**********  COMMENT SECTION START **********/
-
-    /**
-     * @param Comment $comment
-     * @param Attachment $attachment
-     * @return bool
-     */
-    protected function isAttachmentBelongsToComment(Comment $comment, Attachment $attachment)
-    {
-        return !!$comment->attachments()->find($attachment->id);
-    }
 
     /**
      * @param Comment $comment
@@ -192,16 +174,17 @@ class AttachmentController extends ApiController
      */
     public function getCommentAttachment(Comment $comment, Attachment $attachment)
     {
-        if ($this->isAttachmentBelongsToComment($comment, $attachment)) {
+        if ($this->isAttachmentBelongsToModel($comment, $attachment)) {
             return $this->setStatusCode(200)->respond($attachment);
         } else {
             throw (new ModelNotFoundException)->setModel(Attachment::class);
         }
     }
 
+
     /**
      * @param Comment $comment
-     * @param Request $request
+     * @param AttachmentRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function storeCommentAttachment(Comment $comment, AttachmentRequest $request)
@@ -222,31 +205,21 @@ class AttachmentController extends ApiController
      */
     public function destroyCommentAttachment(Comment $comment, Attachment $attachment)
     {
-        if ($this->isAttachmentBelongsToComment($comment, $attachment)) {
+        if ($this->isAttachmentBelongsToModel($comment, $attachment)) {
 
             $this->authorize('deleteCommentAttachment', $comment);
 
-            AttachmentService::deleteAttachmentFromCloud($attachment->cloud_public_id);
-            $attachment->delete();
-            return $this->setStatusCode(204)->respond();
-        } else {
-            throw (new ModelNotFoundException)->setModel(Attachment::class);
+            if ($this->isAttachmentBelongsToModel($comment, $attachment)) {
+                AttachmentService::deleteAttachmentFromCloud($attachment->cloud_public_id);
+                $attachment->delete();
+                return $this->setStatusCode(204)->respond();
+            } else {
+                throw (new ModelNotFoundException)->setModel(Attachment::class);
+            }
         }
     }
 
     /**********  MESSAGE SECTION START **********/
-
-    /**
-     * @param Message $message
-     * @param Attachment $attachment
-     * @return bool
-     */
-    protected function isAttachmentBelongsToMessage(Message $message, Attachment $attachment)
-    {
-        $messageWhichHasThisAttachment = $attachment->messages()->get()->first();
-
-        return ($messageWhichHasThisAttachment && $messageWhichHasThisAttachment->id === $message->id);
-    }
 
     /**
      * @param Message $message
@@ -265,16 +238,17 @@ class AttachmentController extends ApiController
      */
     public function getMessageAttachment(Message $message, Attachment $attachment)
     {
-        if ($this->isAttachmentBelongsToMessage($message, $attachment)) {
+        if ($this->isAttachmentBelongsToModel($message, $attachment)) {
             return $this->setStatusCode(200)->respond($attachment);
         } else {
             throw (new ModelNotFoundException)->setModel(Attachment::class);
         }
     }
 
+
     /**
      * @param Message $message
-     * @param Request $request
+     * @param AttachmentRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function storeMessageAttachment(Message $message, AttachmentRequest $request)
@@ -293,7 +267,63 @@ class AttachmentController extends ApiController
      */
     public function destroyMessageAttachment(Message $message, Attachment $attachment)
     {
-        if ($this->isAttachmentBelongsToMessage($message, $attachment)) {
+        if ($this->isAttachmentBelongsToModel($message, $attachment)) {
+            AttachmentService::deleteAttachmentFromCloud($attachment->cloud_public_id);
+            $attachment->delete();
+            return $this->setStatusCode(204)->respond();
+        } else {
+            throw (new ModelNotFoundException)->setModel(Attachment::class);
+        }
+    }
+
+    /**********  VoteItem SECTION START **********/
+
+    /**
+     * @param VoteItem $voteItem
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAllVoteItemAttachments(VoteItem $voteItem)
+    {
+        $attachments = $voteItem->attachments()->get();
+        return $this->setStatusCode(200)->respond($attachments);
+    }
+
+    /**
+     * @param VoteItem $voteItem
+     * @param Attachment $attachment
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getVoteItemAttachment(VoteItem $voteItem, Attachment $attachment)
+    {
+        if ($this->isAttachmentBelongsToModel($voteItem, $attachment)) {
+            return $this->setStatusCode(200)->respond($attachment);
+        } else {
+            throw (new ModelNotFoundException)->setModel(Attachment::class);
+        }
+    }
+
+    /**
+     * @param VoteItem $voteItem
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeVoteItemAttachment(VoteItem $voteItem, Request $request)
+    {
+        $attachment_data = AttachmentService::uploadAttachmentToCloud($request);
+        $attachment = Attachment::create($attachment_data);
+        $attachment = $voteItem->attachments()->save($attachment);
+        return $this->setStatusCode(201)->respond($attachment);
+    }
+
+    /**
+     * @param VoteItem $voteItem
+     * @param Attachment $attachment
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function destroyVoteItemAttachment(VoteItem $voteItem, Attachment $attachment)
+    {
+        if ($this->isAttachmentBelongsToModel($voteItem, $attachment)) {
             AttachmentService::deleteAttachmentFromCloud($attachment->cloud_public_id);
             $attachment->delete();
             return $this->setStatusCode(204)->respond();
@@ -302,3 +332,4 @@ class AttachmentController extends ApiController
         }
     }
 }
+
