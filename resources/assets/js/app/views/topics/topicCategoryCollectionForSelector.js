@@ -4,5 +4,14 @@ var topicCategoryItemForSelector = require('./topicCategoryItemForSelector');
 
 module.exports = Marionette.CollectionView.extend({
   childView: topicCategoryItemForSelector,
-  tagName: 'select'
+  tagName: 'select',
+
+  onRender: function () {
+    console.log(this.collection);
+  },
+
+  collectionEvents: {
+    'change': 'render'
+  }
+
 });

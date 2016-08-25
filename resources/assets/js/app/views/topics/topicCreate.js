@@ -15,15 +15,13 @@ module.exports = Marionette.LayoutView.extend({
     categories: '#categories'
   },
 
-  onRender: function() {
-    this.categories.show(new topicCategoryCollectionForSelector({
+  onBeforeShow: function() {
+    this.categories.show(new topicCategoryItemForSelector({
       collection: this.collection
-    }))},
+    }))
+  },
 
-  collectionEvents: {
-    'sync': 'render',
-    'add': 'render',
-    'remove': 'render'
+  onRender: function() {
   },
 
   initialize: function (options) {

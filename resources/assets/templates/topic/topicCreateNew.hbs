@@ -1,16 +1,12 @@
 <form class="topic-form">
     <div class="topic-new-head">
         <h4>Create New Thread</h4>
-
-        <select id="categories" name="category_id">
-           <option disable>Choose topic category</option>
-        </select>
-
+        <div id="categories">
+        </div>
     </div>
 
     <div class="topic-new-title">
         <input type="text" placeholder="Enter Topic Title" name="name">
-        <div class="errors"></div>
     </div>
     <div class="topic-new-body">
         <textarea rows="10" name="description"></textarea>
@@ -21,10 +17,7 @@
     </div>
     <div class="topic-new-control">
         <div class="topic-new-notification checkbox">
-            <label>
-                <input type="checkbox" name="report_me">Report me when someone post a reply
-            </label>
-
+            <label><input type="checkbox" name="report_me">Report me when someone post a reply</label>
         </div>
         <div class="topic-new-submit">
             <input type="submit" value="Start Thread">
