@@ -18,6 +18,7 @@ module.exports = Marionette.LayoutView.extend({
   onRender: function() {
     this.categories.show(new topicCategoryCollection({
       childView: topicCategoryItemForSelector,
+      tagName: 'select',
       collection: this.collection
     }))},
 

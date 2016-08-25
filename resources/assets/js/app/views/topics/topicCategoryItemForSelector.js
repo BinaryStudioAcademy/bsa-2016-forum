@@ -1,6 +1,5 @@
 var Marionette = require('backbone.marionette');
 
 module.exports = Marionette.ItemView.extend({
-    template: 'topicCategoryItemForSelector',
-    tagName: 'option'
+    template: 'topicCategoryItemForSelector'
 });
