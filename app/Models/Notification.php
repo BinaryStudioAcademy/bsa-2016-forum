@@ -72,20 +72,4 @@ class Notification extends Model
         return $this->morphedByMany(Notification::class, 'notificationable');
     }
 
-    ////////////////////
-
-    public function likes_rel()
-    {
-        return $this->morphToMany(Like::class, 'likeable');
-    }
-
-    public function comments_rel()
-    {
-        return $this->morphToMany(Comment::class, 'commentable');
-    }
-
-    public function notifications_rel()
-    {
-        return $this->morphToMany(Notification::class, 'notificationable');
-    }
 }

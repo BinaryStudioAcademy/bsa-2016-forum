@@ -10,6 +10,7 @@ use App\Models\Vote;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Facades\AttachmentService;
+use App\Http\Requests\AttachmentRequest;
 
 use App\Http\Requests;
 
@@ -59,8 +60,10 @@ class AttachmentController extends ApiController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeTopicAttachment(Topic $topic, Request $request)
+    public function storeTopicAttachment(Topic $topic, AttachmentRequest $request)
     {
+        $this->authorize('createTopicAttachment', $topic);
+
         $attachment_data = AttachmentService::uploadAttachmentToCloud($request);
         $attachment = Attachment::create($attachment_data);
         $attachment = $topic->attachments()->save($attachment);
@@ -76,6 +79,9 @@ class AttachmentController extends ApiController
     public function destroyTopicAttachment(Topic $topic, Attachment $attachment)
     {
         if ($this->isAttachmentBelongsToTopic($topic, $attachment)) {
+
+            $this->authorize('deleteTopicAttachment', $topic);
+
             AttachmentService::deleteAttachmentFromCloud($attachment->cloud_public_id);
             $attachment->delete();
             return $this->setStatusCode(204)->respond();
@@ -127,8 +133,10 @@ class AttachmentController extends ApiController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeVoteAttachment(Vote $vote, Request $request)
+    public function storeVoteAttachment(Vote $vote, AttachmentRequest $request)
     {
+        $this->authorize('createVoteAttachment', $vote);
+
         $attachment_data = AttachmentService::uploadAttachmentToCloud($request);
         $attachment = Attachment::create($attachment_data);
         $attachment = $vote->attachments()->save($attachment);
@@ -144,6 +152,9 @@ class AttachmentController extends ApiController
     public function destroyVoteAttachment(Vote $vote, Attachment $attachment)
     {
         if ($this->isAttachmentBelongsToVote($vote, $attachment)) {
+
+            $this->authorize('deleteVoteAttachment', $vote);
+
             AttachmentService::deleteAttachmentFromCloud($attachment->cloud_public_id);
             $attachment->delete();
             return $this->setStatusCode(204)->respond();
@@ -193,8 +204,10 @@ class AttachmentController extends ApiController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeCommentAttachment(Comment $comment, Request $request)
+    public function storeCommentAttachment(Comment $comment, AttachmentRequest $request)
     {
+        $this->authorize('createCommentAttachment', $comment);
+
         $attachment_data = AttachmentService::uploadAttachmentToCloud($request);
         $attachment = Attachment::create($attachment_data);
         $attachment = $comment->attachments()->save($attachment);
@@ -210,6 +223,9 @@ class AttachmentController extends ApiController
     public function destroyCommentAttachment(Comment $comment, Attachment $attachment)
     {
         if ($this->isAttachmentBelongsToComment($comment, $attachment)) {
+
+            $this->authorize('deleteCommentAttachment', $comment);
+
             AttachmentService::deleteAttachmentFromCloud($attachment->cloud_public_id);
             $attachment->delete();
             return $this->setStatusCode(204)->respond();
@@ -261,7 +277,7 @@ class AttachmentController extends ApiController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeMessageAttachment(Message $message, Request $request)
+    public function storeMessageAttachment(Message $message, AttachmentRequest $request)
     {
         $attachment_data = AttachmentService::uploadAttachmentToCloud($request);
         $attachment = Attachment::create($attachment_data);
