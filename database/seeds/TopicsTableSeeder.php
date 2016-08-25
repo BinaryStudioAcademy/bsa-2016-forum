@@ -18,8 +18,8 @@ class TopicsTableSeeder extends Seeder
             $tag = factory(App\Models\Tag::class)->make();
             $comment = $topic->tags()->save($tag);
 
-            $like = factory(App\Models\Like::class)->make();
-            $vote = $topic->likes()->save($like);
+//            $like = factory(App\Models\Like::class)->make();
+//            $vote = $topic->likes()->save($like);
             
         });
     }

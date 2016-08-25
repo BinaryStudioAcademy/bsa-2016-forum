@@ -51,9 +51,12 @@ class Topic extends Model
         return $this->morphToMany(Attachment::class, 'attachmenttable');
     }
 
+    /**
+     * Get all of the topic's likes
+     */
     public function likes()
     {
-        return $this->morphToMany(Like::class, 'likeable');
+        return $this->morphMany(Like::class, 'likeable');
     }
 
     public function tags()
