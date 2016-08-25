@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 var Bookmark = require('../../models/BookmarkModel');
+var currentUser = require('../initializers/currentUser');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicItem',
@@ -72,7 +73,7 @@ module.exports = Marionette.ItemView.extend({
         } else {
             bookmark.save({
                 topic_id: this.model.id,
-                user_id: 2
+                user_id: currentUser.id
             }, {
                 success: function (response) {
                     that.model.bookmarkId = response.id;
