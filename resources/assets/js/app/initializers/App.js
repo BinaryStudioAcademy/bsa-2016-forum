@@ -47,7 +47,7 @@ var app = Marionette.Application.extend({
         var routers = require('../config/routers');
         var myRoutes = routers.getRouters();
         myRoutes.forEach(function (item, index) {
-            var myRouter = appRouter(item.controller, item.appRoutes);
+            var myRouter = appRouter(item.controller, item.appRoutes, item.navigItemName);
             var router = new myRouter();
         });
     },
