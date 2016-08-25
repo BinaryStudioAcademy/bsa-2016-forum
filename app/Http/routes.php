@@ -164,6 +164,13 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::post('', 'AttachmentController@storeVoteAttachment')->name('storeVoteAttachment');
         Route::delete('{attachment}', 'AttachmentController@destroyVoteAttachment')->name('deleteVoteAttachment');
     });
+    /*Routes for VoteItem attachments*/
+    Route::group(['prefix' => 'voteItems/{voteItem}/attachments'], function () {
+        Route::get('', 'AttachmentController@getAllVoteItemAttachments')->name('allVoteItemAttachments');
+        Route::get('{attachment}', 'AttachmentController@getVoteItemAttachment')->name('voteItemAttachment');
+        Route::post('', 'AttachmentController@storeVoteItemAttachment')->name('storeVoteItemAttachment');
+        Route::delete('{attachment}', 'AttachmentController@destroyVoteItemAttachment')->name('deleteVoteItemAttachment');
+    });
     /*Routes for Comment attachments*/
     Route::group(['prefix' => 'comments/{comment}/attachments'], function () {
         Route::get('', 'AttachmentController@getAllCommentAttachments')->name('allCommentAttachments');
