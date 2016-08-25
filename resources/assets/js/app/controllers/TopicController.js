@@ -5,6 +5,7 @@ var TopicCollection = require('../collections/topicCollection');
 var TopicCreate = require('../views/topics/topicCreate');
 var TopicModel = require('../models/TopicModel');
 var TopicDetailView = require('../views/topics/topicDetail');
+var currentUser = require('../initializers/currentUser');
 
 module.exports = Marionette.Object.extend({
 
@@ -29,7 +30,7 @@ module.exports = Marionette.Object.extend({
     },
 
     myTopics: function () {
-        var parentUrl = '/users/' + 2;
+        var parentUrl = '/users/' + currentUser.id;
         var topicCollection = new TopicCollection({parentUrl: parentUrl});
         topicCollection.fetch();
         app.render(new topicLayout({collection: topicCollection}));
