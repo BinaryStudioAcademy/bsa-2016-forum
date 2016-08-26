@@ -245,7 +245,7 @@ class CommentController extends ApiController
 
         return $meta;
     }
-    
+
     /**
      * @param Vote $vote
      * @return \Illuminate\Http\JsonResponse
@@ -282,7 +282,11 @@ class CommentController extends ApiController
         $comment = Comment::create($request->all());
         $comment = $vote->comments()->save($comment);
 
-        return $this->setStatusCode(201)->respond($comment, [$comment->id => ['user' => $comment->user()->first()]]);
+        return $this->setStatusCode(201)->respond($comment, [
+            $comment->id => [
+                'user' => $comment->user()->first()
+            ]
+        ]);
     }
 
     /**
