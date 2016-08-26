@@ -145,6 +145,5 @@ class VoteControllerTest extends TestCase
 
         $user->detachAllRoles();
         $user->attachRole($this->roleUser());
-
     }
 }

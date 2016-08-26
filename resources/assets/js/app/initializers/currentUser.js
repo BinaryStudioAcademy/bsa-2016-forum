@@ -1,3 +1,3 @@
 var UserModel = require('../models/UserModel');
 
-module.exports = {};
+module.exports = new UserModel();

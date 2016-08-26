@@ -12,6 +12,10 @@ module.exports = Backbone.Collection.extend({
     _getRequestUrl: function () {
         return App.getBaseUrl() + this.getEntityUrl();
     },
+    
+    getMeta: function () {
+        return (_.result(this, '_meta'));
+    },
 
     sync: function (method, collection, options) {
         if (!options.url) {

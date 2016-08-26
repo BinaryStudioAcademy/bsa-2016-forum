@@ -19,8 +19,6 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
         'email' => $faker->safeEmail,
         'reputation' => $faker->numberBetween(0, 1000),
         'status_id' => App\Models\Status::all()->random(1)->id,
-        'hash_password' => bcrypt(str_random(10)),
-        'token' => $faker->md5,
         'last_visit_at' => $faker->dateTimeThisYear,
     ];
 });
@@ -83,6 +81,12 @@ $factory->define(App\Models\Tag::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Models\Like::class, function () {
+    return [
+        'user_id' => App\Models\User::all()->random(1)->id,
+    ];
+});
+
+$factory->define(App\Models\Notification::class, function () {
     return [
         'user_id' => App\Models\User::all()->random(1)->id,
     ];

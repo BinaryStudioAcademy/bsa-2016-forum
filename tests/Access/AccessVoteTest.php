@@ -36,7 +36,7 @@ class AccessVoteTest extends TestCase
     }
     
     public function testCreateByUser()
-    {
+    { 
         $vote = new Vote();
         
         $user = User::all()->random(1);
@@ -47,6 +47,7 @@ class AccessVoteTest extends TestCase
             $this->createVote($vote, $user->id);
         }
         $this->seeInDatabase('votes', ['user_id' => $user->id, 'title' => $vote->title]);
+ 
     }
 
     public function testCreateByAdmin()
@@ -198,4 +199,5 @@ class AccessVoteTest extends TestCase
         $this->seeInDatabase('votes', ['id' => $voteId])
             ->notSeeInDatabase('votes', ['id' => $voteId, 'deleted_at' => null]);
     }
+    
 }
