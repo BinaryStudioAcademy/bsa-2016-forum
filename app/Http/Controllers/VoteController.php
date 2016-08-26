@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Vote;
 use App\Models\User;
 use App\Http\Requests\VotesRequest;
@@ -17,27 +18,6 @@ class VoteController extends ApiController
     protected $tagIds = [];
 
     /**
-     * @param $votes array
-     * @return array $data array
-     */
-    private function getMetaData($votes)
-    {
-        $data = [];
-
-        foreach ($votes as $vote) {
-
-            $data[$vote->id] =
-                [
-                    'user' => $vote->user()->first(),
-                    'likes' => $vote->likes()->count(),
-                    'comments' => $vote->comments()->count(),
-                    'tags' => $vote->tags()->get(['name'])
-                ];
-        }
-        return $data;
-    }
-
-    /**
      * Display a listing of the resource.
      * @param Request $request
      * @return \Illuminate\Http\Response
@@ -49,6 +29,33 @@ class VoteController extends ApiController
         $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
         $meta = $this->getMetaData($votes);
         return $this->setStatusCode(200)->respond($votes, $meta);
+    }
+
+    protected function setFiltersParameters(Request $request)
+    {
+        $this->searchStr = $request->get('query');
+        $tagIds = $request->get('tag_ids');
+        $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+    }
+
+    /**
+     * @param $votes array
+     * @return array $data array
+     */
+    private function getMetaData($votes)
+    {
+        $data = [];
+
+        foreach ($votes as $vote) {
+
+            $data[$vote->id] = [
+                'user' => $vote->user()->first(),
+                'likes' => $vote->likes()->count(),
+                'comments' => $vote->comments()->count(),
+                'tags' => $vote->tags()->get(['name'])
+            ];
+        }
+        return $data;
     }
 
     /**
@@ -151,12 +158,14 @@ class VoteController extends ApiController
             ->filterByTags($this->tagIds)
             ->get();
 
-        if(!$votes){
+        if (!$votes) {
             return $this->setStatusCode(200)->respond();
         }
 
         return $this->setStatusCode(200)->respond($votes, ['user' => $user]);
     }
+
+    //set filter's parameters from request
 
     /**
      * Display the specific vote created by specific user
@@ -169,19 +178,11 @@ class VoteController extends ApiController
         $user = User::findOrFail($userId);
         $vote = $user->getVote($voteId);
 
-        if(!$vote){
+        if (!$vote) {
             throw (new ModelNotFoundException)->setModel(Vote::class);
         }
 
         return $this->setStatusCode(200)->respond($vote, ['user' => $user]);
-    }
-
-    //set filter's parameters from request
-    protected function setFiltersParameters(Request $request)
-    {
-        $this->searchStr = $request->get('query');
-        $tagIds = $request->get('tag_ids');
-        $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
     }
 
     /**

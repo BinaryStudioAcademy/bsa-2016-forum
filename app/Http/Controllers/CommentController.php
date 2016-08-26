@@ -236,7 +236,8 @@ class CommentController extends ApiController
      * @param $comments
      * @return array
      */
-    protected function makeCommentsMeta($comments){
+    protected function makeCommentsMeta($comments)
+    {
         $meta = [];
 
         foreach ($comments as $comment) {
