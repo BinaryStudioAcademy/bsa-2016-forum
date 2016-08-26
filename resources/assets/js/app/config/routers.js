@@ -2,7 +2,6 @@ var TopicController = require('../controllers/TopicController');
 var IdeaHubController = require('../controllers/IdeaHubController');
 var UserController = require('../controllers/UserController');
 var DashBoardController = require('../controllers/DashboardController');
-var MessageController = require('../controllers/MessageController');
 
 module.exports = {
 
@@ -39,6 +38,14 @@ module.exports = {
                 'users': 'index'
             },
             navigItemName: 'users'
+        },
+
+        {
+            controller: new BookmarkController(),
+            appRoutes: {
+                'bookmarks': 'index'
+            },
+            navigItemName: 'bookmarks'
         },
 
         {

@@ -13,7 +13,7 @@ module.exports = Backbone.Model.extend({
         return App.getBaseUrl() + this.getEntityUrl();
     },
 
-    getMeta: function () {
+    getMeta: function() {
         return (_.result(this, '_meta') || _.result(this.collection, '_meta'));
     },
 
