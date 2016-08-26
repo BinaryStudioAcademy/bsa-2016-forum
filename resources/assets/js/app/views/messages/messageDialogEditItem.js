@@ -38,7 +38,7 @@ module.exports = Marionette.ItemView.extend({
 
         return {
             model: this.model.toJSON(),
-            edit_et: edit
+            edit_at: edit
         }
     }
 });

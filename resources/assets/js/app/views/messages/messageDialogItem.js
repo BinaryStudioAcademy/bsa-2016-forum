@@ -37,7 +37,7 @@ module.exports = Marionette.ItemView.extend({
         return {
             model: this.model.toJSON(),
             messageDirection: direction,
-            edit_et: edit,
+            edit_at: edit,
             user: with_user
         }
     }
