@@ -9,10 +9,19 @@ var redis = new Redis();
 var users = require('./userContainer');
 var checkAuth = require('./checkAuth');
 
-io = io.listen(config.socketPort);
+console.log("Socket starting..");
 
-redis.subscribe('messagesChannel', function(err, count) {
-});
+io = io.listen(config.socketPort);
+console.log("Bind to port: " + config.socketPort);
+
+try {
+    redis.subscribe('messagesChannel', function(err, count) {
+    });
+    
+    console.log("Subscribe to redis success");
+} catch (e) {
+    console.log(e.message);
+}
 
 redis.on('message', function(channel, eventData) {
     eventData = JSON.parse(eventData);
@@ -22,7 +31,7 @@ redis.on('message', function(channel, eventData) {
 
     if (io.sockets.sockets[socketId]) {
         io.sockets.sockets[socketId].emit(eventData.data.socketEvent, message);
-        console.log("Message send to user id: " + message.user_to_id);
+        console.log("Message for user id: " + message.user_to_id);
     }
 });
 
