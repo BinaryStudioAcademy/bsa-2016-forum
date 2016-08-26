@@ -6,6 +6,7 @@
     "backbone.radio": "^1.0.5",
     "bootstrap-sass": "^3.3.7",
     "dropzone": "^4.3.0",
+    "express": "^4.14.0",
     "font-awesome": "^4.6.3",
     "grunt": "^1.0.1",
     "grunt-browserify": "^5.0.0",
@@ -16,7 +17,11 @@
     "grunt-contrib-uglify": "^2.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "handlebars": "^4.0.5",
+    "ioredis": "^2.3.0",
     "jquery": "^3.1.0",
+    "socket.io": "^1.4.8",
+    "socket.io-client": "^1.4.8",
+    "momentjs": "^1.1.15",
     "underscore": "^1.8.3"
   }
 }

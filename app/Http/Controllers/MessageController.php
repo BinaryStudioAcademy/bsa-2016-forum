@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewMessageEvent;
+use App\Events\UpdatedMessageEvent;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\MessageRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
 
-use App\Http\Requests;
 
 class MessageController extends ApiController
 {
@@ -20,18 +23,29 @@ class MessageController extends ApiController
      */
     public function index($userId)
     {
-        $userFrom = User::findOrFail($userId);
+        if($userId != Auth::user()->id)
+            return $this->setStatusCode(403)->respond();
 
-        $messages = $userFrom->messages()->get();
+        $userFrom = Auth::user();
+
+        if (Input::has('with_user')) {
+            $withUserId = Input::get('with_user');
+            $userTo = User::findOrFail($withUserId);
+            $messages = Message::getConversation($userFrom->id, $userTo->id)->get();
+            return $this->setStatusCode(200)->respond($messages, ['with_user' => $userTo]);
+        }
+
+        $messages = Message::getLastIncoming($userFrom->id);
+
         if (!$messages) {
             return $this->setStatusCode(200)->respond();
         }
-        $usersToIds = $messages->pluck('user_to_id');
+        $usersToIds = $messages->pluck('user_from_id');
         $usersTo = User::whereIn('id', $usersToIds)->get();
 
         return $this->setStatusCode(200)->respond(
             $messages,
-            ['user_from' => $userFrom, 'users_to' => $usersTo]
+            ['users_from' => $usersTo]
         );
     }
 
@@ -45,11 +59,12 @@ class MessageController extends ApiController
      */
     public function store($userId, MessageRequest $request)
     {
-        $userFrom = User::findOrFail($userId);
-        $message = new Message($request->all());
-        $message->user()->associate($userFrom);
-        $message->save();
+        if($userId != Auth::user()->id)
+            return $this->setStatusCode(403)->respond();
 
+        $message = new Message($request->all());
+        $message->save();
+        event(new NewMessageEvent($message));
         return $this->setStatusCode(201)->respond($message);
     }
 
@@ -62,7 +77,10 @@ class MessageController extends ApiController
      */
     public function show($userId, $id)
     {
-        $userFrom = User::findOrFail($userId);
+        if($userId != Auth::user()->id)
+            return $this->setStatusCode(403)->respond();
+
+        $userFrom = Auth::user();
         $message = $userFrom->messages()->where('id', $id)->first();
         if (!$message) {
             throw (new ModelNotFoundException)->setModel(Message::class);
@@ -71,7 +89,7 @@ class MessageController extends ApiController
 
         return $this->setStatusCode(200)->respond(
             $message,
-            ['user_from' => $userFrom, 'user_to' => $userTo]
+            ['user_with' => $userTo]
         );
     }
 
@@ -85,14 +103,17 @@ class MessageController extends ApiController
      */
     public function update($userId, MessageRequest $request, $id)
     {
-        $user = User::findOrFail($userId);
+        if($userId != Auth::user()->id)
+            return $this->setStatusCode(403)->respond();
+
+        $user = Auth::user();
         $message = $user->messages()->where('id', $id)->first();
         if (!$message) {
             throw (new ModelNotFoundException)->setModel(Message::class);
         }
         $message->update($request->all());
+        event(new UpdatedMessageEvent($message));
         return $this->setStatusCode(200)->respond($message);
-
     }
 
     /**
@@ -103,11 +124,16 @@ class MessageController extends ApiController
      */
     public function destroy($userId, $id)
     {
-        $user = User::findOrFail($userId);
-        $message = $user->messages()->where('user_from_id', $userId)->first();
+        if($userId != Auth::user()->id)
+            return $this->setStatusCode(403)->respond();
+
+        $user = Auth::user();
+        $message = $user->messages()->first();
         if (!$message) {
             throw (new ModelNotFoundException)->setModel(Message::class);
         }
+        $message->message = "Deleted..";
+        event(new UpdatedMessageEvent($message));
         $message->delete();
         return $this->setStatusCode(204)->respond();
     }

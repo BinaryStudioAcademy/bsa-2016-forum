@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Topic;
 use App\Http\Requests\TopicRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Collection;
 use App\Facades\TagService;
+
 
 class TopicController extends ApiController
 {
@@ -36,6 +39,40 @@ class TopicController extends ApiController
         $data['user'] = $topic->user()->first();
         $data['likes'] = $topic->likes()->count();
         $data['comments'] = $topic->comments()->count();
+        $bookmark = $topic->bookmarks()->where('user_id', Auth::user()->id)->first();
+        if ($bookmark !== null) {
+            $data['bookmark'] = $topic->bookmarks()->where('user_id', Auth::user()->id)->first();
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param $topics array
+     * @return array $data array
+     */
+    private function getMetaData($topics)
+    {
+        $data = [];
+
+        if ($topics instanceof Collection) {
+            foreach ($topics as $topic) {
+                $bookmark = $topic->bookmarks()
+                    ->where('user_id', Auth::user()->id)->first();
+
+                if ($bookmark !== null) {
+                    $data['bookmark'][$topic->id] = $topic->bookmarks()
+                        ->where('user_id', Auth::user()->id)->first();
+                }
+            }
+
+            return $data;
+        }
+
+        $bookmark = $topics->bookmarks()->where('user_id', Auth::user()->id)->first();
+        if ($bookmark !== null) {
+            $data['bookmark'] = $topics->bookmarks()->where('user_id', Auth::user()->id)->first();
+        }
 
         return $data;
     }
@@ -52,7 +89,9 @@ class TopicController extends ApiController
 
         $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
 
-        return $this->setStatusCode(200)->respond($topics);
+        $meta = $this->getMetaData($topics);
+
+        return $this->setStatusCode(200)->respond($topics, $meta);
     }
 
     /**
