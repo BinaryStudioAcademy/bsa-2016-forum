@@ -163,7 +163,7 @@ return [
          * External providers
          */
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-
+        Felixkiss\UniqueWithValidator\UniqueWithValidatorServiceProvider::class,
     ],
 
     /*

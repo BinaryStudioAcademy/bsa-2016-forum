@@ -6,9 +6,12 @@ use App\Models\Category;
 use App\Models\Topic;
 use App\Http\Requests\TopicRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Collection;
 use App\Facades\TagService;
+
 
 class TopicController extends ApiController
 {
@@ -17,6 +20,37 @@ class TopicController extends ApiController
     protected $tagIds = [];
 
     /**
+    /**
+     * @param $topics array
+     * @return array $data array
+     */
+    private function getMetaData($topics)
+    {
+        $data = [];
+
+        if ($topics instanceof Collection) {
+            foreach ($topics as $topic) {
+                $bookmark = $topic->bookmarks()
+                    ->where('user_id', Auth::user()->id)->first();
+
+                if ($bookmark !== null) {
+                    $data['bookmark'][$topic->id] = $topic->bookmarks()
+                        ->where('user_id', Auth::user()->id)->first();
+                }
+            }
+
+            return $data;
+        }
+
+        $bookmark = $topics->bookmarks()->where('user_id', Auth::user()->id)->first();
+        if ($bookmark !== null) {
+            $data['bookmark'] = $topics->bookmarks()->where('user_id', Auth::user()->id)->first();
+        }
+
+        return $data;
+    }
+
+     /**
      * Display a listing of the resource.
      *
      * @param  TopicRequest $request
@@ -28,7 +62,9 @@ class TopicController extends ApiController
 
         $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
 
-        return $this->setStatusCode(200)->respond($topics);
+        $meta = $this->getMetaData($topics);
+
+        return $this->setStatusCode(200)->respond($topics, $meta);
     }
 
     /**
@@ -73,7 +109,8 @@ class TopicController extends ApiController
     {
         $topic = Topic::findOrFail($id);
         $topic->tags = $topic->tags()->get();
-        return $this->setStatusCode(200)->respond($topic);
+        $meta = $this->getMetaData($topic);
+        return $this->setStatusCode(200)->respond($extendedTopic, $meta);
     }
 
     /**
