@@ -31,4 +31,22 @@ class Message extends Model
     {
         return $this->morphToMany(Notification::class, 'notificationable');
     }
+
+    public static function getLastIncoming($userId) 
+    {
+        return self::where('user_to_id', $userId)
+            ->groupBy('user_from_id')
+            ->get();
+    }
+
+    public static function getConversation($userId, $withUserId)
+    {
+        return static::where(function ($msg) use ($userId, $withUserId) {
+            $msg->where('user_from_id', $userId)
+                ->where('user_to_id', $withUserId);
+        })->orWhere(function ($msg) use ($userId, $withUserId) {
+            $msg->where('user_to_id', $userId)
+                ->where('user_from_id', $withUserId);
+        });
+    }
 }

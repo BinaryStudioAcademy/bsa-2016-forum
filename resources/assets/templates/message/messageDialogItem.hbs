@@ -1,14 +1,15 @@
 <div class="message-msg-item">
-    <!-- {{mark}} addition class 'to' or 'from' to mark msg direction -->
-    <div class="message-item-container {{mark}}">
+    <!-- addition class 'to' or 'from' to mark msg direction -->
+    <div class="message-item-container {{messageDirection}}">
         <div class="message-msg-avatar">
             <!-- message owner avatar -->
             <img src="/images/user.png">
         </div>
         <div class="message-msg-body">
-            <p>{{message}}</p>
-            <span>{{data}}</span>
-            <a>Edit</a><a>Delete</a>
+            <p><b>{{user.display_name}}</b></p>
+            <p>{{message.message}}</p>
+            <span>{{edit_at}} {{message.updated_at}}</span>
+            <div><a class="edit">Edit</a>&nbsp;<a class="delete">Delete</a></div>
         </div>
     </div>
 </div>
