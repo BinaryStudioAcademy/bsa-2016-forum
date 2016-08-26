@@ -29,7 +29,7 @@ class Message extends Model
     }
     public function notifications()
     {
-        return $this->morphToMany(Notification::class, 'attachmenttable');
+        return $this->morphToMany(Notification::class, 'notificationable');
     }
 
     public static function getLastIncoming($userId) 
