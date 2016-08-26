@@ -8,7 +8,7 @@ var logger = require('../instances/logger');
 
 module.exports = new function () {
 
-    this.getToken = function () {
+    var getToken = function () {
         var value = "; " + document.cookie;
         var parts = value.split("; " + 'x-access-token' + "=");
         if (parts.length == 2) return parts.pop().split(";").shift();
@@ -30,12 +30,19 @@ module.exports = new function () {
         logger("Socket: Updated one message.")
     });
 
-    this.Login = function () {
-        var token = this.getToken();
+    var socket = this.socket;
+    var login = function () {
+        var token = getToken();
         if (!!token) {
-            this.socket.emit('login', {token: token});
+            socket.emit('login', {token: token});
         } else {
             logger("Socket: token not found!");
         }
     };
+   
+    this.Login = login;
+    
+    this.socket.on('reconnect', function () {
+        login();
+    });
 };
