@@ -1,15 +1,12 @@
 var Marionette = require('backbone.marionette');
 var messageItem = require('./messageItem');
+var _ = require('underscore');
 
 module.exports = Marionette.CollectionView.extend({
     childView: messageItem,
     childViewOptions : function (model) {
-        var user = this.collection.getMeta().users_from.filter(function (user) {
-            return user.id == model.get('user_from_id');
-        })[0];
-        
         return {
-            user: user
+            user: _.findWhere(this.collection.getMeta().users_from, {id: model.get('user_from_id')})
         };
     }
 });
