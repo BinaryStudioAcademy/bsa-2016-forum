@@ -91,3 +91,9 @@ $factory->define(App\Models\Like::class, function () {
         'user_id' => App\Models\User::all()->random(1)->id,
     ];
 });
+
+$factory->define(App\Models\Notification::class, function () {
+    return [
+        'user_id' => App\Models\User::all()->random(1)->id,
+    ];
+});

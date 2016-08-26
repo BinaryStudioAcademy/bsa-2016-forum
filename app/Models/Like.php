@@ -36,4 +36,9 @@ class Like extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function notifications()
+    {
+        return $this->morphToMany(Notification::class, 'notificationable');
+    }
 }
