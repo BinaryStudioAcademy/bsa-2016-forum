@@ -9,7 +9,8 @@
         "laravel/framework": "5.2.*",
         "barryvdh/laravel-ide-helper": "^2.2",
         "cloudinary/cloudinary_php": "^1.4",
-        "emarref/jwt": "^1.0"
+        "emarref/jwt": "^1.0",
+        "doctrine/dbal": "~2.5"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
