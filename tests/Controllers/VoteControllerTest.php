@@ -14,7 +14,8 @@ class VoteControllerTest extends TestCase
      *
      * @return void
      */
-
+    use WithoutMiddleware;
+    
     public function createVote($vote, $userId)
     {
         $vote->title = "Test title User";
@@ -37,48 +38,19 @@ class VoteControllerTest extends TestCase
 
     public function testCRUD()
     {
+        $this->disableMiddlewareForAllTests();
+        
         $users = User::all();
         Auth::login($users[1]);
         $user = Auth::user();
-        var_dump($user->id);
         $vote = Vote::all()->random(1);
-
-       /*
-        $roleUser = $this->roleUser();
-        $user->role()->associate($roleUser);
-
-        $this->json('POST', '/api/v1/votes',
-            [
-                'title' => 'Vote Test Controller',
-                'user_id' => $user->id,
-                'finished_at' => date('Y:m:d H:m:s', strtotime('+10 days')),
-                'is_public' => 1,
-                'is_saved' => 1,
-
-            ])
-            ->assertResponseStatus('403');
-
-        $response = $this->call('GET', '/api/v1/votes/' . $vote->id);
-        $this->assertEquals(403, $response->status());
-
-        $this->json('PUT', '/api/v1/votes/'.$vote->id,
-            [   'title' => 'Vote Test Controller',
-                'user_id' => $user->id,
-                'finished_at' => date('Y:m:d H:m:s', strtotime('+10 days')),
-                'is_public' => 1,
-                'is_saved' => 1,
-            ])
-            ->assertResponseStatus('403');
-
-        $response = $this->call('DELETE', '/api/v1/votes/'.$vote->id);
-        $this->assertEquals(403, $response->status());
-
-       */
 
         // -----------check user permission--------------
         $roleUser = $this->roleUser();
         $user->role()->associate($roleUser);
-        var_dump($user->role()->first()->name);
+
+        $response = $this->call('GET', '/api/v1/votes/' . $vote->id);
+        $this->assertEquals(200, $response->status());
 
         $this->json('POST', '/api/v1/votes',
             [   

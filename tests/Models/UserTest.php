@@ -14,7 +14,7 @@ class UserTest extends TestCase
 
     public function testSave()
     {
-        $user = factory(App\Models\User::class)->create(1);
+        $user = factory(App\Models\User::class)->create();
         $roleUser = \DB::table('roles')->where('name', 'User')->value('id');
         $user->role()->associate($roleUser);
         $user->save();

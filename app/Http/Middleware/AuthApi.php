@@ -29,6 +29,7 @@ class AuthApi extends AuthService
             $user = $this->checkUser($userData);
             Auth::login($user);
         }
+
         return $next($request);
     }
 }
