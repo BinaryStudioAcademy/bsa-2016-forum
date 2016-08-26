@@ -67,8 +67,9 @@ class TopicController extends ApiController
         return $this->setStatusCode(200)->respond($topics, $meta);
     }
 
+
     /**
-     * @param Category $cat
+     * @param $catId
      * @param TopicRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -79,8 +80,9 @@ class TopicController extends ApiController
         $topics = Topic::where('category_id', $catId)
             ->filterByQuery($this->searchStr)
             ->filterByTags($this->tagIds)->get();
+        $meta = $this->getMetaData($topics);
 
-        return $this->setStatusCode(200)->respond($topics);
+        return $this->setStatusCode(200)->respond($topics, $meta);
     }
 
     /**
@@ -110,7 +112,7 @@ class TopicController extends ApiController
         $topic = Topic::findOrFail($id);
         $topic->tags = $topic->tags()->get();
         $meta = $this->getMetaData($topic);
-        return $this->setStatusCode(200)->respond($extendedTopic, $meta);
+        return $this->setStatusCode(200)->respond($topic, $meta);
     }
 
     /**
