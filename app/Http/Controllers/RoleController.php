@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use DCN\RBAC\Models\Role;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
+use App\Models\Role;
 
 class RoleController extends ApiController
 {
     public function index()
     {
-        $role = Role::all();
-        return $this->setStatusCode(200)->respond($role);
+        $roles = Role::all();
+
+        return $this->setStatusCode(200)->respond($roles);
     }
 }
