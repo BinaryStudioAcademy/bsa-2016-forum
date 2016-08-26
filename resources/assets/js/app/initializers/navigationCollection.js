@@ -8,7 +8,6 @@ module.exports = new navigCollection([
         label: 'Dashboard',
         //active: true
     },
-
     {
         href: '#topics',
         icon: '',
@@ -28,10 +27,10 @@ module.exports = new navigCollection([
         label: 'Users'
     },
     {
-        href: '#subscribes',
+        href: '#bookmarks',
         icon: '',
-        name: 'subscribes',
-        label: 'Subscribes',
+        name: 'bookmarks',
+        label: 'Bookmarks',
     },
     {
         href: '#votes',
