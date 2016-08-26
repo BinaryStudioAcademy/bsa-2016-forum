@@ -67,8 +67,11 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof \PDOException) {
-            return response('Internal Server Error', 500);
-           // return response($e->getMessage(),500);
+            if (strtolower(env('APP_ENV')) == 'local') {
+                return response($e->getMessage(), 500);
+            } else {
+                return response('Internal Server Error', 500);
+            }
         }
 
         if ($e instanceof ModelNotFoundException) {
