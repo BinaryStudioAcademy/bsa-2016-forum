@@ -3,10 +3,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserTest extends TestCase
 {
+    public function roleUser()
+    {
+        return \DB::table('roles')->where('name', 'User')->value('id');
+    }
+
+    public function roleAdmin(){
+        return \DB::table('roles')->where('name', 'Admin')->value('id');
+    }
 
     public function testSave()
     {
-        $user = factory(App\Models\User::class)->create();
+        $user = factory(App\Models\User::class)->create(1);
+        $roleUser = \DB::table('roles')->where('name', 'User')->value('id');
+        $user->role()->associate($roleUser);
+        $user->save();
         $this->seeInDatabase('users', [
             'id' => $user->id,
             'first_name' => $user->first_name,

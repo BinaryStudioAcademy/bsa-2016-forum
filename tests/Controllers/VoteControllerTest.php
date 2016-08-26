@@ -40,9 +40,12 @@ class VoteControllerTest extends TestCase
         $users = User::all();
         Auth::login($users[1]);
         $user = Auth::user();
+        var_dump($user->id);
         $vote = Vote::all()->random(1);
 
-        $user->detachAllRoles();
+       /*
+        $roleUser = $this->roleUser();
+        $user->role()->associate($roleUser);
 
         $this->json('POST', '/api/v1/votes',
             [
@@ -70,11 +73,15 @@ class VoteControllerTest extends TestCase
         $response = $this->call('DELETE', '/api/v1/votes/'.$vote->id);
         $this->assertEquals(403, $response->status());
 
+       */
 
-        $user->attachRole($this->roleUser());
+        // -----------check user permission--------------
+        $roleUser = $this->roleUser();
+        $user->role()->associate($roleUser);
+        var_dump($user->role()->first()->name);
 
         $this->json('POST', '/api/v1/votes',
-            [
+            [   
                 'title' => 'Vote Test Controller',
                 'user_id' => $user->id,
                 'finished_at' => date('Y:m:d H:m:s', strtotime('+10 days')),
@@ -99,7 +106,7 @@ class VoteControllerTest extends TestCase
         $response = $this->call('DELETE', '/api/v1/votes/'.$vote->id);
         $this->assertEquals(403, $response->status());
 
-
+        // -----------check owner permission--------------
         $voteOwn = new Vote();
         $this->createVote($voteOwn, $user->id);
 
@@ -115,9 +122,9 @@ class VoteControllerTest extends TestCase
         $response = $this->call('DELETE', '/api/v1/votes/'.$voteOwn->id);
         $this->assertEquals(204, $response->status());
 
-
-        $user->detachAllRoles();
-        $user->attachRole($this->roleAdmin());
+        // -----------check admin permission--------------
+        $roleAdmin = $this->roleAdmin();
+        $user->role()->associate($roleAdmin);
 
         $this->json('POST', '/api/v1/votes',
             [
@@ -142,9 +149,5 @@ class VoteControllerTest extends TestCase
 
         $response = $this->call('DELETE', '/api/v1/votes/'.$vote->id);
         $this->assertEquals(204, $response->status());
-
-        $user->detachAllRoles();
-        $user->attachRole($this->roleUser());
-
     }
 }

@@ -60,7 +60,7 @@ class CurlService
         }
 
         $response = array_shift($response);
-
+//var_dump($response);
         $userProfile = [
             'first_name' => $response['name'],
             'last_name' => $response['surname'],
