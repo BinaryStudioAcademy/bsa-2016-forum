@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Requests\VotesRequest;
 use App\Http\Requests\VoteResultRequest;
 use App\Models\VoteResult;
+use Gate;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -16,14 +17,14 @@ class VoteController extends ApiController
 {
     protected $searchStr = null;
     protected $tagIds = [];
-    
+
     /**
      * @param $votes array
      * @return array $data array
      */
     private function getMetaData($votes)
     {
-        $data =[];
+        $data = [];
         $i = 0;
 
         foreach ($votes as $vote) {
@@ -48,8 +49,15 @@ class VoteController extends ApiController
     public function index(Request $request)
     {
         $this->setFiltersParameters($request);
-
         $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
+
+        $votes = $votes->filter(function ($vote) {
+            if (Gate::denies('show', $vote)) {
+                return false;
+            } else{
+                return true;
+            }
+        });
         $data = $this->getMetaData($votes);
         return $this->setStatusCode(200)->respond($data);
     }
@@ -77,6 +85,8 @@ class VoteController extends ApiController
     public function show($id)
     {
         $vote = Vote::findOrFail($id);
+
+        $this->authorize('show', $vote);
 
         $user = $vote->user()->first();
         $likeCount = $vote->likes()->count();
@@ -149,7 +159,7 @@ class VoteController extends ApiController
             ->filterByTags($this->tagIds)
             ->get();
 
-        if(!$votes){
+        if (!$votes) {
             return $this->setStatusCode(200)->respond();
         }
 
@@ -167,7 +177,7 @@ class VoteController extends ApiController
         $user = User::findOrFail($userId);
         $vote = $user->getVote($voteId);
 
-        if(!$vote){
+        if (!$vote) {
             throw (new ModelNotFoundException)->setModel(Vote::class);
         }
 

@@ -17,6 +17,11 @@ class VotePolicy
         }
     }
 
+    public function show(User $user, Vote $vote)
+    {
+        return !$user->votesDenied()->wherePivot('vote_id', $vote->id)->exists();
+    }
+
     public function delete(User $user, Vote $vote)
     {
         return $user->owns($vote);
