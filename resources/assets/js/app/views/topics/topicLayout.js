@@ -6,10 +6,25 @@ var topicCollection = require('./topicCollection');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'topicLayout',
+
     regions: {
         container: '#posts'
     },
-    
+
+    ui: {
+        createTopic: '.create-topic'
+    },
+
+    events: {
+        'click @ui.createTopic': function () {
+            Backbone.history.navigate('topic/create', {trigger: true});
+        }
+    },
+
+    initialize: function () {
+        this.bindUIElements();
+    },
+
     onRender: function () {
         this.container.show(new topicCollection({
             collection: this.collection
