@@ -1,4 +1,5 @@
 module.exports = {
     debug: false,
-    baseUrl: '/api/v1'
+    baseUrl: '/api/v1',
+    socketUrl: 'http://localhost:3000'
 };

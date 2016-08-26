@@ -14,6 +14,7 @@ class DropTables extends Seeder
         \DB::table('likeables')->delete();
         \DB::table('likes')->delete();
         \DB::table('comments')->delete();
+        \DB::table('vote_results')->delete();
         \DB::table('vote_items')->delete();
         \DB::table('bookmarks')->delete();
         \DB::table('messages')->delete();
