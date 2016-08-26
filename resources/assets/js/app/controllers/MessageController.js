@@ -51,6 +51,10 @@ module.exports = Marionette.Object.extend({
             message.save({message: text}, {
                 success: function () {
                     data.view.$('.modal').modal('hide');
+                },
+                error: function () {
+                    data.view.enableButton();
+                    data.view.ui.save.html('Save');
                 }
             });
         });

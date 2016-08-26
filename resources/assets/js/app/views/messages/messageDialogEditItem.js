@@ -30,6 +30,10 @@ module.exports = Marionette.ItemView.extend({
         this.$('button').prop('disabled', true);
     },
 
+    enableButton: function () {
+        this.$('button').prop('disabled', false);
+    },
+    
     serializeData: function () {
         var edit = '';
         if(this.model.get('created_at') != this.model.get('updated_at')) {
@@ -37,7 +41,7 @@ module.exports = Marionette.ItemView.extend({
         }
 
         return {
-            model: this.model.toJSON(),
+            message: this.model.toJSON(),
             edit_at: edit
         }
     }
