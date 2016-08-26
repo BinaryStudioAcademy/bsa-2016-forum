@@ -68,6 +68,7 @@ class Handler extends ExceptionHandler
 
         if ($e instanceof \PDOException) {
             return response('Internal Server Error', 500);
+           // return response($e->getMessage(),500);
         }
 
         if ($e instanceof ModelNotFoundException) {
