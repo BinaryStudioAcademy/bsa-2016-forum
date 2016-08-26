@@ -37,7 +37,6 @@ $factory->define(App\Models\Comment::class, function (Faker\Generator $faker) {
     return [
         'content_origin' => $faker->text,
         'rating' => $faker->numberBetween(0, 1000),
-        'user_id' => App\Models\User::all()->random(1)->id,
         'content_generated' => $faker->text,
     ];
 });
