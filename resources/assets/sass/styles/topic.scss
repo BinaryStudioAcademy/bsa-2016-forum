@@ -211,14 +211,20 @@ TOPIC DETAILS
   float: right;
 }
 
-.topic-control-btn a {
+.topic-control-btn button {
+  border: 0;
+  background: transparent;
+//  color: #337ab7;
+}
+
+.topic-control-btn a, .topic-control-btn button {
   padding: 10px;
   vertical-align: middle;
   display: inline-block;
   height: 100%;
 }
 
-.topic-control-btn a:hover {
+.topic-control-btn a:hover, .topic-control-btn button:hover {
   cursor: pointer;
   text-decoration: none;
   background: #ddd;
@@ -260,13 +266,16 @@ TOPIC DETAILS
   width: 100%;
   height: 80px;
   display: flex;
-  margin-bottom: 5px;
   border-bottom: 1px solid #EEEEEE;
   overflow: hidden;
   text-decoration: none;
   cursor: pointer;
+  padding-top: 10px;
+  margin-left: 0 !important;
 }
-
+.post-item:nth-child(even) {
+  background: #fff;
+}
 .errors {
   color:red;
 }
