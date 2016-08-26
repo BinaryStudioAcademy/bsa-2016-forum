@@ -171,19 +171,22 @@ module.exports = Marionette.ItemView.extend({
 
     removeAttachmentFromServer: function (file) {
         // remove single file from server
+        this.showLoader(true);
         var model = new AttachmentModel({ id: file.id });
         var parent = this;
         model.parentUrl = _.result(this.model, 'url');
         //console.log(model);
         model.destroy({ success: function (model) {
+            parent.showLoader(false);
             if (parent.options.attachs) parent.options.attachs.remove({ id: file.id });
             parent.$(file.previewElement).remove();
             parent.$('.errors').removeClass('alert-danger')
                 .addClass('alert-info').text('File was successfully removed');
             parent.showErrors(true);
         }, error: function (response) {
-            this.$('.errors').empty();
-            this.$('.errors').text(response.responseText);
+            parent.showLoader(false);
+            parent.$('.errors').empty();
+            parent.$('.errors').text(response.responseText);
             parent.showErrors(true);
         }});
     },

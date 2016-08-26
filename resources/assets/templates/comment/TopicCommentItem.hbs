@@ -25,15 +25,12 @@
             <div class="topic-control-btn">
                 {{!-- only output if user comment belongs to current user --}}
                 {{#if meta.isUserComment}}
-                    <button class="btn btn-primary comment-edit-btn">Edit</button>
-                    <button class="btn btn-danger" data-toggle="modal"
-                            data-target="#confirmDialog-{{ model.id }}">Remove</button>
+                    <a class="btn btn-primary comment-edit-btn">Edit</a>
+                    <a class="btn btn-danger" data-toggle="modal"
+                            data-target="#confirmDialog-{{ model.id }}">Remove</a>
                 {{else}}
                     <a class="answer-btn">Reply</a>
                 {{/if}}
-                <a class="bookmark-btn">Bookmark</a>
-                <a class="share-btn">Share</a>
-                <a class="notification-btn">Notification</a>
             </div>
         </div>
     </div>

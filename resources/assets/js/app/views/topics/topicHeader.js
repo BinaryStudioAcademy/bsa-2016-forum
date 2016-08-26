@@ -53,7 +53,7 @@ module.exports = Marionette.ItemView.extend({
 
     onRender: function () {
         var meta = this.model.getMeta();
-
+        if (!meta) return;
         if (meta.bookmark) {
             this.model.bookmarkId = meta.bookmark.id;
         }
