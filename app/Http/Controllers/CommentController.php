@@ -10,43 +10,9 @@ use App\Models\Topic;
 use App\Http\Requests;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Gate;
+
 class CommentController extends ApiController
 {
-    /**
-     * @param Comment $comment
-     * @return bool
-     */
-    protected function isCommentHasAnyChild(Comment $comment)
-    {
-        return $comment->comments()->exists();
-    }
-
-    /**
-     * @param Comment $comment
-     * @param Comment $commentChild
-     * @return bool
-     */
-    protected function isCommentChildBelongsToComment(Comment $comment, Comment $commentChild)
-    {
-        if ($comment->comments()->find($commentChild->id)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**********  TOPIC SECTION START **********/
-
-    /**
-     * @param Topic $topic
-     * @param Comment $comment
-     * @return bool
-     */
-    protected function isCommentBelongsToTopic(Topic $topic, Comment $comment)
-    {
-        return !!$topic->comments()->find($comment->id);
-    }
-
     /**
      * @param Topic $topic
      * @return \Illuminate\Http\JsonResponse
@@ -69,6 +35,18 @@ class CommentController extends ApiController
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
+    }
+
+    /**********  TOPIC SECTION START **********/
+
+    /**
+     * @param Topic $topic
+     * @param Comment $comment
+     * @return bool
+     */
+    protected function isCommentBelongsToTopic(Topic $topic, Comment $comment)
+    {
+        return !!$topic->comments()->find($comment->id);
     }
 
     /**
@@ -119,8 +97,6 @@ class CommentController extends ApiController
         }
     }
 
-    /**********  Topic CommentChild SECTION START **********/
-
     /**
      * @param Topic $topic
      * @param Comment $comment
@@ -154,6 +130,8 @@ class CommentController extends ApiController
         }
     }
 
+    /**********  Topic CommentChild SECTION START **********/
+
     /**
      * @param Topic $topic
      * @param Comment $comment
@@ -168,6 +146,20 @@ class CommentController extends ApiController
             return $this->setStatusCode(200)->respond($commentChild);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
+        }
+    }
+
+    /**
+     * @param Comment $comment
+     * @param Comment $commentChild
+     * @return bool
+     */
+    protected function isCommentChildBelongsToComment(Comment $comment, Comment $commentChild)
+    {
+        if ($comment->comments()->find($commentChild->id)) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -218,34 +210,6 @@ class CommentController extends ApiController
         }
     }
 
-    /**********  VOTE SECTION START **********/
-
-    /**
-     * @param Vote $vote
-     * @param Comment $comment
-     * @return bool
-     */
-    protected function isCommentBelongsToVote(Vote $vote, Comment $comment)
-    {
-        $voteWhichHasThisComment = $comment->commentable()->get()->first();
-
-        return ($voteWhichHasThisComment && $voteWhichHasThisComment->id === $vote->id);
-    }
-
-    /**
-     * @param $comments
-     * @return array
-     */
-    protected function makeCommentsMeta($comments){
-        $meta = [];
-
-        foreach ($comments as $comment) {
-            $meta[$comment->id]['user'] = $comment->user()->first();
-        }
-
-        return $meta;
-    }
-
     /**
      * @param Vote $vote
      * @return \Illuminate\Http\JsonResponse
@@ -256,6 +220,23 @@ class CommentController extends ApiController
         $meta = $this->makeCommentsMeta($comments);
 
         return $this->setStatusCode(200)->respond($comments, $meta);
+    }
+
+    /**********  VOTE SECTION START **********/
+
+    /**
+     * @param $comments
+     * @return array
+     */
+    protected function makeCommentsMeta($comments)
+    {
+        $meta = [];
+
+        foreach ($comments as $comment) {
+            $meta[$comment->id]['user'] = $comment->user()->first();
+        }
+
+        return $meta;
     }
 
     /**
@@ -270,6 +251,18 @@ class CommentController extends ApiController
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
+    }
+
+    /**
+     * @param Vote $vote
+     * @param Comment $comment
+     * @return bool
+     */
+    protected function isCommentBelongsToVote(Vote $vote, Comment $comment)
+    {
+        $voteWhichHasThisComment = $comment->commentable()->get()->first();
+
+        return ($voteWhichHasThisComment && $voteWhichHasThisComment->id === $vote->id);
     }
 
     /**
@@ -325,8 +318,6 @@ class CommentController extends ApiController
         }
     }
 
-    /**********  Vote CommentChild SECTION START **********/
-
     /**
      * @param Vote $vote
      * @param Comment $comment
@@ -341,6 +332,8 @@ class CommentController extends ApiController
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
     }
+
+    /**********  Vote CommentChild SECTION START **********/
 
     /**
      * @param Vote $vote
@@ -422,20 +415,6 @@ class CommentController extends ApiController
         }
     }
 
-    /**********  VoteItem SECTION START **********/
-
-    /**
-     * @param VoteItem $voteItem
-     * @param Comment $comment
-     * @return bool
-     */
-    protected function isCommentBelongsToVoteItem(VoteItem $voteItem, Comment $comment)
-    {
-        $voteItemWhichHasThisComment = $comment->commentable()->get()->first();
-
-        return ($voteItemWhichHasThisComment && $voteItemWhichHasThisComment->id === $voteItem->id);
-    }
-
     /**
      * @param VoteItem $voteItem
      * @return \Illuminate\Http\JsonResponse
@@ -445,6 +424,8 @@ class CommentController extends ApiController
         $comments = $voteItem->comments()->get();
         return $this->setStatusCode(200)->respond($comments);
     }
+
+    /**********  VoteItem SECTION START **********/
 
     /**
      * @param VoteItem $voteItem
@@ -458,6 +439,18 @@ class CommentController extends ApiController
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
+    }
+
+    /**
+     * @param VoteItem $voteItem
+     * @param Comment $comment
+     * @return bool
+     */
+    protected function isCommentBelongsToVoteItem(VoteItem $voteItem, Comment $comment)
+    {
+        $voteItemWhichHasThisComment = $comment->commentable()->get()->first();
+
+        return ($voteItemWhichHasThisComment && $voteItemWhichHasThisComment->id === $voteItem->id);
     }
 
     /**
@@ -506,6 +499,15 @@ class CommentController extends ApiController
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
+    }
+
+    /**
+     * @param Comment $comment
+     * @return bool
+     */
+    protected function isCommentHasAnyChild(Comment $comment)
+    {
+        return $comment->comments()->exists();
     }
 
 }
