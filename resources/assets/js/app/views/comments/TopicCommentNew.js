@@ -4,6 +4,7 @@ var _ = require('underscore');
 var Radio = require('backbone.radio');
 var Dropzone = require('dropzone');
 var currentUser = require('../../initializers/currentUser');
+var AttachmentModel = require('../../models/AttachmentModel');
 
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentNew',
@@ -76,16 +77,14 @@ module.exports = Marionette.ItemView.extend({
             data[ input.name ] = input.value;
         });
 
-        //this.model.set(data);
         var parent = this;
         this.showLoader(true);
         this.model.save(data, {
             success: function (model) {
                 logger('comment saved successfully');
-
-                //console.log(model, model.getMeta());
-
                 if (parent._dropZone && parent._dropZone.files.length) {
+                    parent.filterAttachs();
+                    // start upload to server
                     parent._dropZone.processQueue();
                 } else {
                     Radio.channel('сommentCollection').trigger('addComment', model);
@@ -94,20 +93,18 @@ module.exports = Marionette.ItemView.extend({
             },
 
             error: function (response) {
-                console.error(response.responseText);
+                parent.showErrors(true);
+                parent.$('.errors').empty().append(response.responseText);
             }
         });
     },
 
     initDropZone: function () {
         var parent = this;
-        var model = this.model;
-
         this._dropZone = new Dropzone(this.$('#drop')[0], {
             url: function(file) {
-                return model.getSelfUrl() + '/attachments';
+                return parent.model.getSelfUrl() + '/attachments';
             },
-
             method: 'post',
             // input file name, registered on server
             paramName: "f",
@@ -115,46 +112,101 @@ module.exports = Marionette.ItemView.extend({
             autoProcessQueue : false,
             uploadMultiple: false,
             addRemoveLinks: true,
-
-            init: function () {
-
-            },
-
-            sending: function(file, xhr, formData) {
-                // triggered on each file
-                //console.log(xhr, formData, 'sending');
-            },
-
+            acceptedFiles: 'image/*,.pdf,.docx,.doc,.xlsx,.xls',
             error: function (xhr) {
-                console.error('error');
+                parent.showErrors(true);
+                parent.$('.errors').append(xhr.responseText);
             },
-
             success: function (file, xhr) {
-                xhr.data ? parent._files.push(xhr.data) : '';
-
-                //logger(file, model);
-                //Radio.channel('attachment').trigger('addAttachmentModel', file);
-            },
-
-            complete: function(file) {
-                if (file.status !== 'canceled') {
-                    this.removeFile(file);
+                if (xhr.data) {
+                    parent._files.push(xhr.data);
+                    //logger('success', file;
                 }
             },
-
             // file canceled to upload
             canceled: function(file) {
 
             },
-
+            removedfile: function (file) {
+                if (file.id) {
+                    parent.removeAttachmentFromServer(file);
+                } else {
+                    parent.$(file.previewElement).remove();
+                }
+            },
             // event triggers when all files has been uploaded
             queuecomplete: function () {
+                parent.setModelAttachments();
                 parent.remove();
-                model.getMeta()[model.get('id')].attachments = parent._files;
-                Radio.channel('сommentCollection').trigger('addComment', model);
-                parent._files = [];
             }
         });
+
+        this.showAttachments();
+    },
+
+    filterAttachs: function() {
+        // remove from dropzone some files, that already has uploaded to server
+        this._dropZone.files.filter(function (file) {
+            return file.id == true;
+        });
+    },
+
+    setModelAttachments: function () {
+        // add attachments to model meta
+        var id = this.model.get('id');
+        var parent = this;
+        // if model has attachments we must push new to it
+        if (this._files.length) {
+            this._files.forEach(function (file, i) {
+                parent.model.getMeta()[id].attachments.push(file);
+                // add file to attachment collection
+                //parent.options.attachs.add(new AttachmentModel(file));
+            });
+        }
+
+        Radio.channel('сommentCollection').trigger('addComment', this.model);
+
+        this._files = [];
+    },
+
+    removeAttachmentFromServer: function (file) {
+        // remove single file from server
+        var model = new AttachmentModel({ id: file.id });
+        var parent = this;
+        model.parentUrl = _.result(this.model, 'url');
+        //console.log(model);
+        model.destroy({ success: function (model) {
+            parent.options.attachs.remove({ id: file.id });
+            parent.$(file.previewElement).remove();
+            parent.$('.errors').removeClass('alert-danger')
+                .addClass('alert-info').text('File was successfully removed');
+            parent.showErrors(true);
+        }, error: function (response) {
+            this.$('.errors').empty();
+            this.$('.errors').text(response.responseText);
+            parent.showErrors(true);
+        }});
+    },
+
+    showAttachments: function () {
+        // if comment already has attachments they will be show
+        var id = this.model.get('id');
+        if (!id) return;
+        //var attachs = this.options.attachs.toJSON();
+        var attachs = this.model.getMeta()[id].attachments;
+        var drop = this._dropZone;
+        if (attachs.length) {
+            attachs.forEach(function (file, i) {
+                var mockFile = {
+                    name: file.cloud_public_id,
+                    type: file.type,
+                    id: file.id
+                };
+                drop.emit("addedfile", mockFile);
+                drop.emit("thumbnail", mockFile, file.url);
+            });
+        }
+        //drop.options.maxFiles = drop.options.maxFiles - attachs.length;
     },
 
     onRender: function () {

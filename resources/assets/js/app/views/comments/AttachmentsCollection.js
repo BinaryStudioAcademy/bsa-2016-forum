@@ -11,7 +11,16 @@ module.exports = Marionette.CollectionView.extend({
     },
 
     addAttachmentModel: function (model) {
-        //logger(model);
         this.collection.add(model);
     },
+
+    collectionEvents: {
+        'change': 'render',
+        'sync': 'render',
+        'add': 'render'
+    },
+
+    onRender: function () {
+
+    }
 });

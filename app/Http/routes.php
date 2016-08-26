@@ -25,13 +25,10 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
     Route::get('user','UserController@getUser')->name('user');
 
     Route::resource('users', 'UserController', [
-        'except' => ['edit', 'create'],
+        'except' => ['edit', 'create', 'store', 'update', 'destroy'],
         'names' => [
             'index' => 'users.index',
-            'store' => 'users.store',
             'show' => 'users.show',
-            'update' => 'users.update',
-            'destroy' => 'users.destroy',
         ],
     ]);
     /*Routes for users Role*/
@@ -94,6 +91,11 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
     Route::group(['prefix' => 'users/{user}/votes'], function () {
         Route::get('', 'VoteController@getUserVotes')->name('userVotes');
         Route::get('{vote}', 'VoteController@getUserVote')->name('userVote');
+    });
+    /*Routes for users results vote*/
+    Route::group(['prefix' => 'votes/{vote}/voteresult'], function () {
+        Route::get('', 'VoteController@getUserVoteResult')->name('userVoteResult');
+        Route::post('', 'VoteController@createUserVoteResult')->name('userVoteResult');
     });
     /*Routes for Topic tags*/
     Route::group(['prefix' => 'topics/{topic}/tags'], function () {
@@ -158,6 +160,13 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::get('{attachment}', 'AttachmentController@getVoteAttachment')->name('voteAttachment');
         Route::post('', 'AttachmentController@storeVoteAttachment')->name('storeVoteAttachment');
         Route::delete('{attachment}', 'AttachmentController@destroyVoteAttachment')->name('deleteVoteAttachment');
+    });
+    /*Routes for VoteItem attachments*/
+    Route::group(['prefix' => 'voteItems/{voteItem}/attachments'], function () {
+        Route::get('', 'AttachmentController@getAllVoteItemAttachments')->name('allVoteItemAttachments');
+        Route::get('{attachment}', 'AttachmentController@getVoteItemAttachment')->name('voteItemAttachment');
+        Route::post('', 'AttachmentController@storeVoteItemAttachment')->name('storeVoteItemAttachment');
+        Route::delete('{attachment}', 'AttachmentController@destroyVoteItemAttachment')->name('deleteVoteItemAttachment');
     });
     /*Routes for Comment attachments*/
     Route::group(['prefix' => 'comments/{comment}/attachments'], function () {

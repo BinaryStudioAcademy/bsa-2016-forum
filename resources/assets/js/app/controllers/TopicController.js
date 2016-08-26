@@ -51,27 +51,37 @@ module.exports = Marionette.Object.extend({
             var model = new TopicCommentModel();
 
             // maybe choose some better method to get child comment url
-            childCommentId ? model.parentUrl = _.result(topicModel, 'url') + _.result(model, 'url') +
-                    '/' + childCommentId :
+            if (childCommentId) {
+                model.parentUrl = _.result(topicModel, 'url') + _.result(model, 'url') + '/' + childCommentId;
+            } else {
                 model.parentUrl = _.result(topicModel, 'url');
+            }
 
             parentView.getRegion('newComment').show(new NewTopicCommentView({
                 model: model
             }));
         });
 
-        view.listenTo(Radio.channel('comment'), 'editComment', function (parentView, commentModel) {
-            if (!commentModel.parentUrl) commentModel.parentUrl = collection.parentUrl;
-            //console.log(commentModel);
-            parentView.getRegion('newComment').show(new NewTopicCommentView({
-                model: commentModel
+        view.listenTo(Radio.channel('comment'), 'editComment', function (view) {
+            if (!view.model.parentUrl) view.model.parentUrl = collection.parentUrl;
+            view.getRegion('newComment').show(new NewTopicCommentView({
+                model: view.model,
+                attachs: view._attachs
             }));
         });
 
-        view.listenTo(Radio.channel('comment'), 'removeComment', function (commentModel) {
+        view.listenTo(Radio.channel('comment'), 'removeComment', function (view) {
             //console.log(commentModel);
-            commentModel.parentUrl = _.result(topicModel, 'url');
-            commentModel.destroy();
+            view.model.parentUrl = _.result(topicModel, 'url');
+            view.model.destroy({
+                success: function () {
+
+                },
+                error: function (response) {
+                    view.$('.errors').text(response.responseText);
+                },
+                wait: true
+            });
         });
 
         app.render(view);

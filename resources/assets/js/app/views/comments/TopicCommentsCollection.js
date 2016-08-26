@@ -12,15 +12,18 @@ module.exports = Marionette.CollectionView.extend({
     },
 
     collectionEvents: {
+        'change': 'render',
+    },
+
+    modelEvents: {
         'change': 'render'
     },
 
     addComment: function (model) {
-        //logger(model);
         this.collection.add(model);
     },
 
     onRender: function () {
-        //console.log(this.collection, 'topic comments collection render');
+
     }
 });

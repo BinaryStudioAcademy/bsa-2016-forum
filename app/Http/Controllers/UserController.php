@@ -2,20 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\CurlService;
+use App\Models\Role;
 use App\Models\User;
 
 use Auth;
-use DCN\RBAC\Exceptions\RoleDeniedException;
-use DCN\RBAC\Models\Role;
 use Illuminate\Http\Request;
 
-use DCN\RBAC\Traits\HasRoleAndPermission;
-use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
-
-class UserController extends ApiController implements HasRoleAndPermissionContract
+class UserController extends ApiController
 {
-    use HasRoleAndPermission;
-
     /**
      * Display a listing of the resource.
      *
@@ -28,20 +23,6 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-
-        $user = User::create($request->all());
-
-        return $this->setStatusCode(201)->respond($user);
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int $id
@@ -51,64 +32,27 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
     {
         $user = User::findOrFail($id);
 
-        return $this->setStatusCode(200)->respond($user);
-    }
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-
-        $user = User::findOrFail($id);
-
-        $user->update($request->all());
+        $this->authorize('show', $user);
 
         return $this->setStatusCode(200)->respond($user);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-
-        $user = User::findOrFail($id);
-
-        $user->delete();
-        if ($user->trashed()) {
-            return $this->setStatusCode(204)->respond();
-        } else {
-            throw new \PDOException();
-        }
     }
 
     /**
      * @param $userId
-     * @param Request $requestst
      * @param $roleId
      * @return \Illuminate\Http\JsonResponse
-     * @throws RoleDeniedException
      */
-    public function updateRole($userId, Request $requestst, $roleId)
+    public function updateRole($userId, $roleId)
     {
-//        Auth::login(User::find(1));   //uncomment for test when there is no user Admin login in
 
-        if(!Auth::user()->is('admin')){
-            throw (new RoleDeniedException('Admin'));
-        }
         $user = User::findOrFail($userId);
+
+        $this->authorize('updateRole', $user);
+
         $role = Role::findOrFail($roleId);
-        $user->detachAllRoles();
-        $user->attachRole($role);
+        $user->role()->associate($role);
+        $user->save();
+
         return $this->setStatusCode(200)->respond(['user' => $user, 'role' => $role] );
     }
 
@@ -119,18 +63,31 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
     public function getUserRole($userId)
     {
         $user = User::findOrFail($userId);
-        $role = $user->grantedRoles()->get();
+
+        $this->authorize('getUserRole', $user);
+
+        $role = $user->role()->first();
 
         return $this->setStatusCode(200)->respond($role, ['user' => $user]);
 
     }
 
+    /**
+     * Return AuthUser Profile to the frontend
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getUser()
     {
         $user = Auth::user();
         if(!$user){
             return $this->setStatusCode(401)->respond();
         }
-        return $this->setStatusCode(200)->respond($user);
+        if (strtolower(env('APP_ENV')) == 'local') {
+            return $this->setStatusCode(200)->respond($user);
+        } else {
+            $userProfile = CurlService::sendUserRequest($user->global_id);
+            $userProfile['id'] = $user->id;
+            return $this->setStatusCode(200)->respond($userProfile);
+        }
     }
 }

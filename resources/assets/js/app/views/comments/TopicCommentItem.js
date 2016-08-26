@@ -10,8 +10,7 @@ module.exports = Marionette.LayoutView.extend({
     template: 'TopicCommentItem',
 
     initialize: function(options) {
-        //console.log(this.model);
-        //this.model.set('comment_url', this.model.collection.getEntityUrl() + '/' + this.model.get('id'));
+
     },
 
     regions: {
@@ -24,7 +23,7 @@ module.exports = Marionette.LayoutView.extend({
         'share': '.share-btn',
         'notification': '.notification-btn',
         'edit': '.comment-edit-btn',
-        'remove': '.comment-remove-btn'
+        'remove': '#removeBtn'
     },
 
     events: {
@@ -33,11 +32,11 @@ module.exports = Marionette.LayoutView.extend({
         },
 
         'click @ui.edit': function (event) {
-            Radio.channel('comment').trigger('editComment', this, this.model);
+            Radio.channel('comment').trigger('editComment', this);
         },
 
         'click @ui.remove': function (event) {
-            Radio.channel('comment').trigger('removeComment', this.model);
+            Radio.channel('comment').trigger('removeComment', this);
         },
     },
 
@@ -58,12 +57,16 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onBeforeShow: function () {
-        //this.getRegion('attachments').show(new AttachmentsCollectionView({
-        //    collection: attachs
-        //}));
+        var meta = this.model.getMeta();
+        var attachs = meta[this.model.id].attachments;
+        this._attachs = new AttachmentCollection(attachs);
+        this.getRegion('attachments').show(new AttachmentsCollectionView({
+            collection: this._attachs
+        }));
     },
 
     onRender: function () {
+
     }
 
 });

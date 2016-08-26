@@ -10,6 +10,7 @@ body {
 }
 .menu-container nav {
   margin-bottom: 0;
+  border: 0;
 }
 .menu-container li a {
   border-bottom: 4px solid transparent;
@@ -64,4 +65,7 @@ body {
 }
 .attachments-container img {
   height: 150px;
+}
+.nav > li > a:hover, .nav > li > a:focus {
+  background-color: transparent;
 }

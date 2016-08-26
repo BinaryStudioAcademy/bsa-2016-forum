@@ -5,4 +5,8 @@ var Radio = require('backbone.radio');
 
 module.exports = Marionette.ItemView.extend({
     template: 'AttachmentItem',
+
+    modelEvents: {
+        'change': 'render'
+    }
 });

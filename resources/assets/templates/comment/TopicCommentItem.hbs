@@ -12,16 +12,8 @@
             <div class="topic-body">
                 <div class="topic-msg">
                     <h4>{{ model.content_origin }}</h4>
-                    <!--<a href="{{ comment_url }}">{{ model.content_origin }}</a>-->
                 </div>
                 <div class="attachments-container">
-                    {{#each meta.attachments}}
-                        <div class="col-xs-6 col-md-3">
-                            <a href="{{ url }}" class="thumbnail">
-                                <img src="{{ url }}" alt="">
-                            </a>
-                        </div>
-                    {{/each}}
                 </div>
             </div>
         </div>
@@ -34,8 +26,8 @@
                 {{!-- only output if user comment belongs to current user --}}
                 {{#if meta.isUserComment}}
                     <button class="btn btn-primary comment-edit-btn">Edit</button>
-                    <button class="btn btn-danger comment-remove-btn">Remove</button>
-                    <!--<button data-toggle="modal" data-target="#delete-comment-dialog" class="btn btn-danger">Remove</button>-->
+                    <button class="btn btn-danger" data-toggle="modal"
+                            data-target="#confirmDialog-{{ model.id }}">Remove</button>
                 {{else}}
                     <a class="answer-btn">Reply</a>
                 {{/if}}
@@ -55,7 +47,8 @@
     </div>
 </div>
 <div class="new-comment-container"></div>
-<div id="delete-comment-dialog" class="modal" role="dialog">
+
+<div id="confirmDialog-{{ model.id }}" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -65,8 +58,7 @@
                 <p>Are you sure?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger comment-remove-btn"
-                        data-dismiss="modal">Submit</button>
+                <button type="button" class="btn btn-default" id="removeBtn" data-dismiss="modal">Submit</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
