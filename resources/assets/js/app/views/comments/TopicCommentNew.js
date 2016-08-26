@@ -176,7 +176,7 @@ module.exports = Marionette.ItemView.extend({
         model.parentUrl = _.result(this.model, 'url');
         //console.log(model);
         model.destroy({ success: function (model) {
-            parent.options.attachs.remove({ id: file.id });
+            if (parent.options.attachs) parent.options.attachs.remove({ id: file.id });
             parent.$(file.previewElement).remove();
             parent.$('.errors').removeClass('alert-danger')
                 .addClass('alert-info').text('File was successfully removed');

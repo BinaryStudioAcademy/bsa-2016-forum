@@ -9,10 +9,6 @@ var currentUser = require('../../initializers/currentUser');
 module.exports = Marionette.LayoutView.extend({
     template: 'TopicCommentItem',
 
-    initialize: function(options) {
-
-    },
-
     regions: {
         'newComment': '.new-comment-container',
         'attachments': '.attachments-container'
@@ -64,9 +60,5 @@ module.exports = Marionette.LayoutView.extend({
             collection: this._attachs
         }));
     },
-
-    onRender: function () {
-
-    }
 
 });
