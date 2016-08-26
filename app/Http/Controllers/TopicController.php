@@ -80,6 +80,7 @@ class TopicController extends ApiController
         $topics = Topic::where('category_id', $catId)
             ->filterByQuery($this->searchStr)
             ->filterByTags($this->tagIds)->get();
+        
         $meta = $this->getMetaData($topics);
 
         return $this->setStatusCode(200)->respond($topics, $meta);
