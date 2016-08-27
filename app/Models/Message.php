@@ -12,12 +12,6 @@ class Message extends Model
     protected $table='messages';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = ['deleted_at'];
 
     public function user()
     {
@@ -36,6 +30,7 @@ class Message extends Model
     {
         return self::where('user_to_id', $userId)
             ->groupBy('user_from_id')
+            ->withTrashed()
             ->get();
     }
 
@@ -47,6 +42,6 @@ class Message extends Model
         })->orWhere(function ($msg) use ($userId, $withUserId) {
             $msg->where('user_to_id', $userId)
                 ->where('user_from_id', $withUserId);
-        });
+        })->withTrashed();
     }
 }
