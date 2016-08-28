@@ -23,15 +23,12 @@ class StatusTest extends TestCase
     public function testCheckUserStatusRelation()
     {
         $user = User::all()->random(1);;
-        $statuses = Status::all();
+        $statuses = Status::all()->toArray();
 
-        foreach ($statuses as $status) {
-            if ($status->name == $user->status->name) {
-                $is_work = true;
-                break;
-            }
+        if (array_search($user->status->name, array_column($statuses, 'name')) !== false) {
+            $result = true;
         }
 
-        $this->assertTrue($is_work);
+        $this->assertTrue($result);
     }
 }
