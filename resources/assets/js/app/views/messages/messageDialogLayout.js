@@ -25,5 +25,8 @@ module.exports = Marionette.LayoutView.extend({
             collection: this.collection,
             currentUser: this.options.currentUser
         }));
+    },
+    onBeforeDestroy: function () {
+        this.collection.stopListening();
     }
 });
