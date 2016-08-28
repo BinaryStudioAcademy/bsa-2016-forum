@@ -52,11 +52,7 @@ class VoteController extends ApiController
         $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
 
         $votes = $votes->filter(function ($vote) {
-            if (Gate::denies('show', $vote)) {
-                return false;
-            } else{
-                return true;
-            }
+            return Gate::allows('show', $vote);
         });
         $data = $this->getMetaData($votes);
         return $this->setStatusCode(200)->respond($data);
