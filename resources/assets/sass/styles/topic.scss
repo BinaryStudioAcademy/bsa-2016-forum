@@ -85,7 +85,7 @@ TOPIC DETAILS
 .topic-comment-item {
   background: #fff;
   border: 1px solid #EEEEEE;
-  box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+  //box-shadow: 0 2px 2px rgba(0,0,0,0.1);
   margin: 20px 0;
 }
 
@@ -194,7 +194,7 @@ TOPIC DETAILS
 }
 
 .topic-control {
-  padding: 5px 15px;
+  padding: 0px 15px;
   overflow: hidden;
 }
 
@@ -277,7 +277,7 @@ TOPIC DETAILS
   padding: 10px;
 }
 
-.topic-control-add .loader img {
+.new-comment-container .loader img {
   height: 30px;
 }
 

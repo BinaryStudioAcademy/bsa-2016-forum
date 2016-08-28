@@ -25,9 +25,8 @@
             <div class="topic-control-btn">
                 {{!-- only output if user comment belongs to current user --}}
                 {{#if meta.isUserComment}}
-                    <a class="btn btn-primary comment-edit-btn">Edit</a>
-                    <a class="btn btn-danger" data-toggle="modal"
-                            data-target="#confirmDialog-{{ model.id }}">Remove</a>
+                    <a class="comment-edit-btn">Edit</a>
+                    <a class="" data-toggle="modal" data-target="#confirmDialog-{{ model.id }}">Remove</a>
                 {{else}}
                     <a class="answer-btn">Reply</a>
                 {{/if}}
@@ -43,6 +42,7 @@
                     <di ... -->
     </div>
 </div>
+
 <div class="new-comment-container"></div>
 
 <div id="confirmDialog-{{ model.id }}" class="modal" tabindex="-1" role="dialog">

@@ -10,12 +10,10 @@ module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentNew',
     _dropZone: null,
     _files: [],
-    className: 'topic-comment-item',
 
     ui: {
-        'attach': '.topic-attachment button',
         'submit': '#submit',
-        'close': '.close-btn button'
+        'close': '.close'
     },
 
     modelEvents: {
@@ -32,37 +30,15 @@ module.exports = Marionette.ItemView.extend({
     },
 
     events: {
-        'click @ui.attach': 'attachFile',
         'click @ui.submit': 'submitComment',
-        'click @ui.close': 'close'
-    },
-
-    initialize: function (options) {
-
-    },
-
-    close: function (event) {
-        this.remove();
-    },
-
-    attachFile: function (event) {
-        var dropz = this.$('.dropzone-container');
-
-        if (dropz.hasClass('hidden')) {
-            dropz.removeClass('hidden');
-        } else {
-            dropz.addClass('hidden');
-        }
     },
 
     showLoader: function (show) {
-        return show ? this.$('.topic-control-add .loader')
-            .removeClass('hidden') : this.$('.topic-control-add .loader').addClass('hidden');
+        return (show ? this.$('.loader').removeClass('hidden') : this.$('.loader').addClass('hidden'));
     },
 
     showErrors: function (show) {
-        return show ? this.$('.errors')
-            .removeClass('hidden') : this.$('.errors').addClass('hidden');
+        return (show ? this.$('.errors').removeClass('hidden') : this.$('.errors').addClass('hidden'));
     },
 
     submitComment: function (event) {
@@ -88,7 +64,7 @@ module.exports = Marionette.ItemView.extend({
                     parent._dropZone.processQueue();
                 } else {
                     Radio.channel('сommentCollection').trigger('addComment', model);
-                    parent.remove();
+                    parent.$('#commentdlg').modal('hide');
                 }
             },
 
@@ -137,7 +113,7 @@ module.exports = Marionette.ItemView.extend({
             // event triggers when all files has been uploaded
             queuecomplete: function () {
                 parent.setModelAttachments();
-                parent.remove();
+                parent.$('#commentdlg').modal('hide');
             }
         });
 
@@ -213,6 +189,11 @@ module.exports = Marionette.ItemView.extend({
     },
 
     onRender: function () {
+        this.$('#commentdlg').modal('show');
+        var view = this;
+        view.$('#commentdlg').on('hidden.bs.modal', function (e) {
+            view.remove();
+        });
         this.initDropZone();
     }
 });
