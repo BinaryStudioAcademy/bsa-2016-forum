@@ -12,12 +12,18 @@ class ChangeVotePermissionsToVoteUserDeniedTable extends Migration
      */
     public function up()
     {
+        Schema::table('vote_permissions', function (Blueprint $table) {
+            $table->dropForeign('vote_permissions_vote_id_foreign');
+            $table->dropForeign('vote_permissions_user_id_foreign');
+        });
+
         Schema::rename('vote_permissions', 'user_vote_denied');
-//        Schema::table('users', function ($table) {
-//            $table->dropColumn('votes');
-//        });
-        Schema::table('user_vote_denied', function(Blueprint $table){
-           $table->dropColumn('grant');
+
+        Schema::table('user_vote_denied', function (Blueprint $table) {
+            $table->dropColumn('grant');
+            $table->foreign('vote_id')->references('id')->on('votes');
+            $table->foreign('user_id')->references('id')->on('users');
+
         });
     }
 
@@ -28,9 +34,17 @@ class ChangeVotePermissionsToVoteUserDeniedTable extends Migration
      */
     public function down()
     {
+        Schema::table('user_vote_denied', function (Blueprint $table) {
+            $table->dropForeign('user_vote_denied_vote_id_foreign');
+            $table->dropForeign('user_vote_denied_user_id_foreign');
+        });
+
         Schema::rename('user_vote_denied', 'vote_permissions');
-        Schema::table('user_vote_denied', function(Blueprint $table){
+
+        Schema::table('vote_permissions', function (Blueprint $table) {
             $table->boolean('grant')->default(1);
+            $table->foreign('vote_id')->references('id')->on('votes');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 }
