@@ -25,6 +25,7 @@ class StatusTest extends TestCase
         $user = User::all()->random(1);;
         $statuses = Status::all()->toArray();
 
+        $result = false;
         if (array_search($user->status->name, array_column($statuses, 'name')) !== false) {
             $result = true;
         }
