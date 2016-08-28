@@ -22,8 +22,4 @@ module.exports = Marionette.CollectionView.extend({
     addComment: function (model) {
         this.collection.add(model);
     },
-
-    onRender: function () {
-
-    }
 });

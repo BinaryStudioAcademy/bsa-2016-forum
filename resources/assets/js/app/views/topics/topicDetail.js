@@ -9,10 +9,6 @@ module.exports = Marionette.LayoutView.extend({
 
     template: 'topicDetail',
 
-    initialize: function(options) {
-        //console.log('topic show', options);
-    },
-
     regions: {
         'newComment': '#newcomment',
         'topicHeader': '.topic-head',

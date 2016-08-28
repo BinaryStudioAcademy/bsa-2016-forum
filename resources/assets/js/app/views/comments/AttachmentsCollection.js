@@ -19,8 +19,4 @@ module.exports = Marionette.CollectionView.extend({
         'sync': 'render',
         'add': 'render'
     },
-
-    onRender: function () {
-
-    }
 });
