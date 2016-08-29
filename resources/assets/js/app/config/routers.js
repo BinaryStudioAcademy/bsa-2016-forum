@@ -21,7 +21,8 @@ module.exports = {
             appRoutes: {
                 'topics': 'index',
                 'topics/:id' : 'show',
-                'topic/create': 'create'
+                'topic/create': 'create',
+                'topic/:id/edit': 'edit'
             },
             navigItemName: 'topics'
         },

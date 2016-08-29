@@ -5,9 +5,14 @@ var TopicCollection = require('../collections/topicCollection');
 var TopicCreate = require('../views/topics/topicCreate');
 var TopicModel = require('../models/TopicModel');
 var TopicDetailView = require('../views/topics/topicDetail');
+var Radio = require('backbone.radio');
 
 module.exports = Marionette.Object.extend({
-
+    initialize: function () {
+        this.listenTo(Radio.channel('topics'), 'editTopic', function (id) {
+            alert(id);
+        });
+    },//
     index: function () {
         var topicCollection = new TopicCollection();
         topicCollection.fetch();
@@ -24,6 +29,15 @@ module.exports = Marionette.Object.extend({
         topicModel.fetch({
             success: function () {
                 app.render(new TopicDetailView({model: topicModel}));
+            }
+        });
+    },
+
+    edit: function (id) {
+        var topicModel = new TopicModel({id: id});
+        topicModel.fetch({
+            success: function () {
+                app.render(new TopicCreate({model: topicModel}));
             }
         });
     }

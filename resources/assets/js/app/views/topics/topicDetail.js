@@ -1,16 +1,19 @@
 var Marionette = require('backbone.marionette');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
+var Radio = require('backbone.radio');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicDetail',
 
     ui: {
-        bookmarkTopic: '.bookmark-btn'
+        bookmarkTopic: '.bookmark-btn',
+        topicEdit: '.topic-edit-btn'
     },
 
     events: {
-        'click @ui.bookmarkTopic': 'bookmarkTopic'
+        'click @ui.bookmarkTopic': 'bookmarkTopic',
+        'click @ui.topicEdit': 'topicEdit'
     },
 
     unlockButton: function () {
@@ -88,5 +91,9 @@ module.exports = Marionette.ItemView.extend({
                 }
             });
         }
+    },
+
+    topicEdit: function () {
+        Radio.trigger('topics', 'editTopic', 2);
     }
 });
