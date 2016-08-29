@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Topic;
 use App\Http\Requests\TopicRequest;
 use App\Models\User;
@@ -18,6 +19,7 @@ class TopicController extends ApiController
 
     protected $tagIds = [];
 
+    /**
     /**
      * @param $topics array
      * @return array $data array
@@ -48,7 +50,7 @@ class TopicController extends ApiController
         return $data;
     }
 
-     /**
+    /**
      * Display a listing of the resource.
      *
      * @param  TopicRequest $request
@@ -58,11 +60,41 @@ class TopicController extends ApiController
     {
         $this->setFiltersData($request);
 
-        $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
+        $extendedTopics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
 
-        $meta = $this->getMetaData($topics);
+        foreach ($extendedTopics as $topic) {
+            $topic->usersCount = $topic->activeUsersCount();
+            $topic->answersCount = $topic->comments()->count();
+        }
 
-        return $this->setStatusCode(200)->respond($topics, $meta);
+        $meta = $this->getMetaData($extendedTopics);
+
+        return $this->setStatusCode(200)->respond($extendedTopics, $meta);
+    }
+
+
+    /**
+     * @param $catId
+     * @param TopicRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function indexInCategory($catId, TopicRequest $request)
+    {
+        $this->setFiltersData($request);
+
+        $extendedTopics = Topic::where('category_id', $catId)
+            ->filterByQuery($this->searchStr)
+            ->filterByTags($this->tagIds)->get();
+
+        foreach ($extendedTopics as $topic) {
+            $topic->usersCount = $topic->activeUsersCount();
+            $topic->answersCount = $topic->comments()->count();
+        }
+
+
+        $meta = $this->getMetaData($extendedTopics);
+
+        return $this->setStatusCode(200)->respond($extendedTopics, $meta);
     }
 
     /**
@@ -73,10 +105,12 @@ class TopicController extends ApiController
      */
     public function store(TopicRequest $request)
     {
-        $extendedTopic = $topic = Topic::create($request->all());
-        TagService::TagsHandler($topic, $request->tags);
-        $extendedTopic->tags = $topic->tags()->get();
-        return $this->setStatusCode(201)->respond($extendedTopic);
+        $topic = Topic::create($request->all());
+        if ($request->tags) {
+            TagService::TagsHandler($topic, $request->tags);
+        }
+        $topic->tags = $topic->tags()->get();
+        return $this->setStatusCode(201)->respond($topic);
     }
 
     /**
@@ -87,11 +121,10 @@ class TopicController extends ApiController
      */
     public function show($id)
     {
-        $extendedTopic = $topic = Topic::findOrFail($id);
-        $extendedTopic->tags = $topic->tags()->get();
-
+        $topic = Topic::findOrFail($id);
+        $topic->tags = $topic->tags()->get();
         $meta = $this->getMetaData($topic);
-        return $this->setStatusCode(200)->respond($extendedTopic, $meta);
+        return $this->setStatusCode(200)->respond($topic, $meta);
     }
 
     /**
@@ -111,10 +144,11 @@ class TopicController extends ApiController
 
         $topic->update($request->all());
 
-        $extendedTopic = $topic = Topic::findOrfail($id);
-        TagService::TagsHandler($topic, $request->tags);
-        $extendedTopic->tags = $topic->tags()->get();
-        return $this->setStatusCode(200)->respond($extendedTopic);
+        if ($request->tags) {
+            TagService::TagsHandler($topic, $request->tags);
+        }
+        $topic->tags = $topic->tags()->get();
+        return $this->setStatusCode(200)->respond($topic);
     }
 
     /**
@@ -131,7 +165,6 @@ class TopicController extends ApiController
         $this->authorize('delete', $topic);
 
         $topic->delete();
-
         return $this->setStatusCode(204)->respond();
     }
 
@@ -145,7 +178,6 @@ class TopicController extends ApiController
     public function getUserTopics($userId, TopicRequest $request)
     {
         $user = User::findOrFail($userId);
-
         $this->setFiltersData($request);
 
         $topics = $user->topics()
@@ -154,11 +186,15 @@ class TopicController extends ApiController
             ->filterByTags($this->tagIds)
             ->get();
 
+        $meta = $this->getMetaData($topics);
+
         if (!$topics) {
             return $this->setStatusCode(200)->respond();
         }
 
-        return $this->setStatusCode(200)->respond($topics, ['user' => $user]);
+        $meta['user'] = $user;
+
+        return $this->setStatusCode(200)->respond($topics, $meta);
     }
 
     /**

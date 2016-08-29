@@ -125,6 +125,10 @@ MESSAGE DIALOG
   display: flex;
 }
 
+.message-item-container .deleted a {
+  display: none;
+}
+
 .message-msg-avatar {
   padding: 5px;
 }
@@ -155,6 +159,15 @@ MESSAGE DIALOG
   color: #999999;
   font-style: italic;
   font-size: 14px;
+}
+
+.message-msg-body > div {
+  display: inline;
+}
+
+.message-msg-body a:hover {
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .message-new {

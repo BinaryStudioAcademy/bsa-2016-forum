@@ -90,8 +90,14 @@ module.exports = Marionette.Object.extend({
         });
 
         DialogView.listenTo(Radio.channel('messagesChannel'),'deleteMessage', function (message){
+            var toRemove = new MessageModel({id: message.get('id')});
             message.parentUrl = _.result(currentUser, 'url');
-            message.destroy();
+            toRemove.parentUrl = _.result(currentUser, 'url');
+            toRemove.destroy({
+                success: function () {
+                    message.fetch();
+                }
+            });
         });
 
         DialogView.listenTo(Radio.channel('messagesChannel'),'editMessage', function (message){
