@@ -17,8 +17,7 @@ class VoteTableSeeder extends Seeder
 
         factory(App\Models\Vote::class, $count_votes)->create()->each(function($vote) use ($users) {
             $commentCount = rand(1, 5);
-            $comments = factory(Comment::class, $commentCount)
-                ->make();
+            $comments = factory(Comment::class, $commentCount)->make();
             if (!$comments instanceof Collection) {
                 $comments =  new Collection([$comments]);
             }
