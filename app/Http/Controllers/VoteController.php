@@ -67,8 +67,16 @@ class VoteController extends ApiController
     public function store(VotesRequest $request)
     {
         $extendedVote = $vote = Vote::create($request->all());
-        TagService::TagsHandler($vote, $request->tags);
-        $extendedVote->tags = $vote->tags()->get();
+        if(!$vote->is_public){
+            $deniedUsersIds = $request->get('denied_users_ids');
+            $deniedUsersIds = ($deniedUsersIds) ? explode(',', $deniedUsersIds) : [];
+            $users = User::whereIn('id', $deniedUsersIds)->get();
+            foreach($users as $user){
+                $user->votesDenied()->attach($vote);
+            }
+        }
+//        TagService::TagsHandler($vote, $request->tags);
+//        $extendedVote->tags = $vote->tags()->get();
         return $this->setStatusCode(201)->respond($extendedVote);
     }
 
@@ -155,6 +163,10 @@ class VoteController extends ApiController
             ->filterByTags($this->tagIds)
             ->get();
 
+        $votes = $votes->filter(function ($vote) {
+            return Gate::allows('show', $vote);
+        });
+
         if (!$votes) {
             return $this->setStatusCode(200)->respond();
         }
@@ -176,6 +188,7 @@ class VoteController extends ApiController
         if (!$vote) {
             throw (new ModelNotFoundException)->setModel(Vote::class);
         }
+        $this->authorize('show', $vote);
 
         return $this->setStatusCode(200)->respond($vote, ['user' => $user]);
     }

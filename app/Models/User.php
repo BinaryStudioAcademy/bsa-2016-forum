@@ -92,7 +92,7 @@ class User extends Authenticatable
 
     public function votesDenied()
     {
-        return $this->belongsToMany(Vote::class,'user_vote_denied', 'user_id', 'vote_id');
+        return $this->belongsToMany(Vote::class,'user_vote_denied', 'user_id', 'vote_id')->withTimestamps();
     }
 
     /**

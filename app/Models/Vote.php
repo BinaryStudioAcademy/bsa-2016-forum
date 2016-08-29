@@ -101,12 +101,4 @@ class Vote extends Model
         }
         return $query;
     }
-
-//    public function scopeFilterByDenied(Builder $query, array $voteIds)
-//    {
-//        if(!empty($voteIds)) {
-//            $query = $query->
-//        }
-//        return $query;
-//    }
 }
