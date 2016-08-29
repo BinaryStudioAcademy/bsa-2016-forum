@@ -1,14 +1,16 @@
 <div class="modal fade">
     <div class="modal-dialog" role="document">
         <div class="modal-content message-edit">
-            <div class="modal-body">
-                <textarea id="edited-message">{{message.message}}</textarea>
-                <span>{{edit_at}} {{message.updated_at}}</span>
-            </div>
-            <div class="modal-footer message-new-control">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-secondary" id="message-save">Save</button>
-            </div>
+            <form id="message-edit-form">
+                <div class="modal-body">
+                    <textarea required id="edited-message">{{message.message}}</textarea>
+                    <span>{{edit_at}} {{message.updated_at}}</span>
+                </div>
+                <div class="modal-footer message-new-control">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-secondary" id="message-save">Save</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
