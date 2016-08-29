@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\Comment;
+use Illuminate\Database\Eloquent\Collection;
 
 class VoteTableSeeder extends Seeder
 {
@@ -32,8 +35,15 @@ class VoteTableSeeder extends Seeder
             $tag = factory(App\Models\Tag::class)->make();
             $comment = $vote->tags()->save($tag);
 
-            $like = factory(App\Models\Like::class)->make();
-            $vote = $vote->likes()->save($like);
+//            insert field for likes for this vote
+            $lim=rand(1,3);
+            $lim=rand(1,3);
+            foreach ((range(1, $lim)) as $index) {
+                $like = factory(App\Models\Like::class)->make();
+                $randomUser = $users->random();
+                $like->user()->associate($randomUser);
+                $like = $vote->likes()->save($like);
+            }
 
         });
 
