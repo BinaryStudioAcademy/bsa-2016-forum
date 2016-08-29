@@ -14,6 +14,8 @@ module.exports = {
                 'topics': 'index',
                 'topics/:id': 'show',
                 'topic/create': 'create',
+                'categories/:catId/topics': 'indexInCategory',
+                'topicCategories': 'indexCategories'
             },
             navigItemName: 'topics'
         },
