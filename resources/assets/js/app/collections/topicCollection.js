@@ -2,7 +2,7 @@ var baseCollection = require('../instances/Collection');
 var topicModel = require('../models/TopicModel');
 
 module.exports = baseCollection.extend({
-    url: '/topics',
+    url: '/categories/:catId/topics',
     model: topicModel,
 
     initialize: function (options) {
@@ -10,4 +10,5 @@ module.exports = baseCollection.extend({
             this.parentUrl = options.parentUrl;
         }
     }
+
 });
