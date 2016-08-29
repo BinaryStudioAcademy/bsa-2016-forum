@@ -2,8 +2,10 @@ var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 var TopicModel = require('../../models/TopicModel');
 var currentUser = require('../../initializers/currentUser');
+var topicCategoryCollectionForSelector = require('../../views/topics/topicCategoryCollectionForSelector');
+var topicCategoryItemForSelector = require('../../views/topics/topicCategoryItemForSelector');
 
-module.exports = Marionette.ItemView.extend({
+module.exports = Marionette.LayoutView.extend({
     template: 'topicCreateNew',
 
     ui: {
@@ -12,6 +14,18 @@ module.exports = Marionette.ItemView.extend({
 
     initialize: function () {
         this.model.set({user_id: currentUser.id});
+    },
+    regions: {
+        categories: '#categories'
+    },
+
+    onBeforeShow: function () {
+        this.categories.show(new topicCategoryItemForSelector({
+            collection: this.collection
+        }))
+    },
+
+    onRender: function () {
     },
 
     modelEvents: {
@@ -40,4 +54,5 @@ module.exports = Marionette.ItemView.extend({
             });
         }
     }
+
 });

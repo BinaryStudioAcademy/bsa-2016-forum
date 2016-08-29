@@ -18,10 +18,10 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleTableSeeder::class);
         $this->call(UserStatusesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
+        $this->call(CategoriesTableSeeder::class);
         $this->call(TopicsTableSeeder::class);
         $this->call(MessagesTableSeeder::class);
         $this->call(VoteTableSeeder::class);
-        $this->call(CommentsTableSeeder::class);
         $this->call(VoteItemSeeder::class);
 
         Model::reguard();
