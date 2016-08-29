@@ -82,13 +82,19 @@ class TopicController extends ApiController
     {
         $this->setFiltersData($request);
 
-        $topics = Topic::where('category_id', $catId)
+        $extendedTopics = Topic::where('category_id', $catId)
             ->filterByQuery($this->searchStr)
             ->filterByTags($this->tagIds)->get();
-        
-        $meta = $this->getMetaData($topics);
 
-        return $this->setStatusCode(200)->respond($topics, $meta);
+        foreach ($extendedTopics as $topic) {
+            $topic->usersCount = $topic->activeUsersCount();
+            $topic->answersCount = $topic->comments()->count();
+        }
+
+
+        $meta = $this->getMetaData($extendedTopics);
+
+        return $this->setStatusCode(200)->respond($extendedTopics, $meta);
     }
 
     /**
@@ -180,11 +186,15 @@ class TopicController extends ApiController
             ->filterByTags($this->tagIds)
             ->get();
 
+        $meta = $this->getMetaData($topics);
+
         if (!$topics) {
             return $this->setStatusCode(200)->respond();
         }
 
-        return $this->setStatusCode(200)->respond($topics, ['user' => $user]);
+        $meta['user'] = $user;
+
+        return $this->setStatusCode(200)->respond($topics, $meta);
     }
 
     /**
