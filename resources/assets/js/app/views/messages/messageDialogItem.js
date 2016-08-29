@@ -45,7 +45,6 @@ module.exports = Marionette.ItemView.extend({
             messageDirection: direction,
             edit_at: edit,
             user: with_user,
-            user_name: with_user.first_name + " " + with_user.last_name,
             deleted: deleted
         }
     }
