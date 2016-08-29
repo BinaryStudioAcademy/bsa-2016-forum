@@ -12,11 +12,7 @@ module.exports = Marionette.CollectionView.extend({
     },
 
     collectionEvents: {
-        'change': 'render',
-    },
-
-    modelEvents: {
-        'change': 'render'
+        'sync': 'render',
     },
 
     addComment: function (model) {

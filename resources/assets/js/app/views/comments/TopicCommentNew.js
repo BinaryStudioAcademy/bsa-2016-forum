@@ -29,7 +29,7 @@ module.exports = Marionette.ItemView.extend({
                 ui.errors.append(message);
             });
             this.showErrors(true);
-        }
+        },
     },
 
     events: {
@@ -57,17 +57,19 @@ module.exports = Marionette.ItemView.extend({
         });
 
         var parent = this;
+
         this.showLoader(true);
+
         this.model.save(data, {
             success: function (model) {
-                logger('comment saved successfully');
+                //logger('comment saved successfully');
                 if (parent._dropZone && parent._dropZone.files.length) {
                     parent.filterAttachs();
                     // start upload to server
                     parent._dropZone.processQueue();
                 } else {
-                    Radio.channel('сommentCollection').trigger('addComment', model);
                     parent.ui.commentDlg.modal('hide');
+                    Radio.channel('сommentCollection').trigger('addComment', model);
                 }
             },
 
@@ -99,12 +101,7 @@ module.exports = Marionette.ItemView.extend({
             success: function (file, xhr) {
                 if (xhr.data) {
                     parent._files.push(xhr.data);
-                    //logger('success', file;
                 }
-            },
-            // file canceled to upload
-            canceled: function(file) {
-
             },
             removedfile: function (file) {
                 if (file.id) {
@@ -142,7 +139,8 @@ module.exports = Marionette.ItemView.extend({
                 //parent.options.attachs.add(new AttachmentModel(file));
             });
         }
-
+        // remove bootstrap modal overlay from body
+        $('.modal-backdrop').remove();
         Radio.channel('сommentCollection').trigger('addComment', this.model);
 
         this._files = [];
@@ -174,8 +172,8 @@ module.exports = Marionette.ItemView.extend({
         // if comment already has attachments they will be show
         var id = this.model.get('id');
         if (!id) return;
-        //var attachs = this.options.attachs.toJSON();
-        var attachs = this.model.getMeta()[id].attachments;
+        var attachs = this.options.attachs.toJSON();
+        //var attachs = this.model.getMeta()[id].attachments;
         var drop = this._dropZone;
         if (attachs.length) {
             attachs.forEach(function (file, i) {
@@ -193,10 +191,14 @@ module.exports = Marionette.ItemView.extend({
 
     onRender: function () {
         this.ui.commentDlg.modal('show');
+
         var view = this;
         view.ui.commentDlg.on('hidden.bs.modal', function (e) {
             view.remove();
         });
+
         this.initDropZone();
+
+        return this;
     }
 });
