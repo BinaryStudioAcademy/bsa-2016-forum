@@ -8,6 +8,9 @@ module.exports = BaseModel.extend({
             this.parentUrl = options.parentUrl;
         }
     },
+    defaults: {
+        rating: 0
+    },
     validate: function (attrs) {
         var errors = {};
         if (!attrs.content_origin) {
