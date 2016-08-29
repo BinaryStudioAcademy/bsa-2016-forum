@@ -7,6 +7,7 @@ use App\Models\Topic;
 use App\Models\Vote;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\TagRequest;
+use App\Facades\TagService;
 
 class TagController extends ApiController
 {
@@ -20,9 +21,7 @@ class TagController extends ApiController
      */
     protected function isTagBelongsToTopic(Topic $topic, Tag $tag)
     {
-        $topicWhichHasThisTag = $tag->topics()->get()->first();
-
-        return ($topicWhichHasThisTag && $topicWhichHasThisTag->id === $topic->id);
+        return !!$topic->tags()->find($tag->id);
     }
 
     /**
@@ -58,9 +57,7 @@ class TagController extends ApiController
     public function storeTopicTag(Topic $topic, TagRequest $request)
     {
         $this->authorize('createTopicTag', $topic);
-
-        $tag = Tag::create($request->all());
-        $tag = $topic->tags()->save($tag);
+        $tag = TagService::storeTag($topic, $request->name);
         return $this->setStatusCode(201)->respond($tag);
     }
 
@@ -92,9 +89,7 @@ class TagController extends ApiController
      */
     protected function isTagBelongsToVote(Vote $vote, Tag $tag)
     {
-        $voteWhichHasThisTag = $tag->votes()->get()->first();
-
-        return ($voteWhichHasThisTag && $voteWhichHasThisTag->id === $vote->id);
+        return !!$vote->tags()->find($tag->id);
     }
 
     public function getAllVoteTags(Vote $vote)
@@ -125,9 +120,8 @@ class TagController extends ApiController
     public function storeVoteTag(Vote $vote, TagRequest $request)
     {
         $this->authorize('createVoteTag', $vote);
-
-        $tag = Tag::create($request->all());
-        $tag = $vote->tags()->save($tag);
+        
+        $tag = TagService::storeTag($vote, $request->name);
         return $this->setStatusCode(201)->respond($tag);
     }
 
