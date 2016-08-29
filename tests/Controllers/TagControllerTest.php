@@ -15,7 +15,13 @@ class TagControllerTest extends TestCase
 
     public function getTagId($response)
     {
-        return substr($response->content(), strpos($response->content(), '"id":') + 5, strpos($response->content(), '"name"') - 16);
+        $tagId = json_decode($response->content());
+
+        if (!empty($tagId->data[0]->id)) {
+            return $tagId->data[0]->id;
+        }
+
+        return null;
     }
 
     public function roleUser()
@@ -58,9 +64,10 @@ class TagControllerTest extends TestCase
     {
         $topic = Topic::all()->random(1);
         $response = $this->call('GET', '/api/v1/topics/' . $topic->id . '/tags');
+        $tagId = $this->getTagId($response);
 
-        if (!empty($response->content())) {
-            $response = $this->call('GET', '/api/v1/topics/' . $topic->id . '/tags/' . $this->getTagId($response));
+        if (!empty($tagId)) {
+            $response = $this->call('GET', '/api/v1/topics/' . $topic->id . '/tags/' . $tagId);
             $this->assertEquals(200, $response->status());
         } else {
             $response = $this->call('GET', '/api/v1/topics/' . $topic->id . '/tags/0');
@@ -97,9 +104,10 @@ class TagControllerTest extends TestCase
         $this->authUser('admin');
         $topic = Topic::all()->random(1);
         $response = $this->call('GET', '/api/v1/topics/' . $topic->id . '/tags');
+        $tagId = $this->getTagId($response);
 
-        if (!empty($response->content())) {
-            $response = $this->call('DELETE', '/api/v1/topics/' . $topic->id . '/tags/' . $this->getTagId($response));
+        if (!empty($tagId)) {
+            $response = $this->call('DELETE', '/api/v1/topics/' . $topic->id . '/tags/' . $tagId);
             $this->assertEquals(204, $response->status());
         } else {
             $response = $this->call('DELETE', '/api/v1/topics/' . $topic->id . '/tags/0');
@@ -112,9 +120,10 @@ class TagControllerTest extends TestCase
         $this->authUser();
         $topic = Topic::all()->random(1);
         $response = $this->call('GET', '/api/v1/topics/' . $topic->id . '/tags');
+        $tagId = $this->getTagId($response);
 
-        if (!empty($response->content())) {
-            $response = $this->call('DELETE', '/api/v1/topics/' . $topic->id . '/tags/' . $this->getTagId($response));
+        if (!empty($tagId)) {
+            $response = $this->call('DELETE', '/api/v1/topics/' . $topic->id . '/tags/' . $tagId);
             $this->assertEquals(403, $response->status());
         } else {
             $response = $this->call('DELETE', '/api/v1/topics/' . $topic->id . '/tags/0');
@@ -141,9 +150,10 @@ class TagControllerTest extends TestCase
     {
         $votes = Vote::all()->random(1);
         $response = $this->call('GET', '/api/v1/votes/' . $votes->id . '/tags');
+        $tagId = $this->getTagId($response);
 
-        if (!empty($response->content())) {
-            $response = $this->call('GET', '/api/v1/votes/' . $votes->id . '/tags/' . $this->getTagId($response));
+        if (!empty($tagId)) {
+            $response = $this->call('GET', '/api/v1/votes/' . $votes->id . '/tags/' . $tagId);
             $this->assertEquals(200, $response->status());
         } else {
             $response = $this->call('GET', '/api/v1/votes/' . $votes->id . '/tags/0');
@@ -180,9 +190,10 @@ class TagControllerTest extends TestCase
         $this->authUser('admin');
         $votes = Vote::all()->random(1);
         $response = $this->call('GET', '/api/v1/votes/' . $votes->id . '/tags');
+        $tagId = $this->getTagId($response);
 
-        if (!empty($response->content())) {
-            $response = $this->call('DELETE', '/api/v1/votes/' . $votes->id . '/tags/' . $this->getTagId($response));
+        if (!empty($tagId)) {
+            $response = $this->call('DELETE', '/api/v1/votes/' . $votes->id . '/tags/' . $tagId);
             $this->assertEquals(204, $response->status());
         } else {
             $response = $this->call('DELETE', '/api/v1/votes/' . $votes->id . '/tags/0');
@@ -195,9 +206,10 @@ class TagControllerTest extends TestCase
         $this->authUser();
         $votes = Vote::all()->random(1);
         $response = $this->call('GET', '/api/v1/votes/' . $votes->id . '/tags');
+        $tagId = $this->getTagId($response);
 
-        if (!empty($response->content())) {
-            $response = $this->call('DELETE', '/api/v1/votes/' . $votes->id . '/tags/' . $this->getTagId($response));
+        if (!empty($tagId)) {
+            $response = $this->call('DELETE', '/api/v1/votes/' . $votes->id . '/tags/' . $tagId);
             $this->assertEquals(403, $response->status());
         } else {
             $response = $this->call('DELETE', '/api/v1/votes/' . $votes->id . '/tags/0');
