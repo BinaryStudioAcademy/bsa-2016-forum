@@ -32,6 +32,14 @@ class Topic extends Model
     protected $hidden = ['deleted_at'];
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    /**
      * Get topic's user
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -67,6 +75,10 @@ class Topic extends Model
     public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function activeUsersCount() {
+        return $this->comments()->distinct('user_id')->count('user_id');
     }
 
     public function notifications()

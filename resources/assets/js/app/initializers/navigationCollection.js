@@ -9,7 +9,7 @@ module.exports = new navigCollection([
         //active: true
     },
     {
-        href: '#topics',
+        href: '#topicCategories',
         icon: '',
         name: 'topics',
         label: 'Topics',

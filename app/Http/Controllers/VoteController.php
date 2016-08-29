@@ -114,10 +114,12 @@ class VoteController extends ApiController
         $this->authorize('update', $vote);
 
         $vote->update($request->all());
-        $extendedVote = $vote = Vote::findOrfail($id);
-        TagService::TagsHandler($vote, $request->tags);
-        $extendedVote->tags = $vote->tags()->get();
-        return $this->setStatusCode(200)->respond($extendedVote);
+        $vote = Vote::findOrfail($id);
+        if ($request->tags) {
+            TagService::TagsHandler($vote, $request->tags);
+        }
+        $vote->tags = $vote->tags()->get();
+        return $this->setStatusCode(200)->respond($vote);
     }
 
     /**
