@@ -8,12 +8,16 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 class CurlService
 {
     protected $curl_params;
-    
+
     public function __construct()
     {
         $this->curl_params = [
             CURLOPT_URL => null,
+            CURLOPT_FOLLOWLOCATION => 1,
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_UNRESTRICTED_AUTH => 1,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_MAXREDIRS => 5,
             CURLOPT_USERAGENT => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0",
@@ -25,10 +29,10 @@ class CurlService
         ];
     }
 
-    public function  sendRequest($method, $url, $cookie)
+    public function sendRequest($method, $url, $cookie)
     {
         $response = null;
-        
+
         $this->curl_params[CURLOPT_URL] = $url;
         $this->curl_params[CURLOPT_CUSTOMREQUEST] = $method;
         array_push($this->curl_params[CURLOPT_HTTPHEADER], $cookie);
@@ -46,30 +50,23 @@ class CurlService
         return $response;
     }
     
-    
-    public function sendUserRequest($id)
+    public function sendUsersRequest($id = null)
     {
         $cookieName = config('authserver.cookieName');
-        $url = config('authserver.urlUserInfo').$id;
-        $cookie = 'Cookie: '.$cookieName.'='.$_COOKIE[$cookieName];
+        $cookie = 'Cookie: ' . $cookieName . '=' . $_COOKIE[$cookieName];
 
-        $response = $this->sendRequest('GET', $url, $cookie);
-        
-        if (!$response){
-            throw new NotFoundHttpException;
+        if (!$id) {
+            $url = trim(config('authserver.urlUsersInfo'));
+        } else {
+            $url = trim(config('authserver.urlUserInfo')) . $id;
         }
 
-        $response = array_shift($response);
+        $response = $this->sendRequest('GET', $url, $cookie);
 
-        $userProfile = [
-            'first_name' => $response['name'],
-            'last_name' => $response['surname'],
-            'email' => $response['email'],
-            'city' => $response['city'],
-            'country' => $response['country'],
-            'birthday' => $response['birthday'],
-            'global_id' => $response['serverUserId']
-        ];
-        return $userProfile;
+        if (!$response) {
+            throw new NotFoundHttpException;
+        }
+        return $response;
     }
+
 }
