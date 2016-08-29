@@ -11,6 +11,7 @@ var TopicCommentModel = require('../models/TopicCommentModel');
 var CommentsCollection = require('../collections/TopicCommentsCollection');
 var _ = require('underscore');
 var Topics = require('../instances/TopicCollection');
+var currentUser = require('../initializers/currentUser');
 
 module.exports = Marionette.Object.extend({
 
@@ -86,4 +87,12 @@ module.exports = Marionette.Object.extend({
 
         app.render(view);
     },
+
+    myTopics: function () {
+        var parentUrl = '/users/' + currentUser.id;
+        var topicCollection = new TopicCollection({parentUrl: parentUrl});
+        topicCollection.fetch();
+        app.render(new topicLayout({collection: topicCollection}));
+    }
+
 });

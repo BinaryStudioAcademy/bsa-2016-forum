@@ -77,7 +77,7 @@ class TopicController extends ApiController
         return $data;
     }
 
-     /**
+    /**
      * Display a listing of the resource.
      *
      * @param  TopicRequest $request
@@ -103,7 +103,8 @@ class TopicController extends ApiController
     public function store(TopicRequest $request)
     {
         $extendedTopic = $topic = Topic::create($request->all());
-        TagService::TagsHandler($topic, $request->tags);
+        if ($request->tags)
+            TagService::TagsHandler($topic, $request->tags);
         $extendedTopic->tags = $topic->tags()->get();
         return $this->setStatusCode(201)->respond($extendedTopic);
     }

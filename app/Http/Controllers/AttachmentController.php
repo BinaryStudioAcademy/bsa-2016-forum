@@ -9,11 +9,8 @@ use App\Models\Topic;
 use App\Models\Vote;
 use App\Models\VoteItem;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
 use App\Facades\AttachmentService;
 use App\Http\Requests\AttachmentRequest;
-
-use App\Http\Requests;
 
 class AttachmentController extends ApiController
 {
@@ -314,10 +311,10 @@ class AttachmentController extends ApiController
 
     /**
      * @param VoteItem $voteItem
-     * @param Request $request
+     * @param AttachmentRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeVoteItemAttachment(VoteItem $voteItem, Request $request)
+    public function storeVoteItemAttachment(VoteItem $voteItem, AttachmentRequest $request)
     {
         $attachment_data = AttachmentService::uploadAttachmentToCloud($request);
         $attachment = Attachment::create($attachment_data);
