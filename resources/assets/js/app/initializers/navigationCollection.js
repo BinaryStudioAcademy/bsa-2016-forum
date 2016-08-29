@@ -2,14 +2,7 @@ var navigCollection = require('../collections/navigationCollection');
 
 module.exports = new navigCollection([
     {
-        href: '#dashboard',
-        icon: '',
-        name: 'dashboard',
-        label: 'Dashboard',
-        //active: true
-    },
-    {
-        href: '#topics',
+        href: '#topicCategories',
         icon: '',
         name: 'topics',
         label: 'Topics',
@@ -17,7 +10,7 @@ module.exports = new navigCollection([
     {
         href: '#mytopics',
         icon: '',
-        name: 'mytopics',
+        name: 'myTopics',
         label: 'My topics',
     },
     {
