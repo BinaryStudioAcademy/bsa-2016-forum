@@ -75,8 +75,8 @@ class VoteController extends ApiController
                 $user->votesDenied()->attach($vote);
             }
         }
-//        TagService::TagsHandler($vote, $request->tags);
-//        $extendedVote->tags = $vote->tags()->get();
+        TagService::TagsHandler($vote, $request->tags);
+        $extendedVote->tags = $vote->tags()->get();
         return $this->setStatusCode(201)->respond($extendedVote);
     }
 
