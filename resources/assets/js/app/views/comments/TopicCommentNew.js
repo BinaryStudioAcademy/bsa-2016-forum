@@ -142,7 +142,6 @@ module.exports = Marionette.ItemView.extend({
         // remove bootstrap modal overlay from body
         $('.modal-backdrop').remove();
         Radio.channel('сommentCollection').trigger('addComment', this.model);
-
         this._files = [];
     },
 
@@ -188,8 +187,8 @@ module.exports = Marionette.ItemView.extend({
         }
         //drop.options.maxFiles = drop.options.maxFiles - attachs.length;
     },
-
-    onRender: function () {
+    
+    onShow: function () {
         this.ui.commentDlg.modal('show');
 
         var view = this;
