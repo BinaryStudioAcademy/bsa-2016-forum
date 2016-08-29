@@ -61,7 +61,7 @@ class TopicController extends ApiController
         $extendedTopics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
 
         foreach ($extendedTopics as $topic) {
-            $topic->activeUsersCount = $topic->comments()->distinct('user_id')->count('user_id');
+            $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
         }
 
