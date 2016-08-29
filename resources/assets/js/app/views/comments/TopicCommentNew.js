@@ -73,10 +73,13 @@ module.exports = Marionette.ItemView.extend({
                 }
             },
 
-            error: function (response) {
+            error: function (model, response) {
                 parent.showErrors(true);
+                parent.showLoader(false);
                 parent.ui.errors.empty().append(response.responseText);
-            }
+            },
+
+            wait: true
         });
     },
 
@@ -136,11 +139,8 @@ module.exports = Marionette.ItemView.extend({
             this._files.forEach(function (file, i) {
                 parent.model.getMeta()[id].attachments.push(file);
                 // add file to attachment collection
-                //parent.options.attachs.add(new AttachmentModel(file));
             });
         }
-        // remove bootstrap modal overlay from body
-        $('.modal-backdrop').remove();
         Radio.channel('сommentCollection').trigger('addComment', this.model);
         this._files = [];
     },
@@ -152,19 +152,23 @@ module.exports = Marionette.ItemView.extend({
         var parent = this;
         model.parentUrl = _.result(this.model, 'url');
         //console.log(model);
-        model.destroy({ success: function (model) {
-            parent.showLoader(false);
-            if (parent.options.attachs) parent.options.attachs.remove({ id: file.id });
-            parent.$(file.previewElement).remove();
-            parent.ui.errors.removeClass('alert-danger')
-                .addClass('alert-info').text('File was successfully removed');
-            parent.showErrors(true);
-        }, error: function (response) {
-            parent.showLoader(false);
-            parent.ui.errors.empty();
-            parent.ui.errors.text(response.responseText);
-            parent.showErrors(true);
-        }});
+        model.destroy({
+            success: function (model) {
+                parent.showLoader(false);
+                if (parent.options.attachs) parent.options.attachs.remove({ id: file.id });
+                parent.$(file.previewElement).remove();
+                parent.ui.errors.removeClass('alert-danger')
+                    .addClass('alert-info').text('File was successfully removed');
+                parent.showErrors(true);
+            },
+            error: function (response) {
+                parent.showLoader(false);
+                parent.ui.errors.empty();
+                parent.ui.errors.text(response.responseText);
+                parent.showErrors(true);
+            },
+            wait: true
+        });
     },
 
     showAttachments: function () {
@@ -197,7 +201,5 @@ module.exports = Marionette.ItemView.extend({
         });
 
         this.initDropZone();
-
-        return this;
     }
 });

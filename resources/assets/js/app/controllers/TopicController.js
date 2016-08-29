@@ -98,7 +98,7 @@ module.exports = Marionette.Object.extend({
                 success: function () {
 
                 },
-                error: function (response) {
+                error: function (model, response) {
                     view.$('.errors').text(response.responseText);
                 },
                 wait: true

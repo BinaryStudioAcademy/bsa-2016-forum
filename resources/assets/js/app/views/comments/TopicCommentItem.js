@@ -58,5 +58,4 @@ module.exports = Marionette.LayoutView.extend({
             collection: this._attachs
         }));
     },
-
 });
