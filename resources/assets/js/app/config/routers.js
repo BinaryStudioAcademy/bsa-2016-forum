@@ -20,10 +20,11 @@ module.exports = {
             controller: new TopicController(),
             appRoutes: {
                 'topics': 'index',
+                'topics/:id': 'show',
+                'topic/create': 'create',
+                'mytopics': 'myTopics'
                 'categories/:catId/topics': 'indexInCategory',
                 'topicCategories': 'indexCategories',
-                'topics/:id' : 'show',
-                'topic/create': 'create'
             },
             navigItemName: 'topics'
         },

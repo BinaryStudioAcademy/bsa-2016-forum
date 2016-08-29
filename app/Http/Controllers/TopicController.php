@@ -50,7 +50,7 @@ class TopicController extends ApiController
         return $data;
     }
 
-     /**
+    /**
      * Display a listing of the resource.
      *
      * @param  TopicRequest $request
