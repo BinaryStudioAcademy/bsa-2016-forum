@@ -180,11 +180,15 @@ class TopicController extends ApiController
             ->filterByTags($this->tagIds)
             ->get();
 
+        $meta = $this->getMetaData($topics);
+
         if (!$topics) {
             return $this->setStatusCode(200)->respond();
         }
 
-        return $this->setStatusCode(200)->respond($topics, ['user' => $user]);
+        $meta['user'] = $user;
+
+        return $this->setStatusCode(200)->respond($topics, $meta);
     }
 
     /**
