@@ -118,6 +118,14 @@ class VoteController extends ApiController
         $this->authorize('update', $vote);
 
         $vote->update($request->all());
+        if(!$vote->is_public){
+            $deniedUsersIds = $request->get('denied_users_ids');
+            $deniedUsersIds = ($deniedUsersIds) ? explode(',', $deniedUsersIds) : [];
+            $users = User::whereIn('id', $deniedUsersIds)->get();
+            foreach($users as $user){
+                $user->votesDenied()->attach($vote);
+            }
+        }
         $extendedVote = $vote = Vote::findOrfail($id);
         TagService::TagsHandler($vote, $request->tags);
         $extendedVote->tags = $vote->tags()->get();
