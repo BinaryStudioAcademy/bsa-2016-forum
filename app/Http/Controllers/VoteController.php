@@ -41,37 +41,24 @@ class VoteController extends ApiController
     }
 
     /**
-     * Display a listing of the resource.
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
-        $vote = new Vote();
-        if (!(Auth::user()->allowed('view.votes', $vote))) {
-            throw new PermissionDeniedException('index');
-        }
-
         $this->setFiltersParameters($request);
-
         $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
         $data = $this->getMetaData($votes);
         return $this->setStatusCode(200)->respond($data);
     }
 
+
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param VotesRequest|Request $request
-     * @return \Illuminate\Http\Response
+     * @param VotesRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(VotesRequest $request)
     {
-        $vote = new Vote();
-        if (!(Auth::user()->allowed('create.votes', $vote))) {
-            throw new PermissionDeniedException('create');
-        }
-
         $vote = Vote::create($request->all());
         if ($request->tags) {
             TagService::TagsHandler($vote, $request->tags);
@@ -81,18 +68,12 @@ class VoteController extends ApiController
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
         $vote = Vote::findOrFail($id);
-
-        if (!(Auth::user()->allowed('view.votes', $vote))) {
-            throw new PermissionDeniedException('view');
-        }
 
         $user = $vote->user()->first();
         $likeCount = $vote->likes()->count();
