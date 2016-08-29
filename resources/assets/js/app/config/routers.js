@@ -22,7 +22,7 @@ module.exports = {
                 'topics': 'index',
                 'topics/:id': 'show',
                 'topic/create': 'create',
-                'mytopics': 'myTopics'
+                'mytopics': 'myTopics',
                 'categories/:catId/topics': 'indexInCategory',
                 'topicCategories': 'indexCategories',
             },
