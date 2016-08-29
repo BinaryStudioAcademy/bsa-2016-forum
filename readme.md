@@ -40,8 +40,9 @@ path/to/project/$ php artisan migrate; path/to/project/$ php artisan db:seed
 
 5) Run local php server
 ```
-path/to/project/$ php artisan serve
+path/to/project/$ php artisan serve --host=127.0.0.1
 ```
+(--host=127.0.0.1 need for socket server)
 
 6) You can find project on
 ```
@@ -80,4 +81,40 @@ gem install sass
 4) compile all resources
 ```
 grunt dev
+```
+
+### Socket server part
+
+1) install all javascript packages
+```
+npm install
+```
+
+2) install Redis
+
+*Ubuntu*
+Go to https://www.digitalocean.com/community/tutorials/how-to-install-and-use-redis
+
+*Windows*
+Go to https://github.com/rgl/redis/downloads and download stable version
+
+3) run redis server
+
+*Ubuntu*
+will start automatic
+
+*Windows*
+go to instalation folder and run redis-server.exe
+
+4) Check file .env in the root directory and put redis settings
+```
+BROADCAST_DRIVER=redis
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+```
+
+5) start socket server (enter in root directory)
+```
+node socket/server.js
 ```
