@@ -5,10 +5,11 @@ module.exports = Marionette.ItemView.extend({
     template: 'messageDialogEditItem',
     ui: {
         message: '#edited-message',
-        save: '#message-save'
+        save: '#message-save',
+        form: '#message-edit-form'
     },
     events: {
-        'click @ui.save' : 'clickedSaveEditMessage'
+        'submit @ui.form' : 'clickedSaveEditMessage'
     },
 
     onRender: function () {
@@ -19,7 +20,8 @@ module.exports = Marionette.ItemView.extend({
         });
     },
 
-    clickedSaveEditMessage: function () {
+    clickedSaveEditMessage: function (e) {
+        e.preventDefault();
         Radio.channel('messagesChannel').trigger('saveEditedMessage', {
             model: this.model,
             view: this
