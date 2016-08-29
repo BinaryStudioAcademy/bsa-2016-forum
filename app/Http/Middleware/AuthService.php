@@ -63,6 +63,7 @@ class AuthService
                 return false;
             };
         }
+        
         return  $userData;
     }
 
@@ -73,8 +74,8 @@ class AuthService
      */
     public function getUserInfo($globalId)
     {
-        $userInfo = CurlService::sendUserRequest($globalId);
-        return $userInfo;
+        $userInfo = CurlService::sendUsersRequest($globalId);
+        return array_shift($userInfo);
     }
 
     /**
@@ -92,27 +93,27 @@ class AuthService
             
             if (!$user ){
                 $user = new User();
-                $user->first_name = $userInfo['first_name'];
-                $user->display_name = $userInfo['first_name'].(string)random_int(1,1000);
-                $user->last_name = $userInfo['last_name'];
+                $user->first_name = $userInfo['name'];
+                $user->display_name = $userInfo['name'].(string)random_int(1,1000);
+                $user->last_name = $userInfo['surname'];
                 $user->email = $userInfo['email'];
-                $user->global_id = $userInfo['global_id'];
-                $user->status_id = 1;
+                $user->global_id = $userInfo['serverUserId'];
+                $statusUser = \DB::table('user_statuses')->where('name', 'online')->value('id');
+                $user->status_id = $statusUser;
                 $user->save();
+                $roleUser = \DB::table('roles')->where('name', 'User')->value('id');
+                $user->role()->associate($roleUser);
+
             } else {
                 
                 if ($user->deleted_at != null) {
                     $user->restore();
                 }
-                $user->first_name = $userInfo['first_name'];
-                $user->last_name = $userInfo['last_name'];
-                $user->global_id = $userInfo['global_id'];
-                $user->status_id = 1;
+                $user->first_name = $userInfo['name'];
+                $user->last_name = $userInfo['surname'];
+                $user->global_id = $userInfo['serverUserId'];
                 $user->save();
             }
-
-            $roleUser = \DB::table('roles')->where('name', 'User')->value('id');
-            $user->attachRole($roleUser);
         };
         if ($user->deleted_at != null) {
             $user->restore();

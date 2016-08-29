@@ -12,6 +12,7 @@ module.exports = Marionette.ItemView.extend({
 
     initialize: function () {
         this.model.set({user_id: currentUser.id});
+        console.log(currentUser.id);
     },
 
     modelEvents: {
