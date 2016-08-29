@@ -4,6 +4,7 @@ var topicLayout = require('../views/topics/topicLayout');
 var topicCategoryLayout = require('../views/topics/topicCategoryLayout');
 var TopicCategoryCollection = require('../collections/topicCategoryCollection');
 var TopicCollection = require('../collections/topicCollection');
+var UserTopicCollection = require('../collections/userTopicCollection');
 var TopicCreate = require('../views/topics/topicCreate');
 var TopicModel = require('../models/TopicModel');
 var TopicDetailView = require('../views/topics/topicDetail');
@@ -110,7 +111,7 @@ module.exports = Marionette.Object.extend({
 
     myTopics: function () {
         var parentUrl = '/users/' + currentUser.id;
-        var topicCollection = new TopicCollection({parentUrl: parentUrl});
+        var topicCollection = new UserTopicCollection({parentUrl: parentUrl});
         topicCollection.fetch();
         app.render(new topicLayout({collection: topicCollection}));
     }
