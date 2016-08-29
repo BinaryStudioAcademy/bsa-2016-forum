@@ -15,7 +15,7 @@ class Topic extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'description', 'user_id'];
+    protected $fillable = ['name', 'description', 'user_id', 'category_id'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -30,6 +30,14 @@ class Topic extends Model
      * @var array
      */
     protected $hidden = ['deleted_at'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
     /**
      * Get topic's user
@@ -70,6 +78,10 @@ class Topic extends Model
     public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function activeUsersCount() {
+        return $this->comments()->distinct('user_id')->count('user_id');
     }
 
     public function notifications()

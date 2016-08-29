@@ -1,7 +1,7 @@
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
-var topicItem = require('./topicItem');
+var topicCategoryItem = require('./topicCategoryItem');
 
 module.exports = Marionette.CollectionView.extend({
-  childView: topicItem
+  childView: topicCategoryItem
 });

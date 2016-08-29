@@ -30,6 +30,7 @@ $factory->define(App\Models\Topic::class, function (Faker\Generator $faker) {
         'description' => $faker->sentence,
         'rating' => $faker->numberBetween(0, 1000),
         'user_id' => App\Models\User::all()->random(1)->id,
+        'category_id' => App\Models\Category::all()->random(1)->id,
     ];
 });
 
@@ -76,22 +77,15 @@ $factory->define(App\Models\Tag::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Models\Like::class, function (Faker\Generator $faker) {
-    $likeable_type=['App\Models\Topic','App\Models\Vote'];
+$factory->define(App\Models\Category::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->unique()->word,
+    ];
+});
 
-    $likeable_type_id=array_rand ($likeable_type,1);
-
-    if($likeable_type[$likeable_type_id]=='App\Models\Topic')
-    {
-        $likeable_id=App\Models\Topic::all()->random(1)->id;
-    }
-    else
-        $likeable_id=App\Models\Vote::all()->random(1)->id;
-
+$factory->define(App\Models\Like::class, function () {
     return [
         'user_id' => App\Models\User::all()->random(1)->id,
-        'likeable_id'=>$likeable_id,
-        'likeable_type' => $likeable_type[$likeable_type_id]
     ];
 });
 
