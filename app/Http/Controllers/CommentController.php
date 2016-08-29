@@ -404,35 +404,36 @@ class CommentController extends ApiController
     /**********  VoteItem SECTION START **********/
 
     /**
-     * @param VoteItem $voteItem
+     * @param VoteItem $voteitem
      * @param Comment $comment
      * @return bool
      */
-    protected function isCommentBelongsToVoteItem(VoteItem $voteItem, Comment $comment)
+    protected function isCommentBelongsToVoteItem(VoteItem $voteitem, Comment $comment)
     {
-        $voteItemWhichHasThisComment = $comment->commentable()->get()->first();
-
-        return ($voteItemWhichHasThisComment && $voteItemWhichHasThisComment->id === $voteItem->id);
+        return !!$voteitem->comments()->find($comment->id);
     }
 
+
     /**
-     * @param VoteItem $voteItem
+     * @param Vote $vote
+     * @param VoteItem $voteitem
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getVoteItemComments(VoteItem $voteItem)
+    public function getVoteItemComments(Vote $vote, VoteItem $voteitem)
     {
-        $comments = $voteItem->comments()->get();
+        $comments = $voteitem->comments()->get();
         return $this->setStatusCode(200)->respond($comments);
     }
 
     /**
-     * @param VoteItem $voteItem
+     * @param Vote $vote
+     * @param VoteItem $voteitem
      * @param Comment $comment
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getVoteItemComment(VoteItem $voteItem, Comment $comment)
+    public function getVoteItemComment(Vote $vote, VoteItem $voteitem, Comment $comment)
     {
-        if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
+        if ($this->isCommentBelongsToVoteItem($voteitem, $comment)) {
             return $this->setStatusCode(200)->respond($comment);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
@@ -440,28 +441,30 @@ class CommentController extends ApiController
     }
 
     /**
-     * @param VoteItem $voteItem
+     * @param Vote $vote
+     * @param VoteItem $voteitem
      * @param CommentsRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeVoteItemComment(VoteItem $voteItem, CommentsRequest $request)
+    public function storeVoteItemComment(Vote $vote, VoteItem $voteitem, CommentsRequest $request)
     {
         $comment = Comment::create($request->all());
-        $comment = $voteItem->comments()->save($comment);
+        $comment = $voteitem->comments()->save($comment);
         return $this->setStatusCode(201)->respond($comment);
     }
 
     /**
-     * @param VoteItem $voteItem
+     * @param Vote $vote
+     * @param VoteItem $voteitem
      * @param Comment $comment
      * @param CommentsRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateVoteItemComment(VoteItem $voteItem, Comment $comment, CommentsRequest $request)
+    public function updateVoteItemComment(Vote $vote, VoteItem $voteitem, Comment $comment, CommentsRequest $request)
     {
-        $this->authorize('updateVoteItemsComment', [$comment, $voteItem]);
+        $this->authorize('updateVoteItemsComment', [$comment, $voteitem]);
 
-        if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
+        if ($this->isCommentBelongsToVoteItem($voteitem, $comment)) {
             $comment->update($request->all());
             return $this->setStatusCode(200)->respond($comment);
         } else {
@@ -470,16 +473,17 @@ class CommentController extends ApiController
     }
 
     /**
-     * @param VoteItem $voteItem
+     * @param Vote $vote
+     * @param VoteItem $voteitem
      * @param Comment $comment
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    public function destroyVoteItemComment(VoteItem $voteItem, Comment $comment)
+    public function destroyVoteItemComment(Vote $vote, VoteItem $voteitem, Comment $comment)
     {
-        $this->authorize('deleteVoteItemsComment', [$comment, $voteItem]);
+        $this->authorize('deleteVoteItemsComment', [$comment, $voteitem]);
 
-        if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
+        if ($this->isCommentBelongsToVoteItem($voteitem, $comment)) {
             $comment->delete();
             return $this->setStatusCode(204)->respond();
         } else {
