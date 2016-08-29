@@ -25,13 +25,10 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
     Route::get('user','UserController@getUser')->name('user');
 
     Route::resource('users', 'UserController', [
-        'except' => ['edit', 'create'],
+        'except' => ['edit', 'create', 'store', 'update', 'destroy'],
         'names' => [
             'index' => 'users.index',
-            'store' => 'users.store',
             'show' => 'users.show',
-            'update' => 'users.update',
-            'destroy' => 'users.destroy',
         ],
     ]);
     /*Routes for users Role*/
@@ -85,6 +82,14 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
             'destroy' => 'voteItems.destroy'
         ]
     ]);
+
+    /*Routes for bookmarks*/
+    Route::group(['prefix' => 'bookmarks'], function () {
+        Route::get('', 'BookmarkController@index')->name('bookmarks.index');
+        Route::post('', 'BookmarkController@store')->name('bookmarks.store');
+        Route::delete('{id}', 'BookmarkController@destroy')->name('bookmarks.destroy');
+    });
+
     /*Routes for users topics*/
     Route::group(['prefix' => 'users/{user}/topics'], function () {
         Route::get('', 'TopicController@getUserTopics')->name('userTopics');

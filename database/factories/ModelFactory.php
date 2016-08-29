@@ -19,8 +19,6 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
         'email' => $faker->safeEmail,
         'reputation' => $faker->numberBetween(0, 1000),
         'status_id' => App\Models\Status::all()->random(1)->id,
-        'hash_password' => bcrypt(str_random(10)),
-        'token' => $faker->md5,
         'last_visit_at' => $faker->dateTimeThisYear,
     ];
 });
@@ -39,7 +37,6 @@ $factory->define(App\Models\Comment::class, function (Faker\Generator $faker) {
     return [
         'content_origin' => $faker->text,
         'rating' => $faker->numberBetween(0, 1000),
-        'user_id' => App\Models\User::all()->random(1)->id,
         'content_generated' => $faker->text,
     ];
 });
@@ -69,8 +66,6 @@ $factory->define(App\Models\Vote::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\VoteItem::class, function (Faker\Generator $faker) {
     return [
-        'vote_id' => App\Models\Vote::all()->random(1)->id,
-        'user_id' => App\Models\User::all()->random(1)->id,
         'name' => $faker->unique()->sentence,
     ];
 });
@@ -97,5 +92,11 @@ $factory->define(App\Models\Like::class, function (Faker\Generator $faker) {
         'user_id' => App\Models\User::all()->random(1)->id,
         'likeable_id'=>$likeable_id,
         'likeable_type' => $likeable_type[$likeable_type_id]
+    ];
+});
+
+$factory->define(App\Models\Notification::class, function () {
+    return [
+        'user_id' => App\Models\User::all()->random(1)->id,
     ];
 });

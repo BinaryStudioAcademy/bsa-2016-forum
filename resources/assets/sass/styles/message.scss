@@ -59,6 +59,11 @@ MESSAGES LIST
   font-size: 16px;
 }
 
+.messages-msg i {
+  color: #777777;
+  margin-left: 5px;
+}
+
 /*
 MESSAGE DIALOG
 */
@@ -67,6 +72,7 @@ MESSAGE DIALOG
   border-bottom: #DDDDDD 1px solid;
   height: calc(100vh - 400px);
   overflow-y: auto;
+  min-height: 320px;
 }
 
 .message-dialog {
@@ -119,6 +125,10 @@ MESSAGE DIALOG
   display: flex;
 }
 
+.message-item-container .deleted a {
+  display: none;
+}
+
 .message-msg-avatar {
   padding: 5px;
 }
@@ -131,6 +141,7 @@ MESSAGE DIALOG
 
 .message-msg-body {
   padding: 0 5px;
+  overflow: hidden;
 }
 
 .message-msg-body a {
@@ -141,6 +152,7 @@ MESSAGE DIALOG
 
 .message-msg-body p {
   margin-bottom: 2px;
+  word-wrap: break-word;
 }
 
 .message-msg-body span {
@@ -154,7 +166,7 @@ MESSAGE DIALOG
   padding: 10px 0;
 }
 
-.message-new textarea {
+.message-new textarea, .message-edit textarea {
   resize: vertical;
   width: 100%;
   margin: 5px 0 5px;
@@ -165,6 +177,7 @@ MESSAGE DIALOG
   color: #555;
   font-size: 14px;
   font-weight: 400;
+  min-height: 90px;
 }
 
 .message-new-control {
@@ -181,8 +194,19 @@ MESSAGE DIALOG
   font-size: 14px;
   font-weight: 800;
   background-color: #ffd992;
+  margin-left: 10px;
 }
 
 .message-new-control button:hover {
   background-color: #f9c172;
+}
+
+.message-new-control button:disabled {
+  background-color: #DDDDDD
+}
+
+.message-edit {
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 0;
 }

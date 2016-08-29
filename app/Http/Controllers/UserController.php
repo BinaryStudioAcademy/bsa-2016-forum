@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\CurlService;
 use App\Models\Role;
 use App\Models\User;
 
@@ -22,22 +23,6 @@ class UserController extends ApiController
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-
-        $user = User::create($request->all());
-
-        $this->authorize('store', $user);
-
-        return $this->setStatusCode(201)->respond($user);
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int $id
@@ -50,44 +35,6 @@ class UserController extends ApiController
         $this->authorize('show', $user);
 
         return $this->setStatusCode(200)->respond($user);
-    }
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-
-        $user = User::findOrFail($id);
-
-        $user->update($request->all());
-
-        return $this->setStatusCode(200)->respond($user);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-
-        $user = User::findOrFail($id);
-
-        $this->authorize('delete', $user);
-        $user->delete();
-        if ($user->trashed()) {
-            return $this->setStatusCode(204)->respond();
-        } else {
-            throw new \PDOException();
-        }
     }
 
     /**
@@ -125,10 +72,22 @@ class UserController extends ApiController
 
     }
 
+    /**
+     * Return AuthUser Profile to the frontend
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getUser()
     {
-        $user = Auth::authenticate();
-
-        return $this->setStatusCode(200)->respond($user);
+        $user = Auth::user();
+        if(!$user){
+            return $this->setStatusCode(401)->respond();
+        }
+        if (strtolower(env('APP_ENV')) == 'local') {
+            return $this->setStatusCode(200)->respond($user);
+        } else {
+            $userProfile = CurlService::sendUserRequest($user->global_id);
+            $userProfile['id'] = $user->id;
+            return $this->setStatusCode(200)->respond($userProfile);
+        }
     }
 }
