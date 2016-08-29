@@ -18,8 +18,8 @@ module.exports = Marionette.Object.extend({
     },
 
     showUserVotes: function(id) {
-        var usersVotes=new usersVotesCollection();
-        usersVotes.parentUrl='/users/'+id;
+        var parentUrl = '/users/' + id;
+        var usersVotes = new usersVotesCollection([], {parentUrl: parentUrl});
 
         usersVotes.fetch();
 

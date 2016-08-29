@@ -6,5 +6,10 @@ var baseModel = require('../instances/Model');
 
 module.exports = baseCollection.extend({
     url: '/votes',
-    model: baseModel
+    model: baseModel,
+    initialize: function (models, options) {
+        if (options.parentUrl) {
+            this.parentUrl = options.parentUrl;
+        }
+    }
 });
