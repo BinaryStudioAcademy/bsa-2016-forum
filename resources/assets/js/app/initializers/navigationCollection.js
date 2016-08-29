@@ -8,11 +8,12 @@ module.exports = new navigCollection([
         label: 'Dashboard',
         //active: true
     },
+
     {
         href: '#topicCategories',
         icon: '',
         name: 'topics',
-        label: 'Topics',
+        label: 'Topics'
     },
     {
         href: '#mytopics',
@@ -30,13 +31,13 @@ module.exports = new navigCollection([
         href: '#bookmarks',
         icon: '',
         name: 'bookmarks',
-        label: 'Bookmarks',
+        label: 'Bookmarks'
     },
     {
         href: '#votes',
         icon: '',
         name: 'votes',
-        label: 'Votes',
+        label: 'Votes'
     },
     {
         href: '#messages',
