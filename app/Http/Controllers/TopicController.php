@@ -60,11 +60,16 @@ class TopicController extends ApiController
     {
         $this->setFiltersData($request);
 
-        $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
+        $extendedTopics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
 
-        $meta = $this->getMetaData($topics);
+        foreach ($extendedTopics as $topic) {
+            $topic->usersCount = $topic->activeUsersCount();
+            $topic->answersCount = $topic->comments()->count();
+        }
 
-        return $this->setStatusCode(200)->respond($topics, $meta);
+        $meta = $this->getMetaData($extendedTopics);
+
+        return $this->setStatusCode(200)->respond($extendedTopics, $meta);
     }
 
 

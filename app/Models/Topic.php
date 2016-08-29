@@ -77,6 +77,10 @@ class Topic extends Model
         return $this->morphMany(Comment::class, 'commentable');
     }
 
+    public function activeUsersCount() {
+        return $this->comments()->distinct('user_id')->count('user_id');
+    }
+
     public function notifications()
     {
         return $this->morphToMany(Notification::class, 'notificationable');
