@@ -81,15 +81,13 @@ class MessageController extends ApiController
             return $this->setStatusCode(403)->respond();
 
         $userFrom = Auth::user();
-        $message = $userFrom->messages()->where('id', $id)->first();
+        $message = $userFrom->messages()->withTrashed()->find($id);
         if (!$message) {
             throw (new ModelNotFoundException)->setModel(Message::class);
         }
-        $userTo = User::findOrFail($message->user_to_id);
 
         return $this->setStatusCode(200)->respond(
-            $message,
-            ['user_with' => $userTo]
+            $message
         );
     }
 
@@ -107,7 +105,7 @@ class MessageController extends ApiController
             return $this->setStatusCode(403)->respond();
 
         $user = Auth::user();
-        $message = $user->messages()->where('id', $id)->first();
+        $message = $user->messages()->find($id);
         if (!$message) {
             throw (new ModelNotFoundException)->setModel(Message::class);
         }
@@ -128,13 +126,14 @@ class MessageController extends ApiController
             return $this->setStatusCode(403)->respond();
 
         $user = Auth::user();
-        $message = $user->messages()->first();
+        $message = $user->messages()->find($id);
         if (!$message) {
             throw (new ModelNotFoundException)->setModel(Message::class);
         }
-        $message->message = "Deleted..";
-        event(new UpdatedMessageEvent($message));
+        $message->message = "Removed";
+        $message->save();
         $message->delete();
+        event(new UpdatedMessageEvent($message));
         return $this->setStatusCode(204)->respond();
     }
 }

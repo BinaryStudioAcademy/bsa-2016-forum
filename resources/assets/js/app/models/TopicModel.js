@@ -7,7 +7,8 @@ module.exports = baseModel.extend({
         var errors = {};
         if (!attrs.name) errors['name'] = 'Name is required';
         if (!attrs.description) errors['description'] = 'Description is required';
-        
+        if (!attrs.category_id) errors['category_id'] = 'Category is required';
+
         if (!_.isEmpty(errors)) {
             return errors;
         }

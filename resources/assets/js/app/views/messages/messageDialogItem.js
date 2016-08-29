@@ -23,6 +23,7 @@ module.exports = Marionette.ItemView.extend({
         var direction = '';
         var with_user = {};
         var edit = '';
+        var deleted = '';
         if(this.model.get('user_from_id') == this.options.currentUser.get('id')) {
             with_user = this.options.currentUser.toJSON();
             direction = 'from';
@@ -33,12 +34,18 @@ module.exports = Marionette.ItemView.extend({
         if(this.model.get('created_at') != this.model.get('updated_at')) {
             edit = 'Edit at';
         }
+        
+        if(this.model.get('deleted_at') != null) {
+            deleted = 'deleted';
+            edit = 'Removed at';
+        }
 
         return {
             message: this.model.toJSON(),
             messageDirection: direction,
             edit_at: edit,
-            user: with_user
+            user: with_user,
+            deleted: deleted
         }
     }
 });

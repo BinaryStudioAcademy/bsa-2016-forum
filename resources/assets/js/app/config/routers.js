@@ -2,29 +2,30 @@ var TopicController = require('../controllers/TopicController');
 var IdeaHubController = require('../controllers/IdeaHubController');
 var UserController = require('../controllers/UserController');
 var BookmarkController = require('../controllers/BookmarkController');
-var DashBoardController = require('../controllers/DashboardController');
 var MessageController = require('../controllers/MessageController');
 
 module.exports = {
 
     routers: [
         {
-            controller: new DashBoardController(),
+            controller: new TopicController(),
             appRoutes: {
                 '': 'index',
-                'dashboard': 'index'
+                'topics': 'index',
+                'topics/:id': 'show',
+                'topic/create': 'create',
+                'categories/:catId/topics': 'indexInCategory',
+                'topicCategories': 'indexCategories'
             },
-            navigItemName: 'dashboard'
+            navigItemName: 'topics'
         },
+
         {
             controller: new TopicController(),
             appRoutes: {
-                'topics': 'index',
-                'topics/:id' : 'show',
-                'topic/create': 'create',
-                'topic/:id/edit': 'edit'
+                'mytopics': 'myTopics'
             },
-            navigItemName: 'topics'
+            navigItemName: 'myTopics'
         },
 
         {
