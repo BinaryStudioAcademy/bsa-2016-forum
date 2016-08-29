@@ -16,8 +16,6 @@ module.exports = Marionette.LayoutView.extend({
 
     ui: {
         'answer': '.answer-btn',
-        'share': '.share-btn',
-        'notification': '.notification-btn',
         'edit': '.comment-edit-btn',
         'remove': '#removeBtn'
     },

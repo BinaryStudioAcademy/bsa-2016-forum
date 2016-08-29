@@ -4,10 +4,6 @@ var logger = require('../instances/logger');
 module.exports = baseModel.extend({
     urlRoot: '/comments',
 
-    initialize: function(options) {
-
-    },
-    
     validate: function (attrs, options) {
         //logger('validate topic comment model', attrs);
 

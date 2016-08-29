@@ -13,17 +13,20 @@ module.exports = Marionette.ItemView.extend({
 
     ui: {
         'submit': '#submit',
-        'close': '.close'
+        'close': '.close',
+        'errors': '.errors',
+        'loader': '.loader',
+        'commentDlg': '#commentdlg'
     },
 
     modelEvents: {
         'invalid': function (model, errors, options) {
             //logger('model is invalid', errors, options);
             this.showLoader(false);
-            this.$('.errors').empty();
+            var ui = this.ui;
+            ui.errors.empty();
             errors.message.forEach(function (message, i) {
-                logger(message);
-                this.$('.errors').append(message);
+                ui.errors.append(message);
             });
             this.showErrors(true);
         }
@@ -34,11 +37,11 @@ module.exports = Marionette.ItemView.extend({
     },
 
     showLoader: function (show) {
-        return (show ? this.$('.loader').removeClass('hidden') : this.$('.loader').addClass('hidden'));
+        return (show ? this.ui.loader.removeClass('hidden') : this.ui.loader.addClass('hidden'));
     },
 
     showErrors: function (show) {
-        return (show ? this.$('.errors').removeClass('hidden') : this.$('.errors').addClass('hidden'));
+        return (show ? this.ui.errors.removeClass('hidden') : this.ui.errors.addClass('hidden'));
     },
 
     submitComment: function (event) {
@@ -64,13 +67,13 @@ module.exports = Marionette.ItemView.extend({
                     parent._dropZone.processQueue();
                 } else {
                     Radio.channel('сommentCollection').trigger('addComment', model);
-                    parent.$('#commentdlg').modal('hide');
+                    parent.ui.commentDlg.modal('hide');
                 }
             },
 
             error: function (response) {
                 parent.showErrors(true);
-                parent.$('.errors').empty().append(response.responseText);
+                parent.ui.errors.empty().append(response.responseText);
             }
         });
     },
@@ -91,7 +94,7 @@ module.exports = Marionette.ItemView.extend({
             acceptedFiles: 'image/*,.pdf,.docx,.doc,.xlsx,.xls',
             error: function (xhr) {
                 parent.showErrors(true);
-                parent.$('.errors').append(xhr.responseText);
+                parent.ui.errors.append(xhr.responseText);
             },
             success: function (file, xhr) {
                 if (xhr.data) {
@@ -113,7 +116,7 @@ module.exports = Marionette.ItemView.extend({
             // event triggers when all files has been uploaded
             queuecomplete: function () {
                 parent.setModelAttachments();
-                parent.$('#commentdlg').modal('hide');
+                parent.ui.commentDlg.modal('hide');
             }
         });
 
@@ -156,13 +159,13 @@ module.exports = Marionette.ItemView.extend({
             parent.showLoader(false);
             if (parent.options.attachs) parent.options.attachs.remove({ id: file.id });
             parent.$(file.previewElement).remove();
-            parent.$('.errors').removeClass('alert-danger')
+            parent.ui.errors.removeClass('alert-danger')
                 .addClass('alert-info').text('File was successfully removed');
             parent.showErrors(true);
         }, error: function (response) {
             parent.showLoader(false);
-            parent.$('.errors').empty();
-            parent.$('.errors').text(response.responseText);
+            parent.ui.errors.empty();
+            parent.ui.errors.text(response.responseText);
             parent.showErrors(true);
         }});
     },
@@ -189,9 +192,9 @@ module.exports = Marionette.ItemView.extend({
     },
 
     onRender: function () {
-        this.$('#commentdlg').modal('show');
+        this.ui.commentDlg.modal('show');
         var view = this;
-        view.$('#commentdlg').on('hidden.bs.modal', function (e) {
+        view.ui.commentDlg.on('hidden.bs.modal', function (e) {
             view.remove();
         });
         this.initDropZone();
