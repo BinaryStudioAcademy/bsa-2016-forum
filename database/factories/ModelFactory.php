@@ -37,7 +37,6 @@ $factory->define(App\Models\Comment::class, function (Faker\Generator $faker) {
     return [
         'content_origin' => $faker->text,
         'rating' => $faker->numberBetween(0, 1000),
-        'user_id' => App\Models\User::all()->random(1)->id,
         'content_generated' => $faker->text,
     ];
 });
@@ -67,8 +66,6 @@ $factory->define(App\Models\Vote::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\VoteItem::class, function (Faker\Generator $faker) {
     return [
-        'vote_id' => App\Models\Vote::all()->random(1)->id,
-        'user_id' => App\Models\User::all()->random(1)->id,
         'name' => $faker->unique()->sentence,
     ];
 });

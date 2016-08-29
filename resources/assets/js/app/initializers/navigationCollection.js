@@ -15,6 +15,12 @@ module.exports = new navigCollection([
         label: 'Topics',
     },
     {
+        href: '#mytopics',
+        icon: '',
+        name: 'mytopics',
+        label: 'My topics',
+    },
+    {
         href: '#users',
         icon: '',
         name: 'users',
