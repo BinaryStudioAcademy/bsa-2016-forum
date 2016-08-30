@@ -233,13 +233,30 @@ class CommentController extends ApiController
     }
 
     /**
+     * @param $comments
+     * @return array
+     */
+    protected function makeCommentsMeta($comments)
+    {
+        $meta = [];
+
+        foreach ($comments as $comment) {
+            $meta[$comment->id]['user'] = $comment->user()->first();
+        }
+
+        return $meta;
+    }
+
+    /**
      * @param Vote $vote
      * @return \Illuminate\Http\JsonResponse
      */
     public function getVoteComments(Vote $vote)
     {
         $comments = $vote->comments()->get();
-        return $this->setStatusCode(200)->respond($comments);
+        $meta = $this->makeCommentsMeta($comments);
+
+        return $this->setStatusCode(200)->respond($comments, $meta);
     }
 
     /**
@@ -265,7 +282,12 @@ class CommentController extends ApiController
     {
         $comment = Comment::create($request->all());
         $comment = $vote->comments()->save($comment);
-        return $this->setStatusCode(201)->respond($comment);
+
+        return $this->setStatusCode(201)->respond($comment, [
+            $comment->id => [
+                'user' => $comment->user()->first()
+            ]
+        ]);
     }
 
     /**
