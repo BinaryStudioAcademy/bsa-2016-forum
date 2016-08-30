@@ -14,7 +14,16 @@
                     <h4>{{ model.content_origin }}</h4>
                 </div>
                 <div class="attachments-container">
+                    {{#each meta.attachments}}
+                        <div class="col-xs-6 col-md-3">
+                            <a href="{{ url }}" class="thumbnail" target="_blank">
+                                <img src="{{ url }}" alt="">
+                            </a>
+                            <div class="file-name">{{ cloud_public_id }}</div>
+                        </div>
+                    {{/each}}
                 </div>
+                <div class="attachs"></div>
             </div>
         </div>
         <div class="topic-control">
@@ -43,7 +52,7 @@
     </div>
 </div>
 
-<div class="new-comment-container"></div>
+<!--<div class="new-comment-container"></div>-->
 
 <div id="confirmDialog-{{ model.id }}" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog">

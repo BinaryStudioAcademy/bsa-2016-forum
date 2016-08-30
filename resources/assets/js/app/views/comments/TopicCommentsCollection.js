@@ -11,11 +11,10 @@ module.exports = Marionette.CollectionView.extend({
         this.listenTo(Radio.channel('сommentCollection'), 'addComment', this.addComment);
     },
 
-    collectionEvents: {
-        'sync': 'render',
-    },
-
     addComment: function (model) {
-        this.collection.add(model);
+        if (!this.collection.findWhere({ id: model.get('id') })) this.collection.add(model);
+        else {
+            model.trigger('change');
+        }
     },
 });

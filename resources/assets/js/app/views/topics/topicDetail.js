@@ -17,17 +17,15 @@ module.exports = Marionette.LayoutView.extend({
 
     ui: {
         'answer': '.topic-answer-btn',
-        'share': '.topic-share-btn',
-        'notification': '.topic-notification-btn'
     },
 
     events: {
         'click @ui.answer': function (event) {
-            Radio.channel('comment').trigger('addComment', this, false);
+            Radio.channel('comment').trigger('addComment', this);
         }
     },
 
-    onBeforeShow: function () {
+    onRender: function () {
         this.getRegion('topicHeader').show(new TopicHeaderView({
             model: this.model
         }));

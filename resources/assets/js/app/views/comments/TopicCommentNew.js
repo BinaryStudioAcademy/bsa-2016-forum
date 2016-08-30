@@ -46,7 +46,9 @@ module.exports = Marionette.ItemView.extend({
 
     submitComment: function (event) {
         event.preventDefault();
+
         this.showErrors(false);
+        this.showLoader(true);
 
         var data = {
             user_id: currentUser.get('id'),
@@ -56,38 +58,31 @@ module.exports = Marionette.ItemView.extend({
             data[ input.name ] = input.value;
         });
 
-        var parent = this;
-
-        this.showLoader(true);
-
+        var view = this;
         this.model.save(data, {
             success: function (model) {
-                //logger('comment saved successfully');
-                if (parent._dropZone && parent._dropZone.files.length) {
-                    parent.filterAttachs();
+                if (view._dropZone && view._dropZone.files.length) {
                     // start upload to server
-                    parent._dropZone.processQueue();
+                    view._dropZone.processQueue();
                 } else {
-                    parent.ui.commentDlg.modal('hide');
                     Radio.channel('сommentCollection').trigger('addComment', model);
+                    view.ui.commentDlg.modal('hide');
                 }
             },
 
             error: function (model, response) {
-                parent.showErrors(true);
-                parent.showLoader(false);
-                parent.ui.errors.empty().append(response.responseText);
+                view.showErrors(true);
+                view.showLoader(false);
+                view.ui.errors.empty().append(response.responseText);
             },
-
-            wait: true
         });
     },
 
     initDropZone: function () {
-        var parent = this;
+        var view = this;
         this._dropZone = new Dropzone(this.$('#drop')[0], {
             url: function(file) {
-                return parent.model.getSelfUrl() + '/attachments';
+                return view.model.getSelfUrl() + '/attachments';
             },
             method: 'post',
             // input file name, registered on server
@@ -98,50 +93,52 @@ module.exports = Marionette.ItemView.extend({
             addRemoveLinks: true,
             acceptedFiles: 'image/*,.pdf,.docx,.doc,.xlsx,.xls',
             error: function (xhr) {
-                parent.showErrors(true);
-                parent.ui.errors.append(xhr.responseText);
+                view.showErrors(true);
+                view.ui.errors.append(xhr.responseText);
             },
             success: function (file, xhr) {
                 if (xhr.data) {
-                    parent._files.push(xhr.data);
+                    if (!view.fileIsUploadedToDropZone(xhr.data.id)) view._files.push(xhr.data);
                 }
             },
             removedfile: function (file) {
                 if (file.id) {
-                    parent.removeAttachmentFromServer(file);
+                    view.removeAttachmentFromServer(file);
                 } else {
-                    parent.$(file.previewElement).remove();
+                    view.$(file.previewElement).remove();
                 }
             },
             // event triggers when all files has been uploaded
             queuecomplete: function () {
-                parent.setModelAttachments();
-                parent.ui.commentDlg.modal('hide');
+                view.setModelWithAttachments();
+                view.ui.commentDlg.modal('hide');
             }
         });
 
         this.showAttachments();
     },
 
-    filterAttachs: function() {
-        // remove from dropzone some files, that already has uploaded to server
-        this._dropZone.files.filter(function (file) {
-            return file.id > 0;
+    fileIsUploadedToDropZone: function (id) {
+        var res = false;
+        this._files.forEach(function (item, i) {
+            if (item.id == id) res = true;
         });
+        return res;
     },
 
-    setModelAttachments: function () {
+    setModelWithAttachments: function () {
         // add attachments to model meta
         var id = this.model.get('id');
-        var parent = this;
+        var view = this;
         // if model has attachments we must push new to it
         if (this._files.length) {
             this._files.forEach(function (file, i) {
-                parent.model.getMeta()[id].attachments.push(file);
-                // add file to attachment collection
+                view.model.getMeta()[id].attachments.push(file);
             });
         }
+
         Radio.channel('сommentCollection').trigger('addComment', this.model);
+
         this._files = [];
     },
 
@@ -149,26 +146,34 @@ module.exports = Marionette.ItemView.extend({
         // remove single file from server
         this.showLoader(true);
         var model = new AttachmentModel({ id: file.id });
-        var parent = this;
+        var view = this;
         model.parentUrl = _.result(this.model, 'url');
-        //console.log(model);
+
         model.destroy({
             success: function (model) {
-                parent.showLoader(false);
-                if (parent.options.attachs) parent.options.attachs.remove({ id: file.id });
-                parent.$(file.previewElement).remove();
-                parent.ui.errors.removeClass('alert-danger')
-                    .addClass('alert-info').text('File was successfully removed');
-                parent.showErrors(true);
+                view.$(file.previewElement).remove();
+                view.showLoader(false);
+                view.ui.errors.removeClass('alert-danger').addClass('alert-info').text('File was successfully removed');
+                view.showErrors(true);
+                view.destroyAttachsFromMeta(model.get('id'));
+                view.model.trigger('change');
             },
+
             error: function (response) {
-                parent.showLoader(false);
-                parent.ui.errors.empty();
-                parent.ui.errors.text(response.responseText);
-                parent.showErrors(true);
+                view.showLoader(false);
+                view.ui.errors.empty();
+                view.ui.errors.text(response.responseText);
+                view.showErrors(true);
             },
-            wait: true
         });
+    },
+
+    destroyAttachsFromMeta: function (id) {
+        var attachs = this.model.getMeta()[this.model.get('id')].attachments.filter(function (file) {
+            return file.id !== id;
+        });
+
+        this.model.getMeta()[this.model.get('id')].attachments = attachs;
     },
 
     showAttachments: function () {
@@ -192,14 +197,15 @@ module.exports = Marionette.ItemView.extend({
         //drop.options.maxFiles = drop.options.maxFiles - attachs.length;
     },
     
-    onShow: function () {
+    onRender: function () {
         this.ui.commentDlg.modal('show');
 
         var view = this;
-        view.ui.commentDlg.on('hidden.bs.modal', function (e) {
-            view.remove();
-        });
+
+        //view.ui.commentDlg.on('hidden.bs.modal', function (e) {
+        //    view.remove();
+        //});
 
         this.initDropZone();
-    }
+    },
 });

@@ -10,8 +10,12 @@ module.exports = Marionette.LayoutView.extend({
     template: 'TopicCommentItem',
 
     regions: {
-        'newComment': '.new-comment-container',
-        'attachments': '.attachments-container'
+        //'newComment': '.new-comment-container',
+        'attachments': '.attachs'
+    },
+
+    initialize: function (options) {
+        this._attachs = new AttachmentCollection();
     },
 
     ui: {
@@ -22,15 +26,23 @@ module.exports = Marionette.LayoutView.extend({
 
     events: {
         'click @ui.answer': function (event) {
-            Radio.channel('comment').trigger('addComment', this, this.model.get('id'));
+            Radio.channel('comment').trigger('addComment', this);
         },
 
         'click @ui.edit': function (event) {
-            Radio.channel('comment').trigger('editComment', this);
+            Radio.channel('comment').trigger('addComment', this, this.model);
         },
 
         'click @ui.remove': function (event) {
-            Radio.channel('comment').trigger('removeComment', this);
+            this.model.parentUrl = this.model.collection.parentUrl;
+            this.model.destroy({
+                success: function () {
+
+                },
+                error: function (model, response) {
+                    this.$('.errors').text(response.responseText);
+                },
+            });
         },
     },
 
@@ -50,12 +62,25 @@ module.exports = Marionette.LayoutView.extend({
         };
     },
 
-    onBeforeShow: function () {
+    onRender: function () {
+        //this.showAttachments();
+    },
+
+    showAttachments: function () {
         var meta = this.model.getMeta();
-        var attachs = meta[this.model.id].attachments;
-        this._attachs = new AttachmentCollection(attachs);
+        var id = this.model.get('id');
+        this._attachs.set(meta[id].attachments);
         this.getRegion('attachments').show(new AttachmentsCollectionView({
             collection: this._attachs
         }));
     },
+
+    modelEvents: {
+        'change': 'render',
+        //'attach:upload': 'attachUpload'
+    },
+
+    attachUpload: function(model) {
+        this.showAttachments();
+    }
 });

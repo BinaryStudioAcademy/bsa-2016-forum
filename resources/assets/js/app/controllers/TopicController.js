@@ -15,6 +15,7 @@ var CommentsCollection = require('../collections/TopicCommentsCollection');
 var _ = require('underscore');
 var Topics = require('../instances/TopicCollection');
 var currentUser = require('../initializers/currentUser');
+var AttachmentCollection = require('../collections/AttachmentCollection');
 
 module.exports = Marionette.Object.extend({
 
@@ -50,13 +51,11 @@ module.exports = Marionette.Object.extend({
         var topicModel = {};
 
         if (Topics.get(id)) {
-            console.log(id);
             topicModel = Topics.get(id);
         } else {
             topicModel = new TopicModel({
                 id: id,
             });
-
             topicModel.fetch();
         }
 
@@ -69,41 +68,28 @@ module.exports = Marionette.Object.extend({
             collection: collection
         });
 
-        view.listenTo(Radio.channel('comment'), 'addComment', function (parentView, childCommentId) {
-            var model = new TopicCommentModel();
+        view.listenTo(Radio.channel('comment'), 'addComment', function (parentView, commentModel) {
+            var model = {}, attachCollection = {};
 
-            // maybe choose some better method to get child comment url
-            if (childCommentId) {
-                model.parentUrl = _.result(topicModel, 'url') + _.result(model, 'url') + '/' + childCommentId;
+            if (commentModel) {
+                //model = new TopicCommentModel(commentModel.toJSON());
+                model = commentModel;
+                var modelAttachs = commentModel.getMeta()[commentModel.get('id')].attachments;
+                attachCollection = new AttachmentCollection(modelAttachs);
             } else {
-                model.parentUrl = _.result(topicModel, 'url');
+                model = new TopicCommentModel();
+                attachCollection = new AttachmentCollection();
             }
 
-            parentView.getRegion('newComment').show(new NewTopicCommentView({
-                model: model
-            }));
-        });
+            // commentModel hasnt parentUrl because parentUrl sets to comment collection
+            model.parentUrl = _.result(topicModel, 'url');
 
-        view.listenTo(Radio.channel('comment'), 'editComment', function (view) {
-            if (!view.model.parentUrl) view.model.parentUrl = collection.parentUrl;
+            //console.log(parentView);
+
             view.getRegion('newComment').show(new NewTopicCommentView({
-                model: view.model,
-                attachs: view._attachs
+                model: model,
+                attachs: attachCollection
             }));
-        });
-
-        view.listenTo(Radio.channel('comment'), 'removeComment', function (view) {
-            //console.log(commentModel);
-            view.model.parentUrl = _.result(topicModel, 'url');
-            view.model.destroy({
-                success: function () {
-
-                },
-                error: function (model, response) {
-                    view.$('.errors').text(response.responseText);
-                },
-                wait: true
-            });
         });
 
         app.render(view);
