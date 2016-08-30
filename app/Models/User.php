@@ -45,6 +45,16 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class);
     }
 
+    public function topicsNotifications()
+    {
+        return $this->morphedByMany(Topic::class, 'notification');
+    }
+
+    public function votesNotifications()
+    {
+        return $this->morphedByMany(Vote::class, 'notification');
+    }
+
     public function topics()
     {
         return $this->hasMany(Topic::class);

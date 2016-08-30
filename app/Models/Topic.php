@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Topic extends Model
 {
+    protected $morphClass = 'topic';
     use SoftDeletes;
 
     /**
@@ -122,4 +123,8 @@ class Topic extends Model
         return $query;
     }
 
+    public function notificationFollowers()
+    {
+        return $this->morphToMany(User::class, 'notification')->withTimestamps();
+    }
 }

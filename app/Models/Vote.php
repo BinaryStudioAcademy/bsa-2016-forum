@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Vote extends Model
 
 {
+    protected $morphClass = 'vote';
     use SoftDeletes;
 
     protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at'];
@@ -100,5 +101,10 @@ class Vote extends Model
             });
         }
         return $query;
+    }
+
+    public function notificationFollowers()
+    {
+        return $this->morphToMany(User::class, 'notification')->withTimestamps();
     }
 }
