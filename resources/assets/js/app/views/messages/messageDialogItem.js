@@ -48,7 +48,8 @@ module.exports = Marionette.ItemView.extend({
             edit_at: edit,
             user: with_user,
             deleted: deleted,
-            updatedDate: MessageDate(moment.utc(this.model.get('updated_at')).tz('Europe/Kiev'))
+            updatedDate: MessageDate(moment.utc(this.model.get('updated_at')).tz('Europe/Kiev')),
+            updatedStaticDate: moment.utc(this.model.get('updated_at')).tz('Europe/Kiev')
         }
     }
 });

@@ -47,7 +47,8 @@ module.exports = Marionette.ItemView.extend({
         return {
             message: this.model.toJSON(),
             edit_at: edit,
-            updatedDate: MessageDate(moment.utc(this.model.get('updated_at')).tz('Europe/Kiev'))
+            updatedDate: MessageDate(moment.utc(this.model.get('updated_at')).tz('Europe/Kiev')),
+            updatedStaticDate: moment.utc(this.model.get('updated_at')).tz('Europe/Kiev')
         }
     }
 });
