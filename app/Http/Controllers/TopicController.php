@@ -28,7 +28,7 @@ class TopicController extends ApiController
     {
         $data = [];
 
-        if ($topics instanceof Collection) {
+        if ($topics instanceof Collection || $topics[0] instanceof Topic) {
             foreach ($topics as $topic) {
                 $bookmark = $topic->bookmarks()
                     ->where('user_id', Auth::user()->id)->first();
@@ -82,9 +82,13 @@ class TopicController extends ApiController
     {
         $this->setFiltersData($request);
 
-        $extendedTopics = Topic::where('category_id', $catId)
+        $topics = Topic::where('category_id', $catId)
             ->filterByQuery($this->searchStr)
-            ->filterByTags($this->tagIds)->get();
+            ->filterByTags($this->tagIds)
+            ->paginate(2);
+
+        $extendedTopics = $topics->items(); //array of Topics
+        $paginationLinks = $topics->nextPageUrl();
 
         foreach ($extendedTopics as $topic) {
             $topic->usersCount = $topic->activeUsersCount();
@@ -93,7 +97,7 @@ class TopicController extends ApiController
 
 
         $meta = $this->getMetaData($extendedTopics);
-
+        $meta['nextPageUrl'] = $paginationLinks;
         return $this->setStatusCode(200)->respond($extendedTopics, $meta);
     }
 
