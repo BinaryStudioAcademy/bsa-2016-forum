@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NotificationRequest;
 use App\Models\Notification;
 use App\Models\Topic;
+use App\Models\Vote;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests;
@@ -39,7 +40,17 @@ class NotificationController extends ApiController
      */
     public function store($userId, NotificationRequest $request)
     {
-        //
+        if($userId != Auth::user()->id)
+            return $this->setStatusCode(403)->respond();
+
+        switch ($request->notification_type)
+        {
+            case 'topic': $notification = Topic::findOrFail($request->notification_id); break;
+            case 'vote': $notification = Vote::findOrFail($request->notification_id); break;
+            default: return $this->setStatusCode(204)->respond();
+        }
+
+        return $this->setStatusCode(201)->respond();
     }
 
     /**
