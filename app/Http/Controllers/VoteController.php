@@ -18,14 +18,12 @@ class VoteController extends ApiController
     protected $tagIds = [];
 
     /**
-     * Display a listing of the resource.
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
         $this->setFiltersParameters($request);
-
         $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
         $meta = $this->getMetaData($votes);
         return $this->setStatusCode(200)->respond($votes, $meta);
@@ -59,25 +57,24 @@ class VoteController extends ApiController
         return $data;
     }
 
+
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param VotesRequest|Request $request
-     * @return \Illuminate\Http\Response
+     * @param VotesRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(VotesRequest $request)
     {
-        $extendedVote = $vote = Vote::create($request->all());
-        TagService::TagsHandler($vote, $request->tags);
-        $extendedVote->tags = $vote->tags()->get();
-        return $this->setStatusCode(201)->respond($extendedVote);
+        $vote = Vote::create($request->all());
+        if ($request->tags) {
+            TagService::TagsHandler($vote, $request->tags);
+        }
+        $vote->tags = $vote->tags()->get();
+        return $this->setStatusCode(201)->respond($vote);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
@@ -167,8 +164,6 @@ class VoteController extends ApiController
 
         return $this->setStatusCode(200)->respond($votes, ['user' => $user]);
     }
-
-    //set filter's parameters from request
 
     /**
      * Display the specific vote created by specific user
