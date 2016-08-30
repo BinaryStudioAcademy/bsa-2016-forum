@@ -159,7 +159,7 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::delete('{comment}/comments/{commentChild}', 'CommentController@destroyVoteCommentChild')->name('deleteVoteCommentChild');
     });
     /*Routes for VoteItem comments*/
-    Route::group(['prefix' => 'votes/{vote}/voteitems/{voteitem}/comments'], function () {
+    Route::group(['prefix' => 'votes/{vote}/voteitems/{voteItem}/comments'], function () {
         Route::get('', 'CommentController@getVoteItemComments')->name('voteItemComments');
         Route::post('', 'CommentController@storeVoteItemComment')->name('storeVoteItemComment');
         Route::get('/{comment}', 'CommentController@getVoteItemComment')->name('voteItemComment');
