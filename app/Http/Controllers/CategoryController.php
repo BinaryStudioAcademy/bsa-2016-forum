@@ -29,6 +29,8 @@ class CategoryController extends ApiController
      */
     public function store(CategoryRequest $request)
     {
+        $this->authorize('storeCategory', new Category());
+
         $category = Category::create($request->all());
         return $this->setStatusCode(201)->respond($category);
     }
@@ -55,6 +57,8 @@ class CategoryController extends ApiController
     public function update(CategoryRequest $request, $id)
     {
         $category = Category::findOrFail($id);
+        $this->authorize('updateCategory', $category);
+
         $category->update($request->all());
         return $this->setStatusCode(200)->respond($category);
     }
@@ -68,6 +72,8 @@ class CategoryController extends ApiController
     public function destroy($id)
     {
         $category = Category::findOrFail($id);
+        $this->authorize('destroyCategory', $category);
+
         $category->delete();
         return $this->setStatusCode(204)->respond();
     }
