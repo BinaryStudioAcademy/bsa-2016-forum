@@ -8,7 +8,7 @@ var VoteModel = require('../models/VoteModel');
 var CommentModel = require('../models/CommentModel');
 
 var CommentsCollection = require('../collections/commentCollection');
-var VoteAICollection = require('../collections/VoteAICollection');
+var VoteAICollection = require('../collections/voteAICollection');
 
 var ListVotes = require('../views/votes/ListVotes');
 var ShowVote = require('../views/votes/ShowVote');
