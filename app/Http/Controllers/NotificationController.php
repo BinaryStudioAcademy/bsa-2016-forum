@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\NotificationRequest;
+use App\Models\Notification;
+use App\Models\Topic;
 use Illuminate\Http\Request;
-
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 
-class NotificationController extends Controller
+class NotificationController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +19,16 @@ class NotificationController extends Controller
      */
     public function index($userId)
     {
-        //
+        if ($userId != Auth::user()->id)
+            return $this->setStatusCode(403)->respond();
+
+        $user = Auth::user();
+
+        return $this->setStatusCode(200)->respond(
+            $user->notifications, [
+            'topic' => $user->topicsNotifications,
+            'vote' => $user->votesNotifications
+        ]);
     }
 
     /**
@@ -24,7 +37,7 @@ class NotificationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($userId, Request $request)
+    public function store($userId, NotificationRequest $request)
     {
         //
     }
@@ -37,6 +50,14 @@ class NotificationController extends Controller
      */
     public function destroy($userId, $id)
     {
-        //
+        if($userId != Auth::user()->id)
+            return $this->setStatusCode(403)->respond();
+        $user = Auth::user();
+        $notification = $user->notifications()->find($id);
+        if (!$notification) {
+            throw (new ModelNotFoundException)->setModel(Notification::class);
+        }
+        $notification->delete();
+        return $this->setStatusCode(204)->respond();
     }
 }
