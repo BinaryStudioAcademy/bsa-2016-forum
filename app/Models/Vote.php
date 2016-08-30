@@ -103,8 +103,8 @@ class Vote extends Model
         return $query;
     }
 
-    public function notificationFollowers()
+    public function subscribers()
     {
-        return $this->morphToMany(User::class, 'notification')->withTimestamps();
+        return $this->morphToMany(User::class, 'subscription')->withTimestamps();
     }
 }

@@ -40,19 +40,19 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
-    public function notifications()
+    public function subscriptions()
     {
-        return $this->hasMany(Notification::class);
+        return $this->hasMany(Subscription::class);
     }
 
-    public function topicsNotifications()
+    public function topicSubscriptions()
     {
-        return $this->morphedByMany(Topic::class, 'notification');
+        return $this->morphedByMany(Topic::class, 'subscription');
     }
 
-    public function votesNotifications()
+    public function voteSubscriptions()
     {
-        return $this->morphedByMany(Vote::class, 'notification');
+        return $this->morphedByMany(Vote::class, 'subscription');
     }
 
     public function topics()

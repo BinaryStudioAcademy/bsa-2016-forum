@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\NotificationRequest;
-use App\Models\Notification;
+use App\Http\Requests\SubscriptionRequest;
+use App\Models\Subscription;
 use App\Models\Topic;
 use App\Models\Vote;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 
-class NotificationController extends ApiController
+class SubscriptionController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -26,9 +24,9 @@ class NotificationController extends ApiController
         $user = Auth::user();
 
         return $this->setStatusCode(200)->respond(
-            $user->notifications, [
-            'topic' => $user->topicsNotifications,
-            'vote' => $user->votesNotifications
+            $user->subscriptions, [
+            'topic' => $user->topicSubscriptions,
+            'vote' => $user->voteSubscriptions
         ]);
     }
 
@@ -38,18 +36,20 @@ class NotificationController extends ApiController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($userId, NotificationRequest $request)
+    public function store($userId, SubscriptionRequest $request)
     {
         if($userId != Auth::user()->id)
             return $this->setStatusCode(403)->respond();
 
-        switch ($request->notification_type)
+        switch ($request->subscription_type)
         {
-            case 'topic': $notification = Topic::findOrFail($request->notification_id); break;
-            case 'vote': $notification = Vote::findOrFail($request->notification_id); break;
+            case 'topic': $subscribe_target = Topic::findOrFail($request->subscription_id); break;
+            case 'vote': $subscribe_target = Vote::findOrFail($request->subscription_id); break;
             default: return $this->setStatusCode(204)->respond();
         }
 
+        $subscribe_target->sync([$userId], false);
+        $subscribe_target;
         return $this->setStatusCode(201)->respond();
     }
 
@@ -64,11 +64,11 @@ class NotificationController extends ApiController
         if($userId != Auth::user()->id)
             return $this->setStatusCode(403)->respond();
         $user = Auth::user();
-        $notification = $user->notifications()->find($id);
-        if (!$notification) {
-            throw (new ModelNotFoundException)->setModel(Notification::class);
+        $subscribe = $user->subscriptions()->find($id);
+        if (!$subscribe) {
+            throw (new ModelNotFoundException)->setModel(Subscription::class);
         }
-        $notification->delete();
+        $subscribe->delete();
         return $this->setStatusCode(204)->respond();
     }
 }

@@ -12,10 +12,11 @@ class ChangeNotificationsTable extends Migration
      */
     public function up()
     {
-        Schema::table('notifications', function(Blueprint $table)
+        Schema::rename('notifications', 'subscriptions');
+        Schema::table('subscriptions', function(Blueprint $table)
         {
-            $table->integer('notification_id');
-            $table->string('notification_type');
+            $table->integer('subscription_id');
+            $table->string('subscription_type');
             $table->removeColumn('deleted_at');
         });
     }
@@ -29,8 +30,8 @@ class ChangeNotificationsTable extends Migration
     {
         Schema::table('notifications', function(Blueprint $table)
         {
-            $table->removeColumn('notification_id');
-            $table->removeColumn('notification_type');
+            $table->removeColumn('subscription_id');
+            $table->removeColumn('subscription_type');
             $table->softDeletes();
         });
     }

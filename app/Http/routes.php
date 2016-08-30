@@ -93,13 +93,13 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
             'destroy' => 'voteItems.destroy'
         ]
     ]);
-    /*Routes for Notifications */
-    Route::resource('users/{user}/notifications', 'NotificationController', [
+    /*Routes for Subscription */
+    Route::resource('users/{user}/subscriptions', 'SubscriptionController', [
         'except' => ['edit', 'create', 'show', 'update'],
         'names' => [
-            'index' => 'notifications.index',
-            'store' => 'notifications.store',
-            'destroy' => 'notifications.destroy'
+            'index' => 'subscriptions.index',
+            'store' => 'subscriptions.store',
+            'destroy' => 'subscriptions.destroy'
         ]
     ]);
 
