@@ -26,7 +26,7 @@ class TopicController extends ApiController
         if ($topics) {
             foreach ($topics as $topic) {
                 $data[$topic->id]['user'] = $topic->user()->first();
-                $data[$topic->id]['likes'] = $topic->likes()->count();
+//                $data[$topic->id]['likes'] = $topic->likes()->count();
                 $data[$topic->id]['comments'] = $topic->comments()->count();
             }
         }
@@ -38,7 +38,7 @@ class TopicController extends ApiController
     {
         $data = [];
         $data['user'] = $topic->user()->first();
-        $data['likes'] = $topic->likes()->count();
+//        $data['likes'] = $topic->likes()->count();
         $data['comments'] = $topic->comments()->count();
         $bookmark = $topic->bookmarks()->where('user_id', Auth::user()->id)->first();
         if ($bookmark !== null) {

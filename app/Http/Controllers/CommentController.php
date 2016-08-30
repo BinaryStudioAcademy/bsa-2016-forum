@@ -20,7 +20,7 @@ class CommentController extends ApiController
         if ($comments) {
             foreach ($comments as $comment) {
                 $data[$comment->id]['user'] = $comment->user()->first();
-                $data[$comment->id]['likes'] = $comment->likes()->count();
+//                $data[$comment->id]['likes'] = $comment->likes()->count();
                 $data[$comment->id]['attachments'] = $comment->attachments()->get();
             }
         }
@@ -32,7 +32,7 @@ class CommentController extends ApiController
     {
         $data = [];
         $data[$comment->id]['user'] = $comment->user()->first();
-        $data[$comment->id]['likes'] = $comment->likes()->count();
+//        $data[$comment->id]['likes'] = $comment->likes()->count();
         $data[$comment->id]['attachments'] = $comment->attachments()->get();
 
         return $data;
