@@ -25,8 +25,8 @@ class SubscriptionController extends ApiController
 
         return $this->setStatusCode(200)->respond(
             $user->subscriptions, [
-            'topic' => $user->topicSubscriptions,
-            'vote' => $user->voteSubscriptions
+            Topic::$morphTag=> $user->topicSubscriptions,
+            Vote::$morphTag => $user->voteSubscriptions
         ]);
     }
 
@@ -41,16 +41,22 @@ class SubscriptionController extends ApiController
         if($userId != Auth::user()->id)
             return $this->setStatusCode(403)->respond();
 
-        switch ($request->subscription_type)
-        {
-            case 'topic': $subscribe_target = Topic::findOrFail($request->subscription_id); break;
-            case 'vote': $subscribe_target = Vote::findOrFail($request->subscription_id); break;
-            default: return $this->setStatusCode(204)->respond();
+        switch ($request->subscription_type) {
+            case Topic::$morphTag:
+                Topic::findOrFail($request->subscription_id);
+                break;
+            case Vote::$morphTag:
+                Vote::findOrFail($request->subscription_id);
+                break;
+            default:
+                return $this->setStatusCode(400)->respond();
         }
 
-        $subscribe_target->sync([$userId], false);
-        $subscribe_target;
-        return $this->setStatusCode(201)->respond();
+        $subscribe = Auth::user()
+            ->subscriptions()
+            ->updateOrCreate($request->all(), $request->all());
+
+        return $this->setStatusCode(201)->respond($subscribe);
     }
 
     /**

@@ -22,7 +22,6 @@ class SubscriptionRequest extends ApiRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|integer|is_current_user',
             'subscription_id' => 'required|integer',
             'subscription_type' => 'required|alpha',
         ];
@@ -31,8 +30,6 @@ class SubscriptionRequest extends ApiRequest
     public function messages()
     {
         return [
-            'user_id.required' => 'User ID is required',
-            'user_id.is_current_user' => 'User ID not is authorized',
             'subscription_type.required' => 'Subscription type is required',
             'subscription_type.alpha' => 'Subscription type must be string',
             'subscription_id.required' => 'Subscription id is required',

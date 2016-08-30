@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Vote extends Model
 
 {
+    public static $morphTag = 'vote';
     protected $morphClass = 'vote';
     use SoftDeletes;
 
@@ -105,6 +106,6 @@ class Vote extends Model
 
     public function subscribers()
     {
-        return $this->morphToMany(User::class, 'subscription')->withTimestamps();
+        return $this->morphToMany(User::class, Subscription::$name)->withTimestamps();
     }
 }
