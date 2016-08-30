@@ -20,7 +20,7 @@ class TopicController extends ApiController
     protected $tagIds = [];
 
     /**
-    /**
+     * /**
      * @param $topics array
      * @return array $data array
      */
@@ -87,18 +87,29 @@ class TopicController extends ApiController
             ->filterByTags($this->tagIds)
             ->paginate(2);
 
-        $extendedTopics = $topics->items(); //array of Topics
-        $paginationLinks = $topics->nextPageUrl();
-
-        foreach ($extendedTopics as $topic) {
+        foreach ($topics->items() as $topic) {
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
         }
 
+        $meta = $this->getMetaData($topics->items());
+        return $this->setStatusCode(200)->respondForPagination($topics, $meta);
+    }
 
-        $meta = $this->getMetaData($extendedTopics);
-        $meta['nextPageUrl'] = $paginationLinks;
-        return $this->setStatusCode(200)->respond($extendedTopics, $meta);
+    /**
+     * @param array $data
+     * @param array $meta
+     * @param array $headers
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondForPagination($data = [], $meta = [], $headers = [])
+    {
+        $data['_meta'] = $meta;
+        return response()->json(
+            $data,
+            $this->getStatusCode(),
+            $headers
+        );
     }
 
     /**
@@ -189,7 +200,7 @@ class TopicController extends ApiController
             ->filterByQuery($this->searchStr)
             ->filterByTags($this->tagIds)
             ->get();
-        
+
         if (!$extendedTopics) {
             return $this->setStatusCode(200)->respond();
         }
