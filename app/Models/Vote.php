@@ -53,9 +53,12 @@ class Vote extends Model
         return $this->morphToMany(Attachment::class, 'attachmenttable');
     }
 
+    /**
+     * Get all of the vote's likes
+     */
     public function likes()
     {
-        return $this->morphToMany(Like::class, 'likeable');
+        return $this->morphMany(Like::class, 'likeable');
     }
 
     /**

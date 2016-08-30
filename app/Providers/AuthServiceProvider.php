@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Tag;
 use App\Models\Topic;
@@ -14,6 +15,7 @@ use App\Policies\TopicPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\VoteItemPolicy;
 use App\Policies\VotePolicy;
+use App\Policies\CategoryPolicy;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -31,6 +33,7 @@ class AuthServiceProvider extends ServiceProvider
         Comment::class => CommentPolicy::class,
         User::class => UserPolicy::class,
         Tag::class => TagPolicy::class,
+        Category::class => CategoryPolicy::class,
     ];
 
     /**
