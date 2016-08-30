@@ -19,17 +19,33 @@ class CategoryRequest extends ApiRequest
      *
      * @return array
      */
-    public function rules()
+    function rules()
     {
-        return [
-            'name' => 'required|max:255',
-        ];
+        switch ($this->method()) {
+            case 'POST':
+                return [
+                    'name' => 'required|max:255|unique:categories,name',
+                ];
+
+                break;
+            case 'PUT':
+            case 'PATCH':
+                return [
+                    'name' => 'required|max:255|unique:categories,name,' . $this->categories,
+                ];
+
+                break;
+            default:
+                return [];
+        }
     }
 
     public function messages()
     {
         return [
             'name.required' => 'Category name is required',
+            'name.unique' => 'Category name already exist',
+            'name.max' => 'Category name is too long',
         ];
     }
 }
