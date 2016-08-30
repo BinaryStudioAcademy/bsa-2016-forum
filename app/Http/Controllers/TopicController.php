@@ -49,7 +49,6 @@ class TopicController extends ApiController
     }
 
     /**
-    /**
      * @param $topics array
      * @return array $data array
      */

@@ -126,7 +126,7 @@ module.exports = Marionette.ItemView.extend({
     filterAttachs: function() {
         // remove from dropzone some files, that already has uploaded to server
         this._dropZone.files.filter(function (file) {
-            return file.id == true;
+            return file.id > 0;
         });
     },
 
