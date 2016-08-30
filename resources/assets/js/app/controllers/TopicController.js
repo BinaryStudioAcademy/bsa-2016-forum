@@ -12,8 +12,7 @@ var currentUser = require('../initializers/currentUser');
 //
 
 module.exports = Marionette.Object.extend({
-    initialize: function () {
-    },//
+
     index: function () {
         var topicCollection = new TopicCollection();
         topicCollection.url = '/topics';
@@ -52,10 +51,12 @@ module.exports = Marionette.Object.extend({
     },
 
     edit: function (id) {
+        var topicCategoryCollection = new TopicCategoryCollection();
+        topicCategoryCollection.fetch();
         var topicModel = new TopicModel({id: id});
         topicModel.fetch({
             success: function () {
-                app.render(new TopicCreate({model: topicModel}));
+                app.render(new TopicCreate({model: topicModel, collection: topicCategoryCollection}));
             }
         });
     },

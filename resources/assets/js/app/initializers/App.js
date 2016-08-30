@@ -72,7 +72,7 @@ var app = Marionette.Application.extend({
         socket.Login();
         this.showRootLayout();
         this.setRouting();
-
+        require('../instances/Helper');
         logger('start application');
 
         if (Backbone.history) {
