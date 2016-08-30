@@ -19,7 +19,35 @@ class TopicController extends ApiController
 
     protected $tagIds = [];
 
-    /**
+    private function getCollectionMetaData($topics)
+    {
+        $data = [];
+
+        if ($topics) {
+            foreach ($topics as $topic) {
+                $data[$topic->id]['user'] = $topic->user()->first();
+                $data[$topic->id]['likes'] = $topic->likes()->count();
+                $data[$topic->id]['comments'] = $topic->comments()->count();
+            }
+        }
+
+        return $data;
+    }
+
+    private function getItemMetaData($topic)
+    {
+        $data = [];
+        $data['user'] = $topic->user()->first();
+        $data['likes'] = $topic->likes()->count();
+        $data['comments'] = $topic->comments()->count();
+        $bookmark = $topic->bookmarks()->where('user_id', Auth::user()->id)->first();
+        if ($bookmark !== null) {
+            $data['bookmark'] = $topic->bookmarks()->where('user_id', Auth::user()->id)->first();
+        }
+
+        return $data;
+    }
+
     /**
      * @param $topics array
      * @return array $data array
@@ -121,10 +149,10 @@ class TopicController extends ApiController
      */
     public function show($id)
     {
-        $topic = Topic::findOrFail($id);
-        $topic->tags = $topic->tags()->get();
-        $meta = $this->getMetaData($topic);
-        return $this->setStatusCode(200)->respond($topic, $meta);
+        $extendedTopic = $topic = Topic::findOrFail($id);
+        $extendedTopic->tags = $topic->tags()->get();
+        $meta = $this->getItemMetaData($extendedTopic);
+        return $this->setStatusCode(200)->respond($extendedTopic, $meta);
     }
 
     /**
@@ -137,7 +165,6 @@ class TopicController extends ApiController
      */
     public function update($id, TopicRequest $request)
     {
-
         $topic = Topic::findOrFail($id);
 
         $this->authorize('update', $topic);

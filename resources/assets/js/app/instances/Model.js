@@ -13,6 +13,10 @@ module.exports = Backbone.Model.extend({
         return App.getBaseUrl() + this.getEntityUrl();
     },
 
+    getSelfUrl: function () {
+        return App.getBaseUrl() + (_.result(this, 'url') || _.result(this, 'urlRoot'));
+    },
+
     getMeta: function() {
         return (_.result(this, '_meta') || _.result(this.collection, '_meta'));
     },
@@ -23,6 +27,7 @@ module.exports = Backbone.Model.extend({
         }
         
         if (!options.statusCode) options.statusCode = {};
+
         options.statusCode['400'] = function (xhr, textStatus, errorThrown) {
             if (xhr.responseJSON) {
                 model.validationError = xhr.responseJSON;
