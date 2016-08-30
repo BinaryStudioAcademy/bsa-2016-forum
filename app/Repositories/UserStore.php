@@ -6,7 +6,6 @@ use App\Repositories\Contracts\UserStoreInterface;
 use App\Facades\CurlService;
 use App\Models\User;
 use DB;
-use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class UserStore implements UserStoreInterface
 {
@@ -15,25 +14,20 @@ class UserStore implements UserStoreInterface
     {
         if (strtolower(env('APP_ENV')) <> 'local') {
             $response = CurlService::sendUsersRequest($user->global_id);
-            if (key_exists('success', $response) && $response['success'] == false) {
-                throw new ServiceUnavailableHttpException;
-                }
-
             $users = array_map(
                 function ($userFunc) {
-                    $r['first_name'] = $userFunc['name'];
-                    $r['last_name'] = $userFunc['surname'];
-                    $r['email'] = $userFunc['email'];
-                    $r['city'] = $userFunc['city'];
-                    $r['country'] = $userFunc['country'];
-                    $r['birthday'] = $userFunc['birthday'];
-                    $r['local_id'] = $userFunc['id'];
-                    $r['avatar'] = $userFunc['avatar'];
+                    $r['first_name'] = $userFunc->name;
+                    $r['last_name'] = $userFunc->surname;
+                    $r['email'] = $userFunc->email;
+                    $r['city'] = $userFunc->city;
+                    $r['country'] = $userFunc->country;
+                    $r['birthday'] = $userFunc->birthday;
+                    $r['local_id'] = $userFunc->id;
+                    $r['avatar'] = $userFunc->avatar;
                     return $r;
                 },
                 $response
             );
-
             $userProfile = array_shift($users);
 
         } else {
@@ -68,24 +62,21 @@ class UserStore implements UserStoreInterface
     public function all()
     {
         $usersInner = User::all()->toArray();
-        
+
         if (strtolower(env('APP_ENV')) <> 'local') {
             $response = CurlService::sendUsersRequest();
-            if (key_exists('success', $response) && $response['success'] == false){
-                throw new ServiceUnavailableHttpException;
-            }
-
+            
             $users = array_map(
                 function ($userFunc) use ($usersInner) {
-                    $r['first_name'] = $userFunc['name'];
-                    $r['last_name'] = $userFunc['surname'];
-                    $r['email'] = $userFunc['email'];
-                    $r['city'] = $userFunc['city'];
-                    $r['country'] = $userFunc['country'];
-                    $r['birthday'] = $userFunc['birthday'];
-                    $r['local_id'] = $userFunc['id'];
-                    $r['global_id'] = $userFunc['serverUserId'];
-                    $r['avatar'] = $userFunc['avatar'];
+                    $r['first_name'] = $userFunc->name;
+                    $r['last_name'] = $userFunc->surname;
+                    $r['email'] = $userFunc->email;
+                    $r['city'] = $userFunc->city;
+                    $r['country'] = $userFunc->country;
+                    $r['birthday'] = $userFunc->birthday;
+                    $r['local_id'] = $userFunc->id;
+                    $r['global_id'] = $userFunc->serverUserId;
+                    $r['avatar'] = $userFunc->avatar;
 
                     $userInner = array_filter($usersInner,
                         function ($item) use ($r) {
@@ -114,7 +105,7 @@ class UserStore implements UserStoreInterface
             );
         } else {
             $users = array_map(
-                function($item) {
+                function ($item) {
                     $item['city'] = '';
                     $item['country'] = '';
                     $item['birthday'] = '';
