@@ -9,7 +9,22 @@ module.exports = Marionette.LayoutView.extend({
     regions: {
         container: '#posts'
     },
-    
+
+    events: {
+        'scroll': 'loadMoreTopics'
+    },
+
+    loadMoreTopics: function(){
+        var totalHeight = this.$('> div').height(),
+            scrollTop = this.$el.scrollTop() + this.$el.height(),
+            margin = 200;
+
+        // if we are closer than 'margin' to the end of the content, load more topics
+        if (scrollTop + margin >= totalHeight) {
+            MyApp.vent.trigger("search:more");
+        }
+    },
+
     onRender: function () {
         this.container.show(new topicCollection({
             collection: this.collection
