@@ -13,6 +13,13 @@ module.exports = Marionette.LayoutView.extend({
         'submit @ui.form': function (e) {
             e.preventDefault();
             Radio.channel('messagesChannel').trigger('sendMessage', this.ui);
+        },
+
+        'keyup @ui.message': function (e) {
+            if (e.ctrlKey && (e.keyCode == 13)) {
+                e.preventDefault();
+                Radio.channel('messagesChannel').trigger('sendMessage', this.ui);
+            }
         }
     },
     ui: {

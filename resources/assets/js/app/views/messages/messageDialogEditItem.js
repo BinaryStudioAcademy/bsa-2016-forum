@@ -9,7 +9,8 @@ module.exports = Marionette.ItemView.extend({
         form: '#message-edit-form'
     },
     events: {
-        'submit @ui.form' : 'clickedSaveEditMessage'
+        'submit @ui.form' : 'clickedSaveEditMessage',
+        'keyup @ui.message' : 'keyPressedSaveEditMessage'
     },
 
     onRender: function () {
@@ -18,6 +19,16 @@ module.exports = Marionette.ItemView.extend({
         this.$('.modal').on('hidden.bs.modal', function (e) {
             view.destroy();
         });
+    },
+
+    keyPressedSaveEditMessage: function (e) {
+        if (e.ctrlKey && (e.keyCode == 13)) {
+            e.preventDefault();
+            Radio.channel('messagesChannel').trigger('saveEditedMessage', {
+                model: this.model,
+                view: this
+            });
+        }
     },
 
     clickedSaveEditMessage: function (e) {
