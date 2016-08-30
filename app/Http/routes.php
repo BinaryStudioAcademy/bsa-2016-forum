@@ -93,6 +93,15 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
             'destroy' => 'voteItems.destroy'
         ]
     ]);
+    /*Routes for Notifications */
+    Route::resource('users/{user}/notifications', 'NotificationController', [
+        'except' => ['edit', 'create', 'show', 'update'],
+        'names' => [
+            'index' => 'notifications.index',
+            'store' => 'notifications.store',
+            'destroy' => 'notifications.destroy'
+        ]
+    ]);
 
     /*Routes for bookmarks*/
     Route::group(['prefix' => 'bookmarks'], function () {
