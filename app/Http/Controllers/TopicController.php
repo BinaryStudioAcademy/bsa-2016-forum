@@ -104,9 +104,11 @@ class TopicController extends ApiController
      */
     protected function respondForPagination($data = [], $meta = [], $headers = [])
     {
-        $data['_meta'] = $meta;
         return response()->json(
-            $data,
+            [
+                'data' => $data->items(),
+                '_meta' => $meta
+            ],
             $this->getStatusCode(),
             $headers
         );
