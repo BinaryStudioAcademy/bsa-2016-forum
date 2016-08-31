@@ -1,6 +1,7 @@
 var Marionette = require('backbone.marionette');
 var moment = require('moment-timezone');
 var MessageDate = require('../../initializers/messageDateFormatting');
+var config = require('config');
 
 module.exports = Marionette.ItemView.extend({
     template: 'messageItem',
@@ -8,8 +9,8 @@ module.exports = Marionette.ItemView.extend({
         return {
             message: this.model.toJSON(),
             user: this.options.user,
-            updatedDate: MessageDate(moment.utc(this.model.get('updated_at')).tz('Europe/Kiev')),
-            updatedStaticDate: moment.utc(this.model.get('updated_at')).tz('Europe/Kiev')
+            updatedDate: MessageDate(moment.utc(this.model.get('updated_at')).tz(config.timeZone)),
+            updatedStaticDate: moment.utc(this.model.get('updated_at')).tz(config.timeZone)
         }
     }
 });
