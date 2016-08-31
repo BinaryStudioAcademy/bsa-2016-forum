@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Vote extends Model
 
 {
-    public static $morphTag = 'vote';
-
+    public static $morphTag = 'Vote';
+    protected $morphClass = 'Vote';
     use SoftDeletes;
 
     protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at'];

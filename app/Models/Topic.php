@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Topic extends Model
 {
-    public static $morphTag = 'topic';
-
+    public static $morphTag = 'Topic';
+    protected $morphClass = 'Topic';
     use SoftDeletes;
 
     /**
