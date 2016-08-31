@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Topic extends Model
 {
     public static $morphTag = 'topic';
-    protected $morphClass = 'topic';
+
     use SoftDeletes;
 
     /**

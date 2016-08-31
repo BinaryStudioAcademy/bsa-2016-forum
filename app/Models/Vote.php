@@ -11,7 +11,7 @@ class Vote extends Model
 
 {
     public static $morphTag = 'vote';
-    protected $morphClass = 'vote';
+
     use SoftDeletes;
 
     protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at'];
