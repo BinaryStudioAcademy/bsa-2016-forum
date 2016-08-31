@@ -168,12 +168,12 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::delete('{comment}/comments/{commentChild}', 'CommentController@destroyVoteCommentChild')->name('deleteVoteCommentChild');
     });
     /*Routes for VoteItem comments*/
-    Route::group(['prefix' => 'votes/{vote}/voteitems/{voteitem}/comments'], function () {
+    Route::group(['prefix' => 'votes/{vote}/voteitems/{voteItem}/comments'], function () {
         Route::get('', 'CommentController@getVoteItemComments')->name('voteItemComments');
         Route::post('', 'CommentController@storeVoteItemComment')->name('storeVoteItemComment');
-        Route::get('{comment}', 'CommentController@getVoteItemComment')->name('voteItemComment');
-        Route::put('{comment}', 'CommentController@updateVoteItemComment')->name('updateVoteItemComment');
-        Route::delete('{comment}', 'CommentController@destroyVoteItemComment')->name('deleteVoteItemComment');
+        Route::get('/{comment}', 'CommentController@getVoteItemComment')->name('voteItemComment');
+        Route::put('/{comment}', 'CommentController@updateVoteItemComment')->name('updateVoteItemComment');
+        Route::delete('/{comment}', 'CommentController@destroyVoteItemComment')->name('deleteVoteItemComment');
     });
     /*Routes for Topic attachments*/
     Route::group(['prefix' => 'topics/{topic}/attachments'], function () {
