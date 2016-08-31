@@ -73,6 +73,3 @@ $factory->define(App\Models\Category::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Models\Like::class, function (Faker\Generator $faker) {
-    return [];
-});

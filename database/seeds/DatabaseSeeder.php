@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
         $this->call(CommentsSeeder::class);
 
         $this->call(NotificationsSeeder::class);
+        $this->call(LikesSeeder::class);
+
         Model::reguard();
     }
 }
