@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\Status;
 
 class UsersTableSeeder extends Seeder
 {
@@ -12,8 +13,15 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $count_users = 10;
+        $statuses = Status::all();
 
-        factory(App\Models\User::class, $count_users)->create();
+        factory(App\Models\User::class, $count_users)
+            ->make()
+            ->each(function ($user) use ($statuses) {
+                $randomStatus = $statuses->random();
+                $user->status()->associate($randomStatus);
+                $user->save();
+            });
         
         $users = App\Models\User::all();
         $roleUser = \DB::table('roles')->where('name', 'User')->value('id');

@@ -18,7 +18,6 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
         'display_name' => $faker->unique()->userName,
         'email' => $faker->safeEmail,
         'reputation' => $faker->numberBetween(0, 1000),
-        'status_id' => App\Models\Status::all()->random(1)->id,
         'last_visit_at' => $faker->dateTimeThisYear
     ];
 });
