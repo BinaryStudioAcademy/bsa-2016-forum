@@ -71,7 +71,7 @@ body {
   padding: 15px;
 }
 .attachments-container img {
-  height: 150px;
+  max-height: 50px;
 }
 .nav > li > a:hover, .nav > li > a:focus {
   background-color: transparent;

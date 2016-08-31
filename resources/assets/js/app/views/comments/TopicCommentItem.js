@@ -46,11 +46,23 @@ module.exports = Marionette.LayoutView.extend({
         },
     },
 
+    attachmentThumb: function (attachs) {
+        attachs.forEach(function (attach) {
+           if (attach.type == 'image/jpeg' || attach.type == 'image/png' ||
+               attach.type == 'image/gif') {
+               attach.thumb = attach.url;
+           } else {
+               attach.thumb = '/images/doc.png';
+           }
+
+        });
+    },
+
     serializeData: function () {
         var meta = this.model.getMeta();
         var id = this.model.get('id');
         //console.log(meta, currentUser);
-
+        this.attachmentThumb(meta[id].attachments);
         return {
             model: this.model.toJSON(),
             meta: {

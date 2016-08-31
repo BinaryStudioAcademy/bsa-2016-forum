@@ -66,8 +66,8 @@ module.exports = Marionette.ItemView.extend({
                     view._dropZone.processQueue();
                 } else {
                     Radio.channel('сommentCollection').trigger('addComment', model);
-                    view.ui.commentDlg.modal('hide');
                 }
+                view.ui.commentDlg.modal('hide');
             },
 
             error: function (model, response) {
@@ -87,7 +87,8 @@ module.exports = Marionette.ItemView.extend({
             method: 'post',
             // input file name, registered on server
             paramName: "f",
-            parallelUploads : 10,
+            //parallelUploads : 10,
+            hiddenInputContainer: '#drop',
             autoProcessQueue : false,
             uploadMultiple: false,
             addRemoveLinks: true,
@@ -111,7 +112,6 @@ module.exports = Marionette.ItemView.extend({
             // event triggers when all files has been uploaded
             queuecomplete: function () {
                 view.setModelWithAttachments();
-                view.ui.commentDlg.modal('hide');
             }
         });
 
@@ -130,6 +130,8 @@ module.exports = Marionette.ItemView.extend({
         // add attachments to model meta
         var id = this.model.get('id');
         var view = this;
+        var a = view.model.getMeta()[id].attachments;
+
         // if model has attachments we must push new to it
         if (this._files.length) {
             this._files.forEach(function (file, i) {
@@ -146,16 +148,15 @@ module.exports = Marionette.ItemView.extend({
         // remove single file from server
         this.showLoader(true);
         var model = new AttachmentModel({ id: file.id });
+        this.destroyAttachsFromMeta(file.id);
         var view = this;
         model.parentUrl = _.result(this.model, 'url');
-
         model.destroy({
             success: function (model) {
                 view.$(file.previewElement).remove();
                 view.showLoader(false);
                 view.ui.errors.removeClass('alert-danger').addClass('alert-info').text('File was successfully removed');
                 view.showErrors(true);
-                view.destroyAttachsFromMeta(model.get('id'));
                 view.model.trigger('change');
             },
 
@@ -180,8 +181,8 @@ module.exports = Marionette.ItemView.extend({
         // if comment already has attachments they will be show
         var id = this.model.get('id');
         if (!id) return;
-        var attachs = this.options.attachs.toJSON();
-        //var attachs = this.model.getMeta()[id].attachments;
+        //var attachs = this.options.attachs.toJSON();
+        var attachs = this.model.getMeta()[id].attachments;
         var drop = this._dropZone;
         if (attachs.length) {
             attachs.forEach(function (file, i) {
@@ -194,18 +195,14 @@ module.exports = Marionette.ItemView.extend({
                 drop.emit("thumbnail", mockFile, file.url);
             });
         }
-        //drop.options.maxFiles = drop.options.maxFiles - attachs.length;
     },
-    
-    onRender: function () {
-        this.ui.commentDlg.modal('show');
 
-        var view = this;
-
-        //view.ui.commentDlg.on('hidden.bs.modal', function (e) {
-        //    view.remove();
-        //});
-
+    onShow: function() {
         this.initDropZone();
+        this.ui.commentDlg.modal('show');
+        var view = this;
+        view.ui.commentDlg.on('hidden.bs.modal', function (e) {
+            view.remove();
+        });
     },
 });
