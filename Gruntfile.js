@@ -98,6 +98,16 @@ module.exports = function (grunt) {
                         dest: 'public/fonts/bootstrap'
                     }
                 ]
+            },
+            ckeditor: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'node_modules/ckeditor',
+                        src: ['**'],
+                        dest: 'public/ckeditor',
+                    }
+                ]
             }
         }
     });
