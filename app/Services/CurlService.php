@@ -72,4 +72,28 @@ class CurlService
         ];
         return $userProfile;
     }
+
+    public function sendNotificationRequest($body)
+    {
+        $response = null;
+        $body['serviceType'] = config('notification.serviceType');
+        $body['sound'] = config('notification.sound');
+
+        $this->curl_params[CURLOPT_URL] = config('notification.url');
+        $this->curl_params[CURLOPT_CUSTOMREQUEST] = 'POST';
+        array_push($this->curl_params[CURLOPT_POSTFIELDS], json_encode($body));
+
+        $curl = curl_init();
+        curl_setopt_array($curl, $this->curl_params);
+        $result = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+
+        if ($err) {
+            throw new ServiceUnavailableHttpException;
+        } else {
+            $response = json_decode($result, true);
+        }
+        return $response;
+    }
 }

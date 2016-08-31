@@ -19,6 +19,7 @@ class TopicNewCommentEvent extends NewCommentEvent
     {
         $this->users = $topic->subscribers()->pluck('global_id');
         $this->target_title = $topic->name;
+        $this->target_type = Topic::$morphTag;
         $this->comment = $comment;
     }
 }

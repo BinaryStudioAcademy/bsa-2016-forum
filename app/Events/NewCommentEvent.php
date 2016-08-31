@@ -10,6 +10,7 @@ class NewCommentEvent extends Event
 
     public $comment;
     public $target_title;
+    public $target_type;
     public $users;
 
     /**

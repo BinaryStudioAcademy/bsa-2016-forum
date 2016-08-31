@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Vote;
+use App\Models\Comment;
 use Illuminate\Queue\SerializesModels;
 
 class VoteNewCommentEvent extends NewCommentEvent
@@ -18,6 +19,7 @@ class VoteNewCommentEvent extends NewCommentEvent
     {
         $this->users = $vote->subscribers()->pluck('global_id');
         $this->target_title = $vote->title;
+        $this->target_type = Vote::$morphTag;
         $this->comment = $comment;
     }
 }
