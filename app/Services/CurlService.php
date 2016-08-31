@@ -81,7 +81,7 @@ class CurlService
 
         $this->curl_params[CURLOPT_URL] = config('notification.url');
         $this->curl_params[CURLOPT_CUSTOMREQUEST] = 'POST';
-        array_push($this->curl_params[CURLOPT_POSTFIELDS], json_encode($body));
+        $this->curl_params[CURLOPT_POSTFIELDS] = json_encode($body);
 
         $curl = curl_init();
         curl_setopt_array($curl, $this->curl_params);
