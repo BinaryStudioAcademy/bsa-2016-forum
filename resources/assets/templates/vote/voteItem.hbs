@@ -6,17 +6,18 @@
     </div>
     <div class="votes-item-body">
         <div class="votes-item-title">
-            <span>{{data.title}}</span>
+            <span><a id="label">{{ model.title }}</a></span> Opened by: <span> {{ meta.user.first_name}} {{ meta.user.last_name }} </span>
         </div>
         <div class="votes-item-details">
-            <a>{{_meta.likes}} Likes</a><a>{{_meta.comments}} Comments</a>
-            <a>Finished at {{data.finished_at}}</a><a>{{data.views}} Views</a>
+            <a>{{ meta.comments}} Comments</a><a>{{ meta.likes }} likes</a>
+            <a>Finished at {{model.finished_at}}</a><a>{{model.views}} Views</a>
         </div>
         <div class="votes-item-tags">
-            {{#each _meta.tags}}
-                <span>{{ name }}</span>
+            {{#each meta.tags}}
+                <a href="#votes/tags/{{name}}" style="color: #333;"><span>#{{name}}</span></a>
             {{/each}}
         </div>
-        <span class="votes-item-time">Asked {{_meta.days_ago}}</span>
+        <!--<span class="votes-item-time">Created at {{ model.created_at }}</span>-->
+    <span class="votes-item-time">Asked {{meta.days_ago}}</span>
     </div>
 </div>
