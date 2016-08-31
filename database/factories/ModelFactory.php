@@ -19,7 +19,7 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
         'email' => $faker->safeEmail,
         'reputation' => $faker->numberBetween(0, 1000),
         'status_id' => App\Models\Status::all()->random(1)->id,
-        'last_visit_at' => $faker->dateTimeThisYear,
+        'last_visit_at' => $faker->dateTimeThisYear
     ];
 });
 
@@ -30,6 +30,7 @@ $factory->define(App\Models\Topic::class, function (Faker\Generator $faker) {
         'description' => $faker->sentence,
         'rating' => $faker->numberBetween(0, 1000),
         'user_id' => App\Models\User::all()->random(1)->id,
+        'category_id' => App\Models\Category::all()->random(1)->id
     ];
 });
 
@@ -37,8 +38,8 @@ $factory->define(App\Models\Comment::class, function (Faker\Generator $faker) {
     return [
         'content_origin' => $faker->text,
         'rating' => $faker->numberBetween(0, 1000),
-        'user_id' => App\Models\User::all()->random(1)->id,
         'content_generated' => $faker->text,
+        'user_id' => App\Models\User::all()->random(1)->id
     ];
 });
 
@@ -51,7 +52,7 @@ $factory->define(App\Models\Message::class, function (Faker\Generator $faker) {
         'user_from_id' => $from_id,
         'user_to_id' => $to_id,
         'message' => $faker->text,
-        'is_read' => $faker->numberBetween(0, 1),
+        'is_read' => $faker->numberBetween(0, 1)
     ];
 });
 
@@ -67,26 +68,28 @@ $factory->define(App\Models\Vote::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\VoteItem::class, function (Faker\Generator $faker) {
     return [
-        'vote_id' => App\Models\Vote::all()->random(1)->id,
-        'user_id' => App\Models\User::all()->random(1)->id,
-        'name' => $faker->unique()->sentence,
+        'name' => $faker->unique()->sentence
     ];
 });
 
 $factory->define(App\Models\Tag::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->unique()->word,
+        'name' => $faker->unique()->word
     ];
 });
 
-$factory->define(App\Models\Like::class, function () {
+$factory->define(App\Models\Category::class, function (Faker\Generator $faker) {
     return [
-        'user_id' => App\Models\User::all()->random(1)->id,
+        'name' => $faker->unique()->word
     ];
 });
 
 $factory->define(App\Models\Notification::class, function () {
     return [
-        'user_id' => App\Models\User::all()->random(1)->id,
+        'user_id' => App\Models\User::all()->random(1)->id
     ];
+});
+
+$factory->define(App\Models\Like::class, function (Faker\Generator $faker) {
+    return [];
 });
