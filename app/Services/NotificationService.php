@@ -46,7 +46,6 @@ class NotificationService
         curl_setopt_array($curl, $options);
         $result = curl_exec($curl);
         $err = curl_error($curl);
-        dd(curl_getinfo($curl));
         curl_close($curl);
 
         if ($err) {
