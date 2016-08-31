@@ -16,7 +16,7 @@ class VoteNewCommentEvent extends NewCommentEvent
      */
     public function __construct(Vote $vote, Comment $comment)
     {
-        $this->users = $vote->subscribers()->get('global_id');
+        $this->users = $vote->subscribers()->pluck('global_id');
         $this->target_title = $vote->title;
         $this->comment = $comment;
     }

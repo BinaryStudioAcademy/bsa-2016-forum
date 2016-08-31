@@ -17,7 +17,7 @@ class TopicNewCommentEvent extends NewCommentEvent
      */
     public function __construct(Topic $topic, Comment $comment)
     {
-        $this->users = $topic->subscribers()->get('global_id');
+        $this->users = $topic->subscribers()->pluck('global_id');
         $this->target_title = $topic->name;
         $this->comment = $comment;
     }
