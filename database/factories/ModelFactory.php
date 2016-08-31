@@ -41,13 +41,7 @@ $factory->define(App\Models\Comment::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Models\Message::class, function (Faker\Generator $faker) {
-    $from_id = App\Models\User::all()->random(1)->id;
-    $to_id = App\Models\User::all()->except($from_id)->random(1)->id;
-
-
     return [
-        'user_from_id' => $from_id,
-        'user_to_id' => $to_id,
         'message' => $faker->text,
         'is_read' => $faker->numberBetween(0, 1)
     ];
