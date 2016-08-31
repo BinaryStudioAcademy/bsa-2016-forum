@@ -175,7 +175,7 @@ class VoteController extends ApiController
 
         $data=$this->getMetaData($votes);
 
-        return $this->setStatusCode(200)->respond($data, ['user' => $user]);
+        return $this->setStatusCode(200)->respond($votes, $data);
     }
 
     /**
