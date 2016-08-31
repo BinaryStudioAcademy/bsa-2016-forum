@@ -45,8 +45,7 @@ class CurlService
         }
         return $response;
     }
-    
-    
+
     public function sendUserRequest($id)
     {
         $cookieName = config('authserver.cookieName');
@@ -71,29 +70,5 @@ class CurlService
             'global_id' => $response['serverUserId']
         ];
         return $userProfile;
-    }
-
-    public function sendNotificationRequest($body)
-    {
-        $response = null;
-        $body['serviceType'] = config('notification.serviceType');
-        $body['sound'] = config('notification.sound');
-
-        $this->curl_params[CURLOPT_URL] = config('notification.url');
-        $this->curl_params[CURLOPT_CUSTOMREQUEST] = 'POST';
-        $this->curl_params[CURLOPT_POSTFIELDS] = json_encode($body);
-
-        $curl = curl_init();
-        curl_setopt_array($curl, $this->curl_params);
-        $result = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
-
-        if ($err) {
-            throw new ServiceUnavailableHttpException;
-        } else {
-            $response = json_decode($result, true);
-        }
-        return $response;
     }
 }

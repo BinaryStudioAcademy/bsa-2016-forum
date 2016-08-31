@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\NewCommentEvent;
+use App\Facades\NotificationService;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -21,12 +22,17 @@ class NewCommentListener
     /**
      * Handle the event.
      *
-     * @param  SomeEvent  $event
-     * @return void
+     * @param NewCommentEvent $event
      */
     public function handle(NewCommentEvent $event)
     {
-        //
-        logger("work");
+        $body = [
+            'users' => $event->users,
+            'title' => 'Appeared new comment',
+            'text' => 'New comment to ' . $event->target_type,
+            'url' => config(url('app.url'))
+        ];
+
+        NotificationService::send($body);
     }
 }
