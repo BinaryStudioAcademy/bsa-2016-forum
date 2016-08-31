@@ -48,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             'Repositories\Contracts\UserStoreInterface',
-            'Repositories\UserStore');
+            'Repositories\UserStore'
+        );
     }
 }
