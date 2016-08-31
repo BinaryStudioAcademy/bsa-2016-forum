@@ -58,7 +58,6 @@ $factory->define(App\Models\Vote::class, function (Faker\Generator $faker) {
         'title' => $faker->word,
         'is_public' => $faker->numberBetween(0, 1),
         'is_saved' => $faker->numberBetween(0, 1),
-        'user_id' => App\Models\User::all()->random(1)->id,
         'finished_at' => date('Y:m:d H:m:s', strtotime('+' . $faker->numberBetween(5, 15) . ' days'))
     ];
 });
