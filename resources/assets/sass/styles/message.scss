@@ -219,3 +219,8 @@ MESSAGE DIALOG
   background-color: #ffffff;
   border-radius: 0;
 }
+
+.from .edit,
+.from .delete {
+  visibility: hidden;
+}
