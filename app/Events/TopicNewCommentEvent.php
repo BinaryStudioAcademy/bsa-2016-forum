@@ -18,7 +18,7 @@ class TopicNewCommentEvent extends NewCommentEvent
     public function __construct(Topic $topic, Comment $comment)
     {
         $this->users = $topic->subscribers()->pluck('global_id');
-        $this->target_title = $topic->name;
+        $this->target = $topic;
         $this->target_type = Topic::$morphTag;
         $this->comment = $comment;
     }

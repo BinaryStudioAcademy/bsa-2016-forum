@@ -9,7 +9,7 @@ class NewCommentEvent extends Event
     use SerializesModels;
 
     public $comment;
-    public $target_title;
+    public $target;
     public $target_type;
     public $users;
 

@@ -25,9 +25,9 @@ class NotificationService
             'serviceType' => config('notification.serviceType'),
             'users' => $data['users'],
         ];
-
+        $cookie = Cookie::get('x-access-token');
         $options = [
-            CURLOPT_COOKIE => 'x-access-token=' . Cookie::get('x-access-token'),
+            CURLOPT_COOKIE => 'x-access-token=' . $cookie,
             CURLOPT_POSTFIELDS => json_encode($Info),
             CURLOPT_HEADER => true,
             CURLOPT_POST => true,
