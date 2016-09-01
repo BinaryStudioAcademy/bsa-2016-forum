@@ -201,6 +201,14 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::post('', 'AttachmentController@storeMessageAttachment')->name('storeMessageAttachment');
         Route::delete('{attachment}', 'AttachmentController@destroyMessageAttachment')->name('deleteMessageAttachment');
     });
+
+    /*Routes for private Vote users*/
+    Route::group(['prefix' => 'votes/{vote}/users'], function () {
+        Route::get('', 'VoteController@getAllVoteAccessedUsers');
+        Route::post('', 'VoteController@storeVoteAccessedPermission');
+        Route::put('{permission}', 'VoteController@updateVoteAccessedPermission');
+    });
+    
     Route::get('rss', 'rssController@index')->name('rss');
     Route::post('rss', 'rssController@subscribe')->name('rssSubscribe');
 });

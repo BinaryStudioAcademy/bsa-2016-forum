@@ -9,4 +9,5 @@ module.exports = BaseCollection.extend({
             this.parentUrl = options.parentUrl;
         }
     }
+    
 });

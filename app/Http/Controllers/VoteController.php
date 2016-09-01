@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\VotePermissionRequest;
 use App\Models\Vote;
 use App\Models\User;
 use App\Http\Requests\VotesRequest;
 use App\Http\Requests\VoteResultRequest;
+use App\Models\VotePermission;
 use App\Models\VoteResult;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
@@ -24,7 +26,7 @@ class VoteController extends ApiController
     public function index(Request $request)
     {
         $this->setFiltersParameters($request);
-        $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
+        $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->orderBy('id', 'desc')->get();
         $meta = $this->getMetaData($votes);
         return $this->setStatusCode(200)->respond($votes, $meta);
     }
@@ -67,6 +69,9 @@ class VoteController extends ApiController
         $vote = Vote::create($request->all());
         if ($request->tags) {
             TagService::TagsHandler($vote, $request->tags);
+        }
+        if ($vote->is_public) {
+            $vote->votePermissions()->forceDelete();
         }
         $vote->tags = $vote->tags()->get();
         return $this->setStatusCode(201)->respond($vote);
@@ -114,6 +119,9 @@ class VoteController extends ApiController
         $vote = Vote::findOrfail($id);
         if ($request->tags) {
             TagService::TagsHandler($vote, $request->tags);
+        }
+        if ($vote->is_public) {
+            $vote->votePermissions()->forceDelete();
         }
         $vote->tags = $vote->tags()->get();
         return $this->setStatusCode(200)->respond($vote);
@@ -208,5 +216,34 @@ class VoteController extends ApiController
     {
         $voteresult = VoteResult::create($request->all());
         return $this->setStatusCode(201)->respond($voteresult);
+    }
+
+    /**
+     * @param Vote $vote
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAllVoteAccessedUsers(Vote $vote)
+    {
+        $users = [];
+        $vote->votePermissions()->get()->each(function ($permission) use ($users) {
+            $users[] = $permission->user()->first();
+        });
+
+        return $this->setStatusCode(200)->respond($users);
+    }
+
+    public function storeVoteAccessedPermission(Vote $vote, VotePermissionRequest $request)
+    {
+        if (!count($vote->votePermissions()->where('user_id', $request->user_id)->first())) {
+            $permission = VotePermission::create($request->all());
+            $vote->votePermissions()->save($permission);
+        }
+
+        return $this->setStatusCode(200)->respond($request->all());
+    }
+
+    public function updateVoteAccessedPermission(Vote $vote, VotePermission $permission, VotePermissionRequest $request)
+    {
+        return $this->setStatusCode(200)->respond();
     }
 }

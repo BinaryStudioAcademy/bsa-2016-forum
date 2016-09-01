@@ -25,8 +25,8 @@ class VotesRequest extends ApiRequest
             'user_id' => 'required|integer|is_current_user',
             'title' => 'required|max:255',
             'finished_at' => 'date',
-            'is_single' => 'integer|between:0,1',
-            'is_public' => 'integer|between:0,1',
+            'is_single' => 'boolean',
+            'is_public' => 'boolean',
             'is_saved' => 'integer|between:0,1',
         ];
     }

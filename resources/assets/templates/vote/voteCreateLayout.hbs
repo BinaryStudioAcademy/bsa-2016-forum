@@ -1,63 +1,56 @@
 <div class="vote-new">
     <div class="vote-new-head">
-        <h4>My Question</h4>
+        <div class="form-group">
+            <label for="usr">Question:</label>
+            <input type="text" class="form-control" id="question-title">
+            <div class="js-errors" style="color: indianred;"></div>
+        </div>
     </div>
     <div class="vote-new-answers">
-        <p>Answers</p>
-        <div id="vote-answers">
+        <div class="form-group">
+            <label for="usr">Answers:</label>
+            <div id="vote-answers">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="question-title">
+                </div>
 
+                <div class="form-group"><input type="text" class="form-control" id="question-title"></div>
 
-            <div class="vote-answer">
-                <label for="answ1">
-                    <input id="answ1" type="checkbox"> Answer one
-                </label>
             </div>
-            <div class="vote-answer">
-                <label for="answ2">
-                    <input id="answ2" type="checkbox"> Answer two
-                </label>
-            </div>
-
 
         </div>
         <div class="vote-new-addAnswer">
-            <button type="button">
+            <button type="button" class="btn btn-default" id="addAnswer">
                 <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Answer
             </button>
         </div>
     </div>
-    <div class="vote-new-date">
-        <p>Timeline</p>
-        <input type="text" placeholder="Available from"><input type="text" placeholder="Available to">
+    <!--<div class="vote-new-date">-->
+    <div class="form-group">
+        <label>Select time when the vote will be finished. Usual format: DD/MM/YYYY HH/mm/ss</label>
+        <input type="text" class="form-control" placeholder="YYYY/MM/DD HH/mm/ss" id="finished" value="{{addDate}}">
     </div>
-    <div class="vote-new-access">
-        <p>Access</p>
-        <div class="form-inline">
-            <div class="form-group">
-                <label for="public">Public</label>
-                <input id="public" name="access" type="radio">
-            </div>
-            <div class="form-group">
-                <label for="private">Private</label>
-                <input id="private" name="access" type="radio">
-            </div>
+    <div class="js-date-errors" style="color: indianred;"></div>
+    <!--</div>-->
+    <div class="form-group">
+        <label>Count of answers:</label>
+        <div class="radio">
+            <label><input type="radio" name="isSingle" value="s" checked>Single</label>
         </div>
-        <div class="vote-new-users">
-            <p><small>Click to remove</small></p>
-            <div id="vote-access-users">
-
-
-                <span>USer 1</span><span>User Nickname</span>
-
-
-            </div>
-        </div>
-        <div class="vote-new-addUsers">
-            <input type="text" placeholder="Add user..">
-            <button><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add</button>
+        <div class="radio">
+            <label><input type="radio" name="isSingle" value="m">Multiple</label>
         </div>
     </div>
-    <div class="vote-new-attachment" >
+    <div class="form-group">
+        <label for="usr">Access:</label>
+        <div class="radio">
+            <label><input type="radio" name="access" value="1" checked>Public</label>
+        </div>
+        <div class="radio">
+            <label><input type="radio" name="access" value="0">Private</label>
+        </div>
+    </div>
+    <div class="vote-new-attachment">
         <div id="vote-attachments">
 
             <!-- Attachments -->
@@ -67,10 +60,22 @@
     </div>
     <div class="vote-new-control">
         <div class="vote-new-notification checkbox">
-            <label><input type="checkbox">Report me when someone post a reply</label>
+            <label><input type="checkbox">Report me when someone leave a comment</label>
         </div>
         <div class="vote-new-submit">
-            <input type="submit" value="Start Thread">
+            <input id="start" type="submit" value="Start Thread">
+        </div>
+    </div>
+    <div class="vote-new-access" style="display: none;">
+        <div class="form-group">
+            <label for="usr">Accessed:</label>
+            <div id="vote-access-users">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="usr">Not accessed:</label>
+            <div id="vote-new-addUsers">
+            </div>
         </div>
     </div>
 </div> 
