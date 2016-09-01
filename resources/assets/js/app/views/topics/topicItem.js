@@ -62,7 +62,7 @@ module.exports = Marionette.ItemView.extend({
             this.addOkSubscribeIcon();
         }
 
-        if(!meta.subscription) {
+        if(meta && !meta.subscription) {
             meta.subscription = {};
         }
     },
