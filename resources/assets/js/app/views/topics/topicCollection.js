@@ -6,18 +6,16 @@ module.exports = Marionette.CollectionView.extend({
     childView: topicItem,
 
     initialize: function () {
+
             $(window).on('scroll', this.fetchPage.bind(this));
 
     },
-
-    collectionEvents: {
-        'change': 'render'
-    },
-
+    
     _page: 1,
     _allItemsUploaded: false,
 
     fetchPage: function () {
+        var self = this;
         if (this.getScrollTop() < this.getDocumentHeight() - window.innerHeight) {
             return;
         }
@@ -30,13 +28,13 @@ module.exports = Marionette.CollectionView.extend({
             remove: false,
             data: {page: this._page + 1},
             error: function (collection, response) {
-                this._allItemsUploaded = true;
+                self._allItemsUploaded = true;
                 console.error(response.responseText);
             },
             success: function (collection, xhr) {
                 if (!xhr.data.length) {
                     // all items has been uploaded
-                    this._allItemsUploaded = true;
+                    self._allItemsUploaded = true;
                 } else {
                     this._page++;
                 }
