@@ -51,6 +51,9 @@ http://localhost:8000/
 
 ### Frontend part (SPA)
 
+0) create your own config.js in path/to/project/resources/assets/js/app/config/debug|prod. Use config.js.example as example.
+(Usually you will only need to configure socketUrl and debug mode)
+
 1) install all javascript packages
 ```
 npm install
