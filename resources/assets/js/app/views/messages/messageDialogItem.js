@@ -5,11 +5,14 @@ module.exports = Marionette.ItemView.extend({
     template: 'messageDialogItem',
     ui: {
         delete: '.delete',
-        edit: '.edit'
+        edit: '.edit',
+        msgFrom: '.from'
     },
     events: {
         'click @ui.delete' : 'clickedDeleteMessage',
-        'click @ui.edit' : 'clickedEditMessage'
+        'click @ui.edit' : 'clickedEditMessage',
+        'mouseenter @ui.msgFrom' : 'mouseenterMsgFrom',
+        'mouseleave @ui.msgFrom' : 'mouseleaveMsgFrom',
     },
     clickedDeleteMessage: function () {
         Radio.channel('messagesChannel').trigger('deleteMessage', this.model);
@@ -17,6 +20,32 @@ module.exports = Marionette.ItemView.extend({
 
     clickedEditMessage: function () {
         Radio.channel('messagesChannel').trigger('editMessage', this.model);
+    },
+    mouseenterMsgFrom: function (e) {
+        var intervalMinutes = 15;
+        var intervalMilliseconds = intervalMinutes * 60 * 1000;
+        var now = new Date();
+        var nowUTC = new Date(
+            now.getUTCFullYear(),
+            now.getUTCMonth(),
+            now.getUTCDate(),
+            now.getUTCHours(),
+            now.getUTCMinutes(),
+            now.getUTCSeconds()
+        );
+        var currentTime = nowUTC.getTime();
+        var createdAt = Date.parse(this.model.get('created_at'));
+        if (!isNaN(createdAt)) {
+            var passedMilliseconds = currentTime - createdAt;
+            if (passedMilliseconds <= intervalMilliseconds) {
+                $(e.currentTarget).find('.delete').css('visibility', 'visible');
+                $(e.currentTarget).find('.edit').css('visibility', 'visible');
+            }
+        }
+    },
+    mouseleaveMsgFrom: function (e) {
+        $(e.currentTarget).find('.delete').css('visibility', 'hidden');
+        $(e.currentTarget).find('.edit').css('visibility', 'hidden');
     },
 
     serializeData: function () {
