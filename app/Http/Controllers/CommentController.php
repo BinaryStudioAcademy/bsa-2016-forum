@@ -233,13 +233,30 @@ class CommentController extends ApiController
     }
 
     /**
+     * @param $comments
+     * @return array
+     */
+    protected function makeCommentsMeta($comments)
+    {
+        $meta = [];
+
+        foreach ($comments as $comment) {
+            $meta[$comment->id]['user'] = $comment->user()->first();
+        }
+
+        return $meta;
+    }
+
+    /**
      * @param Vote $vote
      * @return \Illuminate\Http\JsonResponse
      */
     public function getVoteComments(Vote $vote)
     {
         $comments = $vote->comments()->get();
-        return $this->setStatusCode(200)->respond($comments);
+        $meta = $this->makeCommentsMeta($comments);
+
+        return $this->setStatusCode(200)->respond($comments, $meta);
     }
 
     /**
@@ -265,7 +282,12 @@ class CommentController extends ApiController
     {
         $comment = Comment::create($request->all());
         $comment = $vote->comments()->save($comment);
-        return $this->setStatusCode(201)->respond($comment);
+
+        return $this->setStatusCode(201)->respond($comment, [
+            $comment->id => [
+                'user' => $comment->user()->first()
+            ]
+        ]);
     }
 
     /**
@@ -410,27 +432,28 @@ class CommentController extends ApiController
      */
     protected function isCommentBelongsToVoteItem(VoteItem $voteItem, Comment $comment)
     {
-        $voteItemWhichHasThisComment = $comment->commentable()->get()->first();
-
-        return ($voteItemWhichHasThisComment && $voteItemWhichHasThisComment->id === $voteItem->id);
+        return !!$voteItem->comments()->find($comment->id);
     }
 
+
     /**
+     * @param Vote $vote
      * @param VoteItem $voteItem
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getVoteItemComments(VoteItem $voteItem)
+    public function getVoteItemComments(Vote $vote, VoteItem $voteItem)
     {
         $comments = $voteItem->comments()->get();
         return $this->setStatusCode(200)->respond($comments);
     }
 
     /**
+     * @param Vote $vote
      * @param VoteItem $voteItem
      * @param Comment $comment
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getVoteItemComment(VoteItem $voteItem, Comment $comment)
+    public function getVoteItemComment(Vote $vote, VoteItem $voteItem, Comment $comment)
     {
         if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
             return $this->setStatusCode(200)->respond($comment);
@@ -440,11 +463,12 @@ class CommentController extends ApiController
     }
 
     /**
+     * @param Vote $vote
      * @param VoteItem $voteItem
      * @param CommentsRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeVoteItemComment(VoteItem $voteItem, CommentsRequest $request)
+    public function storeVoteItemComment(Vote $vote, VoteItem $voteItem, CommentsRequest $request)
     {
         $comment = Comment::create($request->all());
         $comment = $voteItem->comments()->save($comment);
@@ -452,12 +476,13 @@ class CommentController extends ApiController
     }
 
     /**
+     * @param Vote $vote
      * @param VoteItem $voteItem
      * @param Comment $comment
      * @param CommentsRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateVoteItemComment(VoteItem $voteItem, Comment $comment, CommentsRequest $request)
+    public function updateVoteItemComment(Vote $vote, VoteItem $voteItem, Comment $comment, CommentsRequest $request)
     {
         $this->authorize('updateVoteItemsComment', [$comment, $voteItem]);
 
@@ -470,12 +495,13 @@ class CommentController extends ApiController
     }
 
     /**
+     * @param Vote $vote
      * @param VoteItem $voteItem
      * @param Comment $comment
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    public function destroyVoteItemComment(VoteItem $voteItem, Comment $comment)
+    public function destroyVoteItemComment(Vote $vote, VoteItem $voteItem, Comment $comment)
     {
         $this->authorize('deleteVoteItemsComment', [$comment, $voteItem]);
 

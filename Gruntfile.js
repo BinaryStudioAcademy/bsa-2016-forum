@@ -9,6 +9,9 @@ module.exports = function (grunt) {
                 options: {
                     alias: {
                         'config': './resources/assets/js/app/config/debug/config.js'
+                    },
+                    browserifyOptions: {
+                        debug: true
                     }
                 },
                 src: 'resources/assets/js/app/app.js',
