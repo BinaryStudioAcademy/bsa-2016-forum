@@ -18,9 +18,9 @@
     "handlebars": "^4.0.5",
     "ioredis": "^2.3.0",
     "jquery": "^3.1.0",
+    "moment": "^2.14.1",
     "socket.io": "^1.4.8",
     "socket.io-client": "^1.4.8",
-    "momentjs": "^1.1.15",
     "underscore": "^1.8.3"
   }
 }

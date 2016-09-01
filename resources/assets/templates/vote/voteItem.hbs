@@ -4,7 +4,7 @@
             <img src="/images/user.png">
         </div>
     </div>
-    <div class="votes-item-body">
+    <div class="votes-item-body" style="position: relative;">
         <div class="votes-item-title">
             <span><a id="label">{{ model.title }}</a></span> Opened by: <span> {{ meta.user.first_name}} {{ meta.user.last_name }} </span>
         </div>
@@ -17,5 +17,6 @@
             {{/each}}
         </div>
         <span class="votes-item-time">Created at {{ model.created_at }}</span>
+        {{deleteVoteButton model meta}}
     </div>
 </div>

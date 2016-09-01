@@ -1,4 +1,5 @@
 var Marionette = require('backbone.marionette');
+var Backbone = require('backbone');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteHeader',
@@ -6,6 +7,16 @@ module.exports = Marionette.ItemView.extend({
     className: 'vote-head',
     modelEvents: {
         'change': 'render'
+    },
+    ui: {
+        deleteButton: '.voteitem-delete-button'
+    },
+    events: {
+        'click @ui.deleteButton': function () {
+            this.model.destroy({success: function () {
+                Backbone.history.navigate('votes', {trigger: true});
+            }});
+        }
     },
     serializeData: function () {
         var tempmeta = this.model.getMeta();
