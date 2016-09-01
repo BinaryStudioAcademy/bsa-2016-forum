@@ -1,5 +1,7 @@
+var _ = require('underscore');
 var Marionette = require('backbone.marionette');
 var Bookmark = require('../../models/BookmarkModel');
+var Subscription = require('../../models/SubscriptionModel');
 var currentUser = require('../../initializers/currentUser');
 var moment = require('momentjs');
 
@@ -9,27 +11,33 @@ module.exports = Marionette.ItemView.extend({
     tagName: 'div',
 
     ui: {
-        bookmarkTopic: '.bookmark-btn'
+        bookmarkTopic: '.bookmark-btn',
+        subscribeNotification: '.subscribe-btn'
     },
 
     events: {
-        'click @ui.bookmarkTopic': 'bookmarkTopic'
+        'click @ui.bookmarkTopic': 'bookmarkTopic',
+        'click @ui.subscribeNotification': 'subscribeNotification'
     },
 
-    unlockButton: function () {
-        this.ui.bookmarkTopic.removeAttr('disabled');
-        this.ui.bookmarkTopic.addClass('text-info');
-        this.ui.bookmarkTopic.removeClass('text-muted');
+    unlockButton: function (uiButton) {
+        uiButton.removeAttr('disabled');
+        uiButton.addClass('text-info');
+        uiButton.removeClass('text-muted');
     },
 
-    lockButton: function () {
-        this.ui.bookmarkTopic.attr('disabled', 'disabled');
-        this.ui.bookmarkTopic.removeClass('text-info');
-        this.ui.bookmarkTopic.addClass('text-muted');
+    lockButton: function (uiButton) {
+        uiButton.attr('disabled', 'disabled');
+        uiButton.removeClass('text-info');
+        uiButton.addClass('text-muted');
     },
 
-    addOkIcon: function () {
-        this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
+    addOkIcon: function (uiButton) {
+        uiButton.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
+    },
+
+    addOkSubscribeIcon: function (uiButton) {
+        uiButton.append(' <i class="glyphicon glyphicon-ok subscribed"></i>');
     },
 
     serializeData: function () {
@@ -47,14 +55,22 @@ module.exports = Marionette.ItemView.extend({
         }
 
         if (this.model.bookmarkId) {
-            this.addOkIcon();
+            this.addOkIcon(this.ui.bookmarkTopic);
+        }
+
+        if (meta && meta.subscription && meta.subscription[this.model.attributes.id]) {
+            this.addOkSubscribeIcon(this.ui.subscribeNotification);
+        }
+
+        if(!meta.subscription) {
+            meta.subscription = {};
         }
     },
 
     bookmarkTopic: function () {
         var bookmark = new Bookmark();
 
-        this.lockButton();
+        this.lockButton(this.ui.bookmarkTopic);
 
         var that = this;
 
@@ -64,7 +80,7 @@ module.exports = Marionette.ItemView.extend({
             });
             bookmark.destroy({
                 success: function () {
-                    that.unlockButton();
+                    that.unlockButton(that.ui.bookmarkTopic);
                     that.$('i.bookmarked').remove();
                     that.model.bookmarkId = undefined;
                 },
@@ -85,8 +101,8 @@ module.exports = Marionette.ItemView.extend({
             }, {
                 success: function (response) {
                     that.model.bookmarkId = response.id;
-                    that.unlockButton();
-                    that.addOkIcon();
+                    that.unlockButton(that.ui.bookmarkTopic);
+                    that.addOkIcon(that.ui.bookmarkTopic);
                 },
                 error: function (response, xhr) {
                     var errorMsg = '';
@@ -95,6 +111,54 @@ module.exports = Marionette.ItemView.extend({
                     });
 
                     alert(errorMsg);
+                }
+            });
+        }
+    },
+
+    subscribeNotification: function () {
+        var subscription = new Subscription();
+        subscription.parentUrl = _.result(currentUser, 'url');
+        this.lockButton(this.ui.subscribeNotification);
+
+        var that = this;
+
+        if (this.model.getMeta().subscription && this.model.getMeta().subscription[this.model.attributes.id]) {
+            subscription.set({
+                id: this.model.getMeta().subscription[that.model.attributes.id].id
+            });
+            subscription.destroy({
+                success: function () {
+                    that.unlockButton(that.ui.subscribeNotification);
+                    that.$('i.subscribed').remove();
+                    that.model.getMeta().subscription[that.model.attributes.id] = undefined;
+                },
+                error: function (response, xhr) {
+                    var errorMsg = '';
+                    $.each(xhr.responseJSON, function(index, value) {
+                        errorMsg += index + ': ' + value;
+                    });
+
+                    alert(errorMsg);
+                }
+            });
+
+        } else {
+            subscription.save({
+                subscription_id: this.model.id,
+                subscription_type: 'Topic'
+            }, {
+                success: function (response) {
+                    that.model.getMeta().subscription[that.model.attributes.id] = response;
+                    that.unlockButton(that.ui.subscribeNotification);
+                    that.addOkSubscribeIcon(that.ui.subscribeNotification);
+                },
+                error: function (response, xhr) {
+                    var errorMsg = '';
+                    $.each(xhr.responseJSON, function(index, value) {
+                        errorMsg += index + ': ' + value;
+                    });
+                    logger(errorMsg);
                 }
             });
         }
