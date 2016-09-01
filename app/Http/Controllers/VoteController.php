@@ -27,9 +27,12 @@ class VoteController extends ApiController
         $votes = Vote::filterByQuery($this->searchStr)
             ->filterByTags($this->tagIds)
             ->paginate(15);
+        // NOW $votes is NOT a collection of votes
+        // NOW we do NOT have a collection, we have just an array of Vote objects
+        // If you need to work with Votes array use variable $votes->items()
         
-        $meta = $this->getMetaData($votes);
-        return $this->setStatusCode(200)->respond($votes, $meta);
+        $meta = $this->getMetaData($votes->items());
+        return $this->setStatusCode(200)->respond($votes->items(), $meta);
     }
 
     protected function setFiltersParameters(Request $request)
