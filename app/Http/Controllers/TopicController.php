@@ -179,25 +179,25 @@ class TopicController extends ApiController
         $user = User::findOrFail($userId);
         $this->setFiltersData($request);
 
-        $extendedTopics = $user->topics()
+        $topics = $user->topics()
             ->getQuery()
             ->filterByQuery($this->searchStr)
             ->filterByTags($this->tagIds)
-            ->get();
+            ->paginate(15);
 
-        if (!$extendedTopics) {
+        if (!$topics->items()) {
             return $this->setStatusCode(200)->respond();
         }
 
-        foreach ($extendedTopics as $topic) {
+        foreach ($topics->items() as $topic) {
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
         }
 
-        $meta = $this->getMetaData($extendedTopics);
+        $meta = $this->getMetaData($topics->items());
         $meta['user'] = $user;
 
-        return $this->setStatusCode(200)->respond($extendedTopics, $meta);
+        return $this->setStatusCode(200)->respond($topics->items(), $meta);
     }
 
     /**
