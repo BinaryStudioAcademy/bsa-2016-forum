@@ -24,7 +24,10 @@ class VoteController extends ApiController
     public function index(Request $request)
     {
         $this->setFiltersParameters($request);
-        $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
+        $votes = Vote::filterByQuery($this->searchStr)
+            ->filterByTags($this->tagIds)
+            ->paginate(15);
+        
         $meta = $this->getMetaData($votes);
         return $this->setStatusCode(200)->respond($votes, $meta);
     }

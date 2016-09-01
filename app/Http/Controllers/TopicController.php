@@ -86,6 +86,9 @@ class TopicController extends ApiController
             ->filterByQuery($this->searchStr)
             ->filterByTags($this->tagIds)
             ->paginate(15);
+        // NOW $topics is NOT a collection of topics
+        // NOW we do NOT have a collection, we have just an array of Topic objects
+        // If you need to work with Topics array use variable $topics->items()
 
         foreach ($topics->items() as $topic) {
             $topic->usersCount = $topic->activeUsersCount();
@@ -184,6 +187,9 @@ class TopicController extends ApiController
             ->filterByQuery($this->searchStr)
             ->filterByTags($this->tagIds)
             ->paginate(15);
+        // NOW $topics is NOT a collection of topics
+        // NOW we do NOT have a collection, we have just an array of Topic objects
+        // If you need to work with Topics array use variable $topics->items()
 
         if (!$topics->items()) {
             return $this->setStatusCode(200)->respond();
