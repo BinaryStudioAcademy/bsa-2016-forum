@@ -32,12 +32,12 @@ module.exports = Marionette.ItemView.extend({
         uiButton.addClass('text-muted');
     },
 
-    addOkIcon: function (uiButton) {
-        uiButton.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
+    addOkBookmarkIcon: function () {
+        this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
     },
 
-    addOkSubscribeIcon: function (uiButton) {
-        uiButton.append(' <i class="glyphicon glyphicon-ok subscribed"></i>');
+    addOkSubscribeIcon: function () {
+        this.ui.subscribeNotification.append(' <i class="glyphicon glyphicon-ok subscribed"></i>');
     },
 
     serializeData: function () {
@@ -55,11 +55,11 @@ module.exports = Marionette.ItemView.extend({
         }
 
         if (this.model.bookmarkId) {
-            this.addOkIcon(this.ui.bookmarkTopic);
+            this.addOkBookmarkIcon();
         }
 
         if (meta && meta.subscription && meta.subscription[this.model.attributes.id]) {
-            this.addOkSubscribeIcon(this.ui.subscribeNotification);
+            this.addOkSubscribeIcon();
         }
 
         if(!meta.subscription) {
@@ -102,7 +102,7 @@ module.exports = Marionette.ItemView.extend({
                 success: function (response) {
                     that.model.bookmarkId = response.id;
                     that.unlockButton(that.ui.bookmarkTopic);
-                    that.addOkIcon(that.ui.bookmarkTopic);
+                    that.addOkBookmarkIcon();
                 },
                 error: function (response, xhr) {
                     var errorMsg = '';
@@ -151,7 +151,7 @@ module.exports = Marionette.ItemView.extend({
                 success: function (response) {
                     that.model.getMeta().subscription[that.model.attributes.id] = response;
                     that.unlockButton(that.ui.subscribeNotification);
-                    that.addOkSubscribeIcon(that.ui.subscribeNotification);
+                    that.addOkSubscribeIcon();
                 },
                 error: function (response, xhr) {
                     var errorMsg = '';

@@ -1,32 +1,40 @@
+var _ = require('underscore');
 var Marionette = require('backbone.marionette');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
+var Subscription = require('../../models/SubscriptionModel');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicDetail',
 
     ui: {
-        bookmarkTopic: '.bookmark-btn'
+        bookmarkTopic: '.bookmark-btn',
+        subscribeNotification: '.subscribe-btn'
     },
 
     events: {
-        'click @ui.bookmarkTopic': 'bookmarkTopic'
+        'click @ui.bookmarkTopic': 'bookmarkTopic',
+        'click @ui.subscribeNotification': 'subscribeNotification'
     },
 
-    unlockButton: function () {
-        this.ui.bookmarkTopic.removeAttr('disabled');
-        this.ui.bookmarkTopic.addClass('text-info');
-        this.ui.bookmarkTopic.removeClass('text-muted');
+    unlockButton: function (uiButton) {
+        uiButton.removeAttr('disabled');
+        uiButton.addClass('text-info');
+        uiButton.removeClass('text-muted');
     },
 
-    lockButton: function () {
-        this.ui.bookmarkTopic.attr('disabled', 'disabled');
-        this.ui.bookmarkTopic.removeClass('text-info');
-        this.ui.bookmarkTopic.addClass('text-muted');
+    lockButton: function (uiButton) {
+        uiButton.attr('disabled', 'disabled');
+        uiButton.removeClass('text-info');
+        uiButton.addClass('text-muted');
     },
 
-    addOkIcon: function () {
+    addOkBookmarkIcon: function () {
         this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
+    },
+
+    addOkSubscribeIcon: function () {
+        this.ui.subscribeNotification.append(' <i class="glyphicon glyphicon-ok subscribed"></i>');
     },
 
     onRender: function () {
@@ -37,14 +45,18 @@ module.exports = Marionette.ItemView.extend({
         }
 
         if (this.model.bookmarkId) {
-            this.addOkIcon();
+            this.addOkBookmarkIcon();
+        }
+
+        if(meta.subscription) {
+            this.addOkSubscribeIcon();
         }
     },
 
     bookmarkTopic: function () {
         var bookmark = new Bookmark();
 
-        this.lockButton();
+        this.lockButton(this.ui.bookmarkTopic);
 
         var that = this;
 
@@ -54,7 +66,7 @@ module.exports = Marionette.ItemView.extend({
             });
             bookmark.destroy({
                 success: function () {
-                    that.unlockButton();
+                    that.unlockButton(that.ui.bookmarkTopic);
                     that.$('i.bookmarked').remove();
                     that.model.bookmarkId = undefined;
                 },
@@ -75,8 +87,8 @@ module.exports = Marionette.ItemView.extend({
             }, {
                 success: function (response) {
                     that.model.bookmarkId = response.id;
-                    that.unlockButton();
-                    that.addOkIcon();
+                    that.unlockButton(that.ui.bookmarkTopic);
+                    that.addOkBookmarkIcon();
                 },
                 error: function (response, xhr) {
                     var errorMsg = '';
@@ -85,6 +97,54 @@ module.exports = Marionette.ItemView.extend({
                     });
 
                     alert(errorMsg);
+                }
+            });
+        }
+    },
+
+    subscribeNotification: function () {
+        var subscription = new Subscription();
+        subscription.parentUrl = _.result(currentUser, 'url');
+        this.lockButton(this.ui.subscribeNotification);
+
+        var that = this;
+
+        if (this.model.getMeta().subscription) {
+            subscription.set({
+                id: this.model.getMeta().subscription.id
+            });
+            subscription.destroy({
+                success: function () {
+                    that.unlockButton(that.ui.subscribeNotification);
+                    that.$('i.subscribed').remove();
+                    that.model.getMeta().subscription = undefined;
+                },
+                error: function (response, xhr) {
+                    var errorMsg = '';
+                    $.each(xhr.responseJSON, function(index, value) {
+                        errorMsg += index + ': ' + value;
+                    });
+
+                    alert(errorMsg);
+                }
+            });
+
+        } else {
+            subscription.save({
+                subscription_id: this.model.id,
+                subscription_type: 'Topic'
+            }, {
+                success: function (response) {
+                    that.model.getMeta().subscription = response;
+                    that.unlockButton(that.ui.subscribeNotification);
+                    that.addOkSubscribeIcon();
+                },
+                error: function (response, xhr) {
+                    var errorMsg = '';
+                    $.each(xhr.responseJSON, function(index, value) {
+                        errorMsg += index + ': ' + value;
+                    });
+                    logger(errorMsg);
                 }
             });
         }
