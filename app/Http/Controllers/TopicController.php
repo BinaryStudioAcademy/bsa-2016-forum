@@ -85,7 +85,7 @@ class TopicController extends ApiController
         $topics = Topic::where('category_id', $catId)
             ->filterByQuery($this->searchStr)
             ->filterByTags($this->tagIds)
-            ->paginate(2);
+            ->paginate(15);
 
         foreach ($topics->items() as $topic) {
             $topic->usersCount = $topic->activeUsersCount();

@@ -14,6 +14,4 @@ module.exports = baseCollection.extend({
         }
     },
 
-     page: 1,
-
 });
