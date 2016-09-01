@@ -37,6 +37,9 @@ class TopicController extends ApiController
                     $data['bookmark'][$topic->id] = $topic->bookmarks()
                         ->where('user_id', Auth::user()->id)->first();
                 }
+
+                if (($subscription = $topic->subscription(Auth::user()->id)) !== null)
+                    $data['subscription'][$topic->id] = $subscription;
             }
 
             return $data;
@@ -46,7 +49,8 @@ class TopicController extends ApiController
         if ($bookmark !== null) {
             $data['bookmark'] = $topics->bookmarks()->where('user_id', Auth::user()->id)->first();
         }
-
+        if (($subscription = $topics->subscription(Auth::user()->id)) !== null)
+            $data['subscription'] = $subscription;
         return $data;
     }
 

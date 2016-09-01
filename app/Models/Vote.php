@@ -111,4 +111,9 @@ class Vote extends Model
     {
         return $this->morphToMany(User::class, Subscription::$name)->withTimestamps();
     }
+
+    public function subscription($userId)
+    {
+        return $this->morphMany(Subscription::class, Subscription::$name)->where('user_id', $userId)->first();
+    }
 }

@@ -11,6 +11,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Facades\TagService;
+use Illuminate\Support\Facades\Auth;
 
 class VoteController extends ApiController
 {
@@ -51,7 +52,8 @@ class VoteController extends ApiController
                     'user' => $vote->user()->first(),
                     'likes' => $vote->likes()->count(),
                     'comments' => $vote->comments()->count(),
-                    'tags' => $vote->tags()->get(['name'])
+                    'tags' => $vote->tags()->get(['name']),
+                    'subscription' => $vote->subscription(Auth::user()->id)
                 ];
         }
         return $data;
@@ -90,7 +92,8 @@ class VoteController extends ApiController
                     'user' => $user,
                     'likes' => $likeCount,
                     'comments' => $commentCount,
-                    'tags' => $tags
+                    'tags' => $tags,
+                    'subscription' => $vote->subscription(Auth::user()->id)
                 ]
             ]
         );
