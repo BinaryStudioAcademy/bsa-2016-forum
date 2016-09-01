@@ -11,10 +11,10 @@ module.exports = Marionette.LayoutView.extend({
         container: '#posts'
     },
 
-
     onRender: function () {
         this.container.show(new topicCollection({
             collection: this.collection
         }));
     }
+
 });
