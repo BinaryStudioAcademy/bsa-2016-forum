@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Vote;
+
 class VoteItemRequest extends ApiRequest
 {
     /**
@@ -21,9 +23,20 @@ class VoteItemRequest extends ApiRequest
      */
     public function rules()
     {
+        if($this->vote_id){
+            $vote = Vote::find($this->vote_id);
+            if($vote){
+                $existedVoteItems = $vote->voteitems()->get()->toArray();
+                $stringOfVoteItemsNames ='';
+                foreach ($existedVoteItems as $voteItem){
+                    $stringOfVoteItemsNames .= $voteItem['name'] . ',';
+                }
+            }
+
+        };
         return [
             'vote_id' => 'required|exists:votes,id|integer',
-            'name' => 'required',
+            'name' => 'required|not_in:' . $stringOfVoteItemsNames,
             'user_id' => 'required|integer|is_current_user',
         ];
     }
@@ -33,6 +46,7 @@ class VoteItemRequest extends ApiRequest
         return [
             'vote_id.required' => 'Vote ID is required',
             'name.required' => 'Title is required',
+            'name.not_in' => 'This voteItem is already exist in the voting',
             'user_id.required' => 'User ID is required',
             'user_id.is_current_user' => 'User not is authorized',
         ];
