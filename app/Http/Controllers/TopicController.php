@@ -93,25 +93,7 @@ class TopicController extends ApiController
         }
 
         $meta = $this->getMetaData($topics->items());
-        return $this->setStatusCode(200)->respondForPagination($topics, $meta);
-    }
-
-    /**
-     * @param array $data
-     * @param array $meta
-     * @param array $headers
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function respondForPagination($data = [], $meta = [], $headers = [])
-    {
-        return response()->json(
-            [
-                'data' => $data->items(),
-                '_meta' => $meta
-            ],
-            $this->getStatusCode(),
-            $headers
-        );
+        return $this->setStatusCode(200)->respond($topics->items(), $meta);
     }
 
     /**
