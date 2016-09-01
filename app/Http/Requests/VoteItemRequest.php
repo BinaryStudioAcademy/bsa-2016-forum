@@ -48,7 +48,7 @@ class VoteItemRequest extends ApiRequest
             'name.required' => 'Title is required',
             'name.not_in' => 'This voteItem is already exist in the voting',
             'user_id.required' => 'User ID is required',
-            'user_id.is_current_user' => 'User not is authorized',
+            'user_id.is_current_user' => 'User is not authenticated',
         ];
     }
 }
