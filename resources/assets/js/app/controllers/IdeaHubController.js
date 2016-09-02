@@ -49,15 +49,15 @@ module.exports = Marionette.Object.extend({
         var parentUrl = '/votes/' + id;
         var myCommentsCollection = new CommentsCollection([], {parentUrl: parentUrl});
         var VoteAnswers = new VoteAICollection([], {parentUrl: parentUrl});
+
         VoteAnswers.fetch();
         myCommentsCollection.fetch({
-            success: function(data) {
+            success: function (data) {
                 Radio.trigger('votesChannel', 'setCommentsCount', data.length);
             }
         });
         
         var addedCommentsCollection = new CommentsCollection([], {parentUrl: ''});
-
         myCommentsCollection.listenTo(Radio.channel('commentsChannel'), 'newComment', function (comment) {
             if ((comment.commentable_id == id) && (comment.user_id != currentUser.id)
                 && (comment.commentable_type == 'App\\Models\\Vote')) {
@@ -88,7 +88,6 @@ module.exports = Marionette.Object.extend({
                 answers: VoteAnswers,
                 addedCommentsCollection: addedCommentsCollection
             }));
-
         }
     }
 });
