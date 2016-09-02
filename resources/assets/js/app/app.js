@@ -1,6 +1,9 @@
 $ = require('jquery');
 jQuery = $;
 require('bootstrap-sass');
+CKEDITOR_BASEPATH = '/ckeditor/';
+require('ckeditor');
+require('ckeditor/adapters/jquery');
 
 var config = require('config');
 

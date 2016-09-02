@@ -7,14 +7,16 @@ var topicCategoryItemForSelector = require('../../views/topics/topicCategoryItem
 
 module.exports = Marionette.LayoutView.extend({
     template: 'topicCreateNew',
+    _$ckeditor: null,
 
     ui: {
         createForm: '.topic-form'
     },
 
     initialize: function () {
-        this.model.set({user_id: currentUser.id});
+        this.model.set({ user_id: currentUser.id });
     },
+
     regions: {
         categories: '#categories'
     },
@@ -22,10 +24,10 @@ module.exports = Marionette.LayoutView.extend({
     onBeforeShow: function () {
         this.categories.show(new topicCategoryItemForSelector({
             collection: this.collection
-        }))
-    },
+        }));
 
-    onRender: function () {
+        this._$ckeditor = this.$('textarea');
+        this._$ckeditor.ckeditor();
     },
 
     modelEvents: {
@@ -47,6 +49,7 @@ module.exports = Marionette.LayoutView.extend({
         },
         'submit @ui.createForm': function (e) {
             e.preventDefault();
+            this.model.set({ description: this._$ckeditor.val() });
             this.model.save({}, {
                 success: function (model, response) {
                     Backbone.history.navigate('topics/' + model.get('id'), {trigger: true});

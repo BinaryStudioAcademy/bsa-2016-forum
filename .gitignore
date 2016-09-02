@@ -10,8 +10,10 @@ composer.lock
 /nbproject/
 /public/css/
 /public/js/
+/public/ckeditor/
 /resources/assets/js/bundle.js
 /resources/assets/js/app/templates.js
+/resources/assets/sass/index.css
 .sass-cache
 .sass-cache/*
 /public/fonts/
