@@ -1,5 +1,8 @@
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
+var moment = require('moment-timezone');
+var MessageDate = require('../../initializers/messageDateFormatting');
+var config = require('config');
 
 module.exports = Marionette.ItemView.extend({
     template: 'messageDialogItem',
@@ -45,7 +48,9 @@ module.exports = Marionette.ItemView.extend({
             messageDirection: direction,
             edit_at: edit,
             user: with_user,
-            deleted: deleted
+            deleted: deleted,
+            updatedDate: MessageDate(moment.utc(this.model.get('updated_at')).tz(config.timeZone)),
+            updatedStaticDate: moment.utc(this.model.get('updated_at')).tz(config.timeZone)
         }
     }
 });
