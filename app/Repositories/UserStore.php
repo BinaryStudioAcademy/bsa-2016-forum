@@ -11,10 +11,15 @@ use App\Models\Status;
 
 class UserStore implements UserStoreInterface
 {
+    /**
+     * @param null $user
+     * @return mixed
+     * @throws ServiceUnavailableHttpException
+     */
     public function all($user = null)
     {
         if ($user) {
-            $usersInner = User::all()->where('id', $user->id)->toArray();
+            $usersInner[] = $user->toArray();
         } else {
             $usersInner = User::all()->toArray();
         }
@@ -85,7 +90,6 @@ class UserStore implements UserStoreInterface
         }
         return $users;
     }
-
 
     public function get($user)
     {
