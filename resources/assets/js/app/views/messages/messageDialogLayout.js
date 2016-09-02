@@ -2,6 +2,7 @@ var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var logger = require('../../instances/logger');
 var messageDialogCollection = require('./messageDialogCollection');
+var helper = require('../../helpers/messageHelper');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'messageDialogLayout',
@@ -11,6 +12,9 @@ module.exports = Marionette.LayoutView.extend({
     },
     events: {
         'submit @ui.form': function (e) {
+            if (helper.isOnlySpecialCharacters(this.ui.message.val())) {
+                return;
+            }
             e.preventDefault();
             Radio.channel('messagesChannel').trigger('sendMessage', this.ui);
         },
@@ -18,6 +22,9 @@ module.exports = Marionette.LayoutView.extend({
         'keyup @ui.message': function (e) {
             if (e.keyCode == 13) {
                 var isEnter = this.ui.hotkeyCheckbox.prop('checked');
+                if (helper.isOnlySpecialCharacters(this.ui.message.val())) {
+                    return;
+                }
                 if (isEnter) {
                     if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
                         e.preventDefault();
