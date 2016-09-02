@@ -20,14 +20,20 @@ module.exports = Marionette.Object.extend({
     initialize: function () {
         this.listenTo(Radio.channel('votesChannel'), 'createComment', function (view) {
             var model = new CommentModel({user_id: currentUser.get('id')}, {parentUrl: view.options.collection.parentUrl});
-            model.save({content_origin: view.ui.text.val()}, {
-                success: function (data) {
-                    view.ui.text.val('');
-                    //view.options.collection.fetch({async: false});
-                    view.options.collection.add(data);
-                    Radio.trigger('votesChannel', 'setCommentsCount', view.options.collection.length);
-                }
-            });
+
+            var errorContainer = $('.errors');
+            errorContainer.empty();
+
+            if (!model.save({content_origin: view.ui.text.val()}, {
+                    success: function (data) {
+                        view.ui.text.val('');
+                        //view.options.collection.fetch({async: false});
+                        view.options.collection.add(data);
+                        Radio.trigger('votesChannel', 'setCommentsCount', view.options.collection.length);
+                    }
+                })) {
+                errorContainer.html(model.validationError.content_origin);
+            }
         });
     },
 
@@ -49,11 +55,8 @@ module.exports = Marionette.Object.extend({
                 Radio.trigger('votesChannel', 'setCommentsCount', data.length);
             }
         });
-
-
-        var addedCommentsCollection = new CommentsCollection([], {
-            parentUrl: '',
-        });
+        
+        var addedCommentsCollection = new CommentsCollection([], {parentUrl: ''});
 
         myCommentsCollection.listenTo(Radio.channel('commentsChannel'), 'newComment', function (comment) {
             if ((comment.commentable_id == id) && (comment.user_id != currentUser.id)
