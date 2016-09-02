@@ -30,6 +30,7 @@ class UserStore implements UserStoreInterface
             } else {
                 $response = CurlService::sendUsersRequest();
             }
+            
             if (key_exists('success', $response) && $response['success'] == false){
                 throw new ServiceUnavailableHttpException;
             }
