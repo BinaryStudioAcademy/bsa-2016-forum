@@ -1,5 +1,7 @@
 var Marionette = require('backbone.marionette');
 var Backbone = require('backbone');
+var moment = require('moment-timezone');
+var config = require('config');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteItem',
@@ -16,6 +18,7 @@ module.exports = Marionette.ItemView.extend({
         var id = this.model.get('id');
         return {
             model: this.model.toJSON(),
+            createdDate: moment.utc(this.model.get('created_at')).tz(config.timeZone).format('DD.MM.YYYY HH:mm:ss'),
             meta: {
                 user: tempmeta[id].user,
                 likes: tempmeta[id].likes,
