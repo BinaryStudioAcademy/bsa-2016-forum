@@ -1,6 +1,5 @@
 var Marionette = require('backbone.marionette');
-var moment = require('moment-timezone');
-var config = require('config');
+var dateHelper = require('../../helpers/dateHelper');
 
 module.exports = Marionette.ItemView.extend({
     tagName: 'div',
@@ -10,7 +9,7 @@ module.exports = Marionette.ItemView.extend({
         var id = this.model.get('id');
         return {
             model: this.model.toJSON(),
-            createdDate: moment.utc(this.model.get('created_at')).tz(config.timeZone).format('DD.MM.YYYY HH:mm:ss'),
+            createdDate: dateHelper.fullDate(this.model.get('created_at')),
             meta: {
                 user: this.model.getMeta()[id].user
             }
