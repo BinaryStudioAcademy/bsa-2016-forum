@@ -1,7 +1,8 @@
 var Marionette = require('backbone.marionette');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
-var moment = require('momentjs');
+var moment = require('moment-timezone');
+var config = require('config');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicItem',
@@ -35,7 +36,7 @@ module.exports = Marionette.ItemView.extend({
     serializeData: function () {
         return {
             model: this.model.toJSON(),
-            createdDate: moment(this.model.get('created_at')).format('dd.MM.YYYY')
+            createdDate: moment.utc(this.model.get('created_at')).tz(config.timeZone).format('DD.MM.YYYY')
         };
     },
 
