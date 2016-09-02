@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Emarref\Jwt\Claim;
 use App\Facades\CurlService;
+use App\Models\Role;
+use App\Models\Status;
 
 
 class AuthService
@@ -86,10 +88,10 @@ class AuthService
                 $user->last_name = $userInfo->surname;
                 $user->email = $userInfo->email;
                 $user->global_id = $userInfo->serverUserId;
-                $statusUser = \DB::table('user_statuses')->where('name', 'online')->value('id');
+                $statusUser = Status::where('name', 'online')->value('id');
                 $user->status_id = $statusUser;
                 $user->save();
-                $roleUser = \DB::table('roles')->where('name', 'User')->value('id');
+                $roleUser = Role::where('name', 'User')->value('id');
                 $user->role()->associate($roleUser);
                 $user->save();
 
