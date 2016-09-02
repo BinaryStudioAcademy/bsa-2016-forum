@@ -9,7 +9,7 @@ module.exports = Marionette.ItemView.extend({
         'change': 'render'
     },
     ui: {
-        deleteButton: '.voteitem-delete-button'
+        deleteButton: '.delete-button'
     },
     events: {
         'click @ui.deleteButton': function () {

@@ -5,7 +5,7 @@ module.exports = Marionette.ItemView.extend({
     template: 'voteItem',
     ui: {
         label: '#label',
-        deleteButton: '.voteitem-delete-button'
+        deleteButton: '.delete-button'
     },
     events: {
         'click @ui.label': function () {

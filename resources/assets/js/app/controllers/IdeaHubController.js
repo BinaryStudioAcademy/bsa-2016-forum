@@ -31,10 +31,13 @@ module.exports = Marionette.Object.extend({
             });
         });
 
-        Handlebars.registerHelper('deleteVoteButton', function (model, meta) {
-            console.log(moment(model.created_at).add(15, 'm').isAfter(moment()));
-            if(currentUser.get('role') == 'Admin' || (currentUser.get('id') == meta.user.id && moment(model.created_at).add(15, 'm').isAfter(moment()))) {
-                return new Handlebars.SafeString('<button class="btn btn-md btn-danger voteitem-delete-button delete-button"><span class="glyphicon glyphicon-remove-sign"></span></button>');
+        Handlebars.registerHelper('deleteButton', function (id, created_at, position_absolute) {
+            var style = 'position:absolute;';
+            if(position_absolute == false) {
+                style = 'position:relative; float:none;'
+            }
+            if(currentUser.get('role') == 'Admin' || (currentUser.get('id') == id && moment(created_at).add(15, 'm').isAfter(moment()))) {
+                return new Handlebars.SafeString('<button style="'+style+'" class="btn btn-md btn-danger delete-button"><span class="glyphicon glyphicon-remove-sign"></span></button>');
             }
         });
     },

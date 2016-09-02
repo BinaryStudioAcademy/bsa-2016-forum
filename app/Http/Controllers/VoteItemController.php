@@ -27,8 +27,14 @@ class VoteItemController extends ApiController
         if (!$voteItems) {
             $this->setStatusCode(200)->respond();
         }
+        $meta = [];
+        foreach ($voteItems as $item){
+            $meta[$item->id] = [
+                'user'=> $item->user()->first()
+            ];
+        }
 
-        return $this->setStatusCode(200)->respond($voteItems, ['vote' => $vote]);
+        return $this->setStatusCode(200)->respond($voteItems, $meta);
 
     }
 

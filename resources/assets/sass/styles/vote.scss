@@ -357,7 +357,8 @@ VOTE INDEX
 }
 
 .delete-button {
-  position: absolute;
+  //position: absolute;
+  float:right;
   top:0;
   right:0;
   opacity: 0.5;

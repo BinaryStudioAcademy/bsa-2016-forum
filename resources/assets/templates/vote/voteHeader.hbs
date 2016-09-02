@@ -1,6 +1,6 @@
 <!--<div class="vote-head">-->
     <div class="vote-header" style="position: relative;">
-        {{deleteVoteButton model meta}}
+        {{deleteButton meta.user.id model.created_at}}
         <h3>{{ model.title }}</h3>
         <h5>Opened by: {{ meta.user.first_name }}  {{ meta.user.last_name }}</h5>
         <div class="vote-tags"><p>
