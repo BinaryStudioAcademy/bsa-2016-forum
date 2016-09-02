@@ -30,6 +30,11 @@ module.exports = new function () {
         logger("Socket: Updated one message.")
     });
 
+    this.socket.on('newComment', function (msg) {
+        Radio.channel('commentsChannel').trigger('newComment', msg);
+        logger("Socket: New Comment come.")
+    });
+
     var socket = this.socket;
     var login = function () {
         var token = getToken();
