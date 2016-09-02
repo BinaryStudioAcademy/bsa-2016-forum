@@ -2,43 +2,22 @@ var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var logger = require('../../instances/logger');
 var messageDialogCollection = require('./messageDialogCollection');
-var helper = require('../../helpers/messageHelper');
+var Behavior = require('../../behaviors/send');
 
 module.exports = Marionette.LayoutView.extend({
+    behaviors: {
+        Behavior: {
+            behaviorClass: Behavior,
+            channel: 'messagesChannel',
+            trigger: 'sendMessage',
+            textui: 'message'
+        }
+    },
+
     template: 'messageDialogLayout',
     regions: {
         container: '#dialog-messages',
         editModal: '#edit-msg-modal'
-    },
-    events: {
-        'submit @ui.form': function (e) {
-            if (helper.isOnlySpecialCharacters(this.ui.message.val())) {
-                return;
-            }
-            e.preventDefault();
-            Radio.channel('messagesChannel').trigger('sendMessage', this.ui);
-        },
-
-        'keyup @ui.message': function (e) {
-            if (e.keyCode == 13) {
-                var isEnter = this.ui.hotkeyCheckbox.prop('checked');
-                if (helper.isOnlySpecialCharacters(this.ui.message.val())) {
-                    return;
-                }
-                if (isEnter) {
-                    if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
-                        e.preventDefault();
-                        Radio.channel('messagesChannel').trigger('sendMessage', this.ui);
-                    }
-                } else {
-                    if (e.ctrlKey) {
-                        e.preventDefault();
-                        Radio.channel('messagesChannel').trigger('sendMessage', this.ui);
-                    }
-                }
-
-            }
-        }
     },
     ui: {
         message: '#messages-new-text',

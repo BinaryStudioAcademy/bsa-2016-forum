@@ -41,20 +41,20 @@ module.exports = Marionette.Object.extend({
             }
         });
 
-        messageCollection.listenTo(Radio.channel('messagesChannel'), 'saveEditedMessage', function (data) {
-            var message = data.model;
-            var text = data.view.ui.message.val();
-            data.view.ui.save.html('Saving..');
-            data.view.disableButton();
+        messageCollection.listenTo(Radio.channel('messagesChannel'), 'saveEditedMessage', function (view) {
+            var message = view.model;
+            var text = view.ui.message.val();
+            view.ui.save.html('Saving..');
+            view.disableButton();
             message.parentUrl = _.result(currentUser, 'url');
             //add check on msg change
             message.save({message: text}, {
                 success: function () {
-                    data.view.$('.modal').modal('hide');
+                    view.$('.modal').modal('hide');
                 },
                 error: function () {
-                    data.view.enableButton();
-                    data.view.ui.save.html('Save');
+                    view.enableButton();
+                    view.ui.save.html('Save');
                 }
             });
         });
@@ -64,27 +64,27 @@ module.exports = Marionette.Object.extend({
             collection: messageCollection
         });
 
-        DialogView.listenTo(Radio.channel('messagesChannel'),'sendMessage', function (ui) {
+        DialogView.listenTo(Radio.channel('messagesChannel'),'sendMessage', function (view) {
             var message = new MessageModel ({
-                message: ui.message.val(),
+                message: view.ui.message.val(),
                 user_from_id: currentUser.get('id'),
                 user_to_id: messageCollection.getMeta().with_user.id,
                 is_read: 0
             });
-            ui.button.html('Sending..');
-            ui.button.prop('disabled', true);
+            view.ui.button.html('Sending..');
+            view.ui.button.prop('disabled', true);
             message.parentUrl = _.result(currentUser, 'url');
             message.save(null, {
                 success: function (model) {
-                    ui.button.html('Send');
-                    ui.button.prop('disabled', false);
-                    ui.message.val('');
+                    view.ui.button.html('Send');
+                    view.ui.button.prop('disabled', false);
+                    view.ui.message.val('');
                     messageCollection.add(model);
                     Radio.channel('messagesChannel').trigger('newMessageScroll');
                 },
                 error: function () {
-                    ui.button.html('ReSend');
-                    ui.button.prop('disabled', false);
+                    view.ui.button.html('ReSend');
+                    view.ui.button.prop('disabled', false);
                 }
             });
         });

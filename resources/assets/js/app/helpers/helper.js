@@ -1,4 +1,4 @@
-var messageHelper = {
+var Helper = {
     isOnlySpecialCharacters: function (str) {
         var len = str.length;
         for (var i = 0; i < len; i++) {
@@ -20,4 +20,4 @@ var messageHelper = {
     }
 };
 
-module.exports = messageHelper;
+module.exports = Helper;
