@@ -44,7 +44,6 @@ class VoteController extends ApiController
     private function getMetaData($votes)
     {
         $data = [];
-
         foreach ($votes as $vote) {
 
             $data[$vote->id] =
@@ -52,9 +51,12 @@ class VoteController extends ApiController
                     'user' => $vote->user()->first(),
                     'likes' => $vote->likes()->count(),
                     'comments' => $vote->comments()->count(),
-                    'tags' => $vote->tags()->get(['name']),
-                    'subscription' => $vote->subscription(Auth::user()->id)
+                    'tags' => $vote->tags()->get(['name'])
                 ];
+
+            if (($subscription = $vote->subscription(Auth::user()->id)) !== null) {
+                $data['subscription'][$vote->id] = $subscription;
+            }
         }
         return $data;
     }
@@ -92,9 +94,9 @@ class VoteController extends ApiController
                     'user' => $user,
                     'likes' => $likeCount,
                     'comments' => $commentCount,
-                    'tags' => $tags,
-                    'subscription' => $vote->subscription(Auth::user()->id)
-                ]
+                    'tags' => $tags
+                ],
+                'subscription' => $vote->subscription(Auth::user()->id)
             ]
         );
     }

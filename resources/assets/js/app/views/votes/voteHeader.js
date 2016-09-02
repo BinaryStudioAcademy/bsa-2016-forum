@@ -1,4 +1,8 @@
 var Marionette = require('backbone.marionette');
+var SubscribeBehavior = require('../subscribeBehavior');
+var _ = require('underscore');
+var currentUser = require('../../initializers/currentUser');
+
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteHeader',
@@ -7,6 +11,29 @@ module.exports = Marionette.ItemView.extend({
     modelEvents: {
         'change': 'render'
     },
+
+    ui: {
+        subscribeNotification: '.subscribe-btn'
+    },
+
+    behaviors: {
+        SubscribeBehavior: {
+            behaviorClass: SubscribeBehavior,
+            parent_url: _.result(currentUser, 'url'),
+            target_type: 'Vote'
+        }
+    },
+
+    addOkSubscribeIcon: function () {
+        this.ui.subscribeNotification.append(' <i class="glyphicon glyphicon-ok subscribed"></i>');
+    },
+
+    onRender: function () {
+        if(this.model.getMeta() && this.model.getMeta().subscription) {
+            this.addOkSubscribeIcon();
+        }
+    },
+
     serializeData: function () {
         var tempmeta = this.model.getMeta();
         var meta = {
