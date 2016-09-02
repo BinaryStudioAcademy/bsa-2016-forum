@@ -1,14 +1,14 @@
 var Marionette = require('backbone.marionette');
-var notificationCollection = require('./notificationCollection');
+var subscriptionCollection = require('./subscriptionsCollection');
 
 module.exports = Marionette.LayoutView.extend({
-    template: 'notificationLayout',
+    template: 'subscriptionLayout',
     regions: {
-        container: '#notification-container'
+        container: '#subscriptions'
     },
 
     onRender: function () {
-        this.container.show(new notificationCollection({
+        this.container.show(new subscriptionCollection({
             collection: this.collection
         }));
     }
