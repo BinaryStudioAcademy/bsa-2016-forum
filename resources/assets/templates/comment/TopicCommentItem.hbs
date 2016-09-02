@@ -1,0 +1,72 @@
+<div class="topic-comment-item">
+    <div class="topic-comment-main">
+        <div class="topic-comment-flex">
+            <div class="topic-bar hidden-xs">
+                <div class="topic-avatar">
+                    <img src="/images/user.png">
+                </div>
+                <div class="topic-addition">
+
+                </div>
+            </div>
+            <div class="topic-body">
+                <div class="topic-msg">
+                    <h4>{{ model.content_origin }}</h4>
+                </div>
+                <div class="attachments-container">
+                    {{#each meta.attachments}}
+                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                            <a href="{{ url }}" class="thumbnail" target="_blank">
+                                <img src="{{ thumb }}" alt="{{ url }}">
+                            </a>
+                            <div class="file-name">{{ cloud_public_id }}</div>
+                        </div>
+                    {{/each}}
+                </div>
+                <div class="attachs"></div>
+            </div>
+        </div>
+        <div class="topic-control">
+            <div class="topic-bar hidden-xs"></div>
+            <div class="topic-history">{{ model.created_at }}</div>
+            <div class="topic-history">{{ meta.user.display_name }}</div>
+            <div class="topic-history">Rating {{ model.rating }}</div>
+            <div class="topic-control-btn">
+                {{!-- only output if user comment belongs to current user --}}
+                {{#if meta.isUserComment}}
+                    <a class="comment-edit-btn">Edit</a>
+                    <a class="" data-toggle="modal" data-target="#confirmDialog-{{ model.id }}">Remove</a>
+                {{else}}
+                    <a class="answer-btn">Reply</a>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+
+    <div class="topic-comment-included">
+        <!-- comments on this comment container -->
+        <!-- comment item such as this item -->
+        <!-- <div class="topic-comment-item">
+                <div class="topic-comment-main">
+                    <di ... -->
+    </div>
+</div>
+
+<!--<div class="new-comment-container"></div>-->
+
+<div id="confirmDialog-{{ model.id }}" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm delete</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="removeBtn" data-dismiss="modal">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

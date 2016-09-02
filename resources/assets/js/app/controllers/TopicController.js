@@ -8,7 +8,14 @@ var UserTopicCollection = require('../collections/userTopicCollection');
 var TopicCreate = require('../views/topics/topicCreate');
 var TopicModel = require('../models/TopicModel');
 var TopicDetailView = require('../views/topics/topicDetail');
+var Radio = require('backbone.radio');
+var NewTopicCommentView = require('../views/comments/TopicCommentNew');
+var TopicCommentModel = require('../models/TopicCommentModel');
+var CommentsCollection = require('../collections/TopicCommentsCollection');
+var _ = require('underscore');
+var Topics = require('../instances/TopicCollection');
 var currentUser = require('../initializers/currentUser');
+var AttachmentCollection = require('../collections/AttachmentCollection');
 
 module.exports = Marionette.Object.extend({
 
@@ -41,12 +48,51 @@ module.exports = Marionette.Object.extend({
     },
 
     show: function (id) {
-        var topicModel = new TopicModel({id: id});
-        topicModel.fetch({
-            success: function () {
-                app.render(new TopicDetailView({model: topicModel}));
-            }
+        var topicModel = {};
+
+        if (Topics.get(id)) {
+            topicModel = Topics.get(id);
+        } else {
+            topicModel = new TopicModel({
+                id: id,
+            });
+            topicModel.fetch();
+        }
+
+        var collection = new CommentsCollection();
+        collection.parentUrl = _.result(topicModel, 'url');
+        collection.fetch();
+
+        var view = new TopicDetailView({
+            model: topicModel,
+            collection: collection
         });
+
+        view.listenTo(Radio.channel('comment'), 'addComment', function (parentView, commentModel) {
+            var model = {}, attachCollection = {};
+
+            if (commentModel) {
+                //model = new TopicCommentModel(commentModel.toJSON());
+                model = commentModel;
+                var modelAttachs = commentModel.getMeta()[commentModel.get('id')].attachments;
+                attachCollection = new AttachmentCollection(modelAttachs);
+            } else {
+                model = new TopicCommentModel();
+                attachCollection = new AttachmentCollection();
+            }
+
+            // commentModel hasnt parentUrl because parentUrl sets to comment collection
+            model.parentUrl = _.result(topicModel, 'url');
+
+            //console.log(parentView);
+
+            view.getRegion('newComment').show(new NewTopicCommentView({
+                model: model,
+                attachs: attachCollection
+            }));
+        });
+
+        app.render(view);
     },
 
     myTopics: function () {
@@ -55,4 +101,5 @@ module.exports = Marionette.Object.extend({
         topicCollection.fetch();
         app.render(new topicLayout({collection: topicCollection}));
     }
+
 });

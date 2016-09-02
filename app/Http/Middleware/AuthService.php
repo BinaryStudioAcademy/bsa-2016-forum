@@ -87,7 +87,7 @@ class AuthService
     {
         if (!$user =  User::findUserByGlobalId($userData->id)) {
             $user = User::findUserByEmail($userData->email);
-            
+
             $userInfo = ($this->getUserInfo($userData->id));
             
             if (!$user ){
