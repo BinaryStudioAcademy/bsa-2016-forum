@@ -23,7 +23,7 @@ module.exports = Marionette.CollectionView.extend({
 
         this.collection.fetch({
             remove: false,
-            data: {page: this._page + 1},
+            data: {page: this._page},
             error: function (collection, response) {
                 self._allItemsUploaded = true;
                 console.error(response.responseText);
