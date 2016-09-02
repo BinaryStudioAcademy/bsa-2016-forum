@@ -23,11 +23,11 @@ class VoteItemRequest extends ApiRequest
      */
     public function rules()
     {
+        $stringOfVoteItemsNames ='';
         if($this->vote_id){
             $vote = Vote::find($this->vote_id);
             if($vote){
                 $existedVoteItems = $vote->voteitems()->get()->toArray();
-                $stringOfVoteItemsNames ='';
                 foreach ($existedVoteItems as $voteItem){
                     $stringOfVoteItemsNames .= $voteItem['name'] . ',';
                 }
