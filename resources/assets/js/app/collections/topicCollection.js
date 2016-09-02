@@ -6,12 +6,13 @@ var Backbone = require("backbone");
 module.exports = baseCollection.extend({
    
     model: topicModel,
+    url: '/topics',
 
     initialize: function (options) {
         
         if (options && options.parentUrl) {
             this.parentUrl = options.parentUrl;
         }
-    },
+    }
 
 });

@@ -1,14 +1,13 @@
-var topicItem = require('./topicItem');
-var paginateableCollectionView = require('../../instances/paginateableCollectionView');
-module.exports = paginateableCollectionView.extend({
-    childView: topicItem,
+var Marionette = require('backbone.marionette');
+
+module.exports = Marionette.CollectionView.extend({
 
     initialize: function () {
 
-            $(window).on('scroll', this.fetchPage.bind(this));
+        $(window).on('scroll', this.fetchPage.bind(this));
 
     },
-    
+
     _page: 1,
     _allItemsUploaded: false,
 
