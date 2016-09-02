@@ -16,9 +16,20 @@ module.exports = Marionette.LayoutView.extend({
         },
 
         'keyup @ui.message': function (e) {
-            if (e.ctrlKey && (e.keyCode == 13)) {
-                e.preventDefault();
-                Radio.channel('messagesChannel').trigger('sendMessage', this.ui);
+            if (e.keyCode == 13) {
+                var isEnter = this.ui.hotkeyCheckbox.prop('checked');
+                if (isEnter) {
+                    if (!e.ctrlKey && !e.altKey && !e.shiftKey) {
+                        e.preventDefault();
+                        Radio.channel('messagesChannel').trigger('sendMessage', this.ui);
+                    }
+                } else {
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        Radio.channel('messagesChannel').trigger('sendMessage', this.ui);
+                    }
+                }
+
             }
         }
     },
@@ -26,7 +37,8 @@ module.exports = Marionette.LayoutView.extend({
         message: '#messages-new-text',
         button: '#messages-new-submit',
         messageContainer: '#dialog-messages',
-        form: '#message-new-form'
+        form: '#message-new-form',
+        hotkeyCheckbox: '#hotkey-checkbox'
     },
     onRender: function () {
         this.container.show(new messageDialogCollection({
