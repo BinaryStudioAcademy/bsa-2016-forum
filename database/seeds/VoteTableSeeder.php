@@ -20,8 +20,7 @@ class VoteTableSeeder extends Seeder
 
         factory(App\Models\Vote::class, $count_votes)->create()->each(function($vote) use ($users) {
             $commentCount = rand(1, 5);
-            $comments = factory(Comment::class, $commentCount)
-                ->make();
+            $comments = factory(Comment::class, $commentCount)->make();
             if (!$comments instanceof Collection) {
                 $comments =  new Collection([$comments]);
             }
@@ -36,8 +35,15 @@ class VoteTableSeeder extends Seeder
             $tag = factory(App\Models\Tag::class)->make();
             $comment = $vote->tags()->save($tag);
 
-            $like = factory(App\Models\Like::class)->make();
-            $vote = $vote->likes()->save($like);
+//            insert field for likes for this vote
+            $lim=rand(1,3);
+            $lim=rand(1,3);
+            foreach ((range(1, $lim)) as $index) {
+                $like = factory(App\Models\Like::class)->make();
+                $randomUser = $users->random();
+                $like->user()->associate($randomUser);
+                $like = $vote->likes()->save($like);
+            }
 
         });
 

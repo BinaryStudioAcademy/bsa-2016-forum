@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\VoteItem;
 use App\Models\VoteResult;
 use App\Models\Comment;
+use App\Models\Like;
 
 class VoteItemSeeder extends Seeder
 {
@@ -57,7 +58,17 @@ class VoteItemSeeder extends Seeder
 
                 $voteItem->comments()->saveMany($comments);
 
+//            insert field for likes for this voteItem
+                $lim=rand(1,3);
+                foreach ((range(1, $lim)) as $index) {
+                    $like = factory(App\Models\Like::class)->make();
+                    $randomUser = $users->random();
+                    $like->user()->associate($randomUser);
+                    $like = $voteItem->likes()->save($like);
+                }
+
             });
+            
         });
 
 //        factory(App\Models\VoteItem::class, 30)->create();
