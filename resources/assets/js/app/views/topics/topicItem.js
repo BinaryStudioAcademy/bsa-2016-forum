@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var Marionette = require('backbone.marionette');
 var Bookmark = require('../../models/BookmarkModel');
-var Subscription = require('../../models/SubscriptionModel');
 var currentUser = require('../../initializers/currentUser');
+var SubscribeBehavior = require('../subscribeBehavior');
 var moment = require('momentjs');
 
 module.exports = Marionette.ItemView.extend({
@@ -16,8 +16,15 @@ module.exports = Marionette.ItemView.extend({
     },
 
     events: {
-        'click @ui.bookmarkTopic': 'bookmarkTopic',
-        'click @ui.subscribeNotification': 'subscribeNotification'
+        'click @ui.bookmarkTopic': 'bookmarkTopic'
+    },
+
+    behaviors: {
+        SubscribeBehavior: {
+            behaviorClass: SubscribeBehavior,
+            parent_url: _.result(currentUser, 'url'),
+            target_type: 'Topic'
+        }
     },
 
     unlockButton: function (uiButton) {
@@ -60,10 +67,6 @@ module.exports = Marionette.ItemView.extend({
 
         if (meta && meta.subscription && meta.subscription[this.model.attributes.id]) {
             this.addOkSubscribeIcon();
-        }
-
-        if(meta && !meta.subscription) {
-            meta.subscription = {};
         }
     },
 
@@ -111,54 +114,6 @@ module.exports = Marionette.ItemView.extend({
                     });
 
                     alert(errorMsg);
-                }
-            });
-        }
-    },
-
-    subscribeNotification: function () {
-        var subscription = new Subscription();
-        subscription.parentUrl = _.result(currentUser, 'url');
-        this.lockButton(this.ui.subscribeNotification);
-
-        var that = this;
-
-        if (this.model.getMeta().subscription && this.model.getMeta().subscription[this.model.attributes.id]) {
-            subscription.set({
-                id: this.model.getMeta().subscription[that.model.attributes.id].id
-            });
-            subscription.destroy({
-                success: function () {
-                    that.unlockButton(that.ui.subscribeNotification);
-                    that.$('i.subscribed').remove();
-                    that.model.getMeta().subscription[that.model.attributes.id] = undefined;
-                },
-                error: function (response, xhr) {
-                    var errorMsg = '';
-                    $.each(xhr.responseJSON, function(index, value) {
-                        errorMsg += index + ': ' + value;
-                    });
-
-                    alert(errorMsg);
-                }
-            });
-
-        } else {
-            subscription.save({
-                subscription_id: this.model.id,
-                subscription_type: 'Topic'
-            }, {
-                success: function (response) {
-                    that.model.getMeta().subscription[that.model.attributes.id] = response;
-                    that.unlockButton(that.ui.subscribeNotification);
-                    that.addOkSubscribeIcon();
-                },
-                error: function (response, xhr) {
-                    var errorMsg = '';
-                    $.each(xhr.responseJSON, function(index, value) {
-                        errorMsg += index + ': ' + value;
-                    });
-                    logger(errorMsg);
                 }
             });
         }

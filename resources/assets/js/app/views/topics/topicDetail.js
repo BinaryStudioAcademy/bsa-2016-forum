@@ -2,7 +2,7 @@ var _ = require('underscore');
 var Marionette = require('backbone.marionette');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
-var Subscription = require('../../models/SubscriptionModel');
+var SubscribeBehavior = require('../subscribeBehavior');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicDetail',
@@ -13,20 +13,27 @@ module.exports = Marionette.ItemView.extend({
     },
 
     events: {
-        'click @ui.bookmarkTopic': 'bookmarkTopic',
-        'click @ui.subscribeNotification': 'subscribeNotification'
+        'click @ui.bookmarkTopic': 'bookmarkTopic'
     },
 
-    unlockButton: function (uiButton) {
-        uiButton.removeAttr('disabled');
-        uiButton.addClass('text-info');
-        uiButton.removeClass('text-muted');
+    behaviors: {
+        SubscribeBehavior: {
+            behaviorClass: SubscribeBehavior,
+            parent_url: _.result(currentUser, 'url'),
+            target_type: 'Topic'
+        }
     },
 
-    lockButton: function (uiButton) {
-        uiButton.attr('disabled', 'disabled');
-        uiButton.removeClass('text-info');
-        uiButton.addClass('text-muted');
+    unlockButton: function () {
+        this.ui.bookmarkTopic.removeAttr('disabled');
+        this.ui.bookmarkTopic.addClass('text-info');
+        this.ui.bookmarkTopic.removeClass('text-muted');
+    },
+
+    lockButton: function () {
+        this.ui.bookmarkTopic.attr('disabled', 'disabled');
+        this.ui.bookmarkTopic.removeClass('text-info');
+        this.ui.bookmarkTopic.addClass('text-muted');
     },
 
     addOkBookmarkIcon: function () {
@@ -56,7 +63,7 @@ module.exports = Marionette.ItemView.extend({
     bookmarkTopic: function () {
         var bookmark = new Bookmark();
 
-        this.lockButton(this.ui.bookmarkTopic);
+        this.lockButton();
 
         var that = this;
 
@@ -66,7 +73,7 @@ module.exports = Marionette.ItemView.extend({
             });
             bookmark.destroy({
                 success: function () {
-                    that.unlockButton(that.ui.bookmarkTopic);
+                    that.unlockButton();
                     that.$('i.bookmarked').remove();
                     that.model.bookmarkId = undefined;
                 },
@@ -87,7 +94,7 @@ module.exports = Marionette.ItemView.extend({
             }, {
                 success: function (response) {
                     that.model.bookmarkId = response.id;
-                    that.unlockButton(that.ui.bookmarkTopic);
+                    that.unlockButton();
                     that.addOkBookmarkIcon();
                 },
                 error: function (response, xhr) {
@@ -97,54 +104,6 @@ module.exports = Marionette.ItemView.extend({
                     });
 
                     alert(errorMsg);
-                }
-            });
-        }
-    },
-
-    subscribeNotification: function () {
-        var subscription = new Subscription();
-        subscription.parentUrl = _.result(currentUser, 'url');
-        this.lockButton(this.ui.subscribeNotification);
-
-        var that = this;
-
-        if (this.model.getMeta().subscription) {
-            subscription.set({
-                id: this.model.getMeta().subscription.id
-            });
-            subscription.destroy({
-                success: function () {
-                    that.unlockButton(that.ui.subscribeNotification);
-                    that.$('i.subscribed').remove();
-                    that.model.getMeta().subscription = undefined;
-                },
-                error: function (response, xhr) {
-                    var errorMsg = '';
-                    $.each(xhr.responseJSON, function(index, value) {
-                        errorMsg += index + ': ' + value;
-                    });
-
-                    alert(errorMsg);
-                }
-            });
-
-        } else {
-            subscription.save({
-                subscription_id: this.model.id,
-                subscription_type: 'Topic'
-            }, {
-                success: function (response) {
-                    that.model.getMeta().subscription = response;
-                    that.unlockButton(that.ui.subscribeNotification);
-                    that.addOkSubscribeIcon();
-                },
-                error: function (response, xhr) {
-                    var errorMsg = '';
-                    $.each(xhr.responseJSON, function(index, value) {
-                        errorMsg += index + ': ' + value;
-                    });
-                    logger(errorMsg);
                 }
             });
         }
