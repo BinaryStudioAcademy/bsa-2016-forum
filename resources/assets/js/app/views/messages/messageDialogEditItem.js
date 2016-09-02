@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
+var dateHelper = require('../../helpers/dateHelper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'messageDialogEditItem',
@@ -44,7 +45,8 @@ module.exports = Marionette.ItemView.extend({
 
         return {
             message: this.model.toJSON(),
-            edit_at: edit
+            edit_at: edit,
+            updatedDate: dateHelper.fullDate(this.model.get('updated_at'))
         }
     }
 });
