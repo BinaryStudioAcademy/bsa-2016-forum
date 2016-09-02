@@ -1,7 +1,6 @@
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
-var moment = require('moment-timezone');
-var config = require('config');
+var dateHelper = require('../../helpers/dateHelper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'messageDialogEditItem',
@@ -47,7 +46,7 @@ module.exports = Marionette.ItemView.extend({
         return {
             message: this.model.toJSON(),
             edit_at: edit,
-            updatedDate: moment.utc(this.model.get('updated_at')).tz(config.timeZone).format('DD.MM.YYYY HH:mm:ss')
+            updatedDate: dateHelper.fullDate(this.model.get('updated_at'))
         }
     }
 });

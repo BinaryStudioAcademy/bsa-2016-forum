@@ -1,6 +1,5 @@
 var Marionette = require('backbone.marionette');
-var moment = require('moment-timezone');
-var config = require('config');
+var dateHelper = require('../../helpers/dateHelper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'messageItem',
@@ -8,7 +7,7 @@ module.exports = Marionette.ItemView.extend({
         return {
             message: this.model.toJSON(),
             user: this.options.user,
-            updatedDate: moment.utc(this.model.get('updated_at')).tz(config.timeZone).format('DD.MM.YYYY HH:mm')
+            updatedDate: dateHelper.middleDate(this.model.get('updated_at'))
         }
     }
 });
