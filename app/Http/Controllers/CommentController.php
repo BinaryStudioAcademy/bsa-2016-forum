@@ -7,9 +7,10 @@ use App\Models\Vote;
 use App\Models\VoteItem;
 use App\Http\Requests\CommentsRequest;
 use App\Models\Topic;
-use App\Http\Requests;
+use App\Events\NewCommentEvent;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Gate;
+
 class CommentController extends ApiController
 {
     /**
@@ -282,6 +283,8 @@ class CommentController extends ApiController
     {
         $comment = Comment::create($request->all());
         $comment = $vote->comments()->save($comment);
+
+        event(new NewCommentEvent($comment));
 
         return $this->setStatusCode(201)->respond($comment, [
             $comment->id => [
