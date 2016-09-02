@@ -27,16 +27,16 @@ module.exports = Marionette.ItemView.extend({
         }
     },
 
-    unlockButton: function (uiButton) {
-        uiButton.removeAttr('disabled');
-        uiButton.addClass('text-info');
-        uiButton.removeClass('text-muted');
+    unlockButton: function () {
+        this.ui.bookmarkTopic.removeAttr('disabled');
+        this.ui.bookmarkTopic.addClass('text-info');
+        this.ui.bookmarkTopic.removeClass('text-muted');
     },
 
-    lockButton: function (uiButton) {
-        uiButton.attr('disabled', 'disabled');
-        uiButton.removeClass('text-info');
-        uiButton.addClass('text-muted');
+    lockButton: function () {
+        this.ui.bookmarkTopic.attr('disabled', 'disabled');
+        this.ui.bookmarkTopic.removeClass('text-info');
+        this.ui.bookmarkTopic.addClass('text-muted');
     },
 
     addOkBookmarkIcon: function () {
@@ -73,7 +73,7 @@ module.exports = Marionette.ItemView.extend({
     bookmarkTopic: function () {
         var bookmark = new Bookmark();
 
-        this.lockButton(this.ui.bookmarkTopic);
+        this.lockButton();
 
         var that = this;
 
@@ -83,7 +83,7 @@ module.exports = Marionette.ItemView.extend({
             });
             bookmark.destroy({
                 success: function () {
-                    that.unlockButton(that.ui.bookmarkTopic);
+                    that.unlockButton();
                     that.$('i.bookmarked').remove();
                     that.model.bookmarkId = undefined;
                 },
@@ -104,7 +104,7 @@ module.exports = Marionette.ItemView.extend({
             }, {
                 success: function (response) {
                     that.model.bookmarkId = response.id;
-                    that.unlockButton(that.ui.bookmarkTopic);
+                    that.unlockButton();
                     that.addOkBookmarkIcon();
                 },
                 error: function (response, xhr) {
