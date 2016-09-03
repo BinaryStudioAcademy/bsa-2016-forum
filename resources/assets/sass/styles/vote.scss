@@ -26,7 +26,12 @@ VOTE DETAIL
 
 .vote-body {
   /* width: calc(100% - 80px); */
+  position: relative;
   display: inline-block;
+}
+
+.vote-header {
+  position: relative;
 }
 
 .vote-header h3 {
@@ -164,6 +169,7 @@ VOTE INDEX
 .votes-item-body {
   width: 100%;
   display: inline-block;
+  position: relative;
 }
 
 .votes-item-title {
@@ -357,7 +363,7 @@ VOTE INDEX
 }
 
 .delete-button {
-  //position: absolute;
+  position: absolute;
   float:right;
   top:0;
   right:0;
@@ -366,4 +372,12 @@ VOTE INDEX
 
 .delete-button:hover {
   opacity: 1;
+}
+
+.vote-question-item {
+  height: 33px;
+}
+
+.tag-links {
+  color: #333;
 }

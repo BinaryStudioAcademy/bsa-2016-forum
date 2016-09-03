@@ -4,7 +4,7 @@
             <img src="/images/user.png">
         </div>
     </div>
-    <div class="votes-item-body" style="position: relative;">
+    <div class="votes-item-body">
         <div class="votes-item-title">
             <span><a id="label">{{ model.title }}</a></span> Opened by: <span> {{ meta.user.first_name}} {{ meta.user.last_name }} </span>
         </div>
@@ -13,7 +13,7 @@
         </div>
         <div class="votes-item-tags">
             {{#each meta.tags}}
-                <a href="#votes/tags/{{name}}" style="color: #333;"><span>#{{name}}</span></a>
+                <a href="#votes/tags/{{name}}" class="tag-links"><span>#{{name}}</span></a>
             {{/each}}
         </div>
         <span class="votes-item-time">Created at {{ model.created_at }}</span>

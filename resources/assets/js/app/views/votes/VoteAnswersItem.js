@@ -2,6 +2,7 @@ var Marionette = require('backbone.marionette');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteAnswerItem',
+    className: 'vote-question-item',
     ui: {
         deleteButton: '.delete-button'
     },
@@ -11,10 +12,10 @@ module.exports = Marionette.ItemView.extend({
         }
     },
     serializeData: function () {
-        var tempmeta = this.model.getMeta()[this.model.get('id')];
+        var meta = this.model.getMetaById(this.model.get('id'));
         return {
             model: this.model.toJSON(),
-            meta: tempmeta
+            meta: meta
         };
     },
     remove: function () {

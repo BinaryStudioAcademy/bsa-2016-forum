@@ -36,6 +36,11 @@ module.exports = Backbone.Model.extend({
         return (_.result(this, '_meta') || _.result(this.collection, '_meta'));
     },
 
+
+    getMetaById: function (id) {
+        return this.getMeta()[id];
+    },
+
     parse: function (response, options) {
         if (!options.collection) {
             this._meta = response._meta;

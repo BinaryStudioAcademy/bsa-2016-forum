@@ -1,11 +1,11 @@
 <!--<div class="vote-head">-->
-    <div class="vote-header" style="position: relative;">
+    <div class="vote-header">
         {{deleteButton meta.user.id model.created_at}}
         <h3>{{ model.title }}</h3>
         <h5>Opened by: {{ meta.user.first_name }}  {{ meta.user.last_name }}</h5>
         <div class="vote-tags"><p>
             {{#each meta.tags}}
-                <a href="#votes/tags/{{name}}" style="color: #333;"><span>#{{name}}</span></a>
+                <a href="#votes/tags/{{name}}" class="tag-links"><span>#{{name}}</span></a>
             {{/each}}
         </div>
     </div>
