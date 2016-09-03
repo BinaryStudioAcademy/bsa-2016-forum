@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Requests\VotesRequest;
 use App\Http\Requests\VoteResultRequest;
 use App\Models\VoteResult;
+use App\Models\VoteUniqueView;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -79,18 +80,26 @@ class VoteController extends ApiController
     public function show($id)
     {
         $vote = Vote::findOrFail($id);
-
+        if (Auth::user()->id &&
+            !VoteUniqueView::where(['vote_id' => $vote->id, 'user_id' => Auth::user()->id])->first()
+        ) {
+            $voteUniqueView = VoteUniqueView::create(['vote_id' => $vote->id, 'user_id' => Auth::user()->id]);
+            $voteUniqueView->save();
+        }
         $user = $vote->user()->first();
         $likeCount = $vote->likes()->count();
         $commentCount = $vote->comments()->count();
         $tags = $vote->tags()->get(['name']);
+        $numberOfUniqueViews = $vote->voteUniqueViews()->count();
 
         return $this->setStatusCode(200)->respond($vote, [
                 $vote->id => [
                     'user' => $user,
                     'likes' => $likeCount,
                     'comments' => $commentCount,
-                    'tags' => $tags
+                    'tags' => $tags,
+                    'numberOfUniqueViews' => $numberOfUniqueViews,
+                    'usersWhoViewedTheVoting' => $usersWhoViewedTheVoting
                 ]
             ]
         );

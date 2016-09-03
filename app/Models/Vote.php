@@ -27,6 +27,11 @@ class Vote extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function usersWhoSaw()
+    {
+        return $this->hasManyThrough(User::class, VoteUniqueView::class, 'user_id','id');
+    }
    
     public function voteItems()
     {
