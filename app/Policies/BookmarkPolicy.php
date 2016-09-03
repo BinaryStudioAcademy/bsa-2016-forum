@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Models\Bookmark;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class VotePolicy
+class BookmarkPolicy
 {
     use HandlesAuthorization;
 

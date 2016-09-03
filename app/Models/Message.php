@@ -17,6 +17,10 @@ class Message extends Model
     {
         return $this->belongsTo(User::class,'user_from_id');
     }
+    public function toUser()
+    {
+        return $this->belongsTo(User::class,'user_to_id');
+    }
     public function attachments()
     {
         return $this->morphToMany(Attachment::class, 'attachmenttable');
