@@ -37,8 +37,8 @@ module.exports = Backbone.Model.extend({
     },
 
 
-    getMetaById: function (id) {
-        return this.getMeta()[id];
+    getMetaById: function () {
+        return this.getMeta()[this.get('id')];
     },
 
     parse: function (response, options) {
