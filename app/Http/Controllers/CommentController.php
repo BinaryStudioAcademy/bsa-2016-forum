@@ -284,11 +284,17 @@ class CommentController extends ApiController
         $comment = Comment::create($request->all());
         $comment = $vote->comments()->save($comment);
 
-        event(new NewCommentEvent($comment));
+        $user = $comment->user()->first();
+
+        event(new NewCommentEvent($comment, [
+            $comment->id => [
+                'user' => $user
+            ]
+        ]));
 
         return $this->setStatusCode(201)->respond($comment, [
             $comment->id => [
-                'user' => $comment->user()->first()
+                'user' => $user
             ]
         ]);
     }

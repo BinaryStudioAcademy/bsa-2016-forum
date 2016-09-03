@@ -9,7 +9,10 @@ module.exports = Marionette.ItemView.extend({
         var meta = this.model.getMeta();
 
         if (!meta[id]) return {
-            model: this.model.toJSON()
+            model: this.model.toJSON(),
+            meta: {
+                user: this.model.attributes.user
+            }
         };
 
         return {

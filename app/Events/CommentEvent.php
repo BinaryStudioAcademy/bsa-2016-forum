@@ -12,15 +12,17 @@ class CommentEvent extends Event implements ShouldBroadcast
 
     public $socketEvent;
     public $comment;
+    public $meta;
 
     /**
      * Create a new event instance.
      *
      * @param Comment $comment
      */
-    public function __construct(Comment $comment)
+    public function __construct(Comment $comment, $meta)
     {
         $this->comment = $comment->toJson();
+        $this->meta = json_encode($meta);
     }
 
     /**

@@ -36,6 +36,10 @@ redis.on('message', function(channel, eventData) {
 
     function commentsLoad () {
         var comment = JSON.parse(eventData.data.comment);
+        var meta = JSON.parse(eventData.data.meta);
+
+        comment.user = meta[comment.id].user;
+        console.log("Meta: " + JSON.stringify(comment));
 
         io.sockets.emit(eventData.data.socketEvent, comment);
         console.log("Comment from user id: " + comment.user_id);
