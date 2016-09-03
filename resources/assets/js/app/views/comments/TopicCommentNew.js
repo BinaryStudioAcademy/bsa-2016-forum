@@ -38,12 +38,10 @@ module.exports = Marionette.ItemView.extend({
 
     showLoader: function (show) {
         return this.ui.loader.toggleClass('hidden', !show);
-        //return (show ? this.ui.loader.removeClass('hidden') : this.ui.loader.addClass('hidden'));
     },
 
     showErrors: function (show) {
         return this.ui.errors.toggleClass('hidden', !show);
-        //return (show ? this.ui.errors.removeClass('hidden') : this.ui.errors.addClass('hidden'));
     },
 
     submitComment: function (event) {
@@ -132,7 +130,6 @@ module.exports = Marionette.ItemView.extend({
         // add attachments to model meta
         var id = this.model.get('id');
         var view = this;
-        var a = view.model.getMeta()[id].attachments;
 
         // if model has attachments we must push new to it
         if (this._files.length) {
@@ -157,7 +154,7 @@ module.exports = Marionette.ItemView.extend({
             success: function (model) {
                 view.$(file.previewElement).remove();
                 view.showLoader(false);
-                view.ui.errors.removeClass('alert-danger').addClass('alert-info').text('File was successfully removed');
+                view.ui.errors.text('File was successfully removed');
                 view.showErrors(true);
                 view.model.trigger('change');
             },
