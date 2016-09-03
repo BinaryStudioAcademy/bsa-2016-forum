@@ -23,5 +23,6 @@ module.exports = Marionette.ItemView.extend({
                 tags: tempmeta[id].tags
             }
         };
+
     }
 });
