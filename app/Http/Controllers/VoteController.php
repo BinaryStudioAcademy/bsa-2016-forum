@@ -12,6 +12,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Facades\TagService;
+use Illuminate\Support\Facades\Auth;
 
 class VoteController extends ApiController
 {
@@ -86,23 +87,16 @@ class VoteController extends ApiController
             $voteUniqueView = VoteUniqueView::create(['vote_id' => $vote->id, 'user_id' => Auth::user()->id]);
             $voteUniqueView->save();
         }
-        $user = $vote->user()->first();
-        $likeCount = $vote->likes()->count();
-        $commentCount = $vote->comments()->count();
-        $tags = $vote->tags()->get(['name']);
-        $numberOfUniqueViews = $vote->voteUniqueViews()->count();
 
-        return $this->setStatusCode(200)->respond($vote, [
-                $vote->id => [
-                    'user' => $user,
-                    'likes' => $likeCount,
-                    'comments' => $commentCount,
-                    'tags' => $tags,
-                    'numberOfUniqueViews' => $numberOfUniqueViews,
-                    'usersWhoViewedTheVoting' => $usersWhoViewedTheVoting
-                ]
-            ]
-        );
+        $numberOfUniqueViews = $vote->voteUniqueViews()->count();
+        $usersWhoSaw = [];
+        foreach ($vote->voteUniqueViews()->get()->load('user') as $view){
+            $usersWhoSaw[] = $view->user;
+        }
+        $meta = $this->getMetaData([$vote]);
+        $meta[$vote->id]['numberOfUniqueViews'] = $numberOfUniqueViews;
+        $meta[$vote->id]['usersWhoSaw'] = $usersWhoSaw;
+        return $this->setStatusCode(200)->respond($vote, $meta);
     }
 
     /**
