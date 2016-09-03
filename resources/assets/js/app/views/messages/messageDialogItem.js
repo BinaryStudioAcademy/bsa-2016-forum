@@ -47,7 +47,9 @@ module.exports = Marionette.ItemView.extend({
             edit_at: edit,
             user: with_user,
             deleted: deleted,
-            updatedDate: dateHelper.fullDate(this.model.get('updated_at'))
+
+            updatedDate: dateHelper.relativeDate(dateHelper.dateWithTimezone(this.model.get('updated_at'))),
+            updatedStaticDate: dateHelper.dateWithTimezone(this.model.get('updated_at'))
         }
     }
 });

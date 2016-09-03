@@ -3,7 +3,6 @@ var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
 
-
 module.exports = Marionette.ItemView.extend({
     template: 'topicDetail',
 

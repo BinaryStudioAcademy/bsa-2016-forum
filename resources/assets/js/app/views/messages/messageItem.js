@@ -7,7 +7,8 @@ module.exports = Marionette.ItemView.extend({
         return {
             message: this.model.toJSON(),
             user: this.options.user,
-            updatedDate: dateHelper.middleDate(this.model.get('updated_at'))
+            updatedDate: dateHelper.relativeDate(dateHelper.dateWithTimezone(this.model.get('updated_at'))),
+            updatedStaticDate: dateHelper.dateWithTimezone(this.model.get('updated_at'))
         }
     }
 });
