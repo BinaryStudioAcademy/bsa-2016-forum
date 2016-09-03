@@ -69,6 +69,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(VoteItem::class);
     }
+    
+    public function voteUniqueViews()
+    {
+        return $this->hasMany(VoteUniqueView::class);
+    }
 
     public function votePermissions()
     {
