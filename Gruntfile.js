@@ -64,7 +64,8 @@ module.exports = function (grunt) {
                     loadPath: 'node_modules/bootstrap-sass/assets/stylesheets'
                 },
                 files: {
-                    'public/css/styles.css': 'resources/assets/sass/index.scss'
+                    'public/css/styles.css': 'resources/assets/sass/index.scss',
+                    'public/css/font-size-icons.css': 'resources/assets/sass/styles/font-size-icons/font-awesome.scss',
                 }
             },
         },

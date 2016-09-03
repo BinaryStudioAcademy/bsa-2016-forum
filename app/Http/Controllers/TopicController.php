@@ -80,6 +80,8 @@ class TopicController extends ApiController
      */
     public function indexInCategory($catId, TopicRequest $request)
     {
+        $user = Auth::user();
+
         $this->setFiltersData($request);
 
         $extendedTopics = Topic::where('category_id', $catId)
@@ -89,8 +91,18 @@ class TopicController extends ApiController
         foreach ($extendedTopics as $topic) {
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
-        }
+            $topic->countOfLikes = $topic->likes()->count();
 
+            if(!empty($topic->likes()->where('user_id', $user->id)->get()->first()))
+            {
+                $topic->is_user= true;
+            }
+            else
+            {
+                $topic->is_user= false;
+            }
+            $topic->currentUser = $user->id;
+        }
 
         $meta = $this->getMetaData($extendedTopics);
 

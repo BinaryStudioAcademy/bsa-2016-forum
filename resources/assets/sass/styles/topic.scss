@@ -280,3 +280,16 @@ TOPIC DETAILS
 .errors {
   color:red;
 }
+
+
+i[id^="starForLike"] {
+  color:#5bc0de;
+  margin-left: 30px;
+  color:#5bc0de;
+}
+
+.fa-star
+{
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color:#f0ad4e;
+}
