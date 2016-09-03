@@ -1,8 +1,6 @@
 var app = require('../instances/appInstance');
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
-var Handlebars = require('handlebars');
-var moment = require('moment');
 
 var currentUser = require('../initializers/currentUser');
 
@@ -36,16 +34,9 @@ module.exports = Marionette.Object.extend({
                 errorContainer.html(model.validationError.content_origin);
             }
         });
-
-        Handlebars.registerHelper('deleteButton', function (id, created_at) {
-            if(currentUser.get('role') == 'Admin' || (currentUser.get('id') == id && moment(created_at).add(15, 'm').isAfter(moment()))) {
-                return new Handlebars.SafeString('<button class="btn btn-md btn-danger delete-button"><span class="glyphicon glyphicon-remove-sign"></span></button>');
-            }
-        });
     },
 
     index: function () {
-
         Votes.reset();
         var view = new ListVotes({vc: Votes});
         app.render(view);
@@ -79,7 +70,6 @@ module.exports = Marionette.Object.extend({
                 collection: myCommentsCollection,
                 answers: VoteAnswers
             }));
-
         }
     }
 });
