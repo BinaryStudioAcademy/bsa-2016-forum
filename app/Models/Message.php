@@ -26,6 +26,11 @@ class Message extends Model
         return $this->morphToMany(Notification::class, 'notificationable');
     }
 
+    public function getMessageAttribute($value)
+    {
+        return ($this->trashed())?'Removed..':$value;
+    }
+
     public static function getLastIncoming($userId) 
     {
         return self::where('user_to_id', $userId)
