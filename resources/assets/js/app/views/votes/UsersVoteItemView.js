@@ -5,17 +5,16 @@ module.exports = Marionette.ItemView.extend({
     className: 'row post-item',
     tagName: 'div',
     serializeData: function () {
-        var tempmeta = this.model.getMeta();
-        console.log(tempmeta);
+        var meta = this.model.getMeta();
         var id = this.model.get('id');
         return {
             model: this.model.toJSON(),
             meta: {
-                user: tempmeta[id].user,
-                likes: tempmeta[id].likes,
-                comments: tempmeta[id].comments,
-                tags: tempmeta[id].tags,
-                days_ago:tempmeta[id].days_ago
+                user: meta[id].user,
+                likes: meta[id].likes,
+                comments: meta[id].comments,
+                tags: meta[id].tags,
+                days_ago:meta[id].days_ago
             }
         };
     }
