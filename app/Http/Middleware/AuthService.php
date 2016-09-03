@@ -1,29 +1,22 @@
 <?php
-
 namespace App\Http\Middleware;
-
 use Closure;
 use Illuminate\Http\Response;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Emarref\Jwt\Claim;
 use App\Facades\CurlService;
-
-
+use App\Models\Role;
+use App\Models\Status;
 class AuthService
 {
     protected $cookieName;
     protected $secretKey;
-    protected $urlUserInfo;
-    protected $curl_params;
-
     public function __construct()
     {
         $this->cookieName = config('authserver.cookieName');
         $this->secretKey = config('authserver.secretKey');
-        $this->urlAuth = config('authserver.urlAuth');
     }
-
     /**
      * Login User if APP_ENV = local for developing
      */
@@ -32,7 +25,6 @@ class AuthService
         $users = User::all();
         Auth::login($users[1]);
     }
-
     /**
      * Check cookie x-access-token
      * @return false if check is fail or array of User Data - id, email, role
@@ -41,20 +33,18 @@ class AuthService
     {
         $userData = null;
         if (array_key_exists ($this->cookieName, $_COOKIE)) {
-
             $tokenSerialized = $_COOKIE[$this->cookieName];
             $jwt = new \Emarref\Jwt\Jwt();
-        
-        try {
-            $token = $jwt->deserialize($tokenSerialized);
-        } 
-        catch (\Exception $e){
-            return false;
-        }
+
+            try {
+                $token = $jwt->deserialize($tokenSerialized);
+            }
+            catch (\Exception $e){
+                return false;
+            }
             $algorithm = new \Emarref\Jwt\Algorithm\Hs256($this->secretKey);
             $encryption = \Emarref\Jwt\Encryption\Factory::create($algorithm);
             $context = new \Emarref\Jwt\Verification\Context($encryption);
-
             try {
                 $jwt->verify($token, $context);
                 $userData = json_decode($token->getPayload()->getClaims()->jsonSerialize());
@@ -63,19 +53,8 @@ class AuthService
                 return false;
             };
         }
-        
-        return  $userData;
-    }
 
-    /**
-     * Send request to the auth service to get user info
-     * @param $globalId
-     * @return $userInfo array
-     */
-    public function getUserInfo($globalId)
-    {
-        $userInfo = CurlService::sendUsersRequest($globalId);
-        return array_shift($userInfo);
+        return  $userData;
     }
 
     /**
@@ -88,30 +67,30 @@ class AuthService
     {
         if (!$user =  User::findUserByGlobalId($userData->id)) {
             $user = User::findUserByEmail($userData->email);
-            
-            $userInfo = ($this->getUserInfo($userData->id));
-            
+
+            $userInfo = CurlService::sendUsersRequest($userData->id);
+            $userInfo = array_shift($userInfo);
             if (!$user ){
                 $user = new User();
-                $user->first_name = $userInfo['name'];
-                $user->display_name = $userInfo['name'].(string)random_int(1,1000);
-                $user->last_name = $userInfo['surname'];
-                $user->email = $userInfo['email'];
-                $user->global_id = $userInfo['serverUserId'];
-                $statusUser = \DB::table('user_statuses')->where('name', 'online')->value('id');
+                $user->first_name = $userInfo->name;
+                $user->display_name = $userInfo->name.(string)random_int(1,1000);
+                $user->last_name = $userInfo->surname;
+                $user->email = $userInfo->email;
+                $user->global_id = $userInfo->serverUserId;
+                $statusUser = Status::where('name', 'online')->value('id');
                 $user->status_id = $statusUser;
                 $user->save();
-                $roleUser = \DB::table('roles')->where('name', 'User')->value('id');
+                $roleUser = Role::where('name', 'User')->value('id');
                 $user->role()->associate($roleUser);
-
+                $user->save();
             } else {
-                
+
                 if ($user->deleted_at != null) {
                     $user->restore();
                 }
-                $user->first_name = $userInfo['name'];
-                $user->last_name = $userInfo['surname'];
-                $user->global_id = $userInfo['serverUserId'];
+                $user->first_name = $userInfo->name;
+                $user->last_name = $userInfo->surname;
+                $user->global_id = $userInfo->serverUserId;
                 $user->save();
             }
         };
@@ -120,7 +99,6 @@ class AuthService
         };
         return $user;
     }
-
     /**
      * Run the request filter.
      *
@@ -132,5 +110,4 @@ class AuthService
     {
         return $next($request);
     }
-
 }
