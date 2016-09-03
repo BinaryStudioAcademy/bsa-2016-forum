@@ -83,6 +83,6 @@ class UserStore implements UserStoreInterface
     public function get($user)
     {
         $user = $this->all($user);
-        return $user;
+        return array_shift($user);
     }
 }
