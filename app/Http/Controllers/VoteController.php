@@ -48,8 +48,7 @@ class VoteController extends ApiController
 
         foreach ($votes as $vote) {
 
-            $data[$vote->id] =
-                [
+            $data[$vote->id] = [
                     'user' => $vote->user()->first(),
                     'likes' => $vote->likes()->count(),
                     'comments' => $vote->comments()->count(),
@@ -59,6 +58,24 @@ class VoteController extends ApiController
         return $data;
     }
 
+    /**
+     * @param $vote
+     * @param $users
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function VotePermissionsHandler($vote, $users) {
+        $users = json_decode($users);
+        
+        $vote->votePermissions()->whereNotIn('user_id', $users)->delete();
+
+        $permissions = $vote->votePermissions()->get();
+
+        foreach($users as $user_id) {
+            if(!$permissions->contains('user_id', $user_id)){
+                $vote->votePermissions()->create(['user_id' => $user_id]);
+            }
+        }
+    }
 
     /**
      * @param VotesRequest $request
@@ -71,9 +88,11 @@ class VoteController extends ApiController
             TagService::TagsHandler($vote, $request->tags);
         }
         if ($vote->is_public) {
-            $vote->votePermissions()->forceDelete();
+            $vote->votePermissions()->delete();
+        } elseif ($request->users) {
+            $this->VotePermissionsHandler($vote, $request->users);
         }
-        $vote->tags = $vote->tags()->get();
+
         return $this->setStatusCode(201)->respond($vote);
     }
 
@@ -122,6 +141,8 @@ class VoteController extends ApiController
         }
         if ($vote->is_public) {
             $vote->votePermissions()->forceDelete();
+        } elseif($request->users) {
+            $this->VotePermissionsHandler($vote, $request->users);
         }
         $vote->tags = $vote->tags()->get();
         return $this->setStatusCode(200)->respond($vote);
@@ -224,27 +245,12 @@ class VoteController extends ApiController
      */
     public function getAllVoteAccessedUsers(Vote $vote)
     {
-        $users = [];
-        $vote->votePermissions()->get()->each(function ($permission) use ($users) {
-            $users[] = $permission->user()->first();
-        });
-
-        return $this->setStatusCode(200)->respond($users);
-    }
-
-    public function storeVoteAccessedPermission(Vote $vote, VotePermissionRequest $request)
-    {
-        $users = $request->users;
-        $vote->votePermissions()->whereNotIn('user_id', $users)->forceDelete();
-
+        $users = User::all();
         $permissions = $vote->votePermissions()->get();
-
-        foreach($users as $user_id) {
-            if($permissions->where('user_id', $user_id)->first() === null){
-                $vote->votePermissions()->create(['user_id' => $user_id]);
-            }
-        }
-
-        return $this->setStatusCode(200)->respond($vote->votePermissions()->count());
+        $users->each(function($user) use ($permissions) {
+            if($permissions->contains('user_id', $user->id))
+                $user->accessed = true;
+        });
+        return $this->setStatusCode(200)->respond($users);
     }
 }

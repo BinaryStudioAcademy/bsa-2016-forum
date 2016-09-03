@@ -163,6 +163,12 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::put('/{comment}', 'CommentController@updateVoteItemComment')->name('updateVoteItemComment');
         Route::delete('/{comment}', 'CommentController@destroyVoteItemComment')->name('deleteVoteItemComment');
     });
+
+    /*Routes for private Vote users*/
+    Route::group(['prefix' => 'votes/{vote}/users'], function () {
+        Route::get('', 'VoteController@getAllVoteAccessedUsers');
+    });
+
     /*Routes for Topic attachments*/
     Route::group(['prefix' => 'topics/{topic}/attachments'], function () {
         Route::get('', 'AttachmentController@getAllTopicAttachments')->name('allTopicAttachments');
@@ -198,12 +204,7 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::post('', 'AttachmentController@storeMessageAttachment')->name('storeMessageAttachment');
         Route::delete('{attachment}', 'AttachmentController@destroyMessageAttachment')->name('deleteMessageAttachment');
     });
-
-    /*Routes for private Vote users*/
-    Route::group(['prefix' => 'votes/{vote}/users'], function () {
-        Route::get('', 'VoteController@getAllVoteAccessedUsers');
-        Route::post('', 'VoteController@storeVoteAccessedPermission');
-    });
+    
     
     Route::get('rss', 'rssController@index')->name('rss');
     Route::post('rss', 'rssController@subscribe')->name('rssSubscribe');

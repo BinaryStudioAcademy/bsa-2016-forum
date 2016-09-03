@@ -28,6 +28,8 @@ class VotesRequest extends ApiRequest
             'is_single' => 'boolean',
             'is_public' => 'boolean',
             'is_saved' => 'integer|between:0,1',
+            'tags' => 'required|string',
+            'users' => 'required|string',
         ];
     }
 

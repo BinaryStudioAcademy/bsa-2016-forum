@@ -1,11 +1,11 @@
 var Marionette = require('backbone.marionette');
 
 module.exports = Marionette.ItemView.extend({
-    template: 'vote-create-voteitem',
+    template: 'vote-create-input-voteitem',
     className: 'form-group',
     ui: {
         name: '.js-item-name',
-        error_name: '.js-error-name'
+        error_name: '.js-error-field'
     },
     events: {
         'change @ui.name': function () {

@@ -1,5 +1,4 @@
 var app = require('../instances/appInstance');
-var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var moment = require('moment');
@@ -24,8 +23,7 @@ var Votes = require('../instances/Votes');
 
 module.exports = Marionette.Object.extend({
     initialize: function () {
-        this.listenTo(Radio.channel('vo' +
-            'tesChannel'), 'createComment', function (view) {
+        this.listenTo(Radio.channel('votesChannel'), 'createComment', function (view) {
             var model = new CommentModel({user_id: currentUser.get('id')}, {parentUrl: view.options.collection.parentUrl});
 
             var errorContainer = $('.errors');
@@ -45,62 +43,6 @@ module.exports = Marionette.Object.extend({
 
         this.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {
             col.add(new VoteAImodel({}, {parentUrl: col.parentUrl}));
-        });
-
-        this.listenTo(Radio.channel('votesChannel'), 'createVote', function (view) {
-            var success = true;
-            if (!view.model.save({
-                    user_id: currentUser.get('id'),
-                    finished_at: moment(view.ui.finished.val(), view.dateFormats, true).format("YYYY-MM-DD HH:mm:ss"),
-                    is_single: view.ui.isSingle.prop('checked'),
-                    is_public: view.ui.isPublic.prop('checked'),
-                    is_saved: 0
-                }, {
-                    async: false,
-                    success: function (data) {
-                        view.model.trigger('saved', data.get('id'));
-                    }
-                })) {
-                success = false;
-            }
-
-            if (view.model.get('id')) {
-                view.options.answers.each(function (model, index) {
-                    if (model.hasChanged('name'))
-                        if (!model.save({
-                                user_id: currentUser.get('id'),
-                                vote_id: view.model.get('id')
-                            }, {
-                                success: function () {
-                                    model.trigger('saved');
-                                }
-                            })) {
-                            success = false;
-                        }
-                });
-
-                if (view.model.get('is_public') == 0) {
-
-                    var permission = new UserModel({}, {parentUrl: '/votes/' + view.model.get('id')});
-                    var users = [];
-                    view.options.accessedUsers.each(function (model, index) {
-                        users.push(model.get('id'));
-                    });
-                    debugger;
-                    permission.save({users: users}, {
-                        async: false, error: function () {
-                            success = false;
-                        }
-                    });
-                }
-            }
-            if (success && view.model.get('id')) {
-                //view.$('.vote-new *').prop('disabled', true);
-                setTimeout(function () {
-                    //Backbone.history.navigate('votes/' + view.model.get('id'), {trigger: true});
-                }, 1000);
-            }
-
         });
 
         Handlebars.registerHelper('addDate', function (options) {
@@ -162,7 +104,7 @@ module.exports = Marionette.Object.extend({
             model: model,
             answers: VoteAnswers,
             users: UsersCollection,
-            accessedUsers: accessedUsers
+            accessedUsers: accessedUsers,
         }));
     }
 });
