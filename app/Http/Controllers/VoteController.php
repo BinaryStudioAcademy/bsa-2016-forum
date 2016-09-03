@@ -53,7 +53,8 @@ class VoteController extends ApiController
                     'user' => $vote->user()->first(),
                     'likes' => $vote->likes()->count(),
                     'comments' => $vote->comments()->count(),
-                    'tags' => $vote->tags()->get(['name'])
+                    'tags' => $vote->tags()->get(['name']),
+                    'numberOfUniqueViews' => $vote->voteUniqueViews()->count()
                 ];
         }
         return $data;
@@ -88,13 +89,11 @@ class VoteController extends ApiController
             $voteUniqueView->save();
         }
 
-        $numberOfUniqueViews = $vote->voteUniqueViews()->count();
         $usersWhoSaw = [];
         foreach ($vote->voteUniqueViews()->get()->load('user') as $view){
             $usersWhoSaw[] = $view->user;
         }
         $meta = $this->getMetaData([$vote]);
-        $meta[$vote->id]['numberOfUniqueViews'] = $numberOfUniqueViews;
         $meta[$vote->id]['usersWhoSaw'] = $usersWhoSaw;
         return $this->setStatusCode(200)->respond($vote, $meta);
     }
