@@ -48,7 +48,7 @@ class VoteController extends ApiController
 
         foreach ($votes as $vote) {
             $usersWhoSaw = [];
-            foreach ($vote->voteUniqueViews()->get()->load('user') as $view){
+            foreach ($vote->voteUniqueViews()->get()->load('user') as $view) {
                 $usersWhoSaw[] = $view->user;
             }
             $data[$vote->id] =
