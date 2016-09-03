@@ -5,6 +5,7 @@ use App\Facades\CurlService;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Status;
+
 class UserStore implements UserStoreInterface
 {
     /**
@@ -83,6 +84,6 @@ class UserStore implements UserStoreInterface
     public function get($user)
     {
         $user = $this->all($user);
-        return $user;
+        return array_shift($user);
     }
 }
