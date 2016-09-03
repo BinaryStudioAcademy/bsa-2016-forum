@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Facades\CurlService;
 use App\Models\Role;
 use App\Models\User;
+use App\Repositories\UserStore;
 
 use Auth;
 use Illuminate\Http\Request;
@@ -16,9 +16,9 @@ class UserController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(UserStore $userStore)
     {
-        $users = User::all();
+        $users = $userStore->all();
         return $this->setStatusCode(200)->respond($users);
     }
 
@@ -28,13 +28,14 @@ class UserController extends ApiController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(UserStore $userStore, $id)
     {
         $user = User::findOrFail($id);
 
         $this->authorize('show', $user);
 
-        return $this->setStatusCode(200)->respond($user);
+        $userProfile = $userStore->get($user);
+        return $this->setStatusCode(200)->respond($userProfile);
     }
 
     /**
@@ -76,18 +77,13 @@ class UserController extends ApiController
      * Return AuthUser Profile to the frontend
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getUser()
+    public function getUser(UserStore $userStore)
     {
         $user = Auth::user();
         if(!$user){
             return $this->setStatusCode(401)->respond();
         }
-        if (strtolower(env('APP_ENV')) == 'local') {
-            return $this->setStatusCode(200)->respond($user);
-        } else {
-            $userProfile = CurlService::sendUserRequest($user->global_id);
-            $userProfile['id'] = $user->id;
+            $userProfile = $userStore->get($user);
             return $this->setStatusCode(200)->respond($userProfile);
-        }
     }
 }
