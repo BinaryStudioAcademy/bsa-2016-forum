@@ -71,8 +71,8 @@ class Handler extends ExceptionHandler
             if (strtolower(env('APP_ENV')) == 'local') {
                 return response($e->getMessage(), 500);
             } else {
-               return response('Internal Server Error', 500);
-           }
+                return response('Internal Server Error', 500);
+            }
         }
 
         if ($e instanceof ModelNotFoundException) {
@@ -96,7 +96,7 @@ class Handler extends ExceptionHandler
         if ($e instanceof CloudinaryErorr) {
             return response('Cloud error: ' . $e->getMessage(), 400);
         }
-        
+
         return parent::render($request, $e);
     }
 }
