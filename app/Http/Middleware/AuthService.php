@@ -8,6 +8,7 @@ use Emarref\Jwt\Claim;
 use App\Facades\CurlService;
 use App\Models\Role;
 use App\Models\Status;
+
 class AuthService
 {
     protected $cookieName;

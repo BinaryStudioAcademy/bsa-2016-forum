@@ -81,6 +81,7 @@ class UserStore implements UserStoreInterface
         }
         return $users;
     }
+    
     public function get($user)
     {
         $user = $this->all($user);
