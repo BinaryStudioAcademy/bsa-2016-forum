@@ -19,10 +19,9 @@ var dateHelper = {
     },
 
     relativeDate: function (date) {
-        //date = moment(date);
-
         var now = moment();
         var then = moment(date);
+        
         // if message older than 12 hours
         if (((now - then) / 1000) > 43200) {
             return moment(date).format('DD.MM.YYYY HH:mm');
