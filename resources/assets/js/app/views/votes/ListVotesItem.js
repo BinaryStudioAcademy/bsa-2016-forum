@@ -4,11 +4,16 @@ var Backbone = require('backbone');
 module.exports = Marionette.ItemView.extend({
     template: 'voteItem',
     ui: {
-        label: '#label'
+        label: '#label',
+        deleteButton: '.delete-button'
     },
     events: {
         'click @ui.label': function () {
             Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
+        },
+        'click @ui.deleteButton': function (e) {
+            e.preventDefault();
+            this.model.destroy();
         }
     },
     serializeData: function () {
@@ -23,5 +28,8 @@ module.exports = Marionette.ItemView.extend({
                 tags: tempmeta[id].tags
             }
         };
+    },
+    remove: function () {
+        this.$el.fadeOut();
     }
 });

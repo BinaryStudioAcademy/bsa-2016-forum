@@ -17,7 +17,6 @@ var Votes = require('../instances/Votes');
 
 module.exports = Marionette.Object.extend({
     index: function () {
-
         Votes.reset();
         var view = new ListVotes({vc: Votes});
         app.render(view);

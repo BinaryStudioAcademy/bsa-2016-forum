@@ -27,6 +27,7 @@ var Handlebars = require('handlebars');
 var Templates = require('../templates')(Handlebars);
 
 var NavigCollection = require('../initializers/navigationCollection');
+var HandlebarsHelpers = require('./HandlebarsHelpers');
 
 var app = Marionette.Application.extend({
     initialize: function (options) {
@@ -65,6 +66,7 @@ var app = Marionette.Application.extend({
     onStart: function (config) {
         this.config = config;
         this.socket = socket;
+        HandlebarsHelpers.register();
         currentUser.fetch({url: this.config.baseUrl + '/user', async:false});
         this.templateCashing();
         this.setRootLayout(new mainLayoutView({ collection: NavigCollection }));

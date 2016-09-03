@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\VoteItem;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class VoteItemPolicy
@@ -19,11 +20,11 @@ class VoteItemPolicy
 
     public function delete(User $user, VoteItem $voteItem)
     {
-        return $user->owns($voteItem);
+        return $user->owns($voteItem) && ((new Carbon($voteItem->created_at))->addMinutes(17)->diffInMinutes(Carbon::now(), false) < 0);
     }
 
     public function update(User $user, VoteItem $voteItem)
     {
-        return $user->owns($voteItem);
+        return $user->owns($voteItem) && ((new Carbon($voteItem->created_at))->addMinutes(17)->diffInMinutes(Carbon::now(), false) < 0);
     }
 }
