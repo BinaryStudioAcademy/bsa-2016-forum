@@ -355,3 +355,11 @@ VOTE INDEX
 .vote-new-submit input:hover {
   background-color: #f9c172;
 } 
+
+.vote-new-access {
+  display: none;
+}
+
+.js-errors {
+  color: indianred;
+}

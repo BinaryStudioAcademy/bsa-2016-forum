@@ -1,17 +1,23 @@
 var app = require('../instances/appInstance');
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
+var moment = require('moment');
+var Handlebars = require('handlebars');
 
 var currentUser = require('../initializers/currentUser');
 
+var VoteAImodel = require('../models/VoteAImodel');
 var VoteModel = require('../models/VoteModel');
 var CommentModel = require('../models/CommentModel');
+var UserModel = require('../models/UserModel');
 
+var usersCollection = require('../collections/userCollection');
 var CommentsCollection = require('../collections/commentCollection');
 var VoteAICollection = require('../collections/voteAICollection');
 
 var ListVotes = require('../views/votes/ListVotes');
 var ShowVote = require('../views/votes/ShowVote');
+var CreateVote = require('../views/votes/CreateVote');
 
 var Votes = require('../instances/Votes');
 
@@ -33,6 +39,14 @@ module.exports = Marionette.Object.extend({
                 })) {
                 errorContainer.html(model.validationError.content_origin);
             }
+        });
+
+        this.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {
+            col.add(new VoteAImodel({}, {parentUrl: col.parentUrl}));
+        });
+
+        Handlebars.registerHelper('addDate', function (options) {
+            return moment().add(30, 'd').format('DD/MM/YYYY HH/mm/ss');
         });
     },
 
@@ -73,5 +87,24 @@ module.exports = Marionette.Object.extend({
             }));
 
         }
+    },
+    createVote: function () {
+        var VoteAnswers = new VoteAICollection([{}, {}], {parentUrl: ''});
+        var UsersCollection = new usersCollection();
+        var accessedUsers = new usersCollection();
+
+        UsersCollection.fetch();
+
+        UsersCollection.opposite = accessedUsers;
+        accessedUsers.opposite = UsersCollection;
+
+        var model = new VoteModel();
+
+        app.render(new CreateVote({
+            model: model,
+            answers: VoteAnswers,
+            users: UsersCollection,
+            accessedUsers: accessedUsers,
+        }));
     }
 });
