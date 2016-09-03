@@ -15,11 +15,10 @@ module.exports = Marionette.LayoutView.extend({
     ui: {
         c_count: '#count'
     },
-    initialize: function () {
-        var self = this;
-        this.options.collection.on('update', function (collection) {
-            self.ui.c_count.text(collection.length + ' Comments');
-        });
+    collectionEvents: {
+        'update': function () {
+            this.ui.c_count.text(this.collection.length + ' Comments');
+        }
     },
     onRender: function () {
         Radio.trigger('votesChannel', 'showAddCommentView', this);

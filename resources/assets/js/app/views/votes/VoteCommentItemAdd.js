@@ -16,7 +16,7 @@ module.exports = Marionette.ItemView.extend({
     },
     events: {
         'click @ui.addButton': function () {
-            var parent = this.options.parent;
+            var parent = this.getOption('parent');
             this.model.save({content_origin: this.ui.text.val()}, {
                 success: function (data) {
                     parent.collection.add(data);
