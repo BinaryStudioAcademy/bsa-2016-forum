@@ -10,7 +10,6 @@ module.exports = Marionette.LayoutView.extend({
     template: 'TopicCommentItem',
 
     regions: {
-        //'newComment': '.new-comment-container',
         'attachments': '.attachs'
     },
 
@@ -36,9 +35,6 @@ module.exports = Marionette.LayoutView.extend({
         'click @ui.remove': function (event) {
             this.model.parentUrl = this.model.collection.parentUrl;
             this.model.destroy({
-                success: function () {
-
-                },
                 error: function (model, response) {
                     this.$('.errors').text(response.responseText);
                 },
@@ -74,10 +70,6 @@ module.exports = Marionette.LayoutView.extend({
         };
     },
 
-    onRender: function () {
-        //this.showAttachments();
-    },
-
     showAttachments: function () {
         var meta = this.model.getMeta();
         var id = this.model.get('id');
@@ -89,10 +81,5 @@ module.exports = Marionette.LayoutView.extend({
 
     modelEvents: {
         'change': 'render',
-        //'attach:upload': 'attachUpload'
     },
-
-    attachUpload: function(model) {
-        this.showAttachments();
-    }
 });

@@ -13,10 +13,7 @@ module.exports = Marionette.ItemView.extend({
 
     serializeData: function () {
         var meta = this.model.getMeta();
-        var id = this.model.get('id');
-
         if (!meta) return {};
-
         return {
             model: this.model.toJSON(),
             meta: {
@@ -28,7 +25,8 @@ module.exports = Marionette.ItemView.extend({
     },
 
     ui: {
-        bookmarkTopic: '.bookmark-btn'
+        bookmarkTopic: '.bookmark-btn',
+        icon: '.bookmarked'
     },
 
     events: {
@@ -77,7 +75,7 @@ module.exports = Marionette.ItemView.extend({
             bookmark.destroy({
                 success: function () {
                     that.unlockButton();
-                    that.$('i.bookmarked').remove();
+                    that.ui.icon.remove();
                     that.model.bookmarkId = undefined;
                 },
                 error: function (response, xhr) {

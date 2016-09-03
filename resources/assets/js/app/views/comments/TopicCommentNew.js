@@ -37,11 +37,13 @@ module.exports = Marionette.ItemView.extend({
     },
 
     showLoader: function (show) {
-        return (show ? this.ui.loader.removeClass('hidden') : this.ui.loader.addClass('hidden'));
+        return this.ui.loader.toggleClass('hidden', !show);
+        //return (show ? this.ui.loader.removeClass('hidden') : this.ui.loader.addClass('hidden'));
     },
 
     showErrors: function (show) {
-        return (show ? this.ui.errors.removeClass('hidden') : this.ui.errors.addClass('hidden'));
+        return this.ui.errors.toggleClass('hidden', !show);
+        //return (show ? this.ui.errors.removeClass('hidden') : this.ui.errors.addClass('hidden'));
     },
 
     submitComment: function (event) {
