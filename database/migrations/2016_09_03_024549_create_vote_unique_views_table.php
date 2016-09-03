@@ -20,6 +20,7 @@ class CreateVoteUniqueViewsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();
             $table->timestamps();
+            $table->unique(array('vote_id', 'user_id'));
         });
     }
 
@@ -34,5 +35,7 @@ class CreateVoteUniqueViewsTable extends Migration
             $table->dropForeign('vote_unique_views_vote_id_foreign');
             $table->dropForeign('vote_unique_views_user_id_foreign');
         });
+
+        Schema::drop('vote_unique_views');
     }
 }
