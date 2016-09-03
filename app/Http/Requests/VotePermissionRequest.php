@@ -24,9 +24,7 @@ class VotePermissionRequest extends Request
     public function rules()
     {
         return [
-            'vote_id' => 'required|integer|exists:votes,id',
-            'user_id' => 'required|integer|exists:users,id',
-            'grant' => 'between:0,1'
+            'users'=>'required|array'
         ];
     }
 }

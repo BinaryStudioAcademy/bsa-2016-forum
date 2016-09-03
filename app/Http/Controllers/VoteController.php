@@ -116,7 +116,7 @@ class VoteController extends ApiController
         $this->authorize('update', $vote);
 
         $vote->update($request->all());
-        $vote = Vote::findOrfail($id);
+        $vote->save();
         if ($request->tags) {
             TagService::TagsHandler($vote, $request->tags);
         }
@@ -234,16 +234,17 @@ class VoteController extends ApiController
 
     public function storeVoteAccessedPermission(Vote $vote, VotePermissionRequest $request)
     {
-        if (!count($vote->votePermissions()->where('user_id', $request->user_id)->first())) {
-            $permission = VotePermission::create($request->all());
-            $vote->votePermissions()->save($permission);
+        $users = $request->users;
+        $vote->votePermissions()->whereNotIn('user_id', $users)->forceDelete();
+
+        $permissions = $vote->votePermissions()->get();
+
+        foreach($users as $user_id) {
+            if($permissions->where('user_id', $user_id)->first() === null){
+                $vote->votePermissions()->create(['user_id' => $user_id]);
+            }
         }
 
-        return $this->setStatusCode(200)->respond($request->all());
-    }
-
-    public function updateVoteAccessedPermission(Vote $vote, VotePermission $permission, VotePermissionRequest $request)
-    {
-        return $this->setStatusCode(200)->respond();
+        return $this->setStatusCode(200)->respond($vote->votePermissions()->count());
     }
 }

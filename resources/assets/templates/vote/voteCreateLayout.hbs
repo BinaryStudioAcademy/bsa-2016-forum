@@ -3,18 +3,13 @@
         <div class="form-group">
             <label for="usr">Question:</label>
             <input type="text" class="form-control" id="question-title">
-            <div class="js-errors" style="color: indianred;"></div>
+            <div class="js-errors js-error-title" style="color: indianred;"></div>
         </div>
     </div>
     <div class="vote-new-answers">
         <div class="form-group">
             <label for="usr">Answers:</label>
             <div id="vote-answers">
-                <div class="form-group">
-                    <input type="text" class="form-control" id="question-title">
-                </div>
-
-                <div class="form-group"><input type="text" class="form-control" id="question-title"></div>
 
             </div>
 
@@ -30,7 +25,8 @@
         <label>Select time when the vote will be finished. Usual format: DD/MM/YYYY HH/mm/ss</label>
         <input type="text" class="form-control" placeholder="YYYY/MM/DD HH/mm/ss" id="finished" value="{{addDate}}">
     </div>
-    <div class="js-date-errors" style="color: indianred;"></div>
+    <div class="js-errors js-error-dateInPast" style="color: indianred;"></div>
+    <div class="js-errors js-error-invalidDate" style="color: indianred;"></div>
     <!--</div>-->
     <div class="form-group">
         <label>Count of answers:</label>
@@ -59,9 +55,9 @@
         <a>Attach</a>
     </div>
     <div class="vote-new-control">
-        <div class="vote-new-notification checkbox">
-            <label><input type="checkbox">Report me when someone leave a comment</label>
-        </div>
+        <!--<div class="vote-new-notification checkbox">-->
+            <!--<label><input type="checkbox">Report me when someone leave a comment</label>-->
+        <!--</div>-->
         <div class="vote-new-submit">
             <input id="start" type="submit" value="Start Thread">
         </div>

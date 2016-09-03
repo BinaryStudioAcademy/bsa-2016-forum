@@ -9,7 +9,7 @@ module.exports = BaseModel.extend({
     validate:function (attrs) {
         var errors = {};
         if(!attrs.name || attrs.name == ' ') {
-            errors.name = 'Write the name of vote item';
+            errors['name'] = 'Write the name of vote item';
         }
 
         if (!_.isEmpty(errors)) {

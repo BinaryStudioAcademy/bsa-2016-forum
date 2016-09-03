@@ -1,4 +1,5 @@
 var app = require('../instances/appInstance');
+var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var moment = require('moment');
@@ -41,44 +42,59 @@ module.exports = Marionette.Object.extend({
         });
 
         this.listenTo(Radio.channel('votesChannel'), 'createVote', function (view) {
-            if(!view.model.save({
-                user_id: currentUser.get('id'),
-                finished_at: moment(view.ui.finished.val(), view.model.dateFormats, true).format("YYYY-MM-DD HH:mm:ss"),
-                is_single: view.ui.isSingle.prop('checked'),
-                is_public: view.ui.radiobuttons.prop('checked'),
-                is_saved: 0
-            }, {
-                async: false,
-                success: function (data) {
-                    view.ui.title.css('border', '1px solid green');
-                    view.ui.errors.empty();
-                    view.ui.dateerrors.empty();
-                    view.options.answers.parentUrl = '/votes/' + data.get('id');
-                }
-            })) {
-                view.printErrors(view.model.validationError);
+            var success = true;
+            if (!view.model.save({
+                    user_id: currentUser.get('id'),
+                    finished_at: moment(view.ui.finished.val(), view.dateFormats, true).format("YYYY-MM-DD HH:mm:ss"),
+                    is_single: view.ui.isSingle.prop('checked'),
+                    is_public: view.ui.isPublic.prop('checked'),
+                    is_saved: 0
+                }, {
+                    async: false,
+                    success: function (data) {
+                        view.model.trigger('saved', data.get('id'));
+                    }
+                })) {
+                success = false;
             }
 
             if (view.model.get('id')) {
                 view.options.answers.each(function (model, index) {
-                    if(!model.save({
-                        user_id: currentUser.get('id'),
-                        vote_id: view.model.get('id')
-                    }, {success: function () {
-                            model.view.ui.name.css('border', '1px solid green');
-                            model.view.ui.errors.empty();
-                        }})) {
-                        model.view.printErrors(model.validationError);
-                    }
+                    if (model.hasChanged('name'))
+                        if (!model.save({
+                                user_id: currentUser.get('id'),
+                                vote_id: view.model.get('id')
+                            }, {
+                                success: function () {
+                                    model.trigger('saved');
+                                }
+                            })) {
+                            success = false;
+                        }
                 });
 
-                var permission = new UserModel({}, {parentUrl: '/votes/' + view.model.get('id')});
-                var users = [];
-                view.options.accessedUsers.each(function (model, index) {
-                    users.push(model.get('id'));
-                });
-                permission.save({users: users});
+                if (view.model.get('is_public') == 0) {
+
+                    var permission = new UserModel({}, {parentUrl: '/votes/' + view.model.get('id')});
+                    var users = [];
+                    view.options.accessedUsers.each(function (model, index) {
+                        users.push(model.get('id'));
+                    });
+                    debugger;
+                    permission.save({users: users}, {
+                        async: false, error: function () {
+                            success = false;
+                        }
+                    });
+                }
             }
+            if (success && view.model.get('id')) {
+                //view.$('.vote-new *').prop('disabled', true);
+                setTimeout(function () {
+                    //Backbone.history.navigate('votes/' + view.model.get('id'), {trigger: true});
+                }, 1000);
+            }
+
         });
 
         Handlebars.registerHelper('addDate', function (options) {
@@ -128,9 +144,14 @@ module.exports = Marionette.Object.extend({
         var VoteAnswers = new VoteAICollection([{}, {}], {parentUrl: ''});
         var UsersCollection = new usersCollection();
         var accessedUsers = new usersCollection();
+
         UsersCollection.fetch();
-        UsersCollection.accessedCollection = accessedUsers;
+
+        UsersCollection.opposite = accessedUsers;
+        accessedUsers.opposite = UsersCollection;
+
         var model = new VoteModel();
+
         app.render(new CreateVote({
             model: model,
             answers: VoteAnswers,

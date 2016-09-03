@@ -19,10 +19,28 @@ module.exports = Marionette.LayoutView.extend({
         start: '#start',
         title: '#question-title',
         errors: '.js-errors',
-        radiobuttons: 'input[name=access]:checked',
+        isPublic: 'input[name=access]:checked',
         finished: '#finished',
         dateerrors: '.js-date-errors',
         isSingle: 'input[name=isSingle]:checked'
+    },
+    modelEvents: {
+        'invalid': function (model, errors) {
+            this.ui.errors.empty();
+            var self = this;
+            $.each(errors, function (key, error) {
+                if (key == 'invalidDate')
+                    self.printInvalidDateError();
+                else
+                    self.$('.js-error-' + key).html(error);
+            });
+        },
+        'saved': function (id) {
+            this.ui.title.css('border', '1px solid green');
+            this.ui.errors.empty();
+            this.ui.dateerrors.empty();
+            this.options.answers.parentUrl = '/votes/' + id ;
+        }
     },
     events: {
         'click @ui.add': function () {
@@ -35,49 +53,56 @@ module.exports = Marionette.LayoutView.extend({
             this.model.set({title: this.ui.title.val()});
         },
         'change @ui.finished': function () {
-            var d = moment(this.ui.finished.val(), this.model.dateFormats, true);
-            if(!d.isValid())
-                this.printDateErrors(errors = {invalidDate:true});
-            else
-                this.printDateErrors(errors = {invalidDate:false});
+            console.log(this.ui.finished.val());
+            this.model.set({finished_at: this.ui.finished.val()});
         },
-        'click @ui.radiobuttons': function () {
-            if(this.ui.radiobuttons.prop('checked')){
+        'click @ui.isPublic': function () {
+            if (this.ui.isPublic.prop('checked')) {
                 this.$('.vote-new-access').hide();
             } else
                 this.$('.vote-new-access').show();
         }
     },
     onRender: function () {
-        this.options.users.on('click', function () {
-            console.log('123');
-        });
+        this.ui.finished.trigger('change');
+
         this.getRegion('answers').show(new CreateVoteItemCollection({collection: this.options.answers}));
-        this.getRegion('voteNotAccessedUsers').show(new userCollectionView({collection: this.options.users, childView: require('./CreateVoteUserItemExtend')}));
-        this.getRegion('voteAcessedUsers').show(new userCollectionView({collection: this.options.accessedUsers}));
+        this.getRegion('voteNotAccessedUsers').show(new userCollectionView({
+            collection: this.options.users,
+            childView: require('./CreateVoteUserItemExtend')
+        }));
+        this.getRegion('voteAcessedUsers').show(new userCollectionView({
+            collection: this.options.accessedUsers,
+            childView: require('./CreateVoteUserItemExtend')
+        }));
     },
-    printErrors: function (errors) {
-        if (errors.title) {
-            this.ui.errors.empty();
-            this.ui.errors.append('<span>' + errors.title + '</span>');
-        } else this.ui.errors.empty();
-        this.printDateErrors(errors);
+    printInvalidDateError: function () {
+        var block = this.$('.js-error-invalidDate');
+        block.append('<span> Typed datetime format is invalid. Here is a list of available formats: </span>');
+        block.append('<ul>');
+        $.each(this.dateFormats, function (key, value) {
+            block.find('ul').append('<li>' + value + '</li>');
+        });
     },
-    printDateErrors: function (errors) {
-        if(errors.invalidDate || errors.finishInThePast) {
-            if(errors.invalidDate) {
-                var self = this;
-                this.ui.dateerrors.empty();
-                this.ui.dateerrors.append('<span> Typed datetime format is invalid. Here is a list of available formats: </span>');
-                this.ui.dateerrors.append('<ul>');
-                $.each(self.model.dateFormats, function (key, value) {
-                    self.ui.dateerrors.find('ul').append('<li>' + value + '</li>');
-                })
-            }
-            if(errors.finishInThePast){
-                this.ui.dateerrors.empty();
-                this.ui.dateerrors.append('<span> Typed datetime is in the past! </span>');
-            }
-        } else this.ui.dateerrors.empty();
-    }
+    dateFormats: [
+        //full
+        'DD:MM:YYYY HH:mm:ss',
+        'DD/MM/YYYY HH/mm/ss',
+        'DD-MM-YYYY HH-mm-ss',
+
+        //short dates
+        'D:M:YY HH:mm:ss',
+        'D/M/YY HH/mm/ss',
+        'D-M-YY HH-mm-ss',
+
+        //short times
+        'DD:MM:YYYY H:m:s',
+        'DD/MM/YYYY H/m/s',
+        'DD-MM-YYYY H-m-s',
+
+        //short
+        'D:M:YY H:m:s',
+        'D/M/YY H/m/s',
+        'D-M-YY H-m-s'
+    ]
 });

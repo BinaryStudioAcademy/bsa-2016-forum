@@ -206,7 +206,6 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
     Route::group(['prefix' => 'votes/{vote}/users'], function () {
         Route::get('', 'VoteController@getAllVoteAccessedUsers');
         Route::post('', 'VoteController@storeVoteAccessedPermission');
-        Route::put('{permission}', 'VoteController@updateVoteAccessedPermission');
     });
     
     Route::get('rss', 'rssController@index')->name('rss');

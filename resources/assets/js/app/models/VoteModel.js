@@ -7,36 +7,15 @@ module.exports = BaseModel.extend({
     validate: function (attrs) {
         var errors = {};
         if(!attrs.title || attrs.title == ' ')
-            errors.title = 'Write question title!';
-        
+            errors['title'] = 'Write question title!';
+
         if(attrs.finished_at == 'Invalid date')
-            errors.invalidDate = true;
-        else if(moment().isAfter(attrs.finished_at))
-            errors.finishInThePast = true;
-
-
+            errors['invalidDate'] = true;
+        else if(moment().diff(moment(attrs.finished_at, "YYYY-MM-DD HH:mm:ss"), 'minute') > -5) {
+            errors['dateInPast'] = '<span> Minimum time for vote: 5 minutes.</span>';
+        }
+        
         if(!_.isEmpty(errors))
             return errors;
-    },
-    dateFormats: [
-        //full
-        'DD:MM:YYYY HH:mm:ss',
-        'DD/MM/YYYY HH/mm/ss',
-        'DD-MM-YYYY HH-mm-ss',
-
-        //short dates
-        'D:M:YY HH:mm:ss',
-        'D/M/YY HH/mm/ss',
-        'D-M-YY HH-mm-ss',
-
-        //short times
-        'DD:MM:YYYY H:m:s',
-        'DD/MM/YYYY H/m/s',
-        'DD-MM-YYYY H-m-s',
-
-        //short
-        'D:M:YY H:m:s',
-        'D/M/YY H/m/s',
-        'D-M-YY H-m-s'
-    ]
+    }
 });

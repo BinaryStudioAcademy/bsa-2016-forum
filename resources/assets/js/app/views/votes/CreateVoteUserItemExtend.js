@@ -2,11 +2,10 @@ var userItem = require('../users/userItem');
 
 module.exports = userItem.extend({
     moveModel: function () {
-        var accessedCollection = this.model.collection.accessedCollection;
+        var opposite = this.model.collection.opposite;
 
         this.model.collection.remove(this.model);
-        accessedCollection.add(this.model);
-        console.log(this.model);
+        opposite.add(this.model);
     },
     events: {
         'click': 'moveModel'
