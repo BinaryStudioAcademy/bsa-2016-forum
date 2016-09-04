@@ -78,10 +78,9 @@ module.exports = Marionette.Object.extend({
                 attachCollection = new AttachmentCollection(modelAttachs);
             } else {
                 model = new TopicCommentModel();
+                model.parentUrl = _.result(parentView.model, 'getEntityUrl');
                 attachCollection = new AttachmentCollection();
             }
-
-            model.parentUrl = _.result(parentView.model, 'getEntityUrl');
 
             view.getRegion('newComment').show(new NewTopicCommentView({
                 model: model,

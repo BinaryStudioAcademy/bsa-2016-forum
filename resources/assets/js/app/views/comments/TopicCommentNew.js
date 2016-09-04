@@ -5,6 +5,7 @@ var Radio = require('backbone.radio');
 var Dropzone = require('dropzone');
 var currentUser = require('../../initializers/currentUser');
 var AttachmentModel = require('../../models/AttachmentModel');
+var App = require('../../instances/appInstance');
 
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentNew',
@@ -67,9 +68,8 @@ module.exports = Marionette.ItemView.extend({
                 if (view._dropZone && view._dropZone.files.length) {
                     // start upload to server
                     view._dropZone.processQueue();
-                } else {
-                    Radio.channel('сommentCollection').trigger('addComment', model);
                 }
+                Radio.channel('сommentCollection').trigger('addComment', model);
                 view.ui.commentDlg.modal('hide');
             },
 
@@ -83,16 +83,24 @@ module.exports = Marionette.ItemView.extend({
 
     initDropZone: function () {
         var view = this;
+        var attachModel = new AttachmentModel();
         this._dropZone = new Dropzone(this.$('#drop')[0], {
             url: function(file) {
-                return view.model.getSelfUrl() + '/attachments';
+                return App.getBaseUrl() + _.result(view.model, 'url') + _.result(attachModel, 'url');
             },
             method: 'post',
             // input file name, registered on server
             paramName: "f",
-            //parallelUploads : 10,
+            parallelUploads : 10,
             hiddenInputContainer: '#drop',
             autoProcessQueue : false,
+            maxFilesize: 8,
+            maxFiles: 5,
+            //if max files count
+            maxfilesexceeded: function (file) {
+                this.removeFile(file);
+                view.$('.errors').text('Max files is 5');
+            },
             uploadMultiple: false,
             addRemoveLinks: true,
             acceptedFiles: 'image/*,.pdf,.docx,.doc,.xlsx,.xls',
@@ -102,11 +110,13 @@ module.exports = Marionette.ItemView.extend({
             },
             success: function (file, xhr) {
                 if (xhr.data) {
-                    if (!view.fileIsUploadedToDropZone(xhr.data.id)) view._files.push(xhr.data);
+                    view._files.push(xhr.data);
                 }
             },
             removedfile: function (file) {
                 if (file.id) {
+                    view.$(file.previewElement).remove();
+                    view.$('.dz-message').hide();
                     view.removeAttachmentFromServer(file);
                 } else {
                     view.$(file.previewElement).remove();
@@ -121,14 +131,6 @@ module.exports = Marionette.ItemView.extend({
         this.showAttachments();
     },
 
-    fileIsUploadedToDropZone: function (id) {
-        var res = false;
-        this._files.forEach(function (item, i) {
-            if (item.id == id) res = true;
-        });
-        return res;
-    },
-
     setModelWithAttachments: function () {
         // add attachments to model meta
         var id = this.model.get('id');
@@ -141,24 +143,22 @@ module.exports = Marionette.ItemView.extend({
             });
         }
 
-        Radio.channel('сommentCollection').trigger('addComment', this.model);
-
-        this._files = [];
+        this._files.splice(0, this._files.length);
+        this.model.trigger('change');
     },
 
     removeAttachmentFromServer: function (file) {
         // remove single file from server
         this.showLoader(true);
         var model = new AttachmentModel({ id: file.id });
-        this.destroyAttachsFromMeta(file.id);
         var view = this;
         model.parentUrl = _.result(this.model, 'url');
         model.destroy({
-            success: function (model) {
-                view.$(file.previewElement).remove();
+            success: function () {
                 view.showLoader(false);
                 view.ui.errors.text('File was successfully removed');
                 view.showErrors(true);
+                view.destroyAttachsFromMeta(file.id);
                 view.model.trigger('change');
             },
 
@@ -197,14 +197,14 @@ module.exports = Marionette.ItemView.extend({
                 drop.emit("thumbnail", mockFile, file.url);
             });
         }
+        this._dropZone.options.maxFiles = this._dropZone.options.maxFiles - attachs.length;
     },
 
     onShow: function() {
         this.initDropZone();
         this.ui.commentDlg.modal('show');
-        var view = this;
-        view.ui.commentDlg.on('hidden.bs.modal', function (e) {
-            view.remove();
-        });
+        this.ui.commentDlg.on('hidden.bs.modal', function (e) {
+            this.remove();
+        }.bind(this));
     },
 });
