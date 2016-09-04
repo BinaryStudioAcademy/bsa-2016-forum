@@ -73,7 +73,6 @@ module.exports = Marionette.Object.extend({
 
         app.render(new ListVotes({
             vc: usersVotes
-        })
-        );
+        }));
     }
 });
