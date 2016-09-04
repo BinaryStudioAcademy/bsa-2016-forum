@@ -20,11 +20,11 @@ class VoteItemPolicy
 
     public function delete(User $user, VoteItem $voteItem)
     {
-        return $user->owns($voteItem) && ((new Carbon($voteItem->created_at))->addMinutes(17)->diffInMinutes(Carbon::now(), false) < 0);
+        return $user->owns($voteItem) && (!$voteItem->hasChildComments() && !$voteItem->voteResults()->exists());
     }
 
     public function update(User $user, VoteItem $voteItem)
     {
-        return $user->owns($voteItem) && ((new Carbon($voteItem->created_at))->addMinutes(17)->diffInMinutes(Carbon::now(), false) < 0);
+        return $user->owns($voteItem);
     }
 }
