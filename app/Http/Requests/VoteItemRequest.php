@@ -23,24 +23,24 @@ class VoteItemRequest extends ApiRequest
      */
     public function rules()
     {
-        $stringOfVoteItemsNames ='';
+        $namesArr = [];
         if($this->vote_id){
             $vote = Vote::find($this->vote_id);
             if($vote){
                 $existedVoteItems = $vote->voteitems()->get()->toArray();
                 foreach ($existedVoteItems as $voteItem){
-                    $stringOfVoteItemsNames .= $voteItem['name'] . ',';
+                    $namesArr[] = $voteItem['name'];
                 }
             }
 
         };
+        $stringOfVoteItemsNames = implode(",", $namesArr);
         $rules = [
             'vote_id' => 'required|exists:votes,id|integer',
             'name' => 'required',
             'user_id' => 'required|integer|is_current_user',
         ];
-        if($stringOfVoteItemsNames !== ''){
-            $stringOfVoteItemsNames = substr($stringOfVoteItemsNames,0,-1);
+        if($stringOfVoteItemsNames){
             $rules['name'] .= '|not_in:' . $stringOfVoteItemsNames;
         }
         return $rules;
