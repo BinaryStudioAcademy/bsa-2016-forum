@@ -32,12 +32,17 @@ module.exports = Marionette.LayoutView.extend({
     onBeforeDestroy: function () {
         this.collection.stopListening();
     },
+
+    onDestroy: function () {
+        clearInterval(this.datesUpdateInterval);
+    },
     onShow: function () {
-        setInterval(function() {
-            $('.messageDate').each(function() {
-                var date = $(this).attr('realdate');
-                $(this).html(dateHelper.relativeDate(date));
-            });
-        }, 10000);
-    }
+        this.datesUpdateInterval
+    },
+    datesUpdateInterval: setInterval(function() {
+        $('.messageDate').each(function() {
+            var date = $(this).attr('realdate');
+            $(this).html(dateHelper.relativeDate(date));
+        });
+    }, 10000)
 });
