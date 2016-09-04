@@ -18,3 +18,4 @@ composer.lock
 /public/fonts/
 storage/debugbar/
 _ide_helper.php
+redis-stable/

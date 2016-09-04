@@ -10,12 +10,14 @@
         </div>
         <div class="votes-item-details">
             <a>{{ meta.comments}} Comments</a><a>{{ meta.likes }} likes</a>
+            <a>Finished at {{model.finished_at}}</a><a>{{model.views}} Views</a>
         </div>
         <div class="votes-item-tags">
             {{#each meta.tags}}
                 <a href="#votes/tags/{{name}}" style="color: #333;"><span>#{{name}}</span></a>
             {{/each}}
         </div>
-        <span class="votes-item-time">Created at {{ createdDate }}</span>
+        <!--<span class="votes-item-time">Created at {{ model.created_at }}</span>-->
+    <span class="votes-item-time">Asked {{meta.days_ago}}</span>
     </div>
 </div>
