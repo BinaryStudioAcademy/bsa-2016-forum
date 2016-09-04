@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 var Backbone = require('backbone');
+var dateHelper = require('../../helpers/dateHelper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteItem',
@@ -21,12 +22,14 @@ module.exports = Marionette.ItemView.extend({
         var id = this.model.get('id');
         return {
             model: this.model.toJSON(),
+            createdDate: dateHelper.fullDate(this.model.get('created_at')),
             meta: {
                 user: tempmeta[id].user,
                 likes: tempmeta[id].likes,
                 comments: tempmeta[id].comments,
                 tags: tempmeta[id].tags,
                 deletable: tempmeta[id].deletable
+                days_ago:tempmeta[id].days_ago
             }
         };
     },

@@ -36,6 +36,12 @@ module.exports = new navigCollection([
         icon: '',
         name: 'messages',
         label: 'Messages'
+    },
+    {
+        href: '#userVotes',
+        icon: '',
+        name: 'myVotes',
+        label: 'My votes'
     }
 
 ]);
