@@ -42,7 +42,7 @@ module.exports = Marionette.LayoutView.extend({
     },
     onShow: function () {
         this.datesUpdateInterval = setInterval(function() {
-            $('.messageDate').each(function() {
+            this.$('.messageDate').each(function() {
                 var date = $(this).attr('realdate');
                 $(this).html(dateHelper.relativeDate(date));
             });
