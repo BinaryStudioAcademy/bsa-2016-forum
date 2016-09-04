@@ -1,7 +1,7 @@
 var Marionette = require('backbone.marionette');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
-var moment = require('momentjs');
+var dateHelper = require('../../helpers/dateHelper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicItem',
@@ -35,7 +35,7 @@ module.exports = Marionette.ItemView.extend({
     serializeData: function () {
         return {
             model: this.model.toJSON(),
-            createdDate: moment(this.model.get('created_at')).format('dd.MM.YYYY')
+            createdDate: dateHelper.shortDate(this.model.get('created_at'))
         };
     },
 
