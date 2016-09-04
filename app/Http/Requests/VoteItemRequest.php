@@ -31,14 +31,19 @@ class VoteItemRequest extends ApiRequest
                 foreach ($existedVoteItems as $voteItem){
                     $stringOfVoteItemsNames .= $voteItem['name'] . ',';
                 }
+                $stringOfVoteItemsNames = substr($stringOfVoteItemsNames,0,-1);
             }
 
         };
-        return [
+        $rules = [
             'vote_id' => 'required|exists:votes,id|integer',
-            'name' => 'required|not_in:' . $stringOfVoteItemsNames,
+            'name' => 'required',
             'user_id' => 'required|integer|is_current_user',
         ];
+        if($stringOfVoteItemsNames !== ''){
+            $rules['name'] .= '|not_in:' . $stringOfVoteItemsNames;
+        }
+        return $rules;
     }
 
     public function messages()
