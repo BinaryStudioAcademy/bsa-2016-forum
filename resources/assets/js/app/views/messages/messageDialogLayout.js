@@ -2,6 +2,8 @@ var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var logger = require('../../instances/logger');
 var messageDialogCollection = require('./messageDialogCollection');
+var $ = require('jquery');
+var dateHelper = require('../../helpers/dateHelper');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'messageDialogLayout',
@@ -29,5 +31,18 @@ module.exports = Marionette.LayoutView.extend({
     },
     onBeforeDestroy: function () {
         this.collection.stopListening();
-    }
+    },
+
+    onDestroy: function () {
+        clearInterval(this.datesUpdateInterval);
+    },
+    onShow: function () {
+        this.datesUpdateInterval
+    },
+    datesUpdateInterval: setInterval(function() {
+        $('.messageDate').each(function() {
+            var date = $(this).attr('realdate');
+            $(this).html(dateHelper.relativeDate(date));
+        });
+    }, 10000)
 });
