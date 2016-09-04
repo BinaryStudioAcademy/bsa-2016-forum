@@ -27,7 +27,7 @@ module.exports = Marionette.LayoutView.extend({
             e.stopPropagation();
             if(!this.opened){
                 Radio.trigger('votesChannel', 'loadNestedComments', this);
-                Radio.trigger('votesChannel', 'showAddCommentView', {view: this});
+                Radio.trigger('votesChannel', 'showAddCommentView', {view: this, atStart: false});
                 this.ui.submit.text('Hide');
             } else {
                 this.getRegion('addcomment').empty();

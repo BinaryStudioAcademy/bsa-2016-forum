@@ -50,7 +50,7 @@ module.exports = Marionette.Object.extend({
         });
 
         view.listenTo(Radio.channel('votesChannel'), 'showAddCommentView', function (options) {
-            view.getRegion('addcomment').show(
+            options.view.getRegion('addcomment').show(
                 new AddCommentView({
                     parent: options.view,
                     model: new CommentModel({user_id: currentUser.get('id')}, {parentUrl: options.view.collection.parentUrl}),

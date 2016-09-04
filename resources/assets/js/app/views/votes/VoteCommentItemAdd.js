@@ -24,7 +24,7 @@ module.exports = Marionette.ItemView.extend({
                         parent.collection.add(data, {at: 0});
                     else
                         parent.collection.add(data);
-                    Radio.trigger('votesChannel', 'showAddCommentView', parent);
+                    Radio.trigger('votesChannel', 'showAddCommentView', {view: parent, atStart: atStart});
                 }
             });
         }
