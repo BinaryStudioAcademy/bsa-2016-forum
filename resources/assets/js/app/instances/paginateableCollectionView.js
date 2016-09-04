@@ -2,7 +2,7 @@ var Marionette = require('backbone.marionette');
 
 module.exports = Marionette.CollectionView.extend({
 
-    initialize: function () {
+    onShow: function () {
 
         $(window).on('scroll', this.fetchPage.bind(this));
 
