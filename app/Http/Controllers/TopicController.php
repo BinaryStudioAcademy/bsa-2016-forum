@@ -19,7 +19,14 @@ class TopicController extends ApiController
 
     protected $tagIds = [];
 
-    /**
+    private function getTopicModel($id) {
+        if (is_numeric($id) === false) {
+            return  Topic::where('slug', '=', $id)->firstOrFail();
+        }
+
+        return Topic::findOrFail($id);
+    }
+
     /**
      * @param $topics array
      * @return array $data array
@@ -121,7 +128,7 @@ class TopicController extends ApiController
      */
     public function show($id)
     {
-        $topic = Topic::findOrFail($id);
+        $topic = $this->getTopicModel($id);
         $topic->tags = $topic->tags()->get();
         $meta = $this->getMetaData($topic);
         return $this->setStatusCode(200)->respond($topic, $meta);
@@ -138,7 +145,7 @@ class TopicController extends ApiController
     public function update($id, TopicRequest $request)
     {
 
-        $topic = Topic::findOrFail($id);
+        $topic = $this->getTopicModel($id);
 
         $this->authorize('update', $topic);
 
@@ -160,7 +167,7 @@ class TopicController extends ApiController
      */
     public function destroy($id)
     {
-        $topic = Topic::findOrFail($id);
+        $topic = $this->getTopicModel($id);
 
         $this->authorize('delete', $topic);
 

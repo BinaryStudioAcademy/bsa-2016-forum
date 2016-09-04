@@ -23,11 +23,15 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Models\Topic::class, function (Faker\Generator $faker) {
+    $name = $faker->unique()->sentence;
+    $slug = str_slug($name, '-');
+
     return [
         'reviewed_number' => $faker->numberBetween(0, 1000),
-        'name' => $faker->unique()->sentence,
+        'name' => $name,
         'description' => $faker->sentence,
         'rating' => $faker->numberBetween(0, 1000),
+        'slug' => $slug,
     ];
 });
 
