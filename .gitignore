@@ -11,9 +11,10 @@ composer.lock
 /public/css/
 /public/js/
 /resources/assets/js/bundle.js
-/resources/assets/js/app/templates.js
+/resources/assets/jgit s/app/templates.js
 .sass-cache
 .sass-cache/*
 /public/fonts/
 storage/debugbar/
 _ide_helper.php
+redis-stable/

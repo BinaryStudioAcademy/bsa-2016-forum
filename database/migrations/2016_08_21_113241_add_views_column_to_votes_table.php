@@ -25,7 +25,7 @@ class AddViewsColumnToVotesTable extends Migration
     public function down()
     {
         Schema::table('votes', function (Blueprint $table) {
-            return true;
+            $table->dropColumn('views');
         });
     }
 }
