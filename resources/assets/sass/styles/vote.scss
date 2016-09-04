@@ -363,3 +363,21 @@ VOTE INDEX
 .js-errors {
   color: indianred;
 }
+
+.create-vote-users-item-msg span {
+  display: none;
+}
+
+.create-vote-users-item:hover > .create-vote-users-item-msg span{
+  display: inline-block;
+  float: right;
+  margin: 15px 15px;
+}
+
+.create-vote-users-item > *:hover {
+  cursor:pointer;
+}
+
+.create-vote-email {
+  color: rgba(255, 136, 40, 0.7);
+}

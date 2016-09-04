@@ -2,7 +2,6 @@ var app = require('../instances/appInstance');
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var moment = require('moment');
-var Handlebars = require('handlebars');
 
 var currentUser = require('../initializers/currentUser');
 
@@ -69,5 +68,31 @@ module.exports = Marionette.Object.extend({
 
         app.render(view);
 
+    },
+    createVote: function () {
+        var VoteAnswers = new VoteAICollection([{}, {}], {parentUrl: ''});
+        var UsersCollection = new usersCollection();
+        var accessedUsers = new usersCollection();
+
+        UsersCollection.fetch();
+
+        UsersCollection.opposite = accessedUsers;
+        UsersCollection.glyph = 'plus';
+        accessedUsers.opposite = UsersCollection;
+        accessedUsers.glyph = 'minus';
+
+        var model = new VoteModel();
+        var view = new CreateVote({
+            model: model,
+            answers: VoteAnswers,
+            users: UsersCollection,
+            accessedUsers: accessedUsers
+        });
+
+        view.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {
+            col.add(new VoteAImodel({}, {parentUrl: col.parentUrl}));
+        });
+
+        app.render(view);
     }
 });

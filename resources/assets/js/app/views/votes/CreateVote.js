@@ -64,7 +64,7 @@ module.exports = Marionette.LayoutView.extend({
                 this.$('.vote-new-access').show();
         },
         'click @ui.isSingle': function () {
-            this.model.set({is_public: this.ui.isSingle.prop('checked')});
+            this.model.set({is_single: this.ui.isSingle.prop('checked')});
         }
     },
     onRender: function () {
@@ -139,7 +139,7 @@ module.exports = Marionette.LayoutView.extend({
             });
         }
         if (success && view.model.get('id')) {
-            view.$('.vote-new *').prop('disabled', true);
+            view.$('*').prop('disabled', true);
             setTimeout(function () {
                 Backbone.history.navigate('votes/' + view.model.get('id'), {trigger: true});
             }, 1000);
@@ -148,21 +148,25 @@ module.exports = Marionette.LayoutView.extend({
     dateFormats: [
         //full
         'DD:MM:YYYY HH:mm:ss',
+        'DD.MM.YYYY HH.mm.ss',
         'DD/MM/YYYY HH/mm/ss',
         'DD-MM-YYYY HH-mm-ss',
 
         //short dates
         'D:M:YY HH:mm:ss',
+        'D.M.YY HH.mm.ss',
         'D/M/YY HH/mm/ss',
         'D-M-YY HH-mm-ss',
 
         //short times
         'DD:MM:YYYY H:m:s',
+        'DD.MM.YYYY H.m.s',
         'DD/MM/YYYY H/m/s',
         'DD-MM-YYYY H-m-s',
 
         //short
         'D:M:YY H:m:s',
+        'D.M.YY H.m.s',
         'D/M/YY H/m/s',
         'D-M-YY H-m-s'
     ]
