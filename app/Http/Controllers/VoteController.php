@@ -6,11 +6,13 @@ use App\Models\Vote;
 use App\Models\User;
 use App\Http\Requests\VotesRequest;
 use App\Http\Requests\VoteResultRequest;
+use App\Models\VoteItem;
 use App\Models\VoteResult;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Facades\TagService;
+use Illuminate\Support\Facades\Auth;
 
 class VoteController extends ApiController
 {
@@ -188,25 +190,67 @@ class VoteController extends ApiController
      * @param $voteId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getUserVoteResult($voteId)
+    public function getUserVoteResult(Vote $vote)
     {
-        $vote = Vote::findOrFail($voteId);
-        $voteResults = $vote->voteResults()->get();
-
-        if (!$voteResults) {
-            throw (new ModelNotFoundException)->setModel(VoteResult::class);
+        $user = Auth::user();
+        $voteItems = $vote->voteItems()->get();
+        if (!$voteItems) {
+            throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
+        $meta['checked'] = [];
+        $userVoteResults = $vote->voteResults()->where('user_id', $user->id)->get();
+        foreach ($userVoteResults as $res) {
+            $temp = $voteItems->where('id', $res->vote_item_id);
+            foreach ($temp as $item) {
+                $item->checked = 1;
+            }
+        }
+        $meta['vote'] = $vote;
+        return $this->setStatusCode(200)->respond($voteItems, $meta);
 
-        return $this->setStatusCode(200)->respond($voteResults, ['vote' => $vote]);
     }
 
     /**
      * Display the specific vote all results
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createUserVoteResult(VoteResultRequest $request)
-    {
-        $voteresult = VoteResult::create($request->all());
-        return $this->setStatusCode(201)->respond($voteresult);
+    public function createUserVoteResult($id,
+        VoteResultRequest $request
+    ) {
+        $model = null;
+        $vote = Vote::findOrFail($request->vote_id);
+        $user = Auth::user();
+        $voteItem = VoteItem::findOrFail($request->vote_item_id);
+        $response['checked'] = true;
+        if ($vote->is_single) {
+            $model = $vote->voteResults()->where('user_id', $user->id)->get();
+            if (count($model) == 1) {
+                $model = $model->first();
+                $model->voteItem()->associate($voteItem);
+                $model->save();
+            } elseif (count($model) == 0) {
+                $model = new VoteResult();
+                $model->user()->associate($user);
+                $model->vote()->associate($vote);
+                $model->vote_item_id = $request->vote_item_id;
+                $model->save();
+            } else {
+                return $this->setStatusCode(400)->respond(['error' => 'Count of results is not equal 1, it is: ' . count($model)]);
+            }
+        } else {
+            $model = $vote->voteResults()->where('user_id', $user->id)->where('vote_item_id',
+                $request->vote_item_id)->first();
+            if (count($model) == 0) {
+                $model = new VoteResult();
+                $model->user()->associate($user);
+                $model->vote()->associate($vote);
+                $model->vote_item_id = $request->vote_item_id;
+                $model->save();
+            } elseif (count($model) == 1) {
+                $model->delete();
+                $response['checked'] = false;
+            }
+        }
+        return $this->setStatusCode(201)->respond($response);
     }
 }

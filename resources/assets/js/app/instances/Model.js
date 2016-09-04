@@ -6,7 +6,7 @@ module.exports = Backbone.Model.extend({
     parentUrl: null,
 
     getEntityUrl: function () {
-        return (_.result(this, 'parentUrl') || '') + (_.result(this, 'url') || _.result(this, 'urlRoot'));
+        return (_.result(this, 'parentUrl') || _.result(this.collection, 'parentUrl') || '') + (_.result(this, 'url') || _.result(this, 'urlRoot'));
     },
 
     _getRequestUrl: function () {
