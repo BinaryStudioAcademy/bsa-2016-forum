@@ -1,15 +1,22 @@
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
+var Behavior = require('../../behaviors/send');
 
 module.exports = Marionette.ItemView.extend({
+    behaviors: {
+        Behavior: {
+            behaviorClass: Behavior,
+            channel: 'messagesChannel',
+            trigger: 'saveEditedMessage',
+            textui: 'message'
+        }
+    },
     template: 'messageDialogEditItem',
     ui: {
         message: '#edited-message',
         save: '#message-save',
-        form: '#message-edit-form'
-    },
-    events: {
-        'submit @ui.form' : 'clickedSaveEditMessage'
+        form: '#message-edit-form',
+        hotkeyCheckbox: '#hotkey-checkbox'
     },
 
     onRender: function () {
@@ -17,14 +24,6 @@ module.exports = Marionette.ItemView.extend({
         this.$('.modal').modal('show');
         this.$('.modal').on('hidden.bs.modal', function (e) {
             view.destroy();
-        });
-    },
-
-    clickedSaveEditMessage: function (e) {
-        e.preventDefault();
-        Radio.channel('messagesChannel').trigger('saveEditedMessage', {
-            model: this.model,
-            view: this
         });
     },
 
