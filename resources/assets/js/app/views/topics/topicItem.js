@@ -135,7 +135,9 @@ module.exports = Marionette.ItemView.extend({
         var parentUrl = '/topics/'+this.model.id+'/likes/'+this.model.get('like_id');
         var topicRemoveLikeModel = new TopicRemoveLikeModel({parentUrl: parentUrl,id:this.model.get('like_id')});
         topicRemoveLikeModel.destroy({success: function(model, response) {
+            console.log(response.data.id);
             alert("model deleted");
+            this.render();
         },
             error:function(){
                 alert("ooops");
