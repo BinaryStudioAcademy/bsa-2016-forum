@@ -1,13 +1,14 @@
 <!--<div class="vote-head">-->
     <div class="vote-header">
-        {{deleteButton model meta}}
+        {{deleteButton meta}}
+        <div class="limited-block-for-delete-button">
         <h3>{{ model.title }}</h3>
         <h5>Opened by: {{ meta.user.first_name }}  {{ meta.user.last_name }}</h5>
         <div class="vote-tags"><p>
             {{#each meta.tags}}
                 <a href="#votes/tags/{{name}}" class="tag-links"><span>#{{name}}</span></a>
             {{/each}}
-        </div>
+        </div></div>
     </div>
 
 <!--</div>-->

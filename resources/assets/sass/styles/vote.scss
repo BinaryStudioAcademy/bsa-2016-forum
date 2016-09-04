@@ -364,15 +364,16 @@ VOTE INDEX
 
 .delete-button {
   position: absolute;
-  float:right;
+  //float:right;
   top:0;
   right:0;
 }
 
-.vote-question-item {
-  height: 33px;
-}
-
 .tag-links {
   color: #333;
+}
+
+.limited-block-for-delete-button {
+  width: calc(100% - 35px);
+  display: block;
 }
