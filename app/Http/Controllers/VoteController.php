@@ -49,17 +49,19 @@ class VoteController extends ApiController
     private function getMetaData($votes)
     {
         $data = [];
+        if($votes){
+            foreach ($votes as $vote) {
 
-        foreach ($votes as $vote) {
-
-            $data[$vote->id] =
-                [
-                    'user' => $vote->user()->first(),
-                    'likes' => $vote->likes()->count(),
-                    'comments' => $vote->comments()->count(),
-                    'tags' => $vote->tags()->get(['name'])
-                ];
+                $data[$vote->id] =
+                    [
+                        'user' => $vote->user()->first(),
+                        'likes' => $vote->likes()->count(),
+                        'comments' => $vote->comments()->count(),
+                        'tags' => $vote->tags()->get(['name'])
+                    ];
+            } 
         }
+
         return $data;
     }
 
