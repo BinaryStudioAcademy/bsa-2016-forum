@@ -51,7 +51,6 @@ class TopicController extends ApiController
         }
 
         return $data;
-
     }
 
     /**
@@ -113,7 +112,6 @@ class TopicController extends ApiController
         if ($request->tags) {
             TagService::TagsHandler($topic, $request->tags);
         }
-
         $topic->tags = $topic->tags()->get();
         return $this->setStatusCode(201)->respond($topic);
     }
@@ -143,11 +141,13 @@ class TopicController extends ApiController
      */
     public function update($id, TopicRequest $request)
     {
+
         $topic = Topic::findOrFail($id);
 
         $this->authorize('update', $topic);
 
         $topic->update($request->all());
+
         if ($request->tags) {
             TagService::TagsHandler($topic, $request->tags);
         }

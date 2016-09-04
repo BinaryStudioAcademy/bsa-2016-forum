@@ -7,6 +7,7 @@ var _ = require('underscore');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'topicLayout',
+
     regions: {
         container: '#posts'
     },
@@ -16,5 +17,4 @@ module.exports = Marionette.LayoutView.extend({
             collection: this.collection
         }));
     }
-
 });

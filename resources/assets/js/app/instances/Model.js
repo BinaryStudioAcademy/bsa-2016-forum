@@ -6,7 +6,7 @@ module.exports = Backbone.Model.extend({
     parentUrl: null,
 
     getEntityUrl: function () {
-        return (_.result(this, 'parentUrl') || '') + (_.result(this, 'url') || _.result(this, 'urlRoot'));
+        return (_.result(this, 'parentUrl') || _.result(this.collection, 'parentUrl') || '') + _.result(this, 'url');
     },
 
     _getRequestUrl: function () {
@@ -23,6 +23,7 @@ module.exports = Backbone.Model.extend({
         }
         
         if (!options.statusCode) options.statusCode = {};
+
         options.statusCode['400'] = function (xhr, textStatus, errorThrown) {
             if (xhr.responseJSON) {
                 model.validationError = xhr.responseJSON;
@@ -30,10 +31,6 @@ module.exports = Backbone.Model.extend({
             }
         };
         return Backbone.sync(method, model, options);
-    },
-
-    getMeta: function() {
-        return (_.result(this, '_meta') || _.result(this.collection, '_meta'));
     },
 
     parse: function (response, options) {
