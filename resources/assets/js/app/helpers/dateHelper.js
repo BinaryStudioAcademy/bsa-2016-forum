@@ -3,22 +3,27 @@ var config = require('config');
 
 var dateHelper = {
     dateWithTimezone: function(date) {
+        if (this.isEmpty(date)) return '';
         return moment.utc(date).tz(config.timeZone).format('YYYY-MM-DD HH:mm:ss')
     },
 
     shortDate: function(date) {
+        if (this.isEmpty(date)) return '';
         return moment.utc(date).tz(config.timeZone).format('DD.MM.YYYY')
     },
 
     middleDate: function(date) {
+        if (this.isEmpty(date)) return '';
         return moment.utc(date).tz(config.timeZone).format('DD.MM.YYYY HH:mm')
     },
 
     fullDate: function(date) {
+        if (this.isEmpty(date)) return '';
         return moment.utc(date).tz(config.timeZone).format('DD.MM.YYYY HH:mm:ss')
     },
 
     relativeDate: function (date) {
+        if (this.isEmpty(date)) return '';
         var now = moment();
         var then = moment(date);
         
@@ -28,6 +33,10 @@ var dateHelper = {
         }
 
         return moment(then, 'x').fromNow();
+    },
+
+    isEmpty: function (date) {
+        return ((typeof date == 'undefined') || (date == undefined)) ? true : false;
     }
 };
 
