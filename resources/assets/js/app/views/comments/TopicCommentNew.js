@@ -50,8 +50,10 @@ module.exports = Marionette.ItemView.extend({
         this.showErrors(false);
         this.showLoader(true);
 
+        var user_id = currentUser.toJSON().id;
+
         var data = {
-            user_id: currentUser.get('id'),
+            user_id: user_id
         };
 
         _.each(this.$('form').serializeArray(), function(input) {
@@ -59,6 +61,7 @@ module.exports = Marionette.ItemView.extend({
         });
 
         var view = this;
+
         this.model.save(data, {
             success: function (model) {
                 if (view._dropZone && view._dropZone.files.length) {

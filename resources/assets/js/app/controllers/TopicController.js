@@ -81,10 +81,7 @@ module.exports = Marionette.Object.extend({
                 attachCollection = new AttachmentCollection();
             }
 
-            // commentModel hasnt parentUrl because parentUrl sets to comment collection
-            model.parentUrl = _.result(topicModel, 'url');
-
-            //console.log(parentView);
+            model.parentUrl = _.result(parentView.model, 'getEntityUrl');
 
             view.getRegion('newComment').show(new NewTopicCommentView({
                 model: model,
