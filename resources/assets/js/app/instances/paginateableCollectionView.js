@@ -7,8 +7,11 @@ module.exports = Marionette.CollectionView.extend({
         $(window).on('scroll', this.fetchPage.bind(this));
 
     },
+    onDestroy: function(){
+        $(window).off('scroll', this.fetchPage.bind(this));
+    },
 
-    _page: 1,
+    _page: 2,
     _allItemsUploaded: false,
 
     fetchPage: function () {
