@@ -27,7 +27,7 @@ class Vote extends Model
     {
         return $this->belongsTo(User::class);
     }
-   
+
     public function voteItems()
     {
         return $this->hasMany(VoteItem::class);
@@ -83,8 +83,14 @@ class Vote extends Model
     public function scopeFilterByQuery(Builder $query, $searchStr)
     {
         if ($searchStr) {
-            $query = $query->where('title','LIKE','%'.$searchStr.'%');
+            $query = $query->where('title', 'LIKE', '%' . $searchStr . '%');
         }
+        return $query;
+    }
+
+    public function scopeNewOnTop(Builder $query)
+    {
+        $query = $query->orderBy('id', 'desc');
         return $query;
     }
 
@@ -98,7 +104,7 @@ class Vote extends Model
     public function scopeFilterByTags(Builder $query, array $tagIds)
     {
         if (!empty($tagIds)) {
-            $query = $query->whereHas('tags', function($q) use ($tagIds){
+            $query = $query->whereHas('tags', function ($q) use ($tagIds) {
                 $q->whereIn('tag_id', $tagIds);
             });
         }

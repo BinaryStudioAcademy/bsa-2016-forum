@@ -27,6 +27,7 @@ class VoteController extends ApiController
         $this->setFiltersParameters($request);
         $votes = Vote::filterByQuery($this->searchStr)
             ->filterByTags($this->tagIds)
+            ->newOnTop()
             ->paginate(15)->getCollection();
         $meta = $this->getMetaDataForCollection($votes);
 
