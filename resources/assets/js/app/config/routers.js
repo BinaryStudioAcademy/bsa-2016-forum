@@ -24,8 +24,6 @@ module.exports = {
             controller: new TopicController(),
             appRoutes: {
                 'mytopics': 'myTopics',
-                // 'topics/:id/likes':'addLike',
-                // 'topics/:id/likes/:like_id':'removeLike'
             },
             navigItemName: 'myTopics'
         },
