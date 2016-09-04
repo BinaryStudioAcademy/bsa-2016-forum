@@ -128,6 +128,7 @@ module.exports = Marionette.ItemView.extend({
         var parentUrl = '/topics/'+this.model.id;
         var topicAddLikeModel=new TopicAddLikeModel({parentUrl: parentUrl});
         topicAddLikeModel.save();
+        this.model.set({is_user:true});
     },
 
     removeLikeTopic: function(){
@@ -137,10 +138,10 @@ module.exports = Marionette.ItemView.extend({
         topicRemoveLikeModel.destroy({success: function(model, response) {
             console.log(response.data.id);
             alert("model deleted");
-            this.render();
         },
             error:function(){
                 alert("ooops");
             }});
+        this.model.set({is_user:false});
     }
 });
