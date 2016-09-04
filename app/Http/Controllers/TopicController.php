@@ -39,13 +39,6 @@ class TopicController extends ApiController
 
             return $data;
         }
-
-        $bookmark = $topics->bookmarks()->where('user_id', Auth::user()->id)->first();
-        if ($bookmark !== null) {
-            $data['bookmark'] = $topics->bookmarks()->where('user_id', Auth::user()->id)->first();
-        }
-
-        return $data;
     }
 
     /**
