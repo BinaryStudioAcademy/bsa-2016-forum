@@ -66,6 +66,15 @@ class TopicController extends ApiController
         foreach ($extendedTopics as $topic) {
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
+
+            $like = $topic->likes()->where('user_id', Auth::user()->id)->first();
+            if ($like !== null) {
+                $topic->is_user = true;
+            }
+            else
+            {
+                $topic->is_user = false;
+            }
         }
 
         $meta = $this->getMetaData($extendedTopics);
@@ -138,15 +147,6 @@ class TopicController extends ApiController
     {
         $topic = Topic::findOrFail($id);
         $topic->tags = $topic->tags()->get();
-
-        $like = $topic->likes()->where('user_id', Auth::user()->id)->first();
-        if ($like !== null) {
-            $topic->is_user = true;
-        }
-        else
-        {
-            $topic->is_user = false;
-        }
 
         $meta = $this->getMetaData($topic);
         return $this->setStatusCode(200)->respond($topic, $meta);
@@ -284,7 +284,6 @@ class TopicController extends ApiController
         }
 
         return $this->setStatusCode(200)->respond($topic, ['user' => $user]);
-
     }
 
     /**

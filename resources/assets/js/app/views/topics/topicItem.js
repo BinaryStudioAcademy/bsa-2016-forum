@@ -20,6 +20,8 @@ module.exports = Marionette.ItemView.extend({
         'click @ui.removeLikeTopic': 'removeLikeTopic'
     },
 
+    modelEvents: { change: 'render' },
+
     unlockButton: function () {
         this.ui.bookmarkTopic.removeAttr('disabled');
         this.ui.bookmarkTopic.addClass('text-info');
@@ -57,10 +59,7 @@ module.exports = Marionette.ItemView.extend({
         };
     },
 
-    modelEvents: { change: 'render' },
-
     onRender: function () {
-        alert("addLikeFunctionRender");
         var meta = this.model.getMeta();
 
         if (meta && meta.bookmark && meta.bookmark[this.model.attributes.id]) {
@@ -120,9 +119,4 @@ module.exports = Marionette.ItemView.extend({
             });
         }
     },
-
-    addLikeTopicc1: function(){
-        this.model.fetch;
-        console.log(this.model.get('is_user'));
-    }
 });

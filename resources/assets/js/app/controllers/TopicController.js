@@ -9,10 +9,8 @@ var TopicCreate = require('../views/topics/topicCreate');
 var TopicModel = require('../models/TopicModel');
 var TopicDetailView = require('../views/topics/topicDetail');
 var currentUser = require('../initializers/currentUser');
-var TopicItem = require('../views/topics/topicItem');
-
-var BaseModel = require('../instances/Model');
-var _ = require('underscore');
+var TopicAddLikeModel = require('../models/TopicAddLikeModel');
+var TopicRemoveLikeModel = require('../models/TopicRemoveLikeModel');
 
 module.exports = Marionette.Object.extend({
 
@@ -62,16 +60,20 @@ module.exports = Marionette.Object.extend({
 
     addLike: function(idTopic){
         alert("addLikeFunction"+idTopic);
-        var TopicAddLikeModel=BaseModel.extend({
-            url:'/topics/'+idTopic+'/likes'
-        });
-
-        var topicAddLikeModel=new TopicAddLikeModel();
-
+        var parentUrl = '/topics/'+idTopic;
+        var topicAddLikeModel=new TopicAddLikeModel({parentUrl: parentUrl});
         topicAddLikeModel.save();
     },
 
     removeLike: function(idTopic,idLike){
         alert("removeLikeFunction"+idTopic+'***'+idLike);
+        var parentUrl = '/topics/'+idTopic+'/likes/'+idLike;
+        var topicRemoveLikeModel = new TopicRemoveLikeModel({parentUrl: parentUrl,id:idLike});
+        topicRemoveLikeModel.destroy({success: function(model, response) {
+            alert("model deleted");
+        },
+        error:function(){
+            alert("ooops");
+        }});
     }
 });
