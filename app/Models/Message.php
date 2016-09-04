@@ -17,6 +17,10 @@ class Message extends Model
     {
         return $this->belongsTo(User::class,'user_from_id');
     }
+    public function toUser()
+    {
+        return $this->belongsTo(User::class,'user_to_id');
+    }
     public function attachments()
     {
         return $this->morphToMany(Attachment::class, 'attachmenttable');
@@ -24,6 +28,11 @@ class Message extends Model
     public function notifications()
     {
         return $this->morphToMany(Notification::class, 'notificationable');
+    }
+
+    public function getMessageAttribute($value)
+    {
+        return ($this->trashed())?'Removed..':$value;
     }
 
     public static function getLastIncoming($userId) 

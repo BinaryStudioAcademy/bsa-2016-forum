@@ -2,10 +2,10 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\Comment;
-use Illuminate\Database\Eloquent\Collection;
-use App\Models\Like;
 use App\Models\Topic;
+use App\Models\Tag;
+use App\Models\Category;
+use Illuminate\Database\Eloquent\Collection;
 
 class TopicsTableSeeder extends Seeder
 {
@@ -16,35 +16,25 @@ class TopicsTableSeeder extends Seeder
      */
     public function run()
     {
+        $topicsCount  = 20;
         $users = User::all();
-//        $likes= Topic::all();
+        $tags = Tag::all();
+        $categories = Category::all();
 
-        factory(App\Models\Topic::class, 20)->create()->each(function($topic) use ($users) {
-            $commentCount = rand(1, 5);
-            $comments = factory(Comment::class, $commentCount)
-                ->make();
-            if (!$comments instanceof Collection) {
-                $comments =  new Collection([$comments]);
-            }
-            $comments->each(function ($comment) use ($users) {
+        factory(App\Models\Topic::class, $topicsCount)
+            ->make()
+            ->each(function($topic) use ($users, $tags, $categories) {
                 $randomUser = $users->random();
-                $comment->user()->associate($randomUser);
-                $comment->save();
+                $randomCategory = $categories->random();
+                $topic->user()->associate($randomUser);
+                $topic->category()->associate($randomCategory);
+                $topic->save();
+                $tagCount = rand(1, 4);
+                $randomTags = $tags->random($tagCount);
+                if (!$randomTags instanceof Collection) {
+                    $randomTags =  new Collection([$randomTags]);
+                }
+                $topic->tags()->saveMany($randomTags);
             });
-
-            $topic->comments()->saveMany($comments);
-
-            $tag = factory(App\Models\Tag::class)->make();
-            $comment = $topic->tags()->save($tag);
-
-            $lim=rand(1,3);
-            foreach ((range(1, $lim)) as $index) {
-                $like = factory(App\Models\Like::class)->make();
-                $randomUser = $users->random();
-                $like->user()->associate($randomUser);
-                $like = $topic->likes()->save($like);
-            }
-
-        });
     }
 }
