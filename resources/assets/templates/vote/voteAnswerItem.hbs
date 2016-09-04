@@ -4,6 +4,7 @@
             <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">
             {{ model.name }}
         </label>
+        <button class="btn btn-success btn-sm js-show-answer-comments" type="button"><span class="glyphicon glyphicon-comment"></span></button>
     </div>
 
 {{else}}
@@ -12,5 +13,6 @@
             <input type="checkbox" value="">
             {{ model.name }}
         </label>
+        <button class="btn btn-success btn-sm js-show-answer-comments" type="button"><span class="glyphicon glyphicon-comment"></span></button>
     </div>
 {{/if}}

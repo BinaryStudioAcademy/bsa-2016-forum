@@ -46,8 +46,7 @@ class VoteController extends ApiController
 
         foreach ($votes as $vote) {
 
-            $data[$vote->id] =
-                [
+            $data[$vote->id] = [
                     'user' => $vote->user()->first(),
                     'likes' => $vote->likes()->count(),
                     'comments' => $vote->comments()->count(),

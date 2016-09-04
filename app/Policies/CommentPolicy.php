@@ -15,7 +15,7 @@ class CommentPolicy
 
     public function before(User $user)
     {
-        if($user->isAdmin()){
+        if ($user->isAdmin()) {
             return true;
         }
     }
@@ -23,7 +23,7 @@ class CommentPolicy
     public function deleteTopicsComment(User $user, Comment $comment, Topic $topic)
     {
         return ($user->owns($comment) && !$comment->hasChildComments())
-                || ($user->owns($topic));
+        || ($user->owns($topic));
     }
 
     public function updateTopicsComment(User $user, Comment $comment, Topic $topic)
@@ -34,8 +34,7 @@ class CommentPolicy
 
     public function deleteVotesComment(User $user, Comment $comment, Vote $vote)
     {
-        return ($user->owns($comment) && !$comment->hasChildComments())
-        || ($user->owns($vote));
+        return $user->owns($comment);
     }
 
     public function updateVotesComment(User $user, Comment $comment, Vote $vote)
@@ -46,8 +45,7 @@ class CommentPolicy
 
     public function deleteVoteItemsComment(User $user, Comment $comment, VoteItem $voteItem)
     {
-        return ($user->owns($comment) && !$comment->hasChildComments())
-        || ($user->owns($voteItem));
+        return $user->owns($comment);
     }
 
     public function updateVoteItemsComment(User $user, Comment $comment, VoteItem $voteItem)
@@ -62,6 +60,16 @@ class CommentPolicy
     }
 
     public function deleteCommentAttachment(User $user, Comment $comment)
+    {
+        return $user->owns($comment);
+    }
+
+    public function deleteCommentComments(User $user, Comment $comment)
+    {
+        return $user->owns($comment);
+    }
+
+    public function updateCommentComments(User $user, Comment $comment)
     {
         return $user->owns($comment);
     }

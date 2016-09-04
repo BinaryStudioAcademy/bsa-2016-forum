@@ -1,16 +1,66 @@
 var Marionette = require('backbone.marionette');
+var Radio = require('backbone.radio');
 
-module.exports = Marionette.ItemView.extend({
+var moment = require('moment');
+module.exports = Marionette.LayoutView.extend({
     tagName: 'div',
     className: 'vote-comment',
     template: 'voteDetailComment',
+    ui: {
+        submit: '.js-show-branch',
+        count: '.js-comments-count',
+        delete: '.js-delete'
+    },
+    regions: {
+        answers: '#comment-answer',
+        addcomment: '#add-comment'
+    },
+    modelEvents: {
+        'change': 'render'
+    },
+    initialize: function (options) {
+        if(options.parent) this.parent = options.parent;
+        this.opened = false;
+    },
+    events: {
+        'click @ui.submit': function (e) {
+            e.stopPropagation();
+            if(!this.opened){
+                Radio.trigger('votesChannel', 'loadNestedComments', this);
+                Radio.trigger('votesChannel', 'showAddCommentView', {view: this});
+                this.ui.submit.text('Hide');
+            } else {
+                this.getRegion('addcomment').empty();
+                this.getRegion('answers').empty();
+                this.ui.submit.text('Show comments branch');
+            }
+            this.opened = !this.opened;
+        },
+        'click @ui.delete': function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.model.destroy({async: false});
+            if(this.parent.collection) this.parent.collection.fetch({async: false});
+        }
+    },
     serializeData: function () {
         var id = this.model.get('id');
+        var tempmeta = this.model.getMeta()[id];
         return {
             model: this.model.toJSON(),
             meta: {
-                user: this.model.getMeta()[id].user
+                user: tempmeta.user,
+                comments: tempmeta.comments,
+                level: this.model.collection.level,
+                time: moment(this.model.get('created_at'), "YYYY-MM-DD h:mm:ss").fromNow()
             }
         };
+    },
+    updateCount: function () {
+
+        this.ui.count.text('Comments: ' + this.collection.length);
+    },
+    remove: function () {
+        this.$el.fadeOut();
     }
 });

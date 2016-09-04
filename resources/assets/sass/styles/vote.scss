@@ -104,8 +104,11 @@ VOTE DETAIL
   font-size: 90%;
 }
 
-.vote-comment-body button {
+.vote-comment-body .js-confirm {
   float: right;
+}
+
+.vote-comment-body button {
   margin-top: 5px;
 }
 
@@ -117,7 +120,7 @@ VOTE INDEX
 
 }
 
-.votes-item-add a{
+.votes-item-add a {
   text-transform: capitalize;
   display: block;
   width: 100%;
@@ -130,7 +133,7 @@ VOTE INDEX
   color: #999999;
 }
 
-.votes-item-add a:hover{
+.votes-item-add a:hover {
   text-decoration: none;
   background-color: #ffd992;
   color: #777777;
@@ -187,7 +190,7 @@ VOTE INDEX
   display: inline-block;
 }
 
-.votes-item-details a{
+.votes-item-details a {
   color: #999999;
   font-size: 14px;
   font-weight: 500;
@@ -229,7 +232,7 @@ VOTE INDEX
   overflow: hidden;
 }
 
-.vote-new-head h4{
+.vote-new-head h4 {
   margin: 0 0 15px;
   font-weight: 400;
   font-size: 18px;
@@ -266,7 +269,7 @@ VOTE INDEX
   color: #777777;
 }
 
-.vote-new-users span{
+.vote-new-users span {
   margin: 0 10px 5px 0;
   padding: 5px 15px;
   border-radius: 0;
@@ -287,7 +290,7 @@ VOTE INDEX
   display: flex;
 }
 
-.vote-new-addUsers input{
+.vote-new-addUsers input {
   width: 100%;
   padding: 10px 15px;
   background-color: #E9E9E9;
@@ -354,4 +357,15 @@ VOTE INDEX
 
 .vote-new-submit input:hover {
   background-color: #f9c172;
-} 
+}
+
+.vote-comment {
+  border-left: 2px solid #E62E04;
+  padding-left: 3px;
+}
+
+.js-show-branch {
+  float: left;
+  width: calc(100% - 40px);
+  overflow: hidden;
+}

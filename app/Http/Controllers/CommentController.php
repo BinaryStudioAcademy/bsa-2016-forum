@@ -239,11 +239,12 @@ class CommentController extends ApiController
     protected function makeCommentsMeta($comments)
     {
         $meta = [];
-
         foreach ($comments as $comment) {
-            $meta[$comment->id]['user'] = $comment->user()->first();
+            $meta[$comment->id] = [
+                'user' => $comment->user()->first(),
+                'comments' => $comment->comments()->count()
+            ];
         }
-
         return $meta;
     }
 
@@ -253,9 +254,9 @@ class CommentController extends ApiController
      */
     public function getVoteComments(Vote $vote)
     {
-        $comments = $vote->comments()->get();
-        $meta = $this->makeCommentsMeta($comments);
+        $comments = $vote->comments()->orderBy('id', 'desc')->get();
 
+        $meta = $this->makeCommentsMeta($comments);
         return $this->setStatusCode(200)->respond($comments, $meta);
     }
 
@@ -285,7 +286,8 @@ class CommentController extends ApiController
 
         return $this->setStatusCode(201)->respond($comment, [
             $comment->id => [
-                'user' => $comment->user()->first()
+                'user' => $comment->user()->first(),
+                'comments' => 0
             ]
         ]);
     }
@@ -443,8 +445,10 @@ class CommentController extends ApiController
      */
     public function getVoteItemComments(Vote $vote, VoteItem $voteItem)
     {
-        $comments = $voteItem->comments()->get();
-        return $this->setStatusCode(200)->respond($comments);
+        $comments = $voteItem->comments()->orderBy('id', 'desc')->get();
+
+        $meta = $this->makeCommentsMeta($comments);
+        return $this->setStatusCode(200)->respond($comments, $meta);
     }
 
     /**
@@ -472,7 +476,12 @@ class CommentController extends ApiController
     {
         $comment = Comment::create($request->all());
         $comment = $voteItem->comments()->save($comment);
-        return $this->setStatusCode(201)->respond($comment);
+        return $this->setStatusCode(201)->respond($comment, [
+            $comment->id => [
+                'user' => $comment->user()->first(),
+                'comments' => 0
+            ]
+        ]);
     }
 
     /**
@@ -512,5 +521,57 @@ class CommentController extends ApiController
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
     }
+
+    /* Comments Section Start */
+
+    protected function isCommentBelongsToComment(Comment $comment, Comment $nested)
+    {
+        return !!$comment->comments()->find($nested->id);
+    }
+
+    public function getCommentComments(Comment $comment)
+    {
+        $meta = [];
+        $comments = $comment->comments()->orderBy('id', 'asc')->get();
+        foreach ($comments as $item) {
+            $meta[$item->id] = [
+                'comments' => $item->comments()->count(),
+                'user' => $item->user()->first()
+            ];
+        }
+        return $this->setStatusCode(200)->respond($comments, $meta);
+    }
+
+    public function storeCommentComments(Comment $comment, CommentsRequest $request)
+    {
+        $new_comment = Comment::create($request->all());
+        if ($request->level < 5) {
+            $result = $comment->comments()->save($new_comment);
+            //notifikate user here using $comment->user
+        } else {
+            $parent = $comment->commentable()->first();
+            $result = $parent->comments()->save($new_comment);
+            //notifikate user here using $parent->user
+        }
+        return $this->setStatusCode(201)->respond($result, [
+                $result->id => [
+                    'user' => $result->user()->first(),
+                    'comments' => 0
+                ]
+            ]
+        );
+    }
+
+    public function deleteCommentComment(Comment $comment, Comment $nested)
+    {
+        $this->authorize('deleteCommentComments', [$nested]);
+        if ($this->isCommentBelongsToComment($comment, $nested)) {
+            $nested->delete();
+            return $this->setStatusCode(200)->respond();
+        } else {
+            throw (new ModelNotFoundException)->setModel(Comment::class);
+        }
+    }
+
 
 }

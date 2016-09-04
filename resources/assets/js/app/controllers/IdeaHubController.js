@@ -12,6 +12,7 @@ var VoteAICollection = require('../collections/voteAICollection');
 
 var ListVotes = require('../views/votes/ListVotes');
 var ShowVote = require('../views/votes/ShowVote');
+var CommentsCollectionView = require('../views/votes/VoteCommentsCollection');
 
 var Votes = require('../instances/Votes');
 
@@ -33,11 +34,7 @@ module.exports = Marionette.Object.extend({
         var myCommentsCollection = new CommentsCollection([], {parentUrl: parentUrl});
         var VoteAnswers = new VoteAICollection([], {parentUrl: parentUrl});
         VoteAnswers.fetch();
-        myCommentsCollection.fetch({
-            success: function (data) {
-                Radio.trigger('votesChannel', 'setCommentsCount', data.length);
-            }
-        });
+        myCommentsCollection.fetch();
 
         if (Votes.get(id)) {
             model = Votes.get(id);
@@ -48,17 +45,50 @@ module.exports = Marionette.Object.extend({
         view = new ShowVote({
             voteModel: model,
             collection: myCommentsCollection,
-            answers: VoteAnswers
+            answers: VoteAnswers,
+            id: id
         });
 
-        view.listenTo(Radio.channel('votesChannel'), 'showAddCommentView', function (view) {
-
+        view.listenTo(Radio.channel('votesChannel'), 'showAddCommentView', function (options) {
             view.getRegion('addcomment').show(
                 new AddCommentView({
-                    parent: view,
-                    model: new CommentModel({user_id: currentUser.get('id')}, {parentUrl: view.collection.parentUrl})
+                    parent: options.view,
+                    model: new CommentModel({user_id: currentUser.get('id')}, {parentUrl: options.view.collection.parentUrl}),
+                    atStart: options.atStart
                 })
             );
+        });
+
+        view.listenTo(Radio.channel('votesChannel'), 'loadNestedComments', function (view) {
+            var myCommentsCollection = new CommentsCollection([], {parentUrl: '/comments/' + view.model.get('id')});
+            myCommentsCollection.level = view.model.collection.level + 1;
+            view.collection = myCommentsCollection;
+            myCommentsCollection.view = view;
+            myCommentsCollection.on('update', function () {
+                view.updateCount();
+            });
+            view.getRegion('answers').show(new CommentsCollectionView({
+                collection: myCommentsCollection,
+                parent: view
+            }));
+            myCommentsCollection.fetch();
+        });
+
+        view.listenTo(Radio.channel('votesChannel'), 'renderCommentsView', function (options) { //parentUrl, view
+            var view = options.view;
+            var myCommentsCollection = new CommentsCollection([], {parentUrl: options.parentUrl});
+            myCommentsCollection.level = 1;
+            view.collection = myCommentsCollection;
+            view.collection.on('update', function () {
+                view.updateCount();
+            });
+            myCommentsCollection.fetch();
+
+            view.getRegion('comments').show(
+                new CommentsCollectionView({
+                    collection: view.collection,
+                    parent: view
+                }));
         });
 
         app.render(view);

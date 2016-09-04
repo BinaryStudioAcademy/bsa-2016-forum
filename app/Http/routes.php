@@ -198,6 +198,14 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::post('', 'AttachmentController@storeMessageAttachment')->name('storeMessageAttachment');
         Route::delete('{attachment}', 'AttachmentController@destroyMessageAttachment')->name('deleteMessageAttachment');
     });
+
+    /* Routes for Comment comments */
+    Route::group(['prefix' => 'comments/{comment}/comments'], function () {
+        Route::get('', 'CommentController@getCommentComments')->name('commentComments');
+        Route::post('', 'CommentController@storeCommentComments')->name('storeCommentComments');
+        Route::delete('{nested}', 'CommentController@deleteCommentComment')->name('deleteCommentComment');
+    });
+
     Route::get('rss', 'rssController@index')->name('rss');
     Route::post('rss', 'rssController@subscribe')->name('rssSubscribe');
 });

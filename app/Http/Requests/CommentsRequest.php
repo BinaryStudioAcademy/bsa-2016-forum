@@ -25,6 +25,7 @@ class CommentsRequest extends ApiRequest
             'content_origin' => 'required',
             'user_id' => 'required|integer|is_current_user',
             'rating' => 'integer|between:0,99999999999',
+            'level' => 'integer|between:0,99999999'
         ];
     }
 
