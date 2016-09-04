@@ -8,6 +8,7 @@ use App\Http\Requests\VotesRequest;
 use App\Http\Requests\VoteResultRequest;
 use App\Models\VoteResult;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Facades\TagService;
@@ -26,13 +27,10 @@ class VoteController extends ApiController
         $this->setFiltersParameters($request);
         $votes = Vote::filterByQuery($this->searchStr)
             ->filterByTags($this->tagIds)
-            ->paginate(15);
-        // NOW $votes is NOT a collection of votes
-        // NOW we do NOT have a collection, we have just an array of Vote objects
-        // If you need to work with Votes array use variable $votes->items()
+            ->paginate(15)->getCollection();
         
-        $meta = $this->getMetaData($votes->items());
-        return $this->setStatusCode(200)->respond($votes->items(), $meta);
+        $meta = $this->getMetaData($votes);
+        return $this->setStatusCode(200)->respond($votes, $meta);
     }
 
     protected function setFiltersParameters(Request $request)
@@ -43,10 +41,10 @@ class VoteController extends ApiController
     }
 
     /**
-     * @param $votes array
-     * @return array $data array
+     * @param Collection $votes
+     * @return array
      */
-    private function getMetaData($votes)
+    private function getMetaData(Collection $votes)
     {
         $data = [];
         if($votes){
