@@ -31,7 +31,6 @@ class VoteItemRequest extends ApiRequest
                 foreach ($existedVoteItems as $voteItem){
                     $stringOfVoteItemsNames .= $voteItem['name'] . ',';
                 }
-                $stringOfVoteItemsNames = substr($stringOfVoteItemsNames,0,-1);
             }
 
         };
@@ -41,6 +40,7 @@ class VoteItemRequest extends ApiRequest
             'user_id' => 'required|integer|is_current_user',
         ];
         if($stringOfVoteItemsNames !== ''){
+            $stringOfVoteItemsNames = substr($stringOfVoteItemsNames,0,-1);
             $rules['name'] .= '|not_in:' . $stringOfVoteItemsNames;
         }
         return $rules;
