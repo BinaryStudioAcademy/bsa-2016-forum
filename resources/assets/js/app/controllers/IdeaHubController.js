@@ -22,34 +22,6 @@ var CreateVote = require('../views/votes/CreateVote');
 var Votes = require('../instances/Votes');
 
 module.exports = Marionette.Object.extend({
-    initialize: function () {
-        this.listenTo(Radio.channel('votesChannel'), 'createComment', function (view) {
-            var model = new CommentModel({user_id: currentUser.get('id')}, {parentUrl: view.options.collection.parentUrl});
-
-            var errorContainer = $('.errors');
-            errorContainer.empty();
-
-            if (!model.save({content_origin: view.ui.text.val()}, {
-                    success: function (data) {
-                        view.ui.text.val('');
-                        //view.options.collection.fetch({async: false});
-                        view.options.collection.add(data);
-                        Radio.trigger('votesChannel', 'setCommentsCount', view.options.collection.length);
-                    }
-                })) {
-                errorContainer.html(model.validationError.content_origin);
-            }
-        });
-
-        this.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {
-            col.add(new VoteAImodel({}, {parentUrl: col.parentUrl}));
-        });
-
-        Handlebars.registerHelper('addDate', function (options) {
-            return moment().add(30, 'd').format('DD/MM/YYYY HH/mm/ss');
-        });
-    },
-
     index: function () {
 
         Votes.reset();
@@ -58,6 +30,10 @@ module.exports = Marionette.Object.extend({
         Votes.fetch();
     },
     showVote: function (id) {
+        var AddCommentView = require('../views/votes/VoteCommentItemAdd');
+
+
+        var view;
         var model;
         var parentUrl = '/votes/' + id;
         var myCommentsCollection = new CommentsCollection([], {parentUrl: parentUrl});
@@ -71,40 +47,27 @@ module.exports = Marionette.Object.extend({
 
         if (Votes.get(id)) {
             model = Votes.get(id);
-            app.render(new ShowVote({
-                voteModel: model,
-                collection: myCommentsCollection,
-                answers: VoteAnswers
-            }));
         } else {
             model = new VoteModel({id: id});
             model.fetch();
-
-            app.render(new ShowVote({
-                voteModel: model,
-                collection: myCommentsCollection,
-                answers: VoteAnswers
-            }));
-
         }
-    },
-    createVote: function () {
-        var VoteAnswers = new VoteAICollection([{}, {}], {parentUrl: ''});
-        var UsersCollection = new usersCollection();
-        var accessedUsers = new usersCollection();
+        view = new ShowVote({
+            voteModel: model,
+            collection: myCommentsCollection,
+            answers: VoteAnswers
+        });
 
-        UsersCollection.fetch();
+        view.listenTo(Radio.channel('votesChannel'), 'showAddCommentView', function (view) {
 
-        UsersCollection.opposite = accessedUsers;
-        accessedUsers.opposite = UsersCollection;
+            view.getRegion('addcomment').show(
+                new AddCommentView({
+                    parent: view,
+                    model: new CommentModel({user_id: currentUser.get('id')}, {parentUrl: view.collection.parentUrl})
+                })
+            );
+        });
 
-        var model = new VoteModel();
+        app.render(view);
 
-        app.render(new CreateVote({
-            model: model,
-            answers: VoteAnswers,
-            users: UsersCollection,
-            accessedUsers: accessedUsers,
-        }));
     }
 });
