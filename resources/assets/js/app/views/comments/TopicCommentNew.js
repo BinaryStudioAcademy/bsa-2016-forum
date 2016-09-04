@@ -6,6 +6,7 @@ var Dropzone = require('dropzone');
 var currentUser = require('../../initializers/currentUser');
 var AttachmentModel = require('../../models/AttachmentModel');
 var App = require('../../instances/appInstance');
+var config = require('config');
 
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentNew',
@@ -91,11 +92,11 @@ module.exports = Marionette.ItemView.extend({
             method: 'post',
             // input file name, registered on server
             paramName: "f",
-            parallelUploads : 10,
             hiddenInputContainer: '#drop',
             autoProcessQueue : false,
-            maxFilesize: 8,
-            maxFiles: 5,
+            parallelUploads : config.parallelFileUploads,
+            maxFilesize: config.maxFileSize,
+            maxFiles: config.maxFiles,
             //if max files count
             maxfilesexceeded: function (file) {
                 this.removeFile(file);
