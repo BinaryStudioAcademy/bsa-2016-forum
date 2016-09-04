@@ -1,5 +1,4 @@
 var Marionette = require('backbone.marionette');
-var Radio = require('backbone.radio');
 var logger = require('../../instances/logger');
 var messageDialogCollection = require('./messageDialogCollection');
 var Behavior = require('../../behaviors/send');
