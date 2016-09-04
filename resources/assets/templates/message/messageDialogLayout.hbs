@@ -7,7 +7,10 @@
         <form id="message-new-form">
             <textarea required class="form-control" id="messages-new-text" placeholder="Message..." name="message"></textarea>
             <div class="message-new-control">
-                <a>Attach</a><button type="submit" class="send" id="messages-new-submit">Send</button>
+                <a>Attach</a>
+                <input class="hotkey-checkbox" type="checkbox" name="hotkey" id="hotkey-checkbox" />
+                <label class="hotkey-checkbox-label" for="hotkey-checkbox">Use Enter-key to send</label>
+                <button type="submit" class="send" id="messages-new-submit">Send</button>
             </div>
         </form>
     </div>
