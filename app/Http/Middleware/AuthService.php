@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Middleware;
-
 use Closure;
 use Illuminate\Http\Response;
 use App\Models\User;
@@ -11,18 +9,15 @@ use App\Facades\CurlService;
 use App\Models\Role;
 use App\Models\Status;
 
-
 class AuthService
 {
     protected $cookieName;
     protected $secretKey;
-
     public function __construct()
     {
         $this->cookieName = config('authserver.cookieName');
         $this->secretKey = config('authserver.secretKey');
     }
-
     /**
      * Login User if APP_ENV = local for developing
      */
@@ -31,7 +26,6 @@ class AuthService
         $users = User::all();
         Auth::login($users[1]);
     }
-
     /**
      * Check cookie x-access-token
      * @return false if check is fail or array of User Data - id, email, role
@@ -40,20 +34,18 @@ class AuthService
     {
         $userData = null;
         if (array_key_exists ($this->cookieName, $_COOKIE)) {
-
             $tokenSerialized = $_COOKIE[$this->cookieName];
             $jwt = new \Emarref\Jwt\Jwt();
-        
-        try {
-            $token = $jwt->deserialize($tokenSerialized);
-        } 
-        catch (\Exception $e){
-            return false;
-        }
+
+            try {
+                $token = $jwt->deserialize($tokenSerialized);
+            }
+            catch (\Exception $e){
+                return false;
+            }
             $algorithm = new \Emarref\Jwt\Algorithm\Hs256($this->secretKey);
             $encryption = \Emarref\Jwt\Encryption\Factory::create($algorithm);
             $context = new \Emarref\Jwt\Verification\Context($encryption);
-
             try {
                 $jwt->verify($token, $context);
                 $userData = json_decode($token->getPayload()->getClaims()->jsonSerialize());
@@ -62,10 +54,9 @@ class AuthService
                 return false;
             };
         }
-        
+
         return  $userData;
     }
-    
 
     /**
      * Check if user exist in the local DB
@@ -80,7 +71,6 @@ class AuthService
 
             $userInfo = CurlService::sendUsersRequest($userData->id);
             $userInfo = array_shift($userInfo);
-
             if (!$user ){
                 $user = new User();
                 $user->first_name = $userInfo->name;
@@ -94,9 +84,8 @@ class AuthService
                 $roleUser = Role::where('name', 'User')->value('id');
                 $user->role()->associate($roleUser);
                 $user->save();
-
             } else {
-                
+
                 if ($user->deleted_at != null) {
                     $user->restore();
                 }
@@ -111,7 +100,6 @@ class AuthService
         };
         return $user;
     }
-
     /**
      * Run the request filter.
      *
@@ -123,5 +111,4 @@ class AuthService
     {
         return $next($request);
     }
-
 }
