@@ -16,7 +16,7 @@ var ShowVote = require('../views/votes/ShowVote');
 var Votes = require('../instances/Votes');
 
 var voteCollection=require('../collections/voteCollection');
-var listVotesCollection = require('../views/votes/ListVotesCollection');
+
 module.exports = Marionette.Object.extend({
     index: function () {
 
@@ -73,8 +73,8 @@ module.exports = Marionette.Object.extend({
 
         usersVotes.fetch();
 
-        app.render(new listVotesCollection({
-            collection: usersVotes
+        app.render(new ListVotes({
+        vc: usersVotes
         }));
     }
 });
