@@ -32,11 +32,10 @@ module.exports = Marionette.Behavior.extend({
     },
 
     send: function (e) {
+        e.preventDefault();
         if (helper.isOnlySpecialCharacters(this.view.ui[this.options.textui].val())) {
-            e.preventDefault();
             return;
         }
-        e.preventDefault();
         Radio.channel(this.options.channel).trigger(this.options.trigger, this.view);
     }
 
