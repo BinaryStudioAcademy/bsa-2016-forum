@@ -11,6 +11,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Collection;
 use App\Facades\TagService;
+use App\Models\Like;
 
 
 class TopicController extends ApiController
@@ -95,11 +96,13 @@ class TopicController extends ApiController
 
             if(!empty($topic->likes()->where('user_id', $user->id)->get()->first()))
             {
-                $topic->is_user= true;
+                $topic->is_user = true;
+                $topic->like_id = $topic->likes()->where('user_id', $user->id)->get()->first()->id;
             }
             else
             {
                 $topic->is_user= false;
+                $topic->like_id = null;
             }
             $topic->currentUser = $user->id;
         }
@@ -135,6 +138,16 @@ class TopicController extends ApiController
     {
         $topic = Topic::findOrFail($id);
         $topic->tags = $topic->tags()->get();
+
+        $like = $topic->likes()->where('user_id', Auth::user()->id)->first();
+        if ($like !== null) {
+            $topic->is_user = true;
+        }
+        else
+        {
+            $topic->is_user = false;
+        }
+
         $meta = $this->getMetaData($topic);
         return $this->setStatusCode(200)->respond($topic, $meta);
     }
@@ -161,6 +174,48 @@ class TopicController extends ApiController
         }
         $topic->tags = $topic->tags()->get();
         return $this->setStatusCode(200)->respond($topic);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $idTopic
+     * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
+     */
+    public function addLike($id)
+    {
+        $topic = Topic::findOrFail($id);
+
+        $user=Auth::user();
+
+        $like = new Like();
+        $like->user()->associate($user);
+
+        $topic->likes()->save($like);
+
+        return $this->setStatusCode(200)->respond($topic);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $idTopic
+     * @param  int $idLike
+     * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
+     */
+    public function removeLike($idTopic,$idLike)
+    {
+        $topic = Topic::findOrFail($idTopic);
+
+        $like = Like::findOrFail($idLike);
+
+        $user=Auth::user();
+
+        $like->delete();
+
+        return $this->setStatusCode(204)->respond();
     }
 
     /**

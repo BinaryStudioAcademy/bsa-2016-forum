@@ -9,6 +9,10 @@ var TopicCreate = require('../views/topics/topicCreate');
 var TopicModel = require('../models/TopicModel');
 var TopicDetailView = require('../views/topics/topicDetail');
 var currentUser = require('../initializers/currentUser');
+var TopicItem = require('../views/topics/topicItem');
+
+var BaseModel = require('../instances/Model');
+var _ = require('underscore');
 
 module.exports = Marionette.Object.extend({
 
@@ -54,5 +58,20 @@ module.exports = Marionette.Object.extend({
         var topicCollection = new UserTopicCollection({parentUrl: parentUrl});
         topicCollection.fetch();
         app.render(new topicLayout({collection: topicCollection}));
+    },
+
+    addLike: function(idTopic){
+        alert("addLikeFunction"+idTopic);
+        var TopicAddLikeModel=BaseModel.extend({
+            url:'/topics/'+idTopic+'/likes'
+        });
+
+        var topicAddLikeModel=new TopicAddLikeModel();
+
+        topicAddLikeModel.save();
+    },
+
+    removeLike: function(idTopic,idLike){
+        alert("removeLikeFunction"+idTopic+'***'+idLike);
     }
 });

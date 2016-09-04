@@ -9,11 +9,15 @@ module.exports = Marionette.ItemView.extend({
     tagName: 'div',
 
     ui: {
-        bookmarkTopic: '.bookmark-btn'
+        bookmarkTopic: '.bookmark-btn',
+        addLikeTopic: '.fa-star-o',
+        removeLikeTopic: 'fa-star'
     },
 
     events: {
-        'click @ui.bookmarkTopic': 'bookmarkTopic'
+        'click @ui.bookmarkTopic': 'bookmarkTopic',
+        'click @ui.addLikeTopic': 'addLikeTopic',
+        'click @ui.removeLikeTopic': 'removeLikeTopic'
     },
 
     unlockButton: function () {
@@ -33,13 +37,30 @@ module.exports = Marionette.ItemView.extend({
     },
 
     serializeData: function () {
+        var style='';
+        var href='';
+        if(this.model.get('is_user'))
+        {
+            style = 'fa fa-star fa-2x';
+            href =  '#topics/'+this.model.get('id')+'/likes/'+this.model.get('like_id');
+        }
+        else
+        {
+            style='fa fa-star-o fa-2x';
+            href =  '#topics/'+this.model.get('id')+'/likes';
+        }
         return {
             model: this.model.toJSON(),
-            createdDate: moment(this.model.get('created_at')).format('dd.MM.YYYY')
+            createdDate: moment(this.model.get('created_at')).format('dd.MM.YYYY'),
+            style: style,
+            href: href
         };
     },
 
+    modelEvents: { change: 'render' },
+
     onRender: function () {
+        alert("addLikeFunctionRender");
         var meta = this.model.getMeta();
 
         if (meta && meta.bookmark && meta.bookmark[this.model.attributes.id]) {
@@ -98,5 +119,10 @@ module.exports = Marionette.ItemView.extend({
                 }
             });
         }
+    },
+
+    addLikeTopicc1: function(){
+        this.model.fetch;
+        console.log(this.model.get('is_user'));
     }
 });

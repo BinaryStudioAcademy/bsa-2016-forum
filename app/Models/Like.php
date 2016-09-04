@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Like extends Model
 {
-    use SoftDeletes;
-    
     protected $fillable = ['user_id','likeable_id','likeable_type'];
     /**
      * The attributes that should be hidden for arrays.
