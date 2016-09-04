@@ -9,8 +9,10 @@ use App\Http\Requests\VoteResultRequest;
 use App\Models\VoteItem;
 use App\Models\VoteResult;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Carbon\Carbon;
 use App\Facades\TagService;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,8 +28,11 @@ class VoteController extends ApiController
     public function index(Request $request)
     {
         $this->setFiltersParameters($request);
-        $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
-        $meta = $this->getMetaData($votes);
+        $votes = Vote::filterByQuery($this->searchStr)
+            ->filterByTags($this->tagIds)
+            ->paginate(15)->getCollection();
+        $meta = $this->getMetaDataForCollection($votes);
+
         return $this->setStatusCode(200)->respond($votes, $meta);
     }
 
@@ -38,24 +43,42 @@ class VoteController extends ApiController
         $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
     }
 
+    private function getMetaDataForModel(Vote $vote)
+    {
+        $data = [];
+
+        //find the difference between two days
+        $created = new Carbon($vote->created_at);
+        $now = Carbon::now();
+        $difference = ($created->diff($now)->days < 1)
+            ? 'today'
+            : $created->diffForHumans($now);
+
+        $data[$vote->id] =
+            [
+                'user' => $vote->user()->first(),
+                'likes' => $vote->likes()->count(),
+                'comments' => $vote->comments()->count(),
+                'tags' => $vote->tags()->get(),
+                'days_ago' => $difference
+            ];
+
+        return $data;
+    }
+
     /**
-     * @param $votes array
-     * @return array $data array
+     * @param Collection $votes
+     * @return array
      */
-    private function getMetaData($votes)
+    private function getMetaDataForCollection(Collection $votes)
     {
         $data = [];
 
         foreach ($votes as $vote) {
 
-            $data[$vote->id] =
-                [
-                    'user' => $vote->user()->first(),
-                    'likes' => $vote->likes()->count(),
-                    'comments' => $vote->comments()->count(),
-                    'tags' => $vote->tags()->get(['name'])
-                ];
+            $data += $this->getMetaDataForModel($vote);
         }
+
         return $data;
     }
 
@@ -82,20 +105,9 @@ class VoteController extends ApiController
     {
         $vote = Vote::findOrFail($id);
 
-        $user = $vote->user()->first();
-        $likeCount = $vote->likes()->count();
-        $commentCount = $vote->comments()->count();
-        $tags = $vote->tags()->get(['name']);
+        $meta = $this->getMetaDataForModel($vote);
 
-        return $this->setStatusCode(200)->respond($vote, [
-                $vote->id => [
-                    'user' => $user,
-                    'likes' => $likeCount,
-                    'comments' => $commentCount,
-                    'tags' => $tags
-                ]
-            ]
-        );
+        return $this->setStatusCode(200)->respond($vote, $meta);
     }
 
     /**
@@ -164,7 +176,9 @@ class VoteController extends ApiController
             return $this->setStatusCode(200)->respond();
         }
 
-        return $this->setStatusCode(200)->respond($votes, ['user' => $user]);
+        $data=$this->getMetaDataForCollection($votes);
+
+        return $this->setStatusCode(200)->respond($votes, $data);
     }
 
     /**
