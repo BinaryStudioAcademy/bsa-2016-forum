@@ -7,10 +7,12 @@ use App\Models\User;
 use App\Http\Requests\VotesRequest;
 use App\Http\Requests\VoteResultRequest;
 use App\Models\VoteResult;
+use App\Models\VoteUniqueView;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Facades\TagService;
+use Illuminate\Support\Facades\Auth;
 
 class VoteController extends ApiController
 {
@@ -45,13 +47,18 @@ class VoteController extends ApiController
         $data = [];
 
         foreach ($votes as $vote) {
-
+            $usersWhoSaw = [];
+            foreach ($vote->voteUniqueViews()->get()->load('user') as $view) {
+                $usersWhoSaw[] = $view->user;
+            }
             $data[$vote->id] =
                 [
                     'user' => $vote->user()->first(),
                     'likes' => $vote->likes()->count(),
                     'comments' => $vote->comments()->count(),
-                    'tags' => $vote->tags()->get(['name'])
+                    'tags' => $vote->tags()->get(['name']),
+                    'numberOfUniqueViews' => $vote->voteUniqueViews()->count(),
+                    'usersWhoSaw' => $usersWhoSaw
                 ];
         }
         return $data;
@@ -79,21 +86,15 @@ class VoteController extends ApiController
     public function show($id)
     {
         $vote = Vote::findOrFail($id);
+        if (Auth::user()->id &&
+            !VoteUniqueView::where(['vote_id' => $vote->id, 'user_id' => Auth::user()->id])->first()
+        ) {
+            $voteUniqueView = VoteUniqueView::create(['vote_id' => $vote->id, 'user_id' => Auth::user()->id]);
+            $voteUniqueView->save();
+        }
 
-        $user = $vote->user()->first();
-        $likeCount = $vote->likes()->count();
-        $commentCount = $vote->comments()->count();
-        $tags = $vote->tags()->get(['name']);
-
-        return $this->setStatusCode(200)->respond($vote, [
-                $vote->id => [
-                    'user' => $user,
-                    'likes' => $likeCount,
-                    'comments' => $commentCount,
-                    'tags' => $tags
-                ]
-            ]
-        );
+        $meta = $this->getMetaData([$vote]);
+        return $this->setStatusCode(200)->respond($vote, $meta);
     }
 
     /**
