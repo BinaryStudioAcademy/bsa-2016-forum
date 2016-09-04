@@ -5,7 +5,7 @@ module.exports = BaseCollection.extend({
     model: Model,
     url: '/votes',
     initialize: function (models, options) {
-        if (options.parentUrl) {
+        if (options && options.parentUrl) {
             this.parentUrl = options.parentUrl;
         }
     }

@@ -32,7 +32,7 @@ module.exports = {
             controller: new IdeaHubController(),
             appRoutes: {
                 'votes': 'index',
-                'votes/:id': 'showVote',
+                'votes/:id': 'showVote'
             },
             navigItemName: 'votes'
         },
@@ -48,7 +48,7 @@ module.exports = {
         {
             controller: new UserController(),
             appRoutes: {
-                'users': 'index',
+                'users': 'index'
             },
             navigItemName: 'users'
         },

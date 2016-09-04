@@ -27,8 +27,6 @@ module.exports = Marionette.Object.extend({
     },
     showVote: function (id) {
         var AddCommentView = require('../views/votes/VoteCommentItemAdd');
-
-
         var view;
         var model;
         var parentUrl = '/votes/' + id;
@@ -74,7 +72,8 @@ module.exports = Marionette.Object.extend({
         usersVotes.fetch();
 
         app.render(new ListVotes({
-        vc: usersVotes
-        }));
+            vc: usersVotes
+        })
+        );
     }
 });
