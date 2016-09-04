@@ -34,11 +34,16 @@ class VoteItemRequest extends ApiRequest
             }
 
         };
-        return [
+        $rules = [
             'vote_id' => 'required|exists:votes,id|integer',
-            'name' => 'required|not_in:' . $stringOfVoteItemsNames,
+            'name' => 'required',
             'user_id' => 'required|integer|is_current_user',
         ];
+        if($stringOfVoteItemsNames !== ''){
+            $stringOfVoteItemsNames = substr($stringOfVoteItemsNames,0,-1);
+            $rules['name'] .= '|not_in:' . $stringOfVoteItemsNames;
+        }
+        return $rules;
     }
 
     public function messages()
