@@ -68,12 +68,15 @@ class TopicController extends ApiController
             $topic->answersCount = $topic->comments()->count();
 
             $like = $topic->likes()->where('user_id', Auth::user()->id)->first();
-            if ($like !== null) {
+            if(!empty($topic->likes()->where('user_id', Auth::user()->id)->get()->first()))
+            {
                 $topic->is_user = true;
+                $topic->like_id = $topic->likes()->where('user_id', Auth::user()->id)->get()->first()->id;
             }
             else
             {
-                $topic->is_user = false;
+                $topic->is_user= false;
+                $topic->like_id = null;
             }
         }
 

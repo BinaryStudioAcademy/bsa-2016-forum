@@ -3,6 +3,9 @@ var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
 var moment = require('momentjs');
 
+var TopicAddLikeModel = require('../../models/TopicAddLikeModel');
+var TopicRemoveLikeModel = require('../../models/TopicRemoveLikeModel');
+
 module.exports = Marionette.ItemView.extend({
     template: 'topicItem',
     className: 'row post-item',
@@ -11,7 +14,7 @@ module.exports = Marionette.ItemView.extend({
     ui: {
         bookmarkTopic: '.bookmark-btn',
         addLikeTopic: '.fa-star-o',
-        removeLikeTopic: 'fa-star'
+        removeLikeTopic: '.fa-star'
     },
 
     events: {
@@ -119,4 +122,23 @@ module.exports = Marionette.ItemView.extend({
             });
         }
     },
+
+    addLikeTopic: function(){
+        alert("addLikeFunction"+this.model.id);
+        var parentUrl = '/topics/'+this.model.id;
+        var topicAddLikeModel=new TopicAddLikeModel({parentUrl: parentUrl});
+        topicAddLikeModel.save();
+    },
+
+    removeLikeTopic: function(){
+        alert("removeLikeFunction"+this.model.id+'***'+this.model.get('like_id'));
+        var parentUrl = '/topics/'+this.model.id+'/likes/'+this.model.get('like_id');
+        var topicRemoveLikeModel = new TopicRemoveLikeModel({parentUrl: parentUrl,id:this.model.get('like_id')});
+        topicRemoveLikeModel.destroy({success: function(model, response) {
+            alert("model deleted");
+        },
+            error:function(){
+                alert("ooops");
+            }});
+    }
 });
