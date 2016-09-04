@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\VotePermissionRequest;
 use App\Models\Vote;
 use App\Models\User;
 use App\Http\Requests\VotesRequest;
