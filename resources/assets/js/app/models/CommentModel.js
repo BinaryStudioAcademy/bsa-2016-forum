@@ -4,9 +4,10 @@ var _ = require('underscore');
 module.exports = BaseModel.extend({
     urlRoot: '/comments',
     initialize: function (data, options) {
-        if (options.parentUrl) {
-            this.parentUrl = options.parentUrl;
-        }
+        if (options)
+            if (options.parentUrl) {
+                this.parentUrl = options.parentUrl;
+            }
     },
     defaults: {
         rating: 0
