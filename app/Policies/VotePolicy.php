@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Vote;
-use Carbon\Carbon;
+use App\Models\Comment;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class VotePolicy
@@ -20,12 +20,12 @@ class VotePolicy
 
     public function delete(User $user, Vote $vote)
     {
-        return $user->owns($vote) && ((new Carbon($vote->created_at))->addMinutes(17)->diffInMinutes(Carbon::now(), false) < 0);
+        return $user->owns($vote) && (!$vote->hasChildComments() && !$vote->hasVoteResults());
     }
 
     public function update(User $user, Vote $vote)
     {
-        return $user->owns($vote) && ((new Carbon($vote->finished_at))->diffInMinutes(Carbon::now(), false) < 0);
+        return $user->owns($vote);
     }
 
     public function createVoteTag(User $user, Vote $vote)

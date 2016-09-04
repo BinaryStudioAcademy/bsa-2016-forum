@@ -11,6 +11,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Facades\TagService;
+use Illuminate\Support\Facades\Auth;
 
 class VoteController extends ApiController
 {
@@ -24,7 +25,10 @@ class VoteController extends ApiController
     public function index(Request $request)
     {
         $this->setFiltersParameters($request);
-        $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
+        if(Auth::user()->isAdmin())
+            $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->withTrashed()->get();
+        else
+            $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
         $meta = $this->getMetaData($votes);
         return $this->setStatusCode(200)->respond($votes, $meta);
     }
@@ -49,7 +53,8 @@ class VoteController extends ApiController
                     'user' => $vote->user()->first(),
                     'likes' => $vote->likes()->count(),
                     'comments' => $vote->comments()->count(),
-                    'tags' => $vote->tags()->get(['name'])
+                    'tags' => $vote->tags()->get(['name']),
+                    'deletable' => $vote->canBeDeleted(Auth::user())
                 ];
         }
         return $data;
@@ -88,7 +93,8 @@ class VoteController extends ApiController
                     'user' => $user,
                     'likes' => $likeCount,
                     'comments' => $commentCount,
-                    'tags' => $tags
+                    'tags' => $tags,
+                    'deletable' => $vote->canBeDeleted(Auth::user())
                 ]
             ]
         );

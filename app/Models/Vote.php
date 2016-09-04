@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 
 class Vote extends Model
@@ -74,6 +75,16 @@ class Vote extends Model
         return $this->morphToMany(Notification::class, 'notificationable');
     }
 
+    public function hasChildComments()
+    {
+        return $this->comments()->exists();
+    }
+    
+    public function hasVoteResults()
+    {
+        return $this->voteResults()->exists();
+    }
+
     /**
      * Scope a query to only include votes which contain a searching text in the vote's title
      * @param \Illuminate\Database\Eloquent\Builder $query
@@ -103,5 +114,9 @@ class Vote extends Model
             });
         }
         return $query;
+    }
+    
+    public function canBeDeleted($user) {
+        return $user->isAdmin() || (!$this->hasChildComments() && !$this->hasVoteResults() && $user->owns($this));
     }
 }
