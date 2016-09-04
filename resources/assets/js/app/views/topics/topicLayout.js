@@ -3,6 +3,7 @@ var Marionette = require('backbone.marionette');
 var app = require('../../instances/appInstance');
 var logger = require('../../instances/logger');
 var topicCollection = require('./topicCollection');
+var _ = require('underscore');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'topicLayout',
@@ -10,6 +11,7 @@ module.exports = Marionette.LayoutView.extend({
     regions: {
         container: '#posts'
     },
+
 
     ui: {
         createTopic: '.create-topic'

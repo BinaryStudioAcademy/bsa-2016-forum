@@ -28,7 +28,7 @@ module.exports = Marionette.Object.extend({
 
     indexInCategory: function (catId) {
         var topicCollection = new TopicCollection({catId: catId});
-        topicCollection.url = '/categories/' + catId + '/topics';
+        topicCollection.parentUrl = '/categories/' + catId;
         topicCollection.fetch();
         app.render(new topicLayout({collection: topicCollection}));
     },
