@@ -12,7 +12,6 @@ module.exports = Marionette.LayoutView.extend({
         container: '#posts'
     },
 
-
     ui: {
         createTopic: '.create-topic'
     },

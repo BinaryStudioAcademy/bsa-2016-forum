@@ -100,7 +100,7 @@ module.exports = Marionette.ItemView.extend({
             //if max files count
             maxfilesexceeded: function (file) {
                 this.removeFile(file);
-                view.$('.errors').text('Max files is 5');
+                view.ui.errors.text('Max files is 5');
             },
             uploadMultiple: false,
             addRemoveLinks: true,

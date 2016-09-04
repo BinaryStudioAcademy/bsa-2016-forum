@@ -3,6 +3,7 @@ var _ = require('underscore');
 var Radio = require('backbone.radio');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
+var dateHelper = require('../../helpers/dateHelper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicHeader',
@@ -20,6 +21,7 @@ module.exports = Marionette.ItemView.extend({
                 user: meta.user,
                 likes: meta.likes,
                 comments: meta.comments,
+                createdDate: dateHelper.middleDate(this.model.get('created_at'))
             }
         };
     },
