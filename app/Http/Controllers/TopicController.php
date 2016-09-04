@@ -126,7 +126,7 @@ class TopicController extends ApiController
     {
         $topic = Topic::findOrFail($id);
         $topic->tags = $topic->tags()->get();
-        $meta = $this->getMetaData($topic);
+        $meta = $this->getMetaData([$topic]);
         return $this->setStatusCode(200)->respond($topic, $meta);
     }
 
