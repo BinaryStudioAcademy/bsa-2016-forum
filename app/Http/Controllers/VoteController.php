@@ -28,8 +28,8 @@ class VoteController extends ApiController
         $votes = Vote::filterByQuery($this->searchStr)
             ->filterByTags($this->tagIds)
             ->paginate(15)->getCollection();
-
         $meta = $this->getMetaDataForCollection($votes);
+
         return $this->setStatusCode(200)->respond($votes, $meta);
     }
 
@@ -66,7 +66,7 @@ class VoteController extends ApiController
 
         foreach ($votes as $vote) {
 
-            $this->getMetaDataForModel($vote);
+            $data += $this->getMetaDataForModel($vote);
         }
 
         return $data;

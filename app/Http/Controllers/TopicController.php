@@ -47,7 +47,7 @@ class TopicController extends ApiController
         $data = [];
 
         foreach ($topics as $topic) {
-            $this->getMetaDataForModel($topic);
+            $data += $this->getMetaDataForModel($topic);
         }
 
         return $data;
