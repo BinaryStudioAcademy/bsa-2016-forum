@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Facades\TagService;
+use Illuminate\Support\Facades\Auth;
 
 class VoteController extends ApiController
 {
@@ -44,12 +45,12 @@ class VoteController extends ApiController
     {
         $data = [];
 
-        $data[$vote->id] =
-            [
+        $data[$vote->id] = [
                 'user' => $vote->user()->first(),
                 'likes' => $vote->likes()->count(),
                 'comments' => $vote->comments()->count(),
-                'tags' => $vote->tags()->get(['name'])
+                'tags' => $vote->tags()->get(['name']),
+                'deletable' => $vote->canBeDeleted(Auth::user())
             ];
 
 
