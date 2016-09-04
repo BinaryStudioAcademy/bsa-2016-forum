@@ -59,7 +59,7 @@ module.exports = Marionette.Object.extend({
         
         var addedCommentsCollection = new CommentsCollection([], {parentUrl: ''});
         myCommentsCollection.listenTo(Radio.channel('VoteComments' + id), 'newComment', function (comment) {
-            if (comment.user_id == currentUser.id) {
+            if (comment.user_id != currentUser.id) {
                 $('.new-comment-notification').show(300);
 
                 addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
