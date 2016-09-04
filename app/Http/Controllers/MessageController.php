@@ -130,8 +130,6 @@ class MessageController extends ApiController
         if (!$message) {
             throw (new ModelNotFoundException)->setModel(Message::class);
         }
-        $message->message = "Removed";
-        $message->save();
         $message->delete();
         event(new UpdatedMessageEvent($message));
         return $this->setStatusCode(204)->respond();
