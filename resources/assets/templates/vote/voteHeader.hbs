@@ -4,7 +4,7 @@
         <h5>Opened by: {{ meta.user.first_name }}  {{ meta.user.last_name }}</h5>
         <div class="vote-tags"><p>
             {{#each meta.tags}}
-                <a href="#votes/tags/{{name}}" style="color: #333;"><span>#{{name}}</span></a>
+                <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
             {{/each}}
         </div>
     </div>

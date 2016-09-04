@@ -37,7 +37,11 @@ VOTE DETAIL
   color: #999999;
 }
 
-.vote-tags span {
+.vote-tags a {
+  color: #333;
+}
+
+.vote-tags a span {
   background: #ffec96;
   border: #ffc761 1px solid;
   font-size: 12px;
