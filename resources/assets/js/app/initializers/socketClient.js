@@ -30,8 +30,12 @@ module.exports = new function () {
         logger("Socket: Updated one message.")
     });
 
-    this.socket.on('newComment', function (msg) {
-        Radio.channel('commentsChannel').trigger('newComment', msg);
+    this.socket.on('newComment', function (comment) {
+        var commentType = comment.commentable_type.split('\\');
+        commentType = commentType[commentType.length-1];
+        var channelName = commentType + 'Comments' + comment.commentable_id;
+
+        Radio.channel(channelName).trigger('newComment', comment);
         logger("Socket: New Comment come.")
     });
 
