@@ -5,8 +5,9 @@ module.exports = BaseCollection.extend({
     model: Model,
     url: '/voteresult',
     initialize: function (models, options) {
-        if (options.parentUrl) {
-            this.parentUrl = options.parentUrl;
-        }
+        if (options)
+            if (options.parentUrl) {
+                this.parentUrl = options.parentUrl;
+            }
     }
 });
