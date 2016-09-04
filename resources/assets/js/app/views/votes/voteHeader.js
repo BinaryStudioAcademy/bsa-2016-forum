@@ -24,7 +24,8 @@ module.exports = Marionette.ItemView.extend({
             user: {},
             likes: {},
             comments: {},
-            tags: {}
+            tags: {},
+            deletable: false
         };
         if (tempmeta) {
             var id = this.model.get('id');
