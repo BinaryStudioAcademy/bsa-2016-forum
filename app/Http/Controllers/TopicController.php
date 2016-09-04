@@ -17,8 +17,6 @@ class TopicController extends ApiController
 {
     protected $searchStr = null;
 
-    protected $tagIds = [];
-
     /**
      * /**
      * @param $topics array
