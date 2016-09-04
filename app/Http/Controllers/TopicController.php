@@ -94,8 +94,11 @@ class TopicController extends ApiController
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
         }
+        $meta = [];
+        if($topics->items()){
+            $meta = $this->getMetaData($topics->items());
+        }
 
-        $meta = $this->getMetaData($topics->items());
         return $this->setStatusCode(200)->respond($topics->items(), $meta);
     }
 
