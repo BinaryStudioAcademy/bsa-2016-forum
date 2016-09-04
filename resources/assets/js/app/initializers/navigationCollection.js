@@ -45,9 +45,3 @@ module.exports = new navigCollection([
     }
 
 ]);
-
-// <div class="users-item-vote">
-//     <a href='#/users/{{id}}/votes'>
-//     <img src="/images/vote_img.png"><div class="hidden-xs"><span>My idea hubs</span></div>
-// </a>
-// </div>
