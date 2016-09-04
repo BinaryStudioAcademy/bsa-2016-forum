@@ -28,8 +28,8 @@ class VoteController extends ApiController
         $votes = Vote::filterByQuery($this->searchStr)
             ->filterByTags($this->tagIds)
             ->paginate(15)->getCollection();
-        
-        $meta = $this->getMetaData($votes);
+
+        $meta = $this->getMetaDataForCollection($votes);
         return $this->setStatusCode(200)->respond($votes, $meta);
     }
 
@@ -40,24 +40,33 @@ class VoteController extends ApiController
         $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
     }
 
+    private function getMetaDataForModel(Vote $vote)
+    {
+        $data = [];
+
+        $data[$vote->id] =
+            [
+                'user' => $vote->user()->first(),
+                'likes' => $vote->likes()->count(),
+                'comments' => $vote->comments()->count(),
+                'tags' => $vote->tags()->get(['name'])
+            ];
+
+
+        return $data;
+    }
+
     /**
      * @param Collection $votes
      * @return array
      */
-    private function getMetaData(Collection $votes)
+    private function getMetaDataForCollection(Collection $votes)
     {
         $data = [];
-        if($votes){
-            foreach ($votes as $vote) {
 
-                $data[$vote->id] =
-                    [
-                        'user' => $vote->user()->first(),
-                        'likes' => $vote->likes()->count(),
-                        'comments' => $vote->comments()->count(),
-                        'tags' => $vote->tags()->get(['name'])
-                    ];
-            } 
+        foreach ($votes as $vote) {
+
+            $this->getMetaDataForModel($vote);
         }
 
         return $data;
@@ -86,20 +95,9 @@ class VoteController extends ApiController
     {
         $vote = Vote::findOrFail($id);
 
-        $user = $vote->user()->first();
-        $likeCount = $vote->likes()->count();
-        $commentCount = $vote->comments()->count();
-        $tags = $vote->tags()->get(['name']);
+        $meta = $this->getMetaDataForModel($vote);
 
-        return $this->setStatusCode(200)->respond($vote, [
-                $vote->id => [
-                    'user' => $user,
-                    'likes' => $likeCount,
-                    'comments' => $commentCount,
-                    'tags' => $tags
-                ]
-            ]
-        );
+        return $this->setStatusCode(200)->respond($vote, $meta);
     }
 
     /**
