@@ -11,6 +11,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Facades\TagService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class VoteController extends ApiController
@@ -41,10 +42,10 @@ class VoteController extends ApiController
     }
 
     /**
-     * @param $votes array
-     * @return array $data array
+     * @param Collection $votes
+     * @return array
      */
-    private function getMetaData($votes)
+    private function getMetaData(Collection $votes)
     {
         $data = [];
 
