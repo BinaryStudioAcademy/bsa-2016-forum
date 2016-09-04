@@ -40,6 +40,14 @@ module.exports = {
         },
 
         {
+            controller: new IdeaHubController(),
+            appRoutes: {
+                'userVotes':'showUserVotes'
+            },
+            navigItemName: 'myVotes'
+        },
+
+        {
             controller: new UserController(),
             appRoutes: {
                 'users': 'index'

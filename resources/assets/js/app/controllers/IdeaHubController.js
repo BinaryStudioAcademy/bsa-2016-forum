@@ -1,7 +1,6 @@
 var app = require('../instances/appInstance');
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
-var moment = require('moment');
 
 var currentUser = require('../initializers/currentUser');
 
@@ -20,6 +19,8 @@ var CreateVote = require('../views/votes/CreateVote');
 
 var Votes = require('../instances/Votes');
 
+var voteCollection=require('../collections/voteCollection');
+
 module.exports = Marionette.Object.extend({
     index: function () {
 
@@ -30,8 +31,6 @@ module.exports = Marionette.Object.extend({
     },
     showVote: function (id) {
         var AddCommentView = require('../views/votes/VoteCommentItemAdd');
-
-
         var view;
         var model;
         var parentUrl = '/votes/' + id;
@@ -94,5 +93,16 @@ module.exports = Marionette.Object.extend({
         });
 
         app.render(view);
+    },
+
+    showUserVotes: function() {
+        var parentUrl = '/users/' + currentUser.id;
+        var usersVotes = new voteCollection([], {parentUrl: parentUrl});
+
+        usersVotes.fetch();
+
+        app.render(new ListVotes({
+            vc: usersVotes
+        }));
     }
 });

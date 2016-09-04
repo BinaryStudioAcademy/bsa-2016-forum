@@ -1,6 +1,7 @@
 var Marionette = require('backbone.marionette');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
+var dateHelper = require('../../helpers/dateHelper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicDetail',
@@ -27,6 +28,13 @@ module.exports = Marionette.ItemView.extend({
 
     addOkIcon: function () {
         this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
+    },
+
+    serializeData: function () {
+        return {
+            model: this.model.toJSON(),
+            createdDate: dateHelper.middleDate(this.model.get('created_at'))
+        };
     },
 
     onRender: function () {
