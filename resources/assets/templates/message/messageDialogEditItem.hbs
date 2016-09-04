@@ -4,7 +4,7 @@
             <form id="message-edit-form">
                 <div class="modal-body">
                     <textarea required id="edited-message">{{message.message}}</textarea>
-                    <span>{{edit_at}} {{message.updated_at}}</span>
+                    <span>{{edit_at}} <date class="messageDate" realdate="{{updatedStaticDate}}">{{updatedDate}}</date></span>
                 </div>
                 <div class="modal-footer message-new-control">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
