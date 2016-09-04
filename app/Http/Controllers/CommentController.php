@@ -242,7 +242,8 @@ class CommentController extends ApiController
         foreach ($comments as $comment) {
             $meta[$comment->id] = [
                 'user' => $comment->user()->first(),
-                'comments' => $comment->comments()->count()
+                'comments' => $comment->comments()->count(),
+                'deletable' => !$comment->trashed()
             ];
         }
         return $meta;
@@ -254,7 +255,7 @@ class CommentController extends ApiController
      */
     public function getVoteComments(Vote $vote)
     {
-        $comments = $vote->comments()->orderBy('id', 'desc')->get();
+        $comments = $vote->comments()->withTrashed()->orderBy('id', 'desc')->get();
 
         $meta = $this->makeCommentsMeta($comments);
         return $this->setStatusCode(200)->respond($comments, $meta);
@@ -532,7 +533,7 @@ class CommentController extends ApiController
     public function getCommentComments(Comment $comment)
     {
         $meta = [];
-        $comments = $comment->comments()->orderBy('id', 'asc')->get();
+        $comments = $comment->comments()->withTrashed()->orderBy('id', 'asc')->get();
         foreach ($comments as $item) {
             $meta[$item->id] = [
                 'comments' => $item->comments()->count(),

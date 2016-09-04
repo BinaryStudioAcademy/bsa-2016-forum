@@ -52,15 +52,11 @@ module.exports = Marionette.LayoutView.extend({
                 user: tempmeta.user,
                 comments: tempmeta.comments,
                 level: this.model.collection.level,
-                time: moment(this.model.get('created_at'), "YYYY-MM-DD h:mm:ss").fromNow()
+                deletable: tempmeta.deletable
             }
         };
     },
     updateCount: function () {
-
         this.ui.count.text('Comments: ' + this.collection.length);
-    },
-    remove: function () {
-        this.$el.fadeOut();
     }
 });
