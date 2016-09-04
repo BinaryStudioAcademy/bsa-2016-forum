@@ -32,7 +32,9 @@ module.exports = Marionette.Behavior.extend({
     },
 
     send: function (e) {
-        if (helper.isOnlySpecialCharacters(this.ui.message.val())) {
+        console.log(this.view.ui[this.options.textui].val());
+        if (helper.isOnlySpecialCharacters(this.view.ui[this.options.textui].val())) {
+            e.preventDefault();
             return;
         }
         e.preventDefault();
