@@ -33,7 +33,6 @@ module.exports = {
             appRoutes: {
                 'votes': 'index',
                 'votes/:id': 'showVote',
-                'userVotes':'showUserVotes'
             },
             navigItemName: 'votes'
         },

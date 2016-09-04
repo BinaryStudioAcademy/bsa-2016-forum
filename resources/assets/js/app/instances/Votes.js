@@ -1,3 +1,3 @@
 var VotesCollection = require('../collections/voteCollection');
 
-module.exports = new VotesCollection();
+module.exports = new VotesCollection([], {parentUrl: ''});
