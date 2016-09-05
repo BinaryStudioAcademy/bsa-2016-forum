@@ -15,6 +15,9 @@ var userCollectionView = require('../users/userCollection');
 module.exports = Marionette.LayoutView.extend({
     className: 'well',
     template: 'voteCreateLayout',
+    initialize:function() {
+        this.model.set({user_id: currentUser.get('id')});
+    },
     regions: {
         answers: '#vote-answers',
         voteAcessedUsers: '#vote-access-users',
@@ -26,10 +29,10 @@ module.exports = Marionette.LayoutView.extend({
         title: '#question-title',
         errors: '.js-errors',
         tags: '#tags',
-        isPublic: 'input[name=access]:checked',
+        isPublic: 'input[name=access]',
         finished: '#finished',
         dateerrors: '.js-date-errors',
-        isSingle: 'input[name=isSingle]:checked'
+        isSingle: 'input[name=isSingle]'
     },
     modelEvents: {
         'invalid': function (model, errors) {
@@ -39,15 +42,17 @@ module.exports = Marionette.LayoutView.extend({
                 self.$('.js-error-' + key).html(error);
             });
         },
-        'saved': function (id) {
-            this.ui.errors.empty();
-            this.ui.dateerrors.empty();
-            this.createVoteItems(id);
-        }
-    },
-    collectionEvents: {
-        'voteItemsSaved': function () {
-            Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
+        'change:id': function () {
+            var id = this.model.get('id');
+
+            this.collection.parentUrl = '/votes/' + id;
+
+            this.collection.each(function (model, index) {
+                model.save({
+                    vote_id: id
+                });
+            });
+
         }
     },
     events: {
@@ -56,20 +61,21 @@ module.exports = Marionette.LayoutView.extend({
         },
         'click @ui.start': 'createVote',
         'change @ui.title': function () {
-            this.model.set({title: this.ui.title.val()});
+            this.model.save({title: this.ui.title.val()});
         },
         'click @ui.isPublic': function () {
-            this.model.set({is_public: this.ui.isPublic.prop('checked')});
+            this.model.set({is_public: this.ui.isPublic.filter(':checked').val()});
             if (this.ui.isPublic.prop('checked')) {
                 this.$('.vote-new-access').hide();
             } else
                 this.$('.vote-new-access').show();
         },
         'click @ui.isSingle': function () {
-            this.model.set({is_single: this.ui.isSingle.prop('checked')});
+            this.model.set({is_single: this.ui.isSingle.filter(':checked').val()});
         },
         'change @ui.finished': function () {
             var field = this.ui.finished;
+            this.model.save({finished_at: DateHelper.dateWithoutTimezone(this.ui.finished.val())});
             field.addClass('bordered-success');
             setTimeout(function () {
                 field.removeClass('bordered-success');
@@ -77,9 +83,11 @@ module.exports = Marionette.LayoutView.extend({
         }
     },
     onRender: function () {
-        this.ui.finished.trigger('change');
-
-        this.getRegion('answers').show(new CreateVoteItemCollection({collection: this.collection}));
+        var self = this;
+        this.getRegion('answers').show(new CreateVoteItemCollection({
+            collection: this.collection,
+            parent: self.model
+        }));
 
         this.getRegion('voteNotAccessedUsers').show(new userCollectionView({
             collection: this.options.users,
@@ -108,30 +116,12 @@ module.exports = Marionette.LayoutView.extend({
             });
         }
         view.model.save({
-            user_id: currentUser.get('id'),
-            finished_at: DateHelper.dateWithoutTimezone(this.ui.finished.val()),
             users: users,
             tags: tags
         }, {
             success: function (data) {
-                view.model.trigger('saved', data.get('id'));
+                Backbone.history.navigate('votes/' + data.get('id'), {trigger: true});
             }
-        });
-    },
-    createVoteItems: function (id) {
-        var collection = this.collection;
-        collection.parentUrl = '/votes/' + id;
-        collection.itemsToSave = 0;
-        _.each(collection.models, function (model, key) {
-            if (model.hasChanged('name') || !model.get('id'))
-                if(model.save({
-                    user_id: currentUser.get('id'),
-                    vote_id: id
-                }, {
-                    success: function () {
-                        model.trigger('saved');
-                    }
-                })) {collection.itemsToSave++;}
         });
     }
 });
