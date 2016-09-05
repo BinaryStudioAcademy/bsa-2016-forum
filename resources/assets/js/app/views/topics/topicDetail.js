@@ -6,7 +6,6 @@ var Radio = require('backbone.radio');
 var TopicHeaderView = require('./topicHeader');
 
 module.exports = Marionette.LayoutView.extend({
-
     template: 'topicDetail',
 
     regions: {
@@ -33,6 +32,6 @@ module.exports = Marionette.LayoutView.extend({
         this.getRegion('comments').show(new CommentsCollectionView({
           collection: this.collection
         }));
-    }
+    },
 
 });
