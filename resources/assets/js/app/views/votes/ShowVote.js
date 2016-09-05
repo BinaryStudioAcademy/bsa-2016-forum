@@ -47,7 +47,7 @@ module.exports = Marionette.LayoutView.extend({
         var self = this;
         this.collection.listenTo(Radio.channel('VoteComments' + this.options.voteModel.id),
                                     'newComment', function (comment) {
-            if (comment.user_id == currentUser.id) {
+            if (comment.user_id != currentUser.id) {
                 self.$('.new-comment-notification').show(300);
 
                 self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
