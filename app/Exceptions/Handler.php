@@ -96,7 +96,7 @@ class Handler extends ExceptionHandler
         if ($e instanceof CloudinaryErorr) {
             return response('Cloud error: ' . $e->getMessage(), 400);
         }
-        
+
         return parent::render($request, $e);
     }
 }
