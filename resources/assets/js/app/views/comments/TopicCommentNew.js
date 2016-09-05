@@ -207,5 +207,5 @@ module.exports = Marionette.ItemView.extend({
         this.ui.commentDlg.on('hidden.bs.modal', function (e) {
             this.remove();
         }.bind(this));
-    },
+    }
 });

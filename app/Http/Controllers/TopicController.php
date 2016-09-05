@@ -21,20 +21,40 @@ class TopicController extends ApiController
      * @param Topic $topic
      * @return array
      */
+
+    private function getItemMetaData($topic)
+    {
+        return [
+            'user' => $topic->user()->first(),
+            'likes' => $topic->likes()->count(),
+            'comments' => $topic->comments()->count(),
+            'bookmarks' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first()
+        ];
+    }
+
+    private function getCollectionMetaData($topics)
+    {
+        $data = [];
+
+        if ($topics) {
+            foreach ($topics as $topic) {
+                $data[$topic->id] = $this->getItemMetaData($topic);
+            }
+        }
+
+        return $data;
+    }
+
     private function getMetaDataForModel(Topic $topic)
     {
         $data = [];
-        $bookmark = $topic->bookmarks()
-            ->where('user_id', Auth::user()->id)->first();
+        $bookmark = $topic->bookmarks()->where('user_id', Auth::user()->id)->first();
 
         if ($bookmark !== null) {
-            $data['bookmark'][$topic->id] = $topic->bookmarks()
-                ->where('user_id', Auth::user()->id)->first();
+            $data['bookmark'][$topic->id] = $topic->bookmarks()->where('user_id', Auth::user()->id)->first();
         }
 
-
         return $data;
-
     }
 
 
@@ -126,7 +146,8 @@ class TopicController extends ApiController
     {
         $topic = Topic::findOrFail($id);
         $topic->tags = $topic->tags()->get();
-        $meta = $this->getMetaDataForModel($topic);
+//        $meta = $this->getMetaDataForModel($topic);
+        $meta = $this->getItemMetaData($topic);
 
         return $this->setStatusCode(200)->respond($topic, $meta);
     }
@@ -180,6 +201,7 @@ class TopicController extends ApiController
      * @param  TopicRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
+
     public function getUserTopics($userId, TopicRequest $request)
     {
         $user = User::findOrFail($userId);
@@ -222,7 +244,6 @@ class TopicController extends ApiController
         }
 
         return $this->setStatusCode(200)->respond($topic, ['user' => $user]);
-
     }
 
     /**

@@ -13,27 +13,24 @@ use Gate;
 class CommentController extends ApiController
 {
 
+    private function getItemMetaData($comment)
+    {
+        return [
+            'user' => $comment->user()->first(),
+            'likes' => $comment->likes()->count(),
+            'attachments' => $comment->attachments()->get()
+        ];
+    }
+
     private function getCollectionMetaData($comments)
     {
         $data = [];
 
         if ($comments) {
             foreach ($comments as $comment) {
-                $data[$comment->id]['user'] = $comment->user()->first();
-                $data[$comment->id]['likes'] = $comment->likes()->count();
-                $data[$comment->id]['attachments'] = $comment->attachments()->get();
+                $data[$comment->id] = $this->getItemMetaData($comment);
             }
         }
-
-        return $data;
-    }
-
-    private function getItemMetaData($comment)
-    {
-        $data = [];
-        $data[$comment->id]['user'] = $comment->user()->first();
-        $data[$comment->id]['likes'] = $comment->likes()->count();
-        $data[$comment->id]['attachments'] = $comment->attachments()->get();
 
         return $data;
     }

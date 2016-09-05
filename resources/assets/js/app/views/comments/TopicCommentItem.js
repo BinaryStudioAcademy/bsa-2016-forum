@@ -2,8 +2,6 @@ var Marionette = require('backbone.marionette');
 var _ = require('underscore');
 var logger = require('../../instances/logger');
 var Radio = require('backbone.radio');
-var AttachmentsCollectionView = require('./AttachmentsCollection');
-var AttachmentCollection = require('../../collections/AttachmentCollection');
 var currentUser = require('../../initializers/currentUser');
 
 module.exports = Marionette.LayoutView.extend({
@@ -70,16 +68,7 @@ module.exports = Marionette.LayoutView.extend({
         };
     },
 
-    showAttachments: function () {
-        var meta = this.model.getMeta();
-        var id = this.model.get('id');
-        this._attachs.set(meta[id].attachments);
-        this.getRegion('attachments').show(new AttachmentsCollectionView({
-            collection: this._attachs
-        }));
-    },
-
     modelEvents: {
-        'change': 'render',
-    },
+        'change': 'render'
+    }
 });

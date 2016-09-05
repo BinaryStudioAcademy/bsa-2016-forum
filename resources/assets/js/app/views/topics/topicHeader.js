@@ -1,9 +1,9 @@
 var Marionette = require('backbone.marionette');
 var _ = require('underscore');
-var Radio = require('backbone.radio');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
+var logger = require('../../instances/logger');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicHeader',
@@ -14,7 +14,15 @@ module.exports = Marionette.ItemView.extend({
 
     serializeData: function () {
         var meta = this.model.getMeta();
-        if (!meta) return {};
+        if (!meta) return {
+            model: this.model.toJSON(),
+            meta: {
+                user: {},
+                likes: 0,
+                comments: 0,
+                createdDate: dateHelper.middleDate(this.model.get('created_at'))
+            }
+        };
         return {
             model: this.model.toJSON(),
             meta: {

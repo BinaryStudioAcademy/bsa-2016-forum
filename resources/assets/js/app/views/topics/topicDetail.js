@@ -11,11 +11,11 @@ module.exports = Marionette.LayoutView.extend({
     regions: {
         'newComment': '#newcomment',
         'topicHeader': '.topic-head',
-        'comments': '.topic-comments',
+        'comments': '.topic-comments'
     },
 
     ui: {
-        'answer': '.topic-answer-btn',
+        'answer': '.topic-answer-btn'
     },
 
     events: {
@@ -32,6 +32,6 @@ module.exports = Marionette.LayoutView.extend({
         this.getRegion('comments').show(new CommentsCollectionView({
           collection: this.collection
         }));
-    },
+    }
 
 });
