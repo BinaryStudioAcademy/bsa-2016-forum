@@ -18,7 +18,13 @@ class MessageController extends ApiController
     /**
      * The time interval in minutes
      */
-    const INTERVAL = 15;
+    protected $interval;
+
+    public function __construct()
+    {
+        $this->interval = env('RESTRICT_INTERVAL', 15);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -113,7 +119,7 @@ class MessageController extends ApiController
 
         $user = User::findOrFail($userId);
 
-        $this->authorize('update', [$message, $user, self::INTERVAL]);
+        $this->authorize('update', [$message, $user, $this->interval]);
 
         $message->update($request->all());
         event(new UpdatedMessageEvent($message));
@@ -136,7 +142,7 @@ class MessageController extends ApiController
 
         $user = User::findOrFail($userId);
 
-        $this->authorize('delete', [$message, $user, self::INTERVAL]);
+        $this->authorize('delete', [$message, $user, $this->interval]);
 
         $message->message = "Removed";
         $message->save();
