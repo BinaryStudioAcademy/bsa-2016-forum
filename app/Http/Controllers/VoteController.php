@@ -143,7 +143,6 @@ class VoteController extends ApiController
     public function update(VotesRequest $request, $id)
     {
         $vote = Vote::findOrFail($id);
-
         $this->authorize('update', $vote);
 
         $vote->update($request->all());
@@ -156,7 +155,7 @@ class VoteController extends ApiController
         } elseif($request->users) {
             $this->VotePermissionsHandler($vote, $request->users);
         }
-        $vote->tags = $vote->tags()->get();
+        
         return $this->setStatusCode(200)->respond($vote);
     }
 

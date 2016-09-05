@@ -110,16 +110,16 @@ module.exports = Marionette.LayoutView.extend({
             });
         }
 
-        if (!(view.ui.tags.val().length == 0)) {
+        if (view.ui.tags.val().trim().length > 0) {
             var splitted = view.ui.tags.val().split(' ');
-
-            _.each(splitted, function (index, value) {
+            _.each(splitted, function (value, index) {
                 tags.push({name: value});
             });
         }
         view.model.save({
-            users: users,
-            tags: tags
+            users: JSON.stringify(users),
+            tags: JSON.stringify(tags),
+            is_saved: 1
         }, {
             success: function (data) {
                 Backbone.history.navigate('votes/' + data.get('id'), {trigger: true});
@@ -127,11 +127,24 @@ module.exports = Marionette.LayoutView.extend({
         });
     },
     saveModel: function (obj) {
-        debugger;
         if (this.model.get('id')) {
             this.model.save(obj);
         } else {
             this.model.set(obj);
         }
+    },
+    serializeData: function () {
+        var def = {
+            editable: false,
+            deletable: true
+        };
+
+        var meta = this.model.getMetaById() || def;
+
+        return {
+            model: this.model.toJSON(),
+            deletable: meta.deletable,
+            editable: !meta.editable
+        };
     }
 });

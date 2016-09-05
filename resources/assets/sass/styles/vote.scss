@@ -403,3 +403,19 @@ VOTE INDEX
 .underscored {
   text-decoration: underline;
 }
+
+.delete-button {
+  position: absolute;
+  //float:right;
+  top:0;
+  right:0;
+}
+
+.limited-block-for-delete-button {
+  width: calc(100% - 50px);
+  display: block;
+}
+
+.relative {
+  position: relative;
+}

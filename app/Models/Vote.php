@@ -12,7 +12,7 @@ class Vote extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at'];
+    protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at', 'is_saved'];
 
     protected $dates = ['deleted_at'];
 

@@ -69,7 +69,7 @@ module.exports = Marionette.Object.extend({
 
     },
     createVote: function () {
-        var VoteAnswers = new VoteAICollection([{}], {parentUrl: ''});
+        var VoteAnswers = new VoteAICollection([{name: ''}], {parentUrl: ''});
         var UsersCollection = new usersCollection();
         var accessedUsers = new usersCollection();
 
@@ -89,7 +89,7 @@ module.exports = Marionette.Object.extend({
         });
 
         view.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {
-            col.add(new VoteAImodel());
+            col.add(new VoteAImodel({name: ''}));
         });
 
         app.render(view);

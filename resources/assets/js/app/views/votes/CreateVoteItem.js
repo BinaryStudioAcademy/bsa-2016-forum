@@ -3,9 +3,10 @@ var currentUser = require('../../initializers/currentUser');
 
 module.exports = Marionette.ItemView.extend({
     template: 'vote-create-input-voteitem',
-    className: 'form-group',
+    className: 'form-group relative',
     ui: {
         name: '.js-item-name',
+        deleteButton: '.delete-button',
         error_name: '.js-error-field'
     },
     events: {
@@ -15,22 +16,42 @@ module.exports = Marionette.ItemView.extend({
                 this.model.set({name: name});
             if (this.model.get('vote_id') && this.model.hasChanged('name'))
                 this.model.save();
+        },
+        'click @ui.deleteButton': function () {
+            this.model.destroy();
         }
     },
     modelEvents: {
         'invalid': function (model, errors) {
             this.ui.error_name.html('<span>' + errors['name'] + '</span>');
         },
-        'sync': function (data) {
-            this.ui.error_name.empty();
-        }
+        'sync': 'render'//function (data) {this.ui.error_name.empty();}
     },
     initialize: function () {
         var self = this;
         this.model.view = this;
         this.model.set({user_id: currentUser.get('id')});
+        if(this.getOption('parent').get('id'))
+            this.model.set({vote_id: this.getOption('parent').get('id')});
         this.getOption('parent').on('change:id', function (model) {
             self.model.set({vote_id: model.get('id')});
         });
+    },
+    serializeData: function () {
+        var def = {
+            editable: true,
+            deletable: true
+        };
+
+        var meta = this.model.getMetaById() || def;
+
+        return {
+            model: this.model.toJSON(),
+            deletable: meta.deletable,
+            editable: meta.editable
+        };
+    },
+    remove: function () {
+        this.$el.fadeOut();
     }
 });
