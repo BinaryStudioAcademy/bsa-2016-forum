@@ -1,9 +1,10 @@
 var Helper = {
     isOnlySpecialCharacters: function (str) {
-        if (str.trim().length != 0 ) {
-            return false;
-        }
-        return true;
+        return (str.trim().length == 0);
+    },
+    
+    formatText: function (text) {
+        return text.replace(/\n/g, '<br>');
     }
 };
 

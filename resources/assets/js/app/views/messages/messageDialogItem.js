@@ -2,6 +2,7 @@ var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var App = require('../../instances/appInstance');
 var dateHelper = require('../../helpers/dateHelper');
+var helper = require('../../helpers/helper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'messageDialogItem',
@@ -72,7 +73,7 @@ module.exports = Marionette.ItemView.extend({
         }
 
         return {
-            message: this.model.toJSON(),
+            message: helper.formatText(this.model.get('message')),
             messageDirection: direction,
             edit_at: edit,
             user: with_user,
