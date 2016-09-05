@@ -3,7 +3,6 @@ var _ = require('underscore');
 
 module.exports = baseModel.extend({
     urlRoot: '/topics',
-	idAttribute:'slug',
     validate: function (attrs) {
         var errors = {};
         if (!attrs.name) errors['name'] = 'Name is required';
@@ -13,5 +12,9 @@ module.exports = baseModel.extend({
         if (!_.isEmpty(errors)) {
             return errors;
         }
+    },
+    fetchBySlag: function (slug) {
+        var url = _.result(this, '_getRequestUrl') + '/' +  slug;
+        return this.fetch({url: url});
     }
 });

@@ -15,6 +15,10 @@ module.exports = Marionette.ItemView.extend({
         'click @ui.bookmarkTopic': 'bookmarkTopic'
     },
 
+    modelEvents: {
+        'change' : 'render'
+    },
+
     unlockButton: function () {
         this.ui.bookmarkTopic.removeAttr('disabled');
         this.ui.bookmarkTopic.addClass('text-info');
@@ -41,13 +45,15 @@ module.exports = Marionette.ItemView.extend({
     onRender: function () {
         var meta = this.model.getMeta();
 
-        if (meta.bookmark) {
-            this.model.bookmarkId = meta.bookmark[this.model.get('id')].id;
-        }
+       if (meta.hasOwnProperty("bookmark")) {
+           if (meta.bookmark) {
+               this.model.bookmarkId = meta.bookmark[this.model.get('id')].id;
+           }
 
-        if (this.model.bookmarkId) {
-            this.addOkIcon();
-        }
+           if (this.model.bookmarkId) {
+               this.addOkIcon();
+           }
+       }
     },
 
     bookmarkTopic: function () {
