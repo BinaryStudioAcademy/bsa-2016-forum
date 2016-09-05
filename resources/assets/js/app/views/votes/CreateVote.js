@@ -15,7 +15,7 @@ var userCollectionView = require('../users/userCollection');
 module.exports = Marionette.LayoutView.extend({
     className: 'well',
     template: 'voteCreateLayout',
-    initialize:function() {
+    initialize: function () {
         this.model.set({user_id: currentUser.get('id')});
     },
     regions: {
@@ -26,6 +26,7 @@ module.exports = Marionette.LayoutView.extend({
     ui: {
         add: '#addAnswer',
         start: '#start',
+        delete: '#delete',
         title: '#question-title',
         errors: '.js-errors',
         tags: '#tags',
@@ -52,7 +53,9 @@ module.exports = Marionette.LayoutView.extend({
                     vote_id: id
                 });
             });
-
+        },
+        'sync': function () {
+            this.ui.errors.empty();
         }
     },
     events: {
@@ -64,22 +67,20 @@ module.exports = Marionette.LayoutView.extend({
             this.model.save({title: this.ui.title.val()});
         },
         'click @ui.isPublic': function () {
-            this.model.set({is_public: this.ui.isPublic.filter(':checked').val()});
+            this.saveModel({is_public: this.ui.isPublic.filter(':checked').val()});
+            console.log(this.model.get('is_public'));
             if (this.ui.isPublic.prop('checked')) {
                 this.$('.vote-new-access').hide();
             } else
                 this.$('.vote-new-access').show();
         },
         'click @ui.isSingle': function () {
-            this.model.set({is_single: this.ui.isSingle.filter(':checked').val()});
+            this.saveModel({is_single: this.ui.isSingle.filter(':checked').val()});
+            console.log(this.model.get('is_single'));
+
         },
         'change @ui.finished': function () {
-            var field = this.ui.finished;
-            this.model.save({finished_at: DateHelper.dateWithoutTimezone(this.ui.finished.val())});
-            field.addClass('bordered-success');
-            setTimeout(function () {
-                field.removeClass('bordered-success');
-            }, 1500);
+            this.saveModel({finished_at: DateHelper.dateWithoutTimezone(this.ui.finished.val())});
         }
     },
     onRender: function () {
@@ -90,12 +91,12 @@ module.exports = Marionette.LayoutView.extend({
         }));
 
         this.getRegion('voteNotAccessedUsers').show(new userCollectionView({
-            collection: this.options.users,
+            collection: this.getOption('users'),
             childView: require('./CreateVoteUserItemExtend')
         }));
 
         this.getRegion('voteAcessedUsers').show(new userCollectionView({
-            collection: this.options.accessedUsers,
+            collection: this.getOption('accessedUsers'),
             childView: require('./CreateVoteUserItemExtend')
         }));
     },
@@ -104,14 +105,15 @@ module.exports = Marionette.LayoutView.extend({
         var users = [];
         var tags = [];
         if (!view.model.get('is_public')) {
-            view.options.accessedUsers.each(function (model, index) {
+            view.getOption('accessedUsers').each(function (model, index) {
                 users.push(model.get('id'));
             });
         }
 
         if (!(view.ui.tags.val().length == 0)) {
             var splitted = view.ui.tags.val().split(' ');
-            $.each(splitted, function (index, value) {
+
+            _.each(splitted, function (index, value) {
                 tags.push({name: value});
             });
         }
@@ -123,5 +125,13 @@ module.exports = Marionette.LayoutView.extend({
                 Backbone.history.navigate('votes/' + data.get('id'), {trigger: true});
             }
         });
+    },
+    saveModel: function (obj) {
+        debugger;
+        if (this.model.get('id')) {
+            this.model.save(obj);
+        } else {
+            this.model.set(obj);
+        }
     }
 });

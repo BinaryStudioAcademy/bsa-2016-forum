@@ -23,10 +23,10 @@ class VotesRequest extends ApiRequest
     {
         return [
             'user_id' => 'required|integer|is_current_user',
-            'title' => 'max:255', //required|
+            'title' => 'required|max:255',
             'finished_at' => 'date',
-            'is_single' => 'boolean',
-            'is_public' => 'boolean',
+            'is_single' => 'integer|between:0,1',
+            'is_public' => 'integer|between:0,1',
             'is_saved' => 'integer|between:0,1',
             'tags' => 'json',
             'users' => 'json',

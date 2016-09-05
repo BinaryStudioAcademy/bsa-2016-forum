@@ -21,7 +21,8 @@ module.exports = BaseModel.extend({
     defaults: {
         is_saved: 0,
         is_public: true,
-        is_single: true
+        is_single: true,
+        finished_at: ''
     },
     sync: function (method, model, options) {
 
