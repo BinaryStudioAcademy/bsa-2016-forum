@@ -228,28 +228,26 @@ class VoteController extends ApiController
      * Display the specific vote all results
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createUserVoteResult($id,
-        VoteResultRequest $request
-    ) {
+    public function createUserVoteResult($id, VoteResultRequest $request) {
         $model = null;
         $vote = Vote::findOrFail($request->vote_id);
         $user = Auth::user();
         $voteItem = VoteItem::findOrFail($request->vote_item_id);
-        $response['checked'] = true;
+        $response = ['checked' => true];
         if ($vote->is_single) {
-            $model = $vote->voteResults()->where('user_id', $user->id)->get();
-            if (count($model) == 1) {
-                $model = $model->first();
+            $results = $vote->voteResults()->where('user_id', $user->id)->get();
+            if (count($results) == 1) {
+                $model = $results->first();
                 $model->voteItem()->associate($voteItem);
                 $model->save();
-            } elseif (count($model) == 0) {
+            } elseif (count($results) == 0) {
                 $model = new VoteResult();
                 $model->user()->associate($user);
                 $model->vote()->associate($vote);
                 $model->vote_item_id = $request->vote_item_id;
                 $model->save();
             } else {
-                return $this->setStatusCode(400)->respond(['error' => 'Count of results is not equal 1, it is: ' . count($model)]);
+                return $this->setStatusCode(400)->respond(['error' => 'Count of results is not equal 1, it is: ' . count($results)]);
             }
         } else {
             $model = $vote->voteResults()->where('user_id', $user->id)->where('vote_item_id',

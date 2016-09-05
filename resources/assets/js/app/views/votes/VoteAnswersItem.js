@@ -26,7 +26,6 @@ module.exports = Marionette.ItemView.extend({
     },
     events: {
         'click @ui.item': function (e) {
-            e.stopPropagation();
             e.preventDefault();
             Radio.trigger('votesChannel', 'saveUserChoice', this);
         }
