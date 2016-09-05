@@ -25,13 +25,25 @@ class CurlService
         ];
     }
 
-    public function  sendRequest($method, $url, $cookie)
+    public function  sendRequest($method, $url, $body = null)
     {
         $response = null;
-        
+        $cookie = $_COOKIE[config('authserver.cookieName')];
+
         $this->curl_params[CURLOPT_URL] = $url;
         $this->curl_params[CURLOPT_CUSTOMREQUEST] = $method;
-        array_push($this->curl_params[CURLOPT_HTTPHEADER], $cookie);
+        $this->curl_params[CURLOPT_COOKIE] = 'x-access-token='. $cookie;
+
+        if(isset($body) && $method == 'POST') {
+            $this->curl_params[CURLOPT_HEADER] = true;
+            $this->curl_params[CURLOPT_HTTPHEADER] = [
+                'Content-Length: ' . strlen(json_encode($body)),
+                'Content-type: application/json'
+            ];
+            $this->curl_params[CURLOPT_POSTFIELDS] = json_encode($body);
+            $this->curl_params[CURLOPT_POST] = true;
+        }
+
         $curl = curl_init();
         curl_setopt_array($curl, $this->curl_params);
         $result = curl_exec($curl);
@@ -43,16 +55,15 @@ class CurlService
         } else {
             $response = json_decode($result, true);
         }
+
         return $response;
     }
 
     public function sendUserRequest($id)
     {
-        $cookieName = config('authserver.cookieName');
         $url = config('authserver.urlUserInfo').$id;
-        $cookie = 'Cookie: '.$cookieName.'='.$_COOKIE[$cookieName];
 
-        $response = $this->sendRequest('GET', $url, $cookie);
+        $response = $this->sendRequest('GET', $url);
         
         if (!$response){
             throw new NotFoundHttpException;
@@ -70,5 +81,21 @@ class CurlService
             'global_id' => $response['serverUserId']
         ];
         return $userProfile;
+    }
+
+    public function sendNotificationRequest($data)
+    {
+        $request = [
+            'title' => $data['title'],
+            'text' => $data['text'],
+            'url' => $data['url'],
+            'sound' => config('notification.sound'),
+            'serviceType' => config('notification.serviceType'),
+            'users' => $data['users'],
+        ];
+
+        $response = $this->sendRequest('POST', config('notification.url'), $request);
+
+        return $response;
     }
 }

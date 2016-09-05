@@ -158,7 +158,6 @@ return [
         App\Providers\AttachmentServiceProvider::class,
         App\Providers\TagServiceProvider::class,
         App\Providers\CurlServiceProvider::class,
-        App\Providers\NotificationServiceProvider::class,
 
         /**
          * External providers

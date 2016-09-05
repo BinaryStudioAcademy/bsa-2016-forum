@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\NewCommentEvent;
-use App\Facades\NotificationService;
+use App\Facades\CurlService;
 use App\Models\Topic;
 use App\Models\Vote;
 use Illuminate\Queue\InteractsWithQueue;
@@ -42,6 +42,6 @@ class NewCommentListener
             'url' => config('app.url').'/#/'.strtolower($event->target_type).'s/'.$event->target->id
         ];
 
-        NotificationService::send($body);
+        CurlService::sendNotificationRequest($body);
     }
 }
