@@ -17,7 +17,7 @@ class TagService
         $oldTags = $taggableModel->tags()->get();
         $taggableModel->tags()->detach($oldTags);
         $tags = json_decode($tags, true);
-        if($tags){
+        if (is_array($tags)) {
             foreach ($tags as $tag) {
                 if (!empty($tag['id'])) {
                     $tag = Tag::find($tag['id']);
@@ -33,7 +33,7 @@ class TagService
                         $taggableModel->tags()->save($newTag);
                     }
                 }
-            } 
+            }
         }
 
     }

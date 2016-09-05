@@ -28,7 +28,7 @@ class TopicRequest extends ApiRequest
                     'description' => 'required',
                     'user_id' => 'required|integer|is_current_user',
                     'category_id' => 'required|exists:categories,id|integer',
-                    'tags' => 'json',
+                    'tags' => 'json|tags_validator',
                 ];
 
                 break;
@@ -39,7 +39,7 @@ class TopicRequest extends ApiRequest
                     'description' => 'required',
                     'user_id' => 'required|integer|is_current_user',
                     'category_id' => 'required|exists:categories,id|integer',
-                    'tags' => 'json',
+                    'tags' => 'json|tags_validator',
                 ];
 
                 break;
@@ -55,7 +55,8 @@ class TopicRequest extends ApiRequest
             'description.required' => 'Description is required',
             'user_id.required' => 'User ID is required',
             'user_id.is_current_user' => 'User not is authorized',
-            'category_id.required' => 'Category is required'
+            'category_id.required' => 'Category is required',
+            'tags.tags_validator' => 'Format of field tags is incorrect'
         ];
     }
 }
