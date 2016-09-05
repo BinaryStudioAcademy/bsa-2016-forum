@@ -39,16 +39,13 @@ module.exports = Marionette.ItemView.extend({
     },
     serializeData: function () {
         var def = {
-            editable: true,
-            deletable: true
+
         };
 
         var meta = this.model.getMetaById() || def;
 
         return {
-            model: this.model.toJSON(),
-            deletable: meta.deletable,
-            editable: meta.editable
+            model: this.model.toJSON()
         };
     },
     remove: function () {

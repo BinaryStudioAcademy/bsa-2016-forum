@@ -132,19 +132,5 @@ module.exports = Marionette.LayoutView.extend({
         } else {
             this.model.set(obj);
         }
-    },
-    serializeData: function () {
-        var def = {
-            editable: false,
-            deletable: true
-        };
-
-        var meta = this.model.getMetaById() || def;
-
-        return {
-            model: this.model.toJSON(),
-            deletable: meta.deletable,
-            editable: !meta.editable
-        };
     }
 });
