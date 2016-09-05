@@ -37,11 +37,15 @@ redis.on('message', function(channel, eventData) {
     function commentsLoad () {
         var comment = JSON.parse(eventData.data.comment);
         var meta = JSON.parse(eventData.data.meta);
-
         comment.user = meta[comment.id].user;
 
-        io.sockets.emit(eventData.data.socketEvent, comment);
-        console.log("Comment from user id: " + comment.user_id);
+        var commentType = comment.commentable_type.split('\\');
+        commentType = commentType[commentType.length-1];
+        var channelName = commentType + 'Comments' + comment.commentable_id;
+
+        io.sockets.emit(channelName, comment);
+        console.log("Comment from user id: " + comment.user_id +
+            ", through channel " + channelName);
     }
 
     function messagesLoad () {

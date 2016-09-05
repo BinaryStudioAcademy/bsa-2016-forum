@@ -1,22 +1,15 @@
 var app = require('../instances/appInstance');
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
-var $ = require('jquery');
-
 var currentUser = require('../initializers/currentUser');
-
 var VoteModel = require('../models/VoteModel');
 var CommentModel = require('../models/CommentModel');
-
 var CommentsCollection = require('../collections/commentCollection');
 var VoteAICollection = require('../collections/voteAICollection');
-
 var ListVotes = require('../views/votes/ListVotes');
 var ShowVote = require('../views/votes/ShowVote');
-
 var Votes = require('../instances/Votes');
-
-var voteCollection=require('../collections/voteCollection');
+var voteCollection = require('../collections/voteCollection');
 
 module.exports = Marionette.Object.extend({
     index: function () {
@@ -26,6 +19,7 @@ module.exports = Marionette.Object.extend({
         app.render(view);
         Votes.fetch();
     },
+
     showVote: function (id) {
         var AddCommentView = require('../views/votes/VoteCommentItemAdd');
         var view;
@@ -37,22 +31,9 @@ module.exports = Marionette.Object.extend({
         VoteAnswers.fetch();
         myCommentsCollection.fetch({
             success: function (data) {
-                Radio.trigger('votesChannel', 'setCommentsCount', data.length);
+                Radio.trigger('votesChannel', 'setCommentsCount' + id, data.length);
             }
         });
-        
-        var addedCommentsCollection = new CommentsCollection([], {parentUrl: ''});
-        myCommentsCollection.listenTo(Radio.channel('VoteComments' + id), 'newComment', function (comment) {
-            if (comment.user_id == currentUser.id) {
-                $('.new-comment-notification').show(300);
-
-                addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
-
-                var count = addedCommentsCollection.length + myCommentsCollection.length;
-                Radio.trigger('votesChannel', 'setCommentsCount', count);
-            }
-        });
-
 
         if (Votes.get(id)) {
             model = Votes.get(id);
@@ -63,8 +44,7 @@ module.exports = Marionette.Object.extend({
         view = new ShowVote({
             voteModel: model,
             collection: myCommentsCollection,
-            answers: VoteAnswers,
-            addedCommentsCollection: addedCommentsCollection
+            answers: VoteAnswers
         });
 
 
