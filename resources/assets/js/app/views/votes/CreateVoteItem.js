@@ -14,10 +14,13 @@ module.exports = Marionette.ItemView.extend({
     },
     modelEvents: {
         'invalid': function (model, errors) {
-            this.ui.error_name.html('<span>'+errors['name']+'</span>');
+            this.ui.error_name.html('<span>' + errors['name'] + '</span>');
         },
         'saved': function () {
+            var collection = this.model.collection;
             this.ui.error_name.empty();
+            if (collection.itemsToSave == 0)
+                collection.trigger('voteItemsSaved');
         }
     },
     initialize: function () {

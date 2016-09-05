@@ -28,6 +28,11 @@ module.exports = Backbone.Collection.extend({
         if (options.remove == false) {  this._meta = _.extend(this._meta, response._meta) }
         else  { this._meta = response._meta; }
         return response.data;
+    },
+    initialize: function (models, options) {
+        if (options && options.parentUrl) {
+            this.parentUrl = options.parentUrl;
+        }
     }
 
 });

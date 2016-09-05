@@ -8,7 +8,6 @@ module.exports = BaseModel.extend({
     urlRoot: '/votes',
     minTime: 5,
     validate: function (attrs) {
-        debugger;
         var errors = {};
         if (!attrs.title || attrs.title == ' ')
             errors['title'] = 'Write question title!';

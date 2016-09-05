@@ -69,7 +69,7 @@ module.exports = Marionette.Object.extend({
 
     },
     createVote: function () {
-        var VoteAnswers = new VoteAICollection([{}, {}], {parentUrl: ''});
+        var VoteAnswers = new VoteAICollection([{}], {parentUrl: ''});
         var UsersCollection = new usersCollection();
         var accessedUsers = new usersCollection();
 
@@ -83,13 +83,13 @@ module.exports = Marionette.Object.extend({
         var model = new VoteModel();
         var view = new CreateVote({
             model: model,
-            answers: VoteAnswers,
+            collection: VoteAnswers,
             users: UsersCollection,
             accessedUsers: accessedUsers
         });
 
         view.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {
-            col.add(new VoteAImodel({}, {parentUrl: col.parentUrl}));
+            col.add(new VoteAImodel());
         });
 
         app.render(view);

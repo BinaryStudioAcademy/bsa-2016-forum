@@ -2,6 +2,7 @@ var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var moment = require('moment');
+var _ = require('underscore');
 
 var DateHelper = require('../../helpers/dateHelper.js');
 
@@ -28,8 +29,7 @@ module.exports = Marionette.LayoutView.extend({
         isPublic: 'input[name=access]:checked',
         finished: '#finished',
         dateerrors: '.js-date-errors',
-        isSingle: 'input[name=isSingle]:checked',
-        all: '*'
+        isSingle: 'input[name=isSingle]:checked'
     },
     modelEvents: {
         'invalid': function (model, errors) {
@@ -42,12 +42,17 @@ module.exports = Marionette.LayoutView.extend({
         'saved': function (id) {
             this.ui.errors.empty();
             this.ui.dateerrors.empty();
-            this.options.answers.parentUrl = '/votes/' + id;
+            this.createVoteItems(id);
+        }
+    },
+    collectionEvents: {
+        'voteItemsSaved': function () {
+            Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
         }
     },
     events: {
         'click @ui.add': function () {
-            Radio.trigger('votesChannel', 'createEmptyVoteItem', this.options.answers);
+            Radio.trigger('votesChannel', 'createEmptyVoteItem', this.collection);
         },
         'click @ui.start': 'createVote',
         'change @ui.title': function () {
@@ -74,7 +79,7 @@ module.exports = Marionette.LayoutView.extend({
     onRender: function () {
         this.ui.finished.trigger('change');
 
-        this.getRegion('answers').show(new CreateVoteItemCollection({collection: this.options.answers}));
+        this.getRegion('answers').show(new CreateVoteItemCollection({collection: this.collection}));
 
         this.getRegion('voteNotAccessedUsers').show(new userCollectionView({
             collection: this.options.users,
@@ -88,7 +93,6 @@ module.exports = Marionette.LayoutView.extend({
     },
     createVote: function () {
         var view = this;
-        var success = true;
         var users = [];
         var tags = [];
         if (!view.model.get('is_public')) {
@@ -103,40 +107,31 @@ module.exports = Marionette.LayoutView.extend({
                 tags.push({name: value});
             });
         }
-        if (!view.model.save({
-                user_id: currentUser.get('id'),
-                finished_at: DateHelper.dateWithoutTimezone(this.ui.finished.val()),
-                users: users,
-                tags: tags
-            }, {
-                async: false,
-                success: function (data) {
-                    view.model.trigger('saved', data.get('id'));
-                }
-            })) {
-            success = false;
-        }
-
-        if (view.model.get('id')) {
-            view.options.answers.each(function (model, index) {
-                if (model.hasChanged('name') || !model.get('id'))
-                    if (!model.save({
-                            user_id: currentUser.get('id'),
-                            vote_id: view.model.get('id')
-                        }, {
-                            success: function () {
-                                model.trigger('saved');
-                            }
-                        })) {
-                        success = false;
+        view.model.save({
+            user_id: currentUser.get('id'),
+            finished_at: DateHelper.dateWithoutTimezone(this.ui.finished.val()),
+            users: users,
+            tags: tags
+        }, {
+            success: function (data) {
+                view.model.trigger('saved', data.get('id'));
+            }
+        });
+    },
+    createVoteItems: function (id) {
+        var collection = this.collection;
+        collection.parentUrl = '/votes/' + id;
+        collection.itemsToSave = 0;
+        _.each(collection.models, function (model, key) {
+            if (model.hasChanged('name') || !model.get('id'))
+                if(model.save({
+                    user_id: currentUser.get('id'),
+                    vote_id: id
+                }, {
+                    success: function () {
+                        model.trigger('saved');
                     }
-            });
-        }
-        if (success && view.model.get('id')) {
-            view.ui.all.prop('disabled', true);
-            setTimeout(function () {
-                Backbone.history.navigate('votes/' + view.model.get('id'), {trigger: true});
-            }, 1000);
-        }
+                })) {collection.itemsToSave++;}
+        });
     }
 });
