@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\VoteUniqueView;
+use App\Models\Vote;
+use App\Models\User;
 
 class VoteUniqueViewSeeder extends Seeder
 {
@@ -14,15 +17,15 @@ class VoteUniqueViewSeeder extends Seeder
         $arrayOfVoteUniqueViews= [];
         for ($i=0;$i<500;$i++){
             $arrayOfVoteUniqueViews[] = [
-                'user_id' => \App\Models\User::all()->random()->id,
-                'vote_id' => \App\Models\Vote::all()->random()->id
+                'user_id' => User::all()->random()->id,
+                'vote_id' => Vote::all()->random()->id
             ];
         }
 
         $arrayOfVoteUniqueViews = array_unique($arrayOfVoteUniqueViews, SORT_REGULAR);
 
         foreach ($arrayOfVoteUniqueViews as $voteUniqueView){
-            $tmp = \App\Models\VoteUniqueView::create($voteUniqueView);
+            $tmp = VoteUniqueView::create($voteUniqueView);
             $tmp->save();
         }
 

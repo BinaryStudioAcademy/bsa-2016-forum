@@ -46,11 +46,10 @@ class VoteController extends ApiController
     private function getMetaDataForModel(Vote $vote)
     {
         $data = [];
-        foreach ($votes as $vote) {
-            $usersWhoSaw = [];
-            foreach ($vote->voteUniqueViews()->get()->load('user') as $view) {
-                $usersWhoSaw[] = $view->user;
-            }
+        $usersWhoSaw = [];
+        foreach ($vote->voteUniqueViews()->get()->load('user') as $view) {
+            $usersWhoSaw[] = $view->user;
+        }
         //find the difference between two days
         $created = new Carbon($vote->created_at);
         $now = Carbon::now();
@@ -85,21 +84,6 @@ class VoteController extends ApiController
             $data += $this->getMetaDataForModel($vote);
         }
 
-        foreach ($votes as $vote) {
-            $usersWhoSaw = [];
-            foreach ($vote->voteUniqueViews()->get()->load('user') as $view) {
-                $usersWhoSaw[] = $view->user;
-            }
-            $data[$vote->id] =
-                [
-                    'user' => $vote->user()->first(),
-                    'likes' => $vote->likes()->count(),
-                    'comments' => $vote->comments()->count(),
-                    'tags' => $vote->tags()->get(['name']),
-                    'numberOfUniqueViews' => $vote->voteUniqueViews()->count(),
-                    'usersWhoSaw' => $usersWhoSaw
-                ];
-        }
         return $data;
     }
 
@@ -119,6 +103,15 @@ class VoteController extends ApiController
     }
 
     /**
+     * @param $vote
+     * @return bool
+     */
+    protected function isUniqueViewExist($vote)
+    {
+        return !!VoteUniqueView::where(['vote_id' => $vote->id, 'user_id' => Auth::user()->id])->first();
+    }
+
+    /**
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
@@ -126,7 +119,7 @@ class VoteController extends ApiController
     {
         $vote = Vote::findOrFail($id);
         if (Auth::user()->id &&
-            !VoteUniqueView::where(['vote_id' => $vote->id, 'user_id' => Auth::user()->id])->first()
+            !$this->isUniqueViewExist($vote)
         ) {
             $voteUniqueView = VoteUniqueView::create(['vote_id' => $vote->id, 'user_id' => Auth::user()->id]);
             $voteUniqueView->save();
@@ -203,7 +196,7 @@ class VoteController extends ApiController
             return $this->setStatusCode(200)->respond();
         }
 
-        $data=$this->getMetaDataForCollection($votes);
+        $data = $this->getMetaDataForCollection($votes);
 
         return $this->setStatusCode(200)->respond($votes, $data);
     }

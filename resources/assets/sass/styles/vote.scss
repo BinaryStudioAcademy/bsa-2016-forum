@@ -47,6 +47,14 @@ VOTE DETAIL
   display: inline-block;
 }
 
+.vote-header select {
+  border:none;
+}
+
+.vote-tags {
+  color: #333;
+}
+
 .vote-control {
   margin: 5px 0;
 }
@@ -188,8 +196,18 @@ VOTE INDEX
   margin-top: 10px;
   display: inline-block;
 }
+.votes-item-tags {
+  color: #333;
+}
 
 .votes-item-details a{
+  color: #999999;
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 20px;
+}
+
+.votes-item-details span{
   color: #999999;
   font-size: 14px;
   font-weight: 500;
