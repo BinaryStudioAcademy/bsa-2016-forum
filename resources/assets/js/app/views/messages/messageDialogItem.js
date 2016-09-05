@@ -40,14 +40,14 @@ module.exports = Marionette.ItemView.extend({
         if (!isNaN(createdAt)) {
             var passedMilliseconds = currentTime - createdAt;
             if (passedMilliseconds <= intervalMilliseconds) {
-                $(e.currentTarget).find('.delete').css('visibility', 'visible');
-                $(e.currentTarget).find('.edit').css('visibility', 'visible');
+                this.ui.delete.removeClass('invisible');
+                this.ui.edit.removeClass('invisible');
             }
         }
     },
     mouseleaveMsgFrom: function (e) {
-        $(e.currentTarget).find('.delete').css('visibility', 'hidden');
-        $(e.currentTarget).find('.edit').css('visibility', 'hidden');
+        this.ui.delete.addClass('invisible');
+        this.ui.edit.addClass('invisible');
     },
 
     serializeData: function () {
