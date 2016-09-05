@@ -18,6 +18,7 @@ module.exports = Marionette.ItemView.extend({
 
     behaviors: {
         SubscribeBehavior: {
+            instance: "Collection",
             behaviorClass: SubscribeBehavior,
             parent_url: _.result(currentUser, 'url'),
             target_type: 'Vote'

@@ -5,6 +5,7 @@ var logger = require('../instances/logger');
 module.exports = Marionette.Behavior.extend({
 
     defaults: {
+        "instance": "Model",
         "target_type": undefined,
         "parent_url": ""
     },
@@ -35,7 +36,7 @@ module.exports = Marionette.Behavior.extend({
 
     saveSubscribe: function(subscribe)
     {
-        if (_.isArray(this.view.model.getMeta().subscription)) {
+        if (this.options.instance == 'Collection') {
             this.view.model.getMeta().subscription[this.view.model.get('id')] = subscribe;
         } else {
             this.view.model.getMeta().subscription = subscribe;
@@ -43,10 +44,11 @@ module.exports = Marionette.Behavior.extend({
     },
 
     getSubscribe: function () {
-        if (_.isArray(this.view.model.getMeta().subscription) && this.view.model.getMeta().subscription[view.model.get('id')]) {
-            return this.view.model.getMeta().subscription[view.model.get('id')];
-        } else if (this.view.model.getMeta().subscription) {
-            return this.view.model.getMeta().subscription;
+        var meta = this.view.model.getMeta();
+        if (this.options.instance == 'Collection' && !_.isUndefined(meta.subscription[this.view.model.get('id')])) {
+            return meta.subscription[this.view.model.get('id')];
+        } else if (this.options.instance == 'Model' && !_.isUndefined(meta.subscription)) {
+            return meta.subscription;
         } else {
             return undefined;
         }
