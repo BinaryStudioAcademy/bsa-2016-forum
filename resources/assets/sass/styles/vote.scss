@@ -152,6 +152,7 @@ VOTE INDEX
 
 .votes-item:hover {
   background-color: papayawhip;
+  cursor: pointer;
 }
 
 .votes-item-bar {
@@ -397,4 +398,8 @@ VOTE INDEX
 
 .bordered-success {
   border:1px solid green;
+}
+
+.underscored {
+  text-decoration: underline;
 }

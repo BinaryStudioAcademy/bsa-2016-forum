@@ -72,7 +72,6 @@ module.exports = Marionette.LayoutView.extend({
         }
     },
     onRender: function () {
-        $('#finished').prop('minDate', 0);
         this.ui.finished.trigger('change');
 
         this.getRegion('answers').show(new CreateVoteItemCollection({collection: this.options.answers}));
@@ -139,30 +138,5 @@ module.exports = Marionette.LayoutView.extend({
                 Backbone.history.navigate('votes/' + view.model.get('id'), {trigger: true});
             }, 1000);
         }
-    },
-    dateFormats: [
-        //full
-        'DD:MM:YYYY HH:mm:ss',
-        'DD.MM.YYYY HH.mm.ss',
-        'DD/MM/YYYY HH/mm/ss',
-        'DD-MM-YYYY HH-mm-ss',
-
-        //short dates
-        'D:M:YY HH:mm:ss',
-        'D.M.YY HH.mm.ss',
-        'D/M/YY HH/mm/ss',
-        'D-M-YY HH-mm-ss',
-
-        //short times
-        'DD:MM:YYYY H:m:s',
-        'DD.MM.YYYY H.m.s',
-        'DD/MM/YYYY H/m/s',
-        'DD-MM-YYYY H-m-s',
-
-        //short
-        'D:M:YY H:m:s',
-        'D.M.YY H.m.s',
-        'D/M/YY H/m/s',
-        'D-M-YY H-m-s'
-    ]
+    }
 });
