@@ -14,10 +14,11 @@
         </div>
         <div class="votes-item-tags">
             {{#each meta.tags}}
-                <a href="#votes/tags/{{name}}" style="color: #333;"><span>#{{name}}</span></a>
+                <a href="#votes/tags/{{name}}" class="tag-links"><span>#{{name}}</span></a>
             {{/each}}
         </div>
         <!--<span class="votes-item-time">Created at {{ model.created_at }}</span>-->
     <span class="votes-item-time">Asked {{meta.days_ago}}</span>
+        {{deleteButton meta}}
     </div>
 </div>

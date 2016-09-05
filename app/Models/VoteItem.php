@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 
 class VoteItem extends Model
@@ -65,6 +66,15 @@ class VoteItem extends Model
     public function notifications()
     {
         return $this->morphToMany(Notification::class, 'notificationable');
+    }
+
+    public function hasChildComments()
+    {
+        return $this->comments()->exists();
+    }
+
+    public function canBeDeleted($user) {
+        return Auth::user()->isAdmin() || (!$this->hasChildComments() && !$this->voteResults()->exists() && $user->owns($this));
     }
     
 }

@@ -6,11 +6,11 @@ use App\Http\Requests\VoteItemRequest;
 use App\Models\User;
 use App\Models\Vote;
 use App\Models\VoteItem;
-use Auth;
 use Illuminate\Contracts\Validation\UnauthorizedException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 
 class VoteItemController extends ApiController
 {
@@ -23,12 +23,23 @@ class VoteItemController extends ApiController
     public function index($voteId)
     {
         $vote = Vote::findOrFail($voteId);
-        $voteItems = $vote->voteItems()->get();
+        if (Auth::user()->isAdmin()) {
+            $voteItems = $vote->voteItems()->withTrashed()->get();
+        } else {
+            $voteItems = $vote->voteItems()->get();
+        }
         if (!$voteItems) {
             $this->setStatusCode(200)->respond();
         }
+        $meta = [];
+        foreach ($voteItems as $item) {
+            $meta[$item->id] = [
+                'user' => $item->user()->first(),
+                'deletable' => $item->canBeDeleted(Auth::user())
+            ];
+        }
 
-        return $this->setStatusCode(200)->respond($voteItems, ['vote' => $vote]);
+        return $this->setStatusCode(200)->respond($voteItems, $meta);
 
     }
 

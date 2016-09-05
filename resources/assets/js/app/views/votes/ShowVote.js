@@ -1,4 +1,5 @@
 var Marionette = require('backbone.marionette');
+
 var Radio = require('backbone.radio');
 var CommentsCollectionView = require('../../views/votes/VoteCommentsCollection');
 var VoteHeader = require('../../views/votes/voteHeader');

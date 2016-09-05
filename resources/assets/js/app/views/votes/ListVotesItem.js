@@ -5,11 +5,16 @@ var dateHelper = require('../../helpers/dateHelper');
 module.exports = Marionette.ItemView.extend({
     template: 'voteItem',
     ui: {
-        label: '#label'
+        label: '#label',
+        deleteButton: '.delete-button'
     },
     events: {
         'click @ui.label': function () {
             Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
+        },
+        'click @ui.deleteButton': function (e) {
+            e.preventDefault();
+            this.model.destroy();
         }
     },
     serializeData: function () {
@@ -23,8 +28,12 @@ module.exports = Marionette.ItemView.extend({
                 likes: tempmeta[id].likes,
                 comments: tempmeta[id].comments,
                 tags: tempmeta[id].tags,
+                deletable: tempmeta[id].deletable,
                 days_ago:tempmeta[id].days_ago
             }
         };
+    },
+    remove: function () {
+        this.$el.fadeOut();
     }
 });

@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Vote;
+use App\Models\Comment;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class VotePolicy
@@ -19,7 +20,7 @@ class VotePolicy
 
     public function delete(User $user, Vote $vote)
     {
-        return $user->owns($vote);
+        return $user->owns($vote) && (!$vote->hasChildComments() && !$vote->hasVoteResults());
     }
 
     public function update(User $user, Vote $vote)

@@ -1,16 +1,18 @@
 {{#if meta.vote.is_single}}
     <div class="radio">
-        <label>
+        <label class="limited-block-for-delete-button">
             <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">
             {{ model.name }}
         </label>
+        {{deleteButton meta}}
     </div>
 
 {{else}}
     <div class="checkbox">
-        <label>
+        <label class="limited-block-for-delete-button">
             <input type="checkbox" value="">
             {{ model.name }}
         </label>
+        {{deleteButton meta}}
     </div>
 {{/if}}
