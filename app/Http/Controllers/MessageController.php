@@ -22,7 +22,7 @@ class MessageController extends ApiController
 
     public function __construct()
     {
-        $this->interval = env('RESTRICT_INTERVAL', 15);
+        $this->interval = config('messageChangeOnDelay', 15);
     }
 
     /**
