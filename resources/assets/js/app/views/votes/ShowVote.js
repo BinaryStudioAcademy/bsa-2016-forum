@@ -1,7 +1,6 @@
 var Marionette = require('backbone.marionette');
 var _ = require('underscore');
 var Radio = require('backbone.radio');
-var AddCommentView = require('./VoteCommentItemAdd');
 var CommentsCollectionView = require('../../views/votes/VoteCommentsCollection');
 var VoteHeader = require('../../views/votes/voteHeader');
 var VoteAnswersCollectionView = require('../../views/votes/VoteAnswersCollection');
@@ -31,6 +30,12 @@ module.exports = Marionette.LayoutView.extend({
         });
     },
 
+    collectionEvents: {
+        'update': function () {
+            this.ui.c_count.text(this.collection.length + ' Comments');
+        }
+    },
+
     showNewComments: function () {
         console.log(this.options);
         this.options.collection.add(this.options.addedCommentsCollection.toJSON());
@@ -38,16 +43,12 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onRender: function () {
+        Radio.trigger('votesChannel', 'showAddCommentView', this);
+
         this.getRegion('comments').show(
             new CommentsCollectionView({
                 collection: this.options.collection
             }));
-
-        this.getRegion('addcomment').show(
-            new AddCommentView({
-                collection: this.options.collection
-            })
-        );
 
         this.getRegion('voteheader').show(
             new VoteHeader({model: this.options.voteModel})
