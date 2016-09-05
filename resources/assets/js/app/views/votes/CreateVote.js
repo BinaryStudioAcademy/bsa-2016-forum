@@ -3,6 +3,8 @@ var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var moment = require('moment');
 
+var DateHelper = require('../../helpers/dateHelper.js');
+
 var currentUser = require('../../initializers/currentUser');
 
 var CreateVoteItemCollection = require('./CreateVoteItemCollection');
@@ -26,17 +28,15 @@ module.exports = Marionette.LayoutView.extend({
         isPublic: 'input[name=access]:checked',
         finished: '#finished',
         dateerrors: '.js-date-errors',
-        isSingle: 'input[name=isSingle]:checked'
+        isSingle: 'input[name=isSingle]:checked',
+        all: '*'
     },
     modelEvents: {
         'invalid': function (model, errors) {
             this.ui.errors.empty();
             var self = this;
             $.each(errors, function (key, error) {
-                if (key == 'invalidDate')
-                    self.printInvalidDateError();
-                else
-                    self.$('.js-error-' + key).html(error);
+                self.$('.js-error-' + key).html(error);
             });
         },
         'saved': function (id) {
@@ -53,9 +53,6 @@ module.exports = Marionette.LayoutView.extend({
         'change @ui.title': function () {
             this.model.set({title: this.ui.title.val()});
         },
-        'change @ui.finished': function () {
-            this.model.set({finished_at: this.ui.finished.val()});
-        },
         'click @ui.isPublic': function () {
             this.model.set({is_public: this.ui.isPublic.prop('checked')});
             if (this.ui.isPublic.prop('checked')) {
@@ -65,9 +62,17 @@ module.exports = Marionette.LayoutView.extend({
         },
         'click @ui.isSingle': function () {
             this.model.set({is_single: this.ui.isSingle.prop('checked')});
+        },
+        'change @ui.finished': function () {
+            var field = this.ui.finished;
+            field.addClass('bordered-success');
+            setTimeout(function () {
+                field.removeClass('bordered-success');
+            }, 1500);
         }
     },
     onRender: function () {
+        $('#finished').prop('minDate', 0);
         this.ui.finished.trigger('change');
 
         this.getRegion('answers').show(new CreateVoteItemCollection({collection: this.options.answers}));
@@ -82,25 +87,15 @@ module.exports = Marionette.LayoutView.extend({
             childView: require('./CreateVoteUserItemExtend')
         }));
     },
-    printInvalidDateError: function () {
-        var block = this.$('.js-error-invalidDate');
-        block.append('<span> Typed datetime format is invalid. Here is a list of available formats: </span>');
-        block.append('<ul>');
-        $.each(this.dateFormats, function (key, value) {
-            block.find('ul').append('<li>' + value + '</li>');
-        });
-    },
     createVote: function () {
         var view = this;
         var success = true;
         var users = [];
         var tags = [];
         if (!view.model.get('is_public')) {
-
             view.options.accessedUsers.each(function (model, index) {
                 users.push(model.get('id'));
             });
-
         }
 
         if (!(view.ui.tags.val().length == 0)) {
@@ -111,7 +106,7 @@ module.exports = Marionette.LayoutView.extend({
         }
         if (!view.model.save({
                 user_id: currentUser.get('id'),
-                finished_at: moment(view.ui.finished.val(), view.dateFormats, true).format("YYYY-MM-DD HH:mm:ss"),
+                finished_at: DateHelper.dateWithoutTimezone(this.ui.finished.val()),
                 users: users,
                 tags: tags
             }, {
@@ -139,7 +134,7 @@ module.exports = Marionette.LayoutView.extend({
             });
         }
         if (success && view.model.get('id')) {
-            view.$('*').prop('disabled', true);
+            view.ui.all.prop('disabled', true);
             setTimeout(function () {
                 Backbone.history.navigate('votes/' + view.model.get('id'), {trigger: true});
             }, 1000);

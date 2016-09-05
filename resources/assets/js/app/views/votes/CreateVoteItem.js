@@ -17,7 +17,6 @@ module.exports = Marionette.ItemView.extend({
             this.ui.error_name.html('<span>'+errors['name']+'</span>');
         },
         'saved': function () {
-            this.ui.name.css('border', '1px solid green');
             this.ui.error_name.empty();
         }
     },

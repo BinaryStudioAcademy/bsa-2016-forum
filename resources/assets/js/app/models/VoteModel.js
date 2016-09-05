@@ -2,21 +2,21 @@ var Backbone = require('backbone');
 var BaseModel = require('../instances/Model');
 var _ = require('underscore');
 var moment = require('moment');
+var DateHelper = require('../helpers/dateHelper.js');
 
 module.exports = BaseModel.extend({
     urlRoot: '/votes',
+    minTime: 5,
     validate: function (attrs) {
+        debugger;
         var errors = {};
-        if(!attrs.title || attrs.title == ' ')
+        if (!attrs.title || attrs.title == ' ')
             errors['title'] = 'Write question title!';
-
-        if(attrs.finished_at == 'Invalid date')
-            errors['invalidDate'] = true;
-        else if(moment().diff(moment(attrs.finished_at, "YYYY-MM-DD HH:mm:ss"), 'minute') > -5) {
-            errors['dateInPast'] = '<span> Minimum time for vote: 5 minutes.</span>';
+        if (!_.isEmpty(attrs.finished_at) && this.minTime > 0 && moment().diff(DateHelper.dateWithoutTimezone(attrs.finished_at), 'minute') > -this.minTime) {
+            errors['dateInPast'] = 'Perhabs, you typed date in the past. Also, minimum time for vote: ' + this.minTime + ' minutes.';
         }
-        
-        if(!_.isEmpty(errors))
+
+        if (!_.isEmpty(errors))
             return errors;
     },
     defaults: {
@@ -25,8 +25,8 @@ module.exports = BaseModel.extend({
         is_single: true
     },
     sync: function (method, model, options) {
-        
-        if(method == 'create' || method == 'update') {
+
+        if (method == 'create' || method == 'update') {
             model.set({users: JSON.stringify(model.get('users'))});
             model.set({tags: JSON.stringify(model.get('tags'))});
         }
