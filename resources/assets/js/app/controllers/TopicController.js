@@ -43,7 +43,7 @@ module.exports = Marionette.Object.extend({
 
     show: function (slug)  {
         var topicModel = new TopicModel({slug: slug});
-        topicModel.fetchBySlag(slug);
+        topicModel.fetchBySlag();
         app.render(new TopicDetailView({model: topicModel}));
     },
 
