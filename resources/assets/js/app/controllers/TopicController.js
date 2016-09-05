@@ -40,7 +40,7 @@ module.exports = Marionette.Object.extend({
         app.render(new TopicCreate({model: topicModel, collection: topicCategoryCollection}));
     },
 
-    show: function (id) {
+    show: function (slug) {
         var topicModel = new TopicModel({slug: slug});
         topicModel.fetch({
             success: function () {
