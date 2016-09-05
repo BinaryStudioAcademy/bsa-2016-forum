@@ -77,3 +77,12 @@ $factory->define(App\Models\Category::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\Models\Notification::class, function () {
+    return [
+        'user_id' => App\Models\User::all()->random(1)->id
+    ];
+});
+
+$factory->define(App\Models\Like::class, function (Faker\Generator $faker) {
+    return [];
+});

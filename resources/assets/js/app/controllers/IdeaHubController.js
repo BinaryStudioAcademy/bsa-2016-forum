@@ -15,6 +15,8 @@ var ShowVote = require('../views/votes/ShowVote');
 
 var Votes = require('../instances/Votes');
 
+var voteCollection=require('../collections/voteCollection');
+
 module.exports = Marionette.Object.extend({
     index: function () {
 
@@ -24,6 +26,7 @@ module.exports = Marionette.Object.extend({
         Votes.fetch();
     },
     showVote: function (id) {
+        var AddCommentView = require('../views/votes/VoteCommentItemAdd');
         var view;
         var model;
         var parentUrl = '/votes/' + id;
@@ -48,25 +51,28 @@ module.exports = Marionette.Object.extend({
             answers: VoteAnswers
         });
 
-        view.listenTo(Radio.channel('votesChannel'), 'createComment', function (view) {
-            var model = new CommentModel({user_id: currentUser.get('id')}, {parentUrl: view.options.collection.parentUrl});
+        view.listenTo(Radio.channel('votesChannel'), 'showAddCommentView', function (view) {
 
-            var errorContainer = $('.errors');
-            errorContainer.empty();
-
-            if (!model.save({content_origin: view.ui.text.val()}, {
-                    success: function (data) {
-                        view.ui.text.val('');
-                        //view.options.collection.fetch({async: false});
-                        view.options.collection.add(data);
-                        Radio.trigger('votesChannel', 'setCommentsCount', view.options.collection.length);
-                    }
-                })) {
-                errorContainer.html(model.validationError.content_origin);
-            }
+            view.getRegion('addcomment').show(
+                new AddCommentView({
+                    parent: view,
+                    model: new CommentModel({user_id: currentUser.get('id')}, {parentUrl: view.collection.parentUrl})
+                })
+            );
         });
 
         app.render(view);
 
+    },
+
+    showUserVotes: function() {
+        var parentUrl = '/users/' + currentUser.id;
+        var usersVotes = new voteCollection([], {parentUrl: parentUrl});
+
+        usersVotes.fetch();
+
+        app.render(new ListVotes({
+            vc: usersVotes
+        }));
     }
 });

@@ -274,7 +274,7 @@ TOPIC DETAILS
 
 .post-item {
   width: 100%;
-  height: 80px;
+  height: 120px;
   display: flex;
   border-bottom: 1px solid #EEEEEE;
   overflow: hidden;
@@ -282,6 +282,7 @@ TOPIC DETAILS
   cursor: pointer;
   padding-top: 10px;
   margin-left: 0 !important;
+  margin-bottom: 10px;
 }
 .post-item:nth-child(even) {
   background: #fff;

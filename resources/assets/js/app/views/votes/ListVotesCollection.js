@@ -1,6 +1,6 @@
-var Marionette = require('backbone.marionette');
-var ListVotesItem = require('./ListVotesItem'); 
+var ListVotesItem = require('./ListVotesItem');
+var paginateableCollectionView = require('../../instances/paginateableCollectionView');
 
-module.exports = Marionette.CollectionView.extend({
+module.exports = paginateableCollectionView.extend({
     childView : ListVotesItem
 });
