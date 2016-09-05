@@ -5,15 +5,25 @@ use HttpRequest;
 
 class CurlService
 {
-    public function sendRequest($method, $url, $cookie)
+    public function sendRequest($method, $url, array $body = null)
     {
         $response = null;
+        $cookieName = config('authserver.cookieName');
+        $cookie = 'Cookie: ' . $cookieName . '=' . $_COOKIE[$cookieName];
         $opts = array('http' =>
             array(
                 'method' => $method,
-                'header' => ['Content-type: application/x-www-form-urlencoded', $cookie]
+                'header' => [$cookie]
             )
         );
+
+        if(isset($body)) {
+            $opts['http']['header'][] = 'Content-type: application/json';
+            $opts['http']['content'] = json_encode($body);
+        } else {
+            $opts['http']['header'][] = 'Content-type: application/x-www-form-urlencoded';
+        }
+
         $context = stream_context_create($opts);
         $stream = fopen($url, 'r', false, $context);
         $response = stream_get_contents($stream);
@@ -23,14 +33,13 @@ class CurlService
 
     public function sendUsersRequest($id = null)
     {
-        $cookieName = config('authserver.cookieName');
-        $cookie = 'Cookie: ' . $cookieName . '=' . $_COOKIE[$cookieName];
+
         if (!$id) {
             $url = trim(config('authserver.urlUsersInfo'));
         } else {
             $url = trim(config('authserver.urlUserInfo')) . $id;
         }
-        $response = $this->sendRequest('GET', $url, $cookie);
+        $response = $this->sendRequest('GET', $url);
         if (!$response) {
             throw new ServiceUnavailableHttpException;
         }
