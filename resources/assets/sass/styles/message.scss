@@ -224,3 +224,12 @@ MESSAGE DIALOG
 .from .delete {
   visibility: hidden;
 }
+
+.hotkey-checkbox-label {
+  font-weight: normal;
+  font-size: 12px;
+}
+
+input.hotkey-checkbox {
+  margin-left: 20px;
+}

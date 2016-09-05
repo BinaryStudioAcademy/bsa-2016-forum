@@ -144,8 +144,6 @@ class MessageController extends ApiController
 
         $this->authorize('delete', [$message, $user, $this->interval]);
 
-        $message->message = "Removed";
-        $message->save();
         $message->delete();
         event(new UpdatedMessageEvent($message));
         return $this->setStatusCode(204)->respond();
