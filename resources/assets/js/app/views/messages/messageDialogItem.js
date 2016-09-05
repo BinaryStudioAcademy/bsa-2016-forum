@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
+var App = require('../../instances/appInstance');
 
 module.exports = Marionette.ItemView.extend({
     template: 'messageDialogItem',
@@ -22,7 +23,7 @@ module.exports = Marionette.ItemView.extend({
         Radio.channel('messagesChannel').trigger('editMessage', this.model);
     },
     mouseenterMsgFrom: function (e) {
-        var intervalMinutes = 15;
+        var intervalMinutes = App.getConfigAttr('messageChangeOnDelay');
         var intervalMilliseconds = intervalMinutes * 60 * 1000;
         var now = new Date();
         var nowUTC = new Date(
