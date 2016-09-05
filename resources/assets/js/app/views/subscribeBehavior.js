@@ -1,3 +1,4 @@
+var _ = require("underscore");
 var Marionette = require('backbone.marionette');
 var Subscription = require('../models/SubscriptionModel');
 var logger = require('../instances/logger');
@@ -34,7 +35,7 @@ module.exports = Marionette.Behavior.extend({
 
     saveSubscribe: function(subscribe)
     {
-        if (Object.prototype.toString.call(this.view.model.getMeta().subscription)  === '[object Array]') {
+        if (_.isArray(this.view.model.getMeta().subscription)) {
             this.view.model.getMeta().subscription[this.view.model.get('id')] = subscribe;
         } else {
             this.view.model.getMeta().subscription = subscribe;
@@ -42,7 +43,7 @@ module.exports = Marionette.Behavior.extend({
     },
 
     getSubscribe: function () {
-        if (Object.prototype.toString.call(this.view.model.getMeta().subscription) === '[object Array]' && this.view.model.getMeta().subscription[view.model.get('id')]) {
+        if (_.isArray(this.view.model.getMeta().subscription) && this.view.model.getMeta().subscription[view.model.get('id')]) {
             return this.view.model.getMeta().subscription[view.model.get('id')];
         } else if (this.view.model.getMeta().subscription) {
             return this.view.model.getMeta().subscription;
