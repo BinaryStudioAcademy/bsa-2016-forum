@@ -37,6 +37,19 @@ class AppServiceProvider extends ServiceProvider
             return $voteitem->vote_id == $request['vote_id'];
         });
 
+        Validator::extend('tags_validator', function ($attribute, $value, $parameters, $validator) {
+            if ($value) {
+                $tags = json_decode($value, true);
+                foreach ($tags as $tag) {
+                    if (empty($tag['id']) && empty($tag['name'])){
+                        return false;
+                    }
+                }
+            } else {
+                return false;
+            }
+        });
+
     }
 
     /**

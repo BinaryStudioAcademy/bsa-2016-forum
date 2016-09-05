@@ -17,23 +17,25 @@ class TagService
         $oldTags = $taggableModel->tags()->get();
         $taggableModel->tags()->detach($oldTags);
         $tags = json_decode($tags, true);
-
-        foreach ($tags as $tag) {
-            if (!empty($tag['id'])) {
-                $tag = Tag::find($tag['id']);
-                if ($tag && !$taggableModel->tags()->find($tag->id)) {
-                    $taggableModel->tags()->save($tag);
+        if($tags){
+            foreach ($tags as $tag) {
+                if (!empty($tag['id'])) {
+                    $tag = Tag::find($tag['id']);
+                    if ($tag && !$taggableModel->tags()->find($tag->id)) {
+                        $taggableModel->tags()->save($tag);
+                    }
+                } elseif (!empty($tag['name'])) {
+                    $existedTag = Tag::where('name', $tag['name'])->get()->first();
+                    if ($existedTag && !$taggableModel->tags()->get()->find($existedTag->id)) {
+                        $taggableModel->tags()->save($existedTag);
+                    } elseif (!$existedTag) {
+                        $newTag = Tag::create($tag);
+                        $taggableModel->tags()->save($newTag);
+                    }
                 }
-            } elseif (!empty($tag['name'])) {
-                $existedTag = Tag::where('name', $tag['name'])->get()->first();
-                if ($existedTag && !$taggableModel->tags()->get()->find($existedTag->id)) {
-                    $taggableModel->tags()->save($existedTag);
-                } elseif (!$existedTag) {
-                    $newTag = Tag::create($tag);
-                    $taggableModel->tags()->save($newTag);
-                }
-            }
+            } 
         }
+
     }
 
     /**
