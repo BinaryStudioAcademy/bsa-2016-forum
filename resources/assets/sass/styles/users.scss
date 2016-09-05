@@ -78,6 +78,38 @@ USER LIST
   font-weight: 800;
 }
 
+//
+.users-item-vote{
+  float: right;
+  margin-right: 5px;
+}
+
+.users-item-vote a{
+  height: 100%;
+  display: flex;
+  padding: 20px 10px;
+}
+
+.users-item-vote a:hover{
+  background-color: #ffd992;
+}
+
+.users-item-vote a img {
+  margin-right: 5px;
+  height: 40px;
+}
+
+.users-item-vote a span {
+  color: #555555;
+  display: table-cell;
+  vertical-align: middle;
+  height: 40px;
+  font-size: 18px;
+  font-weight: 800;
+  width:350px;
+}
+//
+
 .users-item-permission {
   padding: 5px 0;
 }

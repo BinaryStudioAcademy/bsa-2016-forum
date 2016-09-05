@@ -24,8 +24,9 @@ module.exports = Backbone.Collection.extend({
         return Backbone.sync(method, collection, options);
     },
 
-    parse: function (response) {
-        this._meta = response._meta;
+    parse: function (response, options) {
+        if (options.remove == false) {  this._meta = _.extend(this._meta, response._meta) }
+        else  { this._meta = response._meta; }
         return response.data;
     }
 

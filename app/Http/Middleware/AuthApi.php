@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\UserStore;
 
 
 class AuthApi extends AuthService
