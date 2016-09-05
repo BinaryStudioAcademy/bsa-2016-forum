@@ -39,7 +39,7 @@ module.exports = Marionette.LayoutView.extend({
         'invalid': function (model, errors) {
             this.ui.errors.empty();
             var self = this;
-            $.each(errors, function (key, error) {
+            _.each(errors, function (error, key) {
                 self.$('.js-error-' + key).html(error);
             });
         },
@@ -68,7 +68,6 @@ module.exports = Marionette.LayoutView.extend({
         },
         'click @ui.isPublic': function () {
             this.saveModel({is_public: this.ui.isPublic.filter(':checked').val()});
-            console.log(this.model.get('is_public'));
             if (this.ui.isPublic.prop('checked')) {
                 this.$('.vote-new-access').hide();
             } else

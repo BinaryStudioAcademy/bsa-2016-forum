@@ -9,9 +9,9 @@ module.exports = BaseModel.extend({
     minTime: 5,
     validate: function (attrs) {
         var errors = {};
-        if (!attrs.title || attrs.title == ' ')
+        if (attrs.title.trim().length == 0)
             errors['title'] = 'Write question title!';
-        if (!_.isEmpty(attrs.finished_at) && this.minTime > 0 && moment().diff(DateHelper.dateWithoutTimezone(attrs.finished_at), 'minute') > -this.minTime) {
+        if (!_.isEmpty(attrs.finished_at) && DateHelper.getDateTimeDiff(attrs.finished_at) > -this.minTime) {
             errors['dateInPast'] = 'Perhabs, you typed date in the past. Also, minimum time for vote: ' + this.minTime + ' minutes.';
         }
 

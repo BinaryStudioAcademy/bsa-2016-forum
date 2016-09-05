@@ -3,16 +3,9 @@ var _ = require('underscore');
 
 module.exports = BaseModel.extend({
     urlRoot: '/voteitems',
-    initialize: function (options) {
-        if (options)
-            if (options.parentUrl) {
-                this.parentUrl = options.parentUrl;
-            }
-
-    },
     validate: function (attrs) {
         var errors = {};
-        if (!attrs.name || attrs.name == ' ') {
+        if (attrs.name.trim().length == 0) {
             errors['name'] = 'Write the name of vote item';
         }
 

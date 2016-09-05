@@ -42,7 +42,13 @@ module.exports = Backbone.Model.extend({
     },
 
     getMetaById: function () {
-        if(this.getMeta())
+        if (this.getMeta())
             return this.getMeta()[this.get('id')] || null;
+    },
+
+    initialize: function (data, options) {
+        if (options && options.parentUrl) {
+            this.parentUrl = options.parentUrl;
+        }
     }
 });

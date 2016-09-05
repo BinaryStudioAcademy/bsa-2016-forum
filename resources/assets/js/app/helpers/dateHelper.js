@@ -12,6 +12,10 @@ var dateHelper = {
         if (_.isEmpty(date)) return '';
         return moment(date).format('YYYY-MM-DD HH:mm:ss')
     },
+    
+    getDateTimeDiff: function (date) {
+        return moment().diff(this.dateWithoutTimezone(date), 'minute');
+    },
 
     shortDate: function(date) {
         if (_.isEmpty(date)) return '';
