@@ -85,18 +85,25 @@ class TopicController extends ApiController
     public function indexInCategory($catId, TopicRequest $request)
     {
         $this->setFiltersData($request);
-
-        $topics = Topic::where('category_id', $catId)
-            ->filterByQuery($this->searchStr)
-            ->filterByTags($this->tagIds)
-            ->paginate(15)->getCollection();
+        if ($request->page) {
+            $paginationObject = Topic::where('category_id', $catId)
+                ->filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)
+                ->paginate(15);
+            $topics = $paginationObject->getCollection();
+            $meta = $this->getMetaDataForCollection($topics);
+            $meta['hasMorePages'] = $paginationObject->hasMorePages();
+        } else {
+            $topics = Topic::where('category_id', $catId)
+                ->filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)->get();
+            $meta = $this->getMetaDataForCollection($topics);
+        }
 
         foreach ($topics as $topic) {
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
         }
-
-        $meta = $this->getMetaDataForCollection($topics);
 
         return $this->setStatusCode(200)->respond($topics, $meta);
     }

@@ -26,12 +26,20 @@ class VoteController extends ApiController
     public function index(Request $request)
     {
         $this->setFiltersParameters($request);
-        $paginationObject = Vote::filterByQuery($this->searchStr)
-            ->filterByTags($this->tagIds)
-            ->paginate(15);
-        $votes = $paginationObject->getCollection();
-        $meta = $this->getMetaDataForCollection($votes);
-        $meta['hasMorePages'] = $paginationObject->hasMorePages();
+
+        if ($request->page) {
+            $paginationObject = Vote::filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)
+                ->paginate(15);
+            $votes = $paginationObject->getCollection();
+            $meta = $this->getMetaDataForCollection($votes);
+            $meta['hasMorePages'] = $paginationObject->hasMorePages();
+        } else {
+            $votes = Vote::filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)->get();
+            $meta = $this->getMetaDataForCollection($votes);
+        }
+
         return $this->setStatusCode(200)->respond($votes, $meta);
     }
 
@@ -178,7 +186,7 @@ class VoteController extends ApiController
             return $this->setStatusCode(200)->respond();
         }
 
-        $data=$this->getMetaDataForCollection($votes);
+        $data = $this->getMetaDataForCollection($votes);
 
         return $this->setStatusCode(200)->respond($votes, $data);
     }
