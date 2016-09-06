@@ -24,29 +24,16 @@ module.exports = Marionette.ItemView.extend({
     clickedEditMessage: function () {
         Radio.channel('messagesChannel').trigger('editMessage', this.model);
     },
-    mouseenterMsgFrom: function (e) {
+    mouseenterMsgFrom: function () {
         var intervalMinutes = App.getConfigAttr('messageChangeOnDelay');
         var intervalMilliseconds = intervalMinutes * 60 * 1000;
-        var now = new Date();
-        var nowUTC = new Date(
-            now.getUTCFullYear(),
-            now.getUTCMonth(),
-            now.getUTCDate(),
-            now.getUTCHours(),
-            now.getUTCMinutes(),
-            now.getUTCSeconds()
-        );
-        var currentTime = nowUTC.getTime();
-        var createdAt = Date.parse(this.model.get('created_at'));
-        if (!isNaN(createdAt)) {
-            var passedMilliseconds = currentTime - createdAt;
-            if (passedMilliseconds <= intervalMilliseconds) {
-                this.ui.delete.removeClass('invisible');
-                this.ui.edit.removeClass('invisible');
-            }
+        var createdAt = this.model.get('created_at');
+        if (!dateHelper.isTimePassed(createdAt, intervalMilliseconds)) {
+            this.ui.delete.removeClass('invisible');
+            this.ui.edit.removeClass('invisible');
         }
     },
-    mouseleaveMsgFrom: function (e) {
+    mouseleaveMsgFrom: function () {
         this.ui.delete.addClass('invisible');
         this.ui.edit.addClass('invisible');
     },
