@@ -3,6 +3,7 @@ var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
 var $ = require('jquery');
+var logger = require('../../instances/logger');
 var _ = require('underscore');
 var SubscribeBehavior = require('../subscribeBehavior');
 
@@ -40,7 +41,7 @@ module.exports = Marionette.ItemView.extend({
         this.ui.bookmarkTopic.addClass('text-muted');
     },
 
-    addOkBookmarkIcon: function () {
+    addOkIcon: function () {
         this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
     },
 
@@ -66,7 +67,7 @@ module.exports = Marionette.ItemView.extend({
         }
 
         if (this.model.bookmarkId) {
-            this.addOkBookmarkIcon();
+            this.addOkIcon();
         }
     },
 
@@ -105,7 +106,7 @@ module.exports = Marionette.ItemView.extend({
                 success: function (response) {
                     that.model.bookmarkId = response.id;
                     that.unlockButton();
-                    that.addOkBookmarkIcon();
+                    that.addOkIcon();
                 },
                 error: function (response, xhr) {
                     var errorMsg = '';
