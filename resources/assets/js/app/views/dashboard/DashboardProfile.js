@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
-var BookmarksLayout = require('../views/bookmarks/bookmarkLayout');
+var BookmarksCollection = require('../bookmarks/bookmarkCollection');
+var MessagesCollection = require('../messages/messageCollection');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'DashboardProfile',
@@ -10,10 +11,10 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onRender: function() {
-        this.getRegion('bookmarks').show(new new BookmarksLayout({
+        this.getRegion('messages').show(new MessagesCollection({
             collection: this.options.messages,
         }));
-        this.getRegion('bookmarks').show(new new BookmarksLayout({
+        this.getRegion('bookmarks').show(new BookmarksCollection({
             collection: this.options.bookmarks,
         }));
     }
