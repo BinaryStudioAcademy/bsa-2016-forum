@@ -19,6 +19,7 @@ module.exports = Marionette.ItemView.extend({
 
         return {
             model: this.model.toJSON(),
+            createdDate: dateHelper.fullDate(this.model.get('created_at')),
             meta: {
                 user: meta[id].user
             }

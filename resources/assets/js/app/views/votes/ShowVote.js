@@ -47,14 +47,14 @@ module.exports = Marionette.LayoutView.extend({
         var self = this;
         this.collection.listenTo(Radio.channel('VoteComments'),
             'newComment', function (comment) {
+                self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
+                var count = self.addedCommentsCollection.length + self.collection.length;
+                Radio.trigger('votesChannel', 'setCommentsCount' + self.options.voteModel.id, count);
 
-                if (comment.user_id == currentUser.id) {
+                if (comment.user_id != currentUser.id) {
                     self.$('.new-comment-notification').show(300);
-
-                    self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
-
-                    var count = self.addedCommentsCollection.length + self.collection.length;
-                    Radio.trigger('votesChannel', 'setCommentsCount' + self.options.voteModel.id, count);
+                } else {
+                    self.options.collection.add(self.addedCommentsCollection.toJSON());
                 }
             });
     },
@@ -66,7 +66,6 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     showNewComments: function () {
-        console.log(this.options);
         this.options.collection.add(this.addedCommentsCollection.toJSON());
         this.ui.newCommentButton.hide();
     },
