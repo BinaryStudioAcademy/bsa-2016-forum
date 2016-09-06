@@ -52,7 +52,7 @@ module.exports = Marionette.Object.extend({
     myTopics: function () {
         var parentUrl = '/users/' + currentUser.id;
         var topicCollection = new UserTopicCollection({parentUrl: parentUrl});
-        topicCollection.fetch();
+        topicCollection.fetch({data: {page: 1}});
         app.render(new topicLayout({collection: topicCollection}));
     }
 });

@@ -192,11 +192,23 @@ class TopicController extends ApiController
         $user = User::findOrFail($userId);
         $this->setFiltersData($request);
 
-        $topics = $user->topics()
-            ->getQuery()
-            ->filterByQuery($this->searchStr)
-            ->filterByTags($this->tagIds)
-            ->paginate(15)->getCollection();
+        if ($request->page) {
+            $paginationObject = $user->topics()
+                ->getQuery()
+                ->filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)
+                ->paginate(15);
+            $topics = $paginationObject->getCollection();
+            $meta = $this->getMetaDataForCollection($topics);
+            $meta['hasMorePages'] = $paginationObject->hasMorePages();
+        } else {
+            $topics = $user->topics()
+                ->getQuery()
+                ->filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)
+                ->get();
+            $meta = $this->getMetaDataForCollection($topics);
+        }
 
         if (!$topics) {
             return $this->setStatusCode(200)->respond();
@@ -207,7 +219,6 @@ class TopicController extends ApiController
             $topic->answersCount = $topic->comments()->count();
         }
 
-        $meta = $this->getMetaDataForCollection($topics);
         $meta['user'] = $user;
 
         return $this->setStatusCode(200)->respond($topics, $meta);
