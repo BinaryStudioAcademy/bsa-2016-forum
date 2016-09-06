@@ -15,7 +15,7 @@ var ShowVote = require('../views/votes/ShowVote');
 
 var Votes = require('../instances/Votes');
 
-var voteCollection=require('../collections/voteCollection');
+var voteCollection = require('../collections/voteCollection');
 
 module.exports = Marionette.Object.extend({
     index: function () {
@@ -23,7 +23,7 @@ module.exports = Marionette.Object.extend({
         Votes.reset();
         var view = new ListVotes({vc: Votes});
         app.render(view);
-        Votes.fetch();
+        Votes.fetch({data: {page: 1}});
     },
     showVote: function (id) {
         var AddCommentView = require('../views/votes/VoteCommentItemAdd');
@@ -65,7 +65,7 @@ module.exports = Marionette.Object.extend({
 
     },
 
-    showUserVotes: function() {
+    showUserVotes: function () {
         var parentUrl = '/users/' + currentUser.id;
         var usersVotes = new voteCollection([], {parentUrl: parentUrl});
 

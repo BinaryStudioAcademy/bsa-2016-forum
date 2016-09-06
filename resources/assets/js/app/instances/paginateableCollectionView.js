@@ -4,7 +4,9 @@ module.exports = Marionette.CollectionView.extend({
 
     onShow: function () {
 
-        $(window).on('scroll', this.fetchPage.bind(this));
+        if (!this.collection.isEmpty()) {
+            $(window).on('scroll', this.fetchPage.bind(this));
+        }
 
     },
     onDestroy: function () {
@@ -28,12 +30,11 @@ module.exports = Marionette.CollectionView.extend({
             remove: false,
             data: {page: this._page},
             error: function (collection, response) {
-                //self._allItemsUploaded = true;
                 console.error(response.responseText);
             },
             success: function (collection, xhr) {
+                var meta = this.collection.getMeta();
                 self._allItemsUploaded = !meta.hasMorePages;
-                console.log('hasMorePages:' + meta.user);
                 this._page++;
             }.bind(this)
         });
