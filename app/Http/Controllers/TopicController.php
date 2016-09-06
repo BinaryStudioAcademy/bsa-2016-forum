@@ -33,9 +33,30 @@ class TopicController extends ApiController
                 ->where('user_id', Auth::user()->id)->first();
         }
 
-
         return $data;
+    }
 
+    /**
+     * @param Topic $topic
+     * @return array
+     */
+    private function getLikesOfTopic(Topic $topic)
+    {
+        $topic->countOfLikes = $topic->likes()->count();
+
+        $like = $topic->likes()->where('user_id', Auth::user()->id)->first();
+        if(!empty($topic->likes()->where('user_id', Auth::user()->id)->get()->first()))
+        {
+            $topic->is_user = true;
+            $topic->like_id = $topic->likes()->where('user_id', Auth::user()->id)->get()->first()->id;
+        }
+        else
+        {
+            $topic->is_user= false;
+            $topic->like_id = null;
+        }
+
+        return $topic;
     }
 
 
@@ -52,7 +73,6 @@ class TopicController extends ApiController
         }
 
         return $data;
-
     }
 
     /**
@@ -68,20 +88,9 @@ class TopicController extends ApiController
         $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
 
         foreach ($topics as $topic) {
+            $topic=$this->getLikesOfTopic($topic);
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
-
-            $like = $topic->likes()->where('user_id', Auth::user()->id)->first();
-            if(!empty($topic->likes()->where('user_id', Auth::user()->id)->get()->first()))
-            {
-                $topic->is_user = true;
-                $topic->like_id = $topic->likes()->where('user_id', Auth::user()->id)->get()->first()->id;
-            }
-            else
-            {
-                $topic->is_user= false;
-                $topic->like_id = null;
-            }
         }
 
         $meta = $this->getMetaDataForCollection($topics);
@@ -107,20 +116,9 @@ class TopicController extends ApiController
             ->paginate(15)->getCollection();
 
         foreach ($topics as $topic) {
+            $topic=$this->getLikesOfTopic($topic);
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
-            $topic->countOfLikes = $topic->likes()->count();
-
-            if(!empty($topic->likes()->where('user_id', $user->id)->get()->first()))
-            {
-                $topic->is_user = true;
-                $topic->like_id = $topic->likes()->where('user_id', $user->id)->get()->first()->id;
-            }
-            else
-            {
-                $topic->is_user= false;
-                $topic->like_id = null;
-            }
             $topic->currentUser = $user->id;
         }
         $meta = $this->getMetaDataForCollection($topics);
@@ -155,6 +153,8 @@ class TopicController extends ApiController
     {
         $topic = Topic::findOrFail($id);
         $topic->tags = $topic->tags()->get();
+        $topic=$this->getLikesOfTopic($topic);
+
         $meta = $this->getMetaDataForModel($topic);
 
         return $this->setStatusCode(200)->respond($topic, $meta);
@@ -199,7 +199,11 @@ class TopicController extends ApiController
         $like = new Like();
         $like->user()->associate($user);
 
-        $topic->likes()->save($like);
+        //User can't add like to his own topic
+        if($user->id!=$topic->user_id)
+        {
+            $topic->likes()->save($like);
+        }
 
         return $this->setStatusCode(200)->respond($topic);
     }
@@ -265,8 +269,11 @@ class TopicController extends ApiController
         }
 
         foreach ($topics as $topic) {
+
+            $topic=$this->getLikesOfTopic($topic);
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
+
         }
 
         $meta = $this->getMetaDataForCollection($topics);
@@ -305,5 +312,4 @@ class TopicController extends ApiController
         $tagIds = $request->get('tag_ids');
         $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
     }
-
 }

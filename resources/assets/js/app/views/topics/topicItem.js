@@ -58,7 +58,7 @@ module.exports = Marionette.ItemView.extend({
         return {
             model: this.model.toJSON(),
             style: style,
-            href: href
+            href: href,
             createdDate: dateHelper.shortDate(this.model.get('created_at'))
         };
     },
@@ -132,24 +132,28 @@ module.exports = Marionette.ItemView.extend({
     },
 
     addLikeTopic: function(){
-        alert("addLikeFunction"+this.model.id);
         var parentUrl = '/topics/'+this.model.id;
         var topicAddLikeModel=new TopicAddLikeModel({parentUrl: parentUrl});
         topicAddLikeModel.save();
-        this.model.set({is_user:true});
+        this.model.fetch({id:this.model.id});
+        this.model.set({
+            is_user:this.model.attributes.is_user,
+            countOfLikes:this.model.attributes.countOfLikes,
+        });
     },
 
     removeLikeTopic: function(){
-        alert("removeLikeFunction"+this.model.id+'***'+this.model.get('like_id'));
         var parentUrl = '/topics/'+this.model.id+'/likes/'+this.model.get('like_id');
         var topicRemoveLikeModel = new TopicRemoveLikeModel({parentUrl: parentUrl,id:this.model.get('like_id')});
         topicRemoveLikeModel.destroy({success: function(model, response) {
-            console.log(response.data.id);
-            alert("model deleted");
         },
             error:function(){
-                alert("ooops");
             }});
-        this.model.set({is_user:false});
+        this.model.fetch({id:this.model.id});
+        console.log(this.model.attributes.countOfLikes);
+        this.model.set({
+            is_user:this.model.attributes.is_user,
+            countOfLikes:this.model.attributes.countOfLikes,
+        });
     }
 });
