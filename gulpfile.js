@@ -80,9 +80,9 @@ gulp.task('js', function () {
     return b.bundle()
         .pipe(source('bundle.js'))
         .pipe(buffer())
-        .pipe(cfg.prod ? util.noop() : sourcemaps.init({loadMaps: true}))
+        // .pipe(cfg.prod ? util.noop() : sourcemaps.init({loadMaps: true}))
         .pipe(cfg.prod ? uglify() : util.noop())
-        .pipe(cfg.prod ? util.noop() : sourcemaps.write('.'))
+        // .pipe(cfg.prod ? util.noop() : sourcemaps.write('.'))
         .pipe(gulp.dest('./public/js'));
 });
 
