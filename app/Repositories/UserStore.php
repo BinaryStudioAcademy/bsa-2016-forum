@@ -89,8 +89,7 @@ class UserStore implements UserStoreInterface
                 $usersNew[] = $user;
             }
         }
-
-        return $users;
+        return $usersNew;
     }
 
     public function get($user)
