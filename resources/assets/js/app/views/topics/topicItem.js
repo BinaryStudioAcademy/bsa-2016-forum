@@ -3,6 +3,7 @@ var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
 var $ = require('jquery');
+var logger = require('../../instances/logger');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicItem',
@@ -48,7 +49,7 @@ module.exports = Marionette.ItemView.extend({
 
             $.each(meta.bookmark, function(index, value) {
                 if (value.topic_id == self.model.get('id')) {
-                    self.model.bookmarkId = index;
+                    self.model.bookmarkId = value.id;
                     return false;
                 }
             });
@@ -82,7 +83,7 @@ module.exports = Marionette.ItemView.extend({
                         errorMsg += index + ': ' + value;
                     });
 
-                    alert(errorMsg);
+                    logger(errorMsg);
                 }
             });
 
@@ -102,7 +103,7 @@ module.exports = Marionette.ItemView.extend({
                         errorMsg += index + ': ' + value;
                     });
 
-                    alert(errorMsg);
+                    logger(errorMsg);
                 }
             });
         }
