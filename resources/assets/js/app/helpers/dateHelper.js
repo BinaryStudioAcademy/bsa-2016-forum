@@ -43,6 +43,15 @@ var dateHelper = {
         }
 
         return moment(then, 'x').fromNow();
+    },
+
+    isTimePassed: function (date, interval) {
+        if (_.isEmpty(date)) {
+            return false;
+        }
+        var now = moment.utc();
+        var createdAt = moment.utc(date);
+        return !((now - createdAt) <= interval);
     }
 };
 
