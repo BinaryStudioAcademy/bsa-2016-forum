@@ -33,29 +33,30 @@ module.exports = Marionette.LayoutView.extend({
             this.ui.c_count.text(n + ' Comments');
         });
 
-        socketCommentClient.bind('VoteComments' + this.options.voteModel.id);
+        socketCommentClient.bind('VoteComments', this.options.voteModel.id);
     },
 
     onBeforeDestroy: function () {
         this.stopListening();
-        socketCommentClient.unbind('VoteComments' + this.options.voteModel.id);
+        socketCommentClient.unbind('VoteComments', this.options.voteModel.id);
     },
 
     onShow: function () {
         this.addedCommentsCollection = new CommentsCollection([], {parentUrl: ''});
 
         var self = this;
-        this.collection.listenTo(Radio.channel('VoteComments' + this.options.voteModel.id),
-                                    'newComment', function (comment) {
-            if (comment.user_id != currentUser.id) {
-                self.$('.new-comment-notification').show(300);
+        this.collection.listenTo(Radio.channel('VoteComments'),
+            'newComment', function (comment) {
 
-                self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
+                if (comment.user_id == currentUser.id) {
+                    self.$('.new-comment-notification').show(300);
 
-                var count = self.addedCommentsCollection.length + self.collection.length;
-                Radio.trigger('votesChannel', 'setCommentsCount' + self.options.voteModel.id, count);
-            }
-        });
+                    self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
+
+                    var count = self.addedCommentsCollection.length + self.collection.length;
+                    Radio.trigger('votesChannel', 'setCommentsCount' + self.options.voteModel.id, count);
+                }
+            });
     },
 
     collectionEvents: {
