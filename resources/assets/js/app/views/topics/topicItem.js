@@ -3,6 +3,7 @@ var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
 var $ = require('jquery');
+var _ = require('underscore');
 var SubscribeBehavior = require('../subscribeBehavior');
 
 module.exports = Marionette.ItemView.extend({
@@ -21,7 +22,6 @@ module.exports = Marionette.ItemView.extend({
 
     behaviors: {
         SubscribeBehavior: {
-            instance: 'Collection',
             behaviorClass: SubscribeBehavior,
             parent_url: _.result(currentUser, 'url'),
             target_type: 'Topic'
@@ -42,10 +42,6 @@ module.exports = Marionette.ItemView.extend({
 
     addOkBookmarkIcon: function () {
         this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
-    },
-
-    addOkSubscribeIcon: function () {
-        this.ui.subscribeNotification.append(' <i class="glyphicon glyphicon-ok subscribed"></i>');
     },
 
     serializeData: function () {
@@ -71,10 +67,6 @@ module.exports = Marionette.ItemView.extend({
 
         if (this.model.bookmarkId) {
             this.addOkBookmarkIcon();
-        }
-
-        if (meta && meta.subscription && meta.subscription[this.model.attributes.id]) {
-            this.addOkSubscribeIcon();
         }
     },
 

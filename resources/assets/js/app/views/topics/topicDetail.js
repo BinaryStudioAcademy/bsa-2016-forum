@@ -42,10 +42,6 @@ module.exports = Marionette.ItemView.extend({
         this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
     },
 
-    addOkSubscribeIcon: function () {
-        this.ui.subscribeNotification.append(' <i class="glyphicon glyphicon-ok subscribed"></i>');
-    },
-
     serializeData: function () {
         return {
             model: this.model.toJSON(),
@@ -62,10 +58,6 @@ module.exports = Marionette.ItemView.extend({
 
         if (this.model.bookmarkId) {
             this.addOkBookmarkIcon();
-        }
-
-        if(meta.subscription) {
-            this.addOkSubscribeIcon();
         }
     },
 

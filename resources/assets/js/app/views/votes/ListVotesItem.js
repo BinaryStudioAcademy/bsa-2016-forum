@@ -3,6 +3,7 @@ var Backbone = require('backbone');
 var SubscribeBehavior = require('../subscribeBehavior');
 var _ = require('underscore');
 var currentUser = require('../../initializers/currentUser');
+var dateHelper = require('../../helpers/dateHelper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteItem',
@@ -18,20 +19,9 @@ module.exports = Marionette.ItemView.extend({
 
     behaviors: {
         SubscribeBehavior: {
-            instance: "Collection",
             behaviorClass: SubscribeBehavior,
             parent_url: _.result(currentUser, 'url'),
             target_type: 'Vote'
-        }
-    },
-
-    addOkSubscribeIcon: function () {
-        this.ui.subscribeNotification.append(' <i class="glyphicon glyphicon-ok subscribed"></i>');
-    },
-
-    onRender: function () {
-        if (this.model.getMeta() && this.model.getMeta().subscription && this.model.getMeta().subscription[this.model.get('id')]) {
-            this.addOkSubscribeIcon();
         }
     },
 

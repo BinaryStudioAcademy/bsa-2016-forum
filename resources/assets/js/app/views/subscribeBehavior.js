@@ -5,13 +5,20 @@ var logger = require('../instances/logger');
 module.exports = Marionette.Behavior.extend({
 
     defaults: {
-        "instance": "Model",
         "target_type": undefined,
         "parent_url": ""
     },
 
     events: {
        'click @ui.subscribeNotification': 'subscribe'
+    },
+
+    onRender: function () {
+        var meta = this.view.model.getMeta();
+        if(!_.isUndefined(meta)) {
+            if (!_.isNull(meta[this.view.model.get('id')].subscription))
+                this.addOkIcon();
+        }
     },
 
     unlockButton: function () {
@@ -36,21 +43,15 @@ module.exports = Marionette.Behavior.extend({
 
     saveSubscribe: function(subscribe)
     {
-        if (this.options.instance == 'Collection') {
-            this.view.model.getMeta().subscription[this.view.model.get('id')] = subscribe;
-        } else {
-            this.view.model.getMeta().subscription = subscribe;
-        }
+        this.view.model.getMeta()[this.view.model.get('id')].subscription = subscribe;
     },
 
     getSubscribe: function () {
-        var meta = this.view.model.getMeta();
-        if (this.options.instance == 'Collection' && !_.isUndefined(meta.subscription[this.view.model.get('id')])) {
-            return meta.subscription[this.view.model.get('id')];
-        } else if (this.options.instance == 'Model' && !_.isUndefined(meta.subscription)) {
-            return meta.subscription;
-        } else {
+        var model = this.view.model;
+        if (_.isUndefined(model.getMeta()[model.get('id')].subscription) || _.isNull(model.getMeta()[model.get('id')].subscription)) {
             return undefined;
+        } else {
+            return model.getMeta()[model.get('id')].subscription;
         }
     },
 

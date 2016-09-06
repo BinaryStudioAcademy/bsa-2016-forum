@@ -24,16 +24,6 @@ module.exports = Marionette.ItemView.extend({
         }
     },
 
-    addOkSubscribeIcon: function () {
-        this.ui.subscribeNotification.append(' <i class="glyphicon glyphicon-ok subscribed"></i>');
-    },
-
-    onRender: function () {
-        if(this.model.getMeta() && this.model.getMeta().subscription) {
-            this.addOkSubscribeIcon();
-        }
-    },
-
     serializeData: function () {
         var tempmeta = this.model.getMeta();
         var meta = {
