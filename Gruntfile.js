@@ -8,7 +8,7 @@ module.exports = function (grunt) {
             dev: {
                 options: {
                     alias: {
-                        'config': './resources/assets/js/app/config/debug/config.js'
+                        'config': './resources/assets/js/app/config/config.dev.js'
                     },
                     browserifyOptions: {
                         debug: true
@@ -20,7 +20,7 @@ module.exports = function (grunt) {
             prod: {
                 options: {
                     alias: {
-                        'config': './resources/assets/js/app/config/prod/config.js'
+                        'config': './resources/assets/js/app/config/config.prod.js'
                     }
                 },
                 src: 'resources/assets/js/app/app.js',
@@ -101,6 +101,14 @@ module.exports = function (grunt) {
             }
         }
     });
+
+    var customConfig = './resources/assets/js/app/config/config.custom.js';
+    var isFileExist = grunt.file.exists(customConfig);
+    if (!isFileExist) {
+        var content = 'module.exports = {};';
+        grunt.file.write(customConfig, content);
+    }
+
 
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');

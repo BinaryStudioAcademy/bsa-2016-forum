@@ -1,6 +1,6 @@
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
-var App = require('../../instances/appInstance');
+var config = require('../../config/common');
 var dateHelper = require('../../helpers/dateHelper');
 var helper = require('../../helpers/helper');
 
@@ -25,7 +25,7 @@ module.exports = Marionette.ItemView.extend({
         Radio.channel('messagesChannel').trigger('editMessage', this.model);
     },
     mouseenterMsgFrom: function () {
-        var intervalMinutes = App.getConfigAttr('messageChangeOnDelay');
+        var intervalMinutes = config.messageChangeOnDelay;
         var intervalMilliseconds = intervalMinutes * 60 * 1000;
         var createdAt = this.model.get('created_at');
         if (!dateHelper.isTimePassed(createdAt, intervalMilliseconds)) {
