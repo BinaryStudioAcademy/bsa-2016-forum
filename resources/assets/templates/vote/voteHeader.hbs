@@ -1,6 +1,6 @@
 <!--<div class="vote-head">-->
     <div class="vote-header">
-        <h3>{{ model.title }}</h3>
+        <h3>{{ model.title }}  {{meta.status}}</h3>
         <h5>Opened by: {{ meta.user.first_name }}  {{ meta.user.last_name }}</h5>
         <div class="vote-tags"><p>
             {{#each meta.tags}}

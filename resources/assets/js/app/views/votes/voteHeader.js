@@ -21,7 +21,8 @@ module.exports = Marionette.ItemView.extend({
                 user: tempmeta[id].user,
                 likes: tempmeta[id].likes,
                 comments: tempmeta[id].comments,
-                tags: tempmeta[id].tags
+                tags: tempmeta[id].tags,
+                status: tempmeta[id].status
             }
         }
 

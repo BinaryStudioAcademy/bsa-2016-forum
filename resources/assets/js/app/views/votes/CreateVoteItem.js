@@ -25,7 +25,7 @@ module.exports = Marionette.ItemView.extend({
         'invalid': function (model, errors) {
             this.ui.error_name.html('<span>' + errors['name'] + '</span>');
         },
-        'sync': 'render'//function (data) {this.ui.error_name.empty();}
+        'sync': 'render'
     },
     initialize: function () {
         var self = this;
@@ -45,7 +45,8 @@ module.exports = Marionette.ItemView.extend({
         var meta = this.model.getMetaById() || def;
 
         return {
-            model: this.model.toJSON()
+            model: this.model.toJSON(),
+            meta: meta
         };
     },
     remove: function () {

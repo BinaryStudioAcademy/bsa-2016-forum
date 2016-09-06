@@ -54,7 +54,7 @@ module.exports = Marionette.LayoutView.extend({
                 });
             });
         },
-        'sync': function () {
+        'sync': function (data) {
             this.ui.errors.empty();
         }
     },
@@ -75,11 +75,13 @@ module.exports = Marionette.LayoutView.extend({
         },
         'click @ui.isSingle': function () {
             this.saveModel({is_single: this.ui.isSingle.filter(':checked').val()});
-            console.log(this.model.get('is_single'));
 
         },
         'change @ui.finished': function () {
             this.saveModel({finished_at: DateHelper.dateWithoutTimezone(this.ui.finished.val())});
+        },
+        'click @ui.delete': function () {
+            this.model.destroy({success: function() {Backbone.history.navigate('votes', {trigger: true});}});
         }
     },
     onRender: function () {
@@ -103,7 +105,8 @@ module.exports = Marionette.LayoutView.extend({
         var view = this;
         var users = [];
         var tags = [];
-        if (!view.model.get('is_public')) {
+
+        if (view.model.get('is_public') == '0') {
             view.getOption('accessedUsers').each(function (model, index) {
                 users.push(model.get('id'));
             });

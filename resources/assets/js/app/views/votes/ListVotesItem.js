@@ -23,7 +23,8 @@ module.exports = Marionette.ItemView.extend({
                 likes: tempmeta[id].likes,
                 comments: tempmeta[id].comments,
                 tags: tempmeta[id].tags,
-                days_ago:tempmeta[id].days_ago
+                days_ago:tempmeta[id].days_ago,
+                status: tempmeta[id].status
             }
         };
     }

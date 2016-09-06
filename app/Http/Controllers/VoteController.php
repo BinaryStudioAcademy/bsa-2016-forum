@@ -27,6 +27,7 @@ class VoteController extends ApiController
     {
         $this->setFiltersParameters($request);
         $votes = Vote::filterByQuery($this->searchStr)
+            ->checkOnIsSaved()
             ->filterByTags($this->tagIds)
             ->newOnTop()
             ->paginate(15)->getCollection();
@@ -40,6 +41,22 @@ class VoteController extends ApiController
         $this->searchStr = $request->get('query');
         $tagIds = $request->get('tag_ids');
         $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+    }
+
+    /**
+     * @param Collection $votes
+     * @return array
+     */
+    private function getMetaDataForCollection(Collection $votes)
+    {
+        $data = [];
+
+        foreach ($votes as $vote) {
+
+            $data += $this->getMetaDataForModel($vote);
+        }
+
+        return $data;
     }
 
     private function getMetaDataForModel(Vote $vote)
@@ -59,45 +76,13 @@ class VoteController extends ApiController
                 'likes' => $vote->likes()->count(),
                 'comments' => $vote->comments()->count(),
                 'tags' => $vote->tags()->get(),
-                'days_ago' => $difference
+                'days_ago' => $difference,
             ];
 
-        return $data;
-    }
-
-    /**
-     * @param Collection $votes
-     * @return array
-     */
-    private function getMetaDataForCollection(Collection $votes)
-    {
-        $data = [];
-
-        foreach ($votes as $vote) {
-
-            $data += $this->getMetaDataForModel($vote);
+        if ($vote->is_saved == 0 && $vote->canBeEdited()) {
+            $data[$vote->id]['status'] = ' (Not saved)';
         }
-
         return $data;
-    }
-
-    /**
-     * @param $vote
-     * @param $users
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function VotePermissionsHandler($vote, $users) {
-        $users = json_decode($users);
-        
-        $vote->votePermissions()->whereNotIn('user_id', $users)->delete();
-
-        $permissions = $vote->votePermissions()->get();
-
-        foreach($users as $user_id) {
-            if(!$permissions->contains('user_id', $user_id)){
-                $vote->votePermissions()->create(['user_id' => $user_id]);
-            }
-        }
     }
 
     /**
@@ -117,6 +102,26 @@ class VoteController extends ApiController
         }
 
         return $this->setStatusCode(201)->respond($vote);
+    }
+
+    /**
+     * @param $vote
+     * @param $users
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function VotePermissionsHandler($vote, $users)
+    {
+        $users = json_decode($users);
+
+        $vote->votePermissions()->whereNotIn('user_id', $users)->delete();
+
+        $permissions = $vote->votePermissions()->get();
+
+        foreach ($users as $user_id) {
+            if (!$permissions->contains('user_id', $user_id)) {
+                $vote->votePermissions()->create(['user_id' => $user_id]);
+            }
+        }
     }
 
     /**
@@ -152,10 +157,10 @@ class VoteController extends ApiController
         }
         if ($vote->is_public) {
             $vote->votePermissions()->forceDelete();
-        } elseif($request->users) {
+        } elseif ($request->users) {
             $this->VotePermissionsHandler($vote, $request->users);
         }
-        
+
         return $this->setStatusCode(200)->respond($vote);
     }
 
@@ -194,6 +199,7 @@ class VoteController extends ApiController
         $this->setFiltersParameters($request);
         $votes = $user->votes()
             ->getQuery()
+            ->newOnTop()
             ->filterByQuery($this->searchStr)
             ->filterByTags($this->tagIds)
             ->get();
@@ -202,7 +208,7 @@ class VoteController extends ApiController
             return $this->setStatusCode(200)->respond();
         }
 
-        $data=$this->getMetaDataForCollection($votes);
+        $data = $this->getMetaDataForCollection($votes);
 
         return $this->setStatusCode(200)->respond($votes, $data);
     }

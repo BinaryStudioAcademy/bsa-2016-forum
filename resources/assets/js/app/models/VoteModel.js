@@ -9,7 +9,7 @@ module.exports = BaseModel.extend({
     minTime: 5,
     validate: function (attrs) {
         var errors = {};
-        if (attrs.title.trim().length == 0)
+        if (!attrs.title || attrs.title.trim().length == 0)
             errors['title'] = 'Write question title!';
         if (!_.isEmpty(attrs.finished_at) && DateHelper.getDateTimeDiff(attrs.finished_at) > -this.minTime) {
             errors['dateInPast'] = 'Perhabs, you typed date in the past. Also, minimum time for vote: ' + this.minTime + ' minutes.';

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 
 class Vote extends Model
@@ -109,5 +110,20 @@ class Vote extends Model
             });
         }
         return $query;
+    }
+
+    public function scopeCheckOnIsSaved(Builder $query)
+    {
+        if(!Auth::user()->isAdmin()) {
+            $query = $query->where('is_saved', 1);
+        }
+
+        return $query;
+    }
+    
+    public function canBeEdited() {
+        $user = Auth::user();
+        
+        return $user->isAdmin() || $user->owns($this);
     }
 }
