@@ -11,10 +11,6 @@ module.exports = Marionette.LayoutView.extend({
         'attachments': '.attachs'
     },
 
-    initialize: function (options) {
-        this._attachs = new AttachmentCollection();
-    },
-
     ui: {
         'answer': '.answer-btn',
         'edit': '.comment-edit-btn',

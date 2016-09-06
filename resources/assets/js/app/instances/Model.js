@@ -14,7 +14,7 @@ module.exports = Backbone.Model.extend({
     },
 
     getMeta: function() {
-        return (_.result(this, '_meta') || _.result(this.collection, '_meta'));
+        return (_.result(this, '_meta')) || _.result(this.collection, '_meta');
     },
 
     sync: function (method, model, options) {

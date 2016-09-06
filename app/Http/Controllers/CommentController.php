@@ -15,20 +15,26 @@ class CommentController extends ApiController
 
     private function getItemMetaData($comment)
     {
-        return [
+        $data = [];
+        $data[$comment->id] = [
             'user' => $comment->user()->first(),
             'likes' => $comment->likes()->count(),
             'attachments' => $comment->attachments()->get()
         ];
+
+        return $data;
     }
 
     private function getCollectionMetaData($comments)
     {
         $data = [];
-
         if ($comments) {
             foreach ($comments as $comment) {
-                $data[$comment->id] = $this->getItemMetaData($comment);
+                $data[$comment->id] = [
+                    'user' => $comment->user()->first(),
+                    'likes' => $comment->likes()->count(),
+                    'attachments' => $comment->attachments()->get()
+                ];
             }
         }
 
