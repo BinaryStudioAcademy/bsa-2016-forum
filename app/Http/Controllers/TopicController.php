@@ -11,7 +11,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Collection;
 use App\Facades\TagService;
-
+use App\Facades\MarkdownService;
 
 class TopicController extends ApiController
 {
@@ -113,7 +113,8 @@ class TopicController extends ApiController
         if ($request->tags) {
             TagService::TagsHandler($topic, $request->tags);
         }
-
+        $topic->generated_description = MarkdownService::baseConvert($topic->description);
+        $topic->save();
         $topic->tags = $topic->tags()->get();
         return $this->setStatusCode(201)->respond($topic);
     }
@@ -151,7 +152,8 @@ class TopicController extends ApiController
         if ($request->tags) {
             TagService::TagsHandler($topic, $request->tags);
         }
-
+        $topic->generated_description = MarkdownService::baseConvert($topic->description);
+        $topic->save();
         $topic->tags = $topic->tags()->get();
         return $this->setStatusCode(200)->respond($topic);
     }
