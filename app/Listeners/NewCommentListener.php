@@ -31,8 +31,12 @@ class NewCommentListener
         $text = 'New comment to "';
         switch ($event->target_type)
         {
-            case Topic::$morphTag:  $text .= $event->target->name; break;
-            case Vote::$morphTag: $text .= $event->target->title; break;
+            case Topic::$morphTag:
+                $text .= $event->target->name;
+                break;
+            case Vote::$morphTag:
+                $text .= $event->target->title;
+                break;
         }
         $text .= '"';
         $body = [

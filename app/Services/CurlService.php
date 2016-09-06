@@ -5,7 +5,7 @@ use HttpRequest;
 
 class CurlService
 {
-    public function sendRequest($method, $url, array $body = null)
+    public function sendRequest($method, $url, array $body = [])
     {
         $response = null;
         $cookieName = config('authserver.cookieName');
@@ -17,11 +17,11 @@ class CurlService
             )
         );
 
-        if(isset($body)) {
+        if(empty($body)) {
+            $opts['http']['header'][] = 'Content-type: application/x-www-form-urlencoded';
+        } else {
             $opts['http']['header'][] = 'Content-type: application/json';
             $opts['http']['content'] = json_encode($body);
-        } else {
-            $opts['http']['header'][] = 'Content-type: application/x-www-form-urlencoded';
         }
 
         $context = stream_context_create($opts);
