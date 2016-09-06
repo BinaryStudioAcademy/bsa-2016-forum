@@ -8,7 +8,12 @@ var logger = require('../../instances/logger');
 module.exports = Marionette.ItemView.extend({
     template: 'topicItem',
     className: 'row post-item',
-    tagName: 'div',
+    tagName: 'a',
+    attributes : function () {
+        return {
+            href: "#/topics/"+this.model.get("id")
+        }
+    },
 
     ui: {
         bookmarkTopic: '.bookmark-btn'
@@ -60,7 +65,8 @@ module.exports = Marionette.ItemView.extend({
         }
     },
 
-    bookmarkTopic: function () {
+    bookmarkTopic: function (e) {
+        e.preventDefault();
         var bookmark = new Bookmark();
 
         this.lockButton();

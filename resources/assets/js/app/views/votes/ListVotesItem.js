@@ -1,17 +1,16 @@
 var Marionette = require('backbone.marionette');
-var Backbone = require('backbone');
 var dateHelper = require('../../helpers/dateHelper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteItem',
-    ui: {
-        label: '#label'
-    },
-    events: {
-        'click @ui.label': function () {
-            Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
+    tagName: 'a',
+
+    attributes : function () {
+        return {
+            href: "#/votes/"+this.model.get("id")
         }
     },
+    
     serializeData: function () {
         var tempmeta = this.model.getMeta();
         var id = this.model.get('id');

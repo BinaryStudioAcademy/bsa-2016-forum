@@ -263,6 +263,12 @@ TOPIC DETAILS
   margin-bottom: 20px;
 }
 
+.posts a:hover {
+  text-decoration: none;
+  cursor: pointer;
+  background-color: papayawhip;
+}
+
 .post-item {
   width: 100%;
   height: 120px;
@@ -275,6 +281,7 @@ TOPIC DETAILS
   margin-left: 0 !important;
   margin-bottom: 10px;
 }
+
 .post-item:nth-child(even) {
   background: #fff;
 }
