@@ -176,7 +176,7 @@ class CommentController extends ApiController
             $childComment = Comment::create($childCommentInput->all());
             $topic->comments()->save($childComment);
             $childComment = $comment->comments()->save($childComment);
-            $meta[$comment->id] = $this->getItemMetaData($childComment);
+            $meta[$childComment->id] = $this->getItemMetaData($childComment);
             return $this->setStatusCode(201)->respond($childComment, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
