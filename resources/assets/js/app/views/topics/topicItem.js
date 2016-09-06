@@ -2,6 +2,8 @@ var Marionette = require('backbone.marionette');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
+var $ = require('jquery');
+var logger = require('../../instances/logger');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicItem',
@@ -42,8 +44,15 @@ module.exports = Marionette.ItemView.extend({
     onRender: function () {
         var meta = this.model.getMeta();
 
-        if (meta && meta.bookmark && meta.bookmark[this.model.attributes.id]) {
-            this.model.bookmarkId = meta.bookmark[this.model.attributes.id].id;
+        if (meta && meta.bookmark) {
+            var self = this;
+
+            $.each(meta.bookmark, function(index, value) {
+                if (value.topic_id == self.model.get('id')) {
+                    self.model.bookmarkId = value.id;
+                    return false;
+                }
+            });
         }
 
         if (this.model.bookmarkId) {
@@ -74,7 +83,7 @@ module.exports = Marionette.ItemView.extend({
                         errorMsg += index + ': ' + value;
                     });
 
-                    alert(errorMsg);
+                    logger(errorMsg);
                 }
             });
 
@@ -94,7 +103,7 @@ module.exports = Marionette.ItemView.extend({
                         errorMsg += index + ': ' + value;
                     });
 
-                    alert(errorMsg);
+                    logger(errorMsg);
                 }
             });
         }
