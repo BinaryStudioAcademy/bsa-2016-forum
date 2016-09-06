@@ -7,7 +7,7 @@ module.exports = Marionette.CollectionView.extend({
         $(window).on('scroll', this.fetchPage.bind(this));
 
     },
-    onDestroy: function(){
+    onDestroy: function () {
         $(window).off('scroll');
     },
 
@@ -28,16 +28,13 @@ module.exports = Marionette.CollectionView.extend({
             remove: false,
             data: {page: this._page},
             error: function (collection, response) {
-                self._allItemsUploaded = true;
+                //self._allItemsUploaded = true;
                 console.error(response.responseText);
             },
             success: function (collection, xhr) {
-                if (!xhr.data.length) {
-                    // all items has been uploaded
-                    self._allItemsUploaded = true;
-                } else {
-                    this._page++;
-                }
+                self._allItemsUploaded = !meta.hasMorePages;
+                console.log('hasMorePages:' + meta.user);
+                this._page++;
             }.bind(this)
         });
     },
