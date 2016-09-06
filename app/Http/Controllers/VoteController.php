@@ -59,6 +59,7 @@ class VoteController extends ApiController
                 'likes' => $vote->likes()->count(),
                 'comments' => $vote->comments()->count(),
                 'tags' => $vote->tags()->get(),
+                'subscription' => $vote->subscription(Auth::user()->id),
                 'days_ago' => $difference
             ];
 
