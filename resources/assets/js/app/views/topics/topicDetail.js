@@ -1,6 +1,8 @@
 var Marionette = require('backbone.marionette');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
+var dateHelper = require('../../helpers/dateHelper');
+var logger = require('../../instances/logger');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicDetail',
@@ -29,11 +31,18 @@ module.exports = Marionette.ItemView.extend({
         this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
     },
 
+    serializeData: function () {
+        return {
+            model: this.model.toJSON(),
+            createdDate: dateHelper.middleDate(this.model.get('created_at'))
+        };
+    },
+
     onRender: function () {
         var meta = this.model.getMeta();
 
         if (meta.bookmark) {
-            this.model.bookmarkId = meta.bookmark.id;
+            this.model.bookmarkId = meta.bookmark[this.model.get('id')].id;
         }
 
         if (this.model.bookmarkId) {
@@ -64,7 +73,7 @@ module.exports = Marionette.ItemView.extend({
                         errorMsg += index + ': ' + value;
                     });
 
-                    alert(errorMsg);
+                    logger(errorMsg);
                 }
             });
 

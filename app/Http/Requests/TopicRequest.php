@@ -28,6 +28,7 @@ class TopicRequest extends ApiRequest
                     'description' => 'required',
                     'user_id' => 'required|integer|is_current_user',
                     'category_id' => 'required|exists:categories,id|integer',
+                    'tags' => 'json',
                 ];
 
                 break;
@@ -38,6 +39,7 @@ class TopicRequest extends ApiRequest
                     'description' => 'required',
                     'user_id' => 'required|integer|is_current_user',
                     'category_id' => 'required|exists:categories,id|integer',
+                    'tags' => 'json',
                 ];
 
                 break;
