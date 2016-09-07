@@ -143,14 +143,14 @@ module.exports = Marionette.ItemView.extend({
     },
 
     removeLikeTopic: function(){
-        var parentUrl = '/topics/'+this.model.id+'/likes/'+this.model.get('like_id');
-        var topicRemoveLikeModel = new TopicRemoveLikeModel({parentUrl: parentUrl,id:this.model.get('like_id')});
+        console.log(this.model.attributes.like_id);
+        var parentUrl = '/topics/'+this.model.id+'/likes/'+this.model.attributes.like_id;
+        var topicRemoveLikeModel = new TopicRemoveLikeModel({parentUrl: parentUrl,id:this.model.attributes.like_id});
         topicRemoveLikeModel.destroy({success: function(model, response) {
         },
             error:function(){
             }});
         this.model.fetch({id:this.model.id});
-        console.log(this.model.attributes.countOfLikes);
         this.model.set({
             is_user:this.model.attributes.is_user,
             countOfLikes:this.model.attributes.countOfLikes,
