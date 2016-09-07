@@ -1,6 +1,6 @@
 var build = require('configBuild');
 var custom = require('./config.custom');
-var $ = require('jquery');
+var _ = require('underscore');
 
 var defaults = {
     debug: true,
@@ -11,7 +11,7 @@ var defaults = {
 };
 
 
-var settings = $.extend(defaults, build);
-settings = $.extend(settings, custom);
+var settings = _.extend(defaults, build);
+settings = _.extend(settings, custom);
 
 module.exports = settings;
