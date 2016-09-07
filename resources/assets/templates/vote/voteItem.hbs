@@ -11,6 +11,7 @@
         <div class="votes-item-details">
             <span>{{ meta.comments}} Comments</span> <span>{{ meta.likes }} likes</span> <span>{{ meta.numberOfUniqueViews }} unique views</span>
             <span>Finished at {{model.finished_at}}</span><span>{{model.views}} Views</span>
+            <button class="btn btn-info btn-xs text-info subscribe-btn">Subscribe</button>
         </div>
         <div class="votes-item-tags">
             {{#each meta.tags}}

@@ -2,13 +2,13 @@
     <div class="vote-header">
         <h3>{{ model.title }}</h3>
         <h5>Opened by: {{ meta.user.first_name }}  {{ meta.user.last_name }}</h5>
-        <select class="vote-tags">
-        <option>{{ meta.numberOfUniqueViews }} users have seen this voting</option>
-            {{#each meta.usersWhoSaw}}
-                <option>{{ first_name }} {{ last_name }}</option>
-            {{/each}}
-        </select>
-
+                <select class="vote-tags">
+                <option>{{ meta.numberOfUniqueViews }} users have seen this voting</option>
+                    {{#each meta.usersWhoSaw}}
+                        <option>{{ first_name }} {{ last_name }}</option>
+                    {{/each}}
+                </select>
+        <button class="btn btn-info btn-xs text-info subscribe-btn">Subscribe</button>
         <div class="vote-tags">
             {{#each meta.tags}}
                 <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>

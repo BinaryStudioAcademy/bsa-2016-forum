@@ -63,6 +63,7 @@ class VoteController extends ApiController
                 'likes' => $vote->likes()->count(),
                 'comments' => $vote->comments()->count(),
                 'tags' => $vote->tags()->get(),
+                'subscription' => $vote->subscription(Auth::user()->id),
                 'days_ago' => $difference,
                 'numberOfUniqueViews' => $vote->voteUniqueViews()->count(),
                 'usersWhoSaw' => $usersWhoSaw
@@ -146,9 +147,9 @@ class VoteController extends ApiController
 
         $vote->update($request->all());
         $vote = Vote::findOrfail($id);
-        if ($request->tags) {
-            TagService::TagsHandler($vote, $request->tags);
-        }
+
+        TagService::TagsHandler($vote, $request->tags);
+
         $vote->tags = $vote->tags()->get();
         return $this->setStatusCode(200)->respond($vote);
     }
