@@ -22,7 +22,7 @@ class RemoveNotificationablesTable extends Migration
      */
     public function down()
     {
-        Schema::create('notificationtables', function(Blueprint $table) {
+        Schema::create('notificationables', function(Blueprint $table) {
             $table->increments('id');
 
             $table->integer('notification_id')->unsigned();
