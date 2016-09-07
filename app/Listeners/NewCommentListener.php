@@ -33,16 +33,15 @@ class NewCommentListener
             return;
 
         $text = 'New comment to "';
-        $commentTagResourceUrl = config('app.url').'/#/';
         switch ($event->target_type)
         {
             case Topic::$morphTag:
                 $text .= $event->target->name;
-                $commentTagResourceUrl.= "topics/";
+                $commentTagResourceUrl = config('app.url')."/#/topics/".$event->target->id;
                 break;
             case Vote::$morphTag:
                 $text .= $event->target->title;
-                $commentTagResourceUrl.= "votes/";
+                $commentTagResourceUrl = config('app.url')."/#/votes/".$event->target->id;
                 break;
             default:
                 throw new ModelNotFoundException();
@@ -50,7 +49,6 @@ class NewCommentListener
         }
 
         $text .= '"';
-        $commentTagResourceUrl.= $event->target->id;
 
         $body = [
             'users' => $event->users,
