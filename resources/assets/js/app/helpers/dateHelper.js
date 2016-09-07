@@ -1,5 +1,5 @@
 var moment = require('moment-timezone');
-var config = require('../config/common');
+var config = require('config');
 var _ = require('underscore');
 
 var dateHelper = {

@@ -8,23 +8,25 @@ module.exports = function (grunt) {
             dev: {
                 options: {
                     alias: {
-                        'config': './resources/assets/js/app/config/config.dev.js'
+                        'configBuild': './resources/assets/js/app/config/config.dev.js',
+                        'config' : './resources/assets/js/app/config/common.js'
                     },
                     browserifyOptions: {
                         debug: true
                     }
                 },
                 src: 'resources/assets/js/app/app.js',
-                dest: 'public/js/bundle.js',
+                dest: 'public/js/bundle.js'
             },
             prod: {
                 options: {
                     alias: {
-                        'config': './resources/assets/js/app/config/config.prod.js'
+                        'configBuild': './resources/assets/js/app/config/config.prod.js',
+                        'config' : './resources/assets/js/app/config/common.js'
                     }
                 },
                 src: 'resources/assets/js/app/app.js',
-                dest: 'public/js/bundle.js',
+                dest: 'public/js/bundle.js'
             }
         },
 
@@ -66,7 +68,7 @@ module.exports = function (grunt) {
                 files: {
                     'public/css/styles.css': 'resources/assets/sass/index.scss'
                 }
-            },
+            }
         },
 
         uglify: {

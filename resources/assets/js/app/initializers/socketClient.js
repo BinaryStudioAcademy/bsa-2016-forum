@@ -3,7 +3,7 @@
  */
 var Radio = require('backbone.radio');
 var io = require('socket.io-client');
-var config = require('../config/common');
+var config = require('config');
 var logger = require('../instances/logger');
 
 module.exports = new function () {

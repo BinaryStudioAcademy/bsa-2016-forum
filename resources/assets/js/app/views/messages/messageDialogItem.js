@@ -1,6 +1,6 @@
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
-var config = require('../../config/common');
+var config = require('config');
 var dateHelper = require('../../helpers/dateHelper');
 var helper = require('../../helpers/helper');
 

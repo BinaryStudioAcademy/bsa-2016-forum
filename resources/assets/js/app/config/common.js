@@ -1,4 +1,4 @@
-var build = require('config');
+var build = require('configBuild');
 var custom = require('./config.custom');
 var $ = require('jquery');
 

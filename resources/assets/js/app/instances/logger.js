@@ -1,5 +1,5 @@
 var appInstance = require('./appInstance');
-var config = require('../config/common');
+var config = require('config');
 
 module.exports = function () {
     if (config.debug) {
