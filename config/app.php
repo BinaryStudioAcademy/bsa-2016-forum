@@ -159,6 +159,8 @@ return [
         App\Providers\TagServiceProvider::class,
         App\Providers\CurlServiceProvider::class,
 
+        Cviebrock\EloquentSluggable\ServiceProvider::class,
+
         /**
          * External providers
          */
