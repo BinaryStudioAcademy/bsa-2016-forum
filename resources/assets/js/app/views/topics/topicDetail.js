@@ -54,15 +54,16 @@ module.exports = Marionette.ItemView.extend({
     },
 
     onRender: function () {
-       var meta = this.model.getMeta();
+        var meta = this.model.getMeta();
 
-       if (meta && meta.hasOwnProperty("bookmark")) {
-           if (meta.bookmark) {
-               this.model.bookmarkId = meta.bookmark[this.model.get('id')].id;
-           }
+        if (meta && meta.hasOwnProperty("bookmark")) {
+            if (meta.bookmark) {
+                this.model.bookmarkId = meta.bookmark[this.model.get('id')].id;
+            }
 
-        if (this.model.bookmarkId) {
-            this.addOkBookmarkIcon();
+            if (this.model.bookmarkId) {
+                this.addOkBookmarkIcon();
+            }
         }
     },
 
