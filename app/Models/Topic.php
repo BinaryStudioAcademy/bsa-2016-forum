@@ -9,6 +9,8 @@ use Cviebrock\EloquentSluggable\Sluggable;
 
 class Topic extends Model
 {
+    public static $morphTag = 'Topic';
+    protected $morphClass = 'Topic';
     use SoftDeletes;
     use Sluggable;
 
@@ -125,6 +127,16 @@ class Topic extends Model
         }
 
         return $query;
+    }
+
+    public function subscribers()
+    {
+        return $this->morphToMany(User::class, Subscription::$name)->withTimestamps();
+    }
+
+    public function subscription($userId)
+    {
+        return $this->morphMany(Subscription::class, Subscription::$name)->where('user_id', $userId)->first();
     }
 
     /**

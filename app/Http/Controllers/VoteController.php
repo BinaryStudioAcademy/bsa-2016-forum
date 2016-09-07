@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Carbon\Carbon;
 use App\Facades\TagService;
+use Illuminate\Support\Facades\Auth;
 
 class VoteController extends ApiController
 {
@@ -58,6 +59,7 @@ class VoteController extends ApiController
                 'likes' => $vote->likes()->count(),
                 'comments' => $vote->comments()->count(),
                 'tags' => $vote->tags()->get(),
+                'subscription' => $vote->subscription(Auth::user()->id),
                 'days_ago' => $difference
             ];
 
@@ -124,9 +126,9 @@ class VoteController extends ApiController
 
         $vote->update($request->all());
         $vote = Vote::findOrfail($id);
-        if ($request->tags) {
-            TagService::TagsHandler($vote, $request->tags);
-        }
+
+        TagService::TagsHandler($vote, $request->tags);
+
         $vote->tags = $vote->tags()->get();
         return $this->setStatusCode(200)->respond($vote);
     }
@@ -174,7 +176,7 @@ class VoteController extends ApiController
             return $this->setStatusCode(200)->respond();
         }
 
-        $data=$this->getMetaDataForCollection($votes);
+        $data = $this->getMetaDataForCollection($votes);
 
         return $this->setStatusCode(200)->respond($votes, $data);
     }

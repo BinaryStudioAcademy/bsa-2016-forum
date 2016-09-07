@@ -59,6 +59,7 @@ class TopicRequest extends ApiRequest
             'user_id.is_current_user' => 'User not is authorized',
             'category_id.required' => 'Category is required',
             'slug.unique' => 'Sluggable Url already exist',
+            'tags.tags_validator' => 'Format of field tags is incorrect'
         ];
     }
 }
