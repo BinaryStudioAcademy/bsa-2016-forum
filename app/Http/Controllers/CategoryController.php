@@ -17,6 +17,12 @@ class CategoryController extends ApiController
     public function index()
     {
         $categories = Category::all();
+        if($categories){
+            foreach ($categories as $category){
+                $category->topicCount = $category->topics()->count();
+                $category->lastThreeTopics = $category->topics()->orderBy('updated_at', 'DESC')->limit(3)->get();
+            }
+        }
         return $this->setStatusCode(200)->respond($categories);
     }
 
