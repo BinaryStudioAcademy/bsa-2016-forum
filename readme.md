@@ -89,8 +89,14 @@ sudo npm i -g gulp
 npm i -g gulp
 ```
 
+5) you can set your own config's values in the /resources/assets/js/app/config/config.custom.js like that
+```
+module.exports = {
+    socketUrl: 'you.own.value:3000'
+};
+```
 
-5) compile all resources
+6) compile all resources
 *Grunt*
 ```
 grunt dev
