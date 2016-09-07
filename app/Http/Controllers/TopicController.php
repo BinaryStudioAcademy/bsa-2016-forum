@@ -148,10 +148,9 @@ class TopicController extends ApiController
         $this->authorize('update', $topic);
 
         $topic->update($request->all());
-        if ($request->tags) {
-            TagService::TagsHandler($topic, $request->tags);
-        }
 
+        TagService::TagsHandler($topic, $request->tags);
+        
         $topic->tags = $topic->tags()->get();
         return $this->setStatusCode(200)->respond($topic);
     }
