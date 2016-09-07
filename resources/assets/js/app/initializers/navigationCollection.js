@@ -42,5 +42,11 @@ module.exports = new navigCollection([
         icon: '',
         name: 'messages',
         label: 'Messages'
+    },
+    {
+        href: '#subscriptions',
+        icon: '',
+        name: 'subscriptions',
+        label: 'Subscriptions'
     }
 ]);
