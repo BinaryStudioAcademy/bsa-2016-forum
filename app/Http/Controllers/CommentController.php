@@ -8,10 +8,26 @@ use App\Models\VoteItem;
 use App\Http\Requests\CommentsRequest;
 use App\Models\Topic;
 use App\Http\Requests;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Gate;
 class CommentController extends ApiController
 {
+    /**
+     * @param $commentable
+     * @return mixed
+     */
+    protected function getCommentsCollection($commentable, $order = 'desc')
+    {
+        $comments = $commentable->comments()->withTrashed()
+            ->where('deleted_at', null)
+            ->orHas('comments')
+            ->orderBy('id', $order)
+            ->get();
+
+        return $comments;
+    }
+
     /**
      * @param Comment $comment
      * @return bool
@@ -232,20 +248,27 @@ class CommentController extends ApiController
         return ($voteWhichHasThisComment && $voteWhichHasThisComment->id === $vote->id);
     }
 
+    protected function getMetaDataForCollection($comments) {
+        $meta = [];
+        foreach ($comments as $comment) {
+            $meta += $this->getMetaDataForModel($comment);
+        }
+        return $meta;
+    }
+
     /**
      * @param $comments
      * @return array
      */
-    protected function makeCommentsMeta($comments)
+    protected function getMetaDataForModel($comment)
     {
         $meta = [];
-        foreach ($comments as $comment) {
-            $meta[$comment->id] = [
-                'user' => $comment->user()->first(),
-                'comments' => $comment->comments()->count(),
-                'deletable' => !$comment->trashed()
-            ];
-        }
+        $meta[$comment->id] = [
+            'user' => $comment->user()->first(),
+            'comments' => $comment->comments()->count(),
+            'deletable' => $comment->canBeDeleted(),
+            'commentable' => !$comment->trashed()
+        ];
         return $meta;
     }
 
@@ -253,11 +276,16 @@ class CommentController extends ApiController
      * @param Vote $vote
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getVoteComments(Vote $vote)
+    public function getVoteComments($voteId)
     {
-        $comments = $vote->comments()->withTrashed()->orderBy('id', 'desc')->get();
+        $vote = Vote::withTrashed()->find($voteId);
+        if(!$vote)
+            throw (new ModelNotFoundException)->setModel(Vote::class);
 
-        $meta = $this->makeCommentsMeta($comments);
+        $comments = $this->getCommentsCollection($vote);
+
+
+        $meta = $this->getMetaDataForCollection($comments);
         return $this->setStatusCode(200)->respond($comments, $meta);
     }
 
@@ -288,7 +316,9 @@ class CommentController extends ApiController
         return $this->setStatusCode(201)->respond($comment, [
             $comment->id => [
                 'user' => $comment->user()->first(),
-                'comments' => 0
+                'comments' => 0,
+                'deletable' => $comment->canBeDeleted(),
+                'commentable' => !$comment->trashed()
             ]
         ]);
     }
@@ -317,13 +347,13 @@ class CommentController extends ApiController
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    public function destroyVoteComment(Vote $vote, Comment $comment)
+    public function asd(Vote $vote, Comment $comment)
     {
         $this->authorize('deleteVotesComment', [$comment, $vote]);
 
         if ($this->isCommentBelongsToVote($vote, $comment)) {
             $comment->delete();
-            return $this->setStatusCode(204)->respond();
+            return $this->setStatusCode(200)->respond();
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -444,11 +474,15 @@ class CommentController extends ApiController
      * @param VoteItem $voteItem
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getVoteItemComments(Vote $vote, VoteItem $voteItem)
+    public function getVoteItemComments(Vote $vote, $voteItemId)
     {
-        $comments = $voteItem->comments()->orderBy('id', 'desc')->get();
+        $voteItem = VoteItem::withTrashed()->find($voteItemId);
+        if(!$voteItem)
+            throw (new ModelNotFoundException)->setModel(VoteItem::class);
 
-        $meta = $this->makeCommentsMeta($comments);
+        $comments = $this->getCommentsCollection($voteItem);
+
+        $meta = $this->getMetaDataForCollection($comments);
         return $this->setStatusCode(200)->respond($comments, $meta);
     }
 
@@ -480,7 +514,9 @@ class CommentController extends ApiController
         return $this->setStatusCode(201)->respond($comment, [
             $comment->id => [
                 'user' => $comment->user()->first(),
-                'comments' => 0
+                'comments' => 0,
+                'deletable' => $comment->canBeDeleted(),
+                'commentable' => !$comment->trashed()
             ]
         ]);
     }
@@ -511,13 +547,12 @@ class CommentController extends ApiController
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    public function destroyVoteItemComment(Vote $vote, VoteItem $voteItem, Comment $comment)
+    public function deletevoteitemcomment(Vote $vote, VoteItem $voteItem, Comment $comment)
     {
         $this->authorize('deleteVoteItemsComment', [$comment, $voteItem]);
-
         if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
             $comment->delete();
-            return $this->setStatusCode(204)->respond();
+            return $this->setStatusCode(200)->respond();
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -530,16 +565,14 @@ class CommentController extends ApiController
         return !!$comment->comments()->find($nested->id);
     }
 
-    public function getCommentComments(Comment $comment)
+    public function getCommentComments($commentid)
     {
-        $meta = [];
-        $comments = $comment->comments()->withTrashed()->orderBy('id', 'asc')->get();
-        foreach ($comments as $item) {
-            $meta[$item->id] = [
-                'comments' => $item->comments()->count(),
-                'user' => $item->user()->first()
-            ];
-        }
+        $comment = Comment::withTrashed()->find($commentid);
+        if(!$comment)
+            throw (new ModelNotFoundException)->setModel(Comment::class);
+        $comments = $this->getCommentsCollection($comment, 'asc');
+
+        $meta = $this->getMetaDataForCollection($comments);
         return $this->setStatusCode(200)->respond($comments, $meta);
     }
 
@@ -557,14 +590,17 @@ class CommentController extends ApiController
         return $this->setStatusCode(201)->respond($result, [
                 $result->id => [
                     'user' => $result->user()->first(),
-                    'comments' => 0
+                    'comments' => 0,
+                    'deletable' => $result->canBeDeleted(),
+                    'commentable' => !$result->trashed()
                 ]
             ]
         );
     }
 
-    public function deleteCommentComment(Comment $comment, Comment $nested)
+    public function deleteCommentComment($commentId, Comment $nested)
     {
+        $comment = Comment::withTrashed()->findOrFail($commentId);
         $this->authorize('deleteCommentComments', [$nested]);
         if ($this->isCommentBelongsToComment($comment, $nested)) {
             $nested->delete();

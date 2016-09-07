@@ -4,7 +4,7 @@ var Radio = require('backbone.radio');
 var moment = require('moment');
 module.exports = Marionette.LayoutView.extend({
     tagName: 'div',
-    className: 'vote-comment',
+    className: 'vote-comment well',
     template: 'voteDetailComment',
     ui: {
         submit: '.js-show-branch',
@@ -21,13 +21,15 @@ module.exports = Marionette.LayoutView.extend({
     initialize: function (options) {
         if(options.parent) this.parent = options.parent;
         this.opened = false;
+        this.commentable = false;
     },
     events: {
         'click @ui.submit': function (e) {
             e.stopPropagation();
             if(!this.opened){
                 Radio.trigger('votesChannel', 'loadNestedComments', this);
-                Radio.trigger('votesChannel', 'showAddCommentView', {view: this, atStart: false});
+                if(this.commentable)
+                    Radio.trigger('votesChannel', 'showAddCommentView', {view: this, atStart: false});
                 this.ui.submit.text('Hide');
             } else {
                 this.getRegion('addcomment').empty();
@@ -46,6 +48,7 @@ module.exports = Marionette.LayoutView.extend({
     serializeData: function () {
         var id = this.model.get('id');
         var tempmeta = this.model.getMeta()[id];
+        this.commentable = tempmeta.commentable;
         return {
             model: this.model.toJSON(),
             meta: {
