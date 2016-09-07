@@ -22,6 +22,17 @@ class RemoveNotificationablesTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::create('notificationtables', function(Blueprint $table) {
+            $table->increments('id');
+
+            $table->integer('notification_id')->unsigned();
+            $table->foreign('notification_id')->references('id')->on('notifications');
+
+            $table->integer('notificationable_id')->unsigned();
+
+            $table->string('notificationable_type');
+            $table->softDeletes();
+            $table->timestamps();
+        });
     }
 }
