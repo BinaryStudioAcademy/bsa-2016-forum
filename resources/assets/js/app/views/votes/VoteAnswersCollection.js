@@ -7,7 +7,7 @@ module.exports = Marionette.CollectionView.extend({
     childView: childView,
     childViewOptions: function (model, index) {
         return {
-            parent: this.options.parent
+            parent: this.getOption('parent')
         }
     }
 });

@@ -18,6 +18,9 @@ module.exports = Marionette.LayoutView.extend({
     modelEvents: {
         'change': 'render'
     },
+    collectionEvents: {
+        'update':'updateCount'
+    },
     initialize: function (options) {
         if(options.parent) this.parent = options.parent;
         this.opened = false;

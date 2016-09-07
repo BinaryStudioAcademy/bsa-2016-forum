@@ -64,9 +64,6 @@ module.exports = Marionette.Object.extend({
             myCommentsCollection.level = view.model.collection.level + 1;
             view.collection = myCommentsCollection;
             myCommentsCollection.view = view;
-            myCommentsCollection.on('update', function () {
-                view.updateCount();
-            });
             view.getRegion('answers').show(new CommentsCollectionView({
                 collection: myCommentsCollection,
                 parent: view

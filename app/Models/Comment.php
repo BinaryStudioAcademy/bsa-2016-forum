@@ -87,16 +87,16 @@ class Comment extends Model
      * @param $value
      * @return string
      */
-//    public function getContentOriginAttribute($value)
-//    {
-//        if ($this->trashed()) {
-//            if (Auth::user()->isAdmin()) {
-//                return $value . ' (Deleted)';
-//            } else {
-//                return '(Deleted by user or Admin)';
-//            }
-//        } else {
-//            return $value;
-//        }
-//    }
+    public function getContentOriginAttribute($value)
+    {
+        if ($this->trashed()) {
+            if (Auth::user()->isAdmin()) {
+                return $value . ' (Deleted)';
+            } else {
+                return '(Deleted by user or Admin)';
+            }
+        } else {
+            return $value;
+        }
+    }
 }

@@ -11,21 +11,27 @@ use App\Http\Requests;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Gate;
+use Illuminate\Support\Facades\DB;
+
 class CommentController extends ApiController
 {
     /**
      * @param $commentable
      * @return mixed
      */
-    protected function getCommentsCollection($commentable, $order = 'desc')
+    protected function getCommentsCollection($commentable, $order)
     {
-        $comments = $commentable->comments()->withTrashed()
-            ->where('deleted_at', null)
-            ->orHas('comments')
-            ->orderBy('id', $order)
-            ->get();
+        $comments = $commentable->comments()->withTrashed()->orderBy('id', $order)->get();
 
-        return $comments;
+        $collection = collect();
+
+        $comments->each(function($item) use ($collection){
+            if(!$item->trashed() || $item->comments()->exists())
+                $collection->push($item);
+        });
+
+
+        return $collection;
     }
 
     /**
@@ -282,7 +288,7 @@ class CommentController extends ApiController
         if(!$vote)
             throw (new ModelNotFoundException)->setModel(Vote::class);
 
-        $comments = $this->getCommentsCollection($vote);
+        $comments = $this->getCommentsCollection($vote, 'desc');
 
 
         $meta = $this->getMetaDataForCollection($comments);
@@ -347,7 +353,7 @@ class CommentController extends ApiController
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    public function asd(Vote $vote, Comment $comment)
+    public function deleteVoteComment(Vote $vote, Comment $comment)
     {
         $this->authorize('deleteVotesComment', [$comment, $vote]);
 
@@ -480,7 +486,7 @@ class CommentController extends ApiController
         if(!$voteItem)
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
 
-        $comments = $this->getCommentsCollection($voteItem);
+        $comments = $this->getCommentsCollection($voteItem, 'desc');
 
         $meta = $this->getMetaDataForCollection($comments);
         return $this->setStatusCode(200)->respond($comments, $meta);
@@ -547,7 +553,7 @@ class CommentController extends ApiController
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    public function deletevoteitemcomment(Vote $vote, VoteItem $voteItem, Comment $comment)
+    public function deleteVoteItemComment(Vote $vote, VoteItem $voteItem, Comment $comment)
     {
         $this->authorize('deleteVoteItemsComment', [$comment, $voteItem]);
         if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {

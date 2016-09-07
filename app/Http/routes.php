@@ -147,7 +147,7 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::post('', 'CommentController@storeVoteComment')->name('storeVoteComment');
         Route::get('{comment}', 'CommentController@getVoteComment')->name('voteComment');
         Route::put('{comment}', 'CommentController@updateVoteComment')->name('updateVoteComment');
-        Route::delete('{comment}', 'CommentController@asd')->name('asd');
+        Route::delete('{comment}', 'CommentController@deleteVoteComment')->name('deleteVoteComment');
 
         Route::get('{comment}/comments', 'CommentController@getVoteCommentChildren')->name('voteCommentChildren');
         Route::post('{comment}/comments', 'CommentController@storeVoteCommentChild')->name('storeVoteCommentChild');
@@ -161,7 +161,7 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::post('', 'CommentController@storeVoteItemComment')->name('storeVoteItemComment');
         Route::get('{comment}', 'CommentController@getVoteItemComment')->name('voteItemComment');
         Route::put('{comment}', 'CommentController@updateVoteItemComment')->name('updateVoteItemComment');
-        Route::delete('{comment}', 'CommentController@deletevoteitemcomment')->name('deletevoteitemcomment');
+        Route::delete('{comment}', 'CommentController@deleteVoteItemComment')->name('deleteVoteItemComment');
     });
     /*Routes for Topic attachments*/
     Route::group(['prefix' => 'topics/{topic}/attachments'], function () {

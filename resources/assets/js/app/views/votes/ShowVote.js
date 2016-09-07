@@ -28,8 +28,9 @@ module.exports = Marionette.LayoutView.extend({
     onRender: function () {
         var self = this;
 
-        Radio.trigger('votesChannel', 'showAddCommentView', {view: this, atStart: true});
+
         Radio.trigger('votesChannel', 'renderCommentsView', {parentUrl: '/votes/' + this.options.id, view: this});
+        Radio.trigger('votesChannel', 'showAddCommentView', {view: this, atStart: true});
 
         this.getRegion('voteheader').show(
             new VoteHeader({model: this.options.voteModel})

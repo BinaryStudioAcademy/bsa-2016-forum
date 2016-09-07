@@ -27,8 +27,8 @@ module.exports = Marionette.ItemView.extend({
         'click @ui.comments': function (e) {
             e.stopPropagation();
             e.preventDefault();
-            Radio.trigger('votesChannel', 'showAddCommentView', {view: this.options.parent, atStart: true});
-            Radio.trigger('votesChannel', 'renderCommentsView', {parentUrl: '/votes/' + this.model.getMeta().vote.id + '/voteitems/' + this.model.get('id'), view: this.options.parent});
+            Radio.trigger('votesChannel', 'showAddCommentView', {view: this.getOption('parent'), atStart: true});
+            Radio.trigger('votesChannel', 'renderCommentsView', {parentUrl: '/votes/' + this.model.getMeta().vote.id + '/voteitems/' + this.model.get('id'), view: this.getOption('parent')});
         }
     }
 });
