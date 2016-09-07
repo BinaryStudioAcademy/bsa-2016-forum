@@ -12,7 +12,14 @@ module.exports = Marionette.CollectionView.extend({
     },
 
     addComment: function (model) {
+        //console.log(model.collection, 'collection');
+        //console.log(this._parent);
+        ////if (model.collection) {
+        ////    model.collection.add(model);
+        ////    return;
+        ////}
         if (!this.collection.findWhere({ id: model.get('id') })) {
+            debugger;
             this.collection.add(model);
         }
         else {

@@ -36,19 +36,21 @@
                 {{#if meta.isUserComment}}
                     <a class="comment-edit-btn">Edit</a>
                     <a class="" data-toggle="modal" data-target="#confirmDialog-{{ model.id }}">Remove</a>
-                {{else}}
-                    <a class="answer-btn">Reply</a>
+                {{/if}}
+                <a class="answer-btn">Reply</a>
+            </div>
+            <div class="text-right childs-btn">
+                {{#if meta.comments}}
+                    <button class="btn-childs btn btn-warning" data-toggle="collapse" data-target=".topic-comment-included">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </button>
                 {{/if}}
             </div>
         </div>
     </div>
 
-    <div class="topic-comment-included">
-        <!-- comments on this comment container -->
-        <!-- comment item such as this item -->
-        <!-- <div class="topic-comment-item">
-                <div class="topic-comment-main">
-                    <di ... -->
+    <div class="topic-comment-included collapse">
+        <div class="topic-comment-childs"></div>
     </div>
 </div>
 

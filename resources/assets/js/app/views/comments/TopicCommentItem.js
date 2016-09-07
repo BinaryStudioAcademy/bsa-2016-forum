@@ -3,18 +3,28 @@ var _ = require('underscore');
 var logger = require('../../instances/logger');
 var Radio = require('backbone.radio');
 var currentUser = require('../../initializers/currentUser');
+var ChildCommentsCollection = require('../../collections/TopicCommentsCollection');
+var ChildCommentsView = require('./TopicCommentNew');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'TopicCommentItem',
+    _childUpload: false,
+
+    initialize: function () {
+        //this._childs = new ChildCommentsCollection();
+        //this._childs.parentUrl = _.result(this.model, 'getEntityUrl');
+    },
 
     regions: {
-        'attachments': '.attachs'
+        'attachments': '.attachs',
+        'childComments': '.topic-comment-childs'
     },
 
     ui: {
         'answer': '.answer-btn',
         'edit': '.comment-edit-btn',
-        'remove': '#removeBtn'
+        'remove': '#removeBtn',
+        'showChilds': '.btn-childs'
     },
 
     events: {
@@ -23,6 +33,9 @@ module.exports = Marionette.LayoutView.extend({
         },
 
         'click @ui.edit': function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            //console.log(this.model);
             Radio.channel('comment').trigger('addComment', this, this.model);
         },
 
@@ -34,6 +47,15 @@ module.exports = Marionette.LayoutView.extend({
                 },
             });
         },
+
+        'click @ui.showChilds': function (event) {
+            event.preventDefault();
+            Radio.channel('comment').trigger('showChildComments', this);
+        },
+    },
+
+    childCommentsBtnIcon: function () {
+        this.ui.showChilds.find('span').toggleClass('glyphicon-chevron-down').toggleClass('glyphicon-chevron-up');
     },
 
     attachmentThumb: function (attachs) {
@@ -51,7 +73,6 @@ module.exports = Marionette.LayoutView.extend({
     serializeData: function () {
         var meta = this.model.getMeta();
         var id = this.model.get('id');
-        //console.log(meta, currentUser);
         this.attachmentThumb(meta[id].attachments);
         return {
             model: this.model.toJSON(),
@@ -59,12 +80,19 @@ module.exports = Marionette.LayoutView.extend({
                 user: meta[id].user,
                 likes: meta[id].likes,
                 attachments: meta[id].attachments,
+                comments: meta[id].comments,
                 isUserComment: currentUser.get('id') === meta[id].user.id
             }
         };
     },
 
     modelEvents: {
-        'change': 'render'
+        'change': 'render',
+        'destroy': 'modelDestroy'
+    },
+
+    modelDestroy: function (model) {
+        console.log(model, 'destroy model');
+        //this.render();
     }
 });

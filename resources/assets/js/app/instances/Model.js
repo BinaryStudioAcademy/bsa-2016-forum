@@ -9,6 +9,10 @@ module.exports = Backbone.Model.extend({
         return (_.result(this, 'parentUrl') || _.result(this.collection, 'parentUrl') || '') + _.result(this, 'url');
     },
 
+    getParentUrl: function () {
+        return (_.result(this, 'parentUrl') || _.result(this.collection, 'parentUrl') || '');
+    },
+
     _getRequestUrl: function () {
         return App.getBaseUrl() + this.getEntityUrl();
     },

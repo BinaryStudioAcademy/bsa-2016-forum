@@ -18,7 +18,8 @@ class CommentController extends ApiController
         return [
             'user' => $comment->user()->first(),
             'likes' => $comment->likes()->count(),
-            'attachments' => $comment->attachments()->get()
+            'attachments' => $comment->attachments()->get(),
+            'comments' => $comment->comments()->count(),
         ];
     }
 
@@ -174,7 +175,7 @@ class CommentController extends ApiController
     {
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $childComment = Comment::create($childCommentInput->all());
-            $topic->comments()->save($childComment);
+//            $topic->comments()->save($childComment);
             $childComment = $comment->comments()->save($childComment);
             $meta[$childComment->id] = $this->getItemMetaData($childComment);
             return $this->setStatusCode(201)->respond($childComment, $meta);
@@ -215,13 +216,13 @@ class CommentController extends ApiController
         CommentsRequest $request
     ) {
 
-        $this->authorize('updateTopicsComment', [$comment, $topic]);
-
+//        $this->authorize('updateTopicsComment', [$comment, $topic]);
+        $this->authorize('updateTopicsComment', [$commentChild, $topic]);
         if ($this->isCommentBelongsToTopic($topic, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
             $commentChild->update($request->all());
-            $meta = $this->getItemMetaData($commentChild);
+            $meta[$commentChild->id] = $this->getItemMetaData($commentChild);
             return $this->setStatusCode(200)->respond($commentChild, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
@@ -237,8 +238,8 @@ class CommentController extends ApiController
      */
     public function destroyTopicCommentChild(Topic $topic, Comment $comment, Comment $commentChild)
     {
-        $this->authorize('deleteTopicsComment', [$comment, $topic]);
-
+//        $this->authorize('deleteTopicsComment', [$comment, $topic]);
+        $this->authorize('deleteTopicsComment', [$commentChild, $topic]);
         if ($this->isCommentBelongsToTopic($topic, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {

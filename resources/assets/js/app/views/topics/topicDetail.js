@@ -8,6 +8,10 @@ var TopicHeaderView = require('./topicHeader');
 module.exports = Marionette.LayoutView.extend({
     template: 'topicDetail',
 
+    initialize: function() {
+        this._childs = this.collection;
+    },
+
     regions: {
         'newComment': '#newcomment',
         'topicHeader': '.topic-head',

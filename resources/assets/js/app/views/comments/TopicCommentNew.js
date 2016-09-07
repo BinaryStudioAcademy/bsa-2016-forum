@@ -64,14 +64,18 @@ module.exports = Marionette.ItemView.extend({
 
         var view = this;
 
+        debugger;
+
         this.model.save(data, {
             success: function (model) {
                 if (view._dropZone && view._dropZone.files.length) {
                     // start upload to server
                     view._dropZone.processQueue();
                 }
+
                 Radio.channel('сommentCollection').trigger('addComment', model);
                 view.ui.commentDlg.modal('hide');
+                //Radio.channel('cent').trigger('addChildComment', view.options.childCommentsCollection, model);
             },
 
             error: function (model, response) {
@@ -182,10 +186,16 @@ module.exports = Marionette.ItemView.extend({
 
     showAttachments: function () {
         // if comment already has attachments they will be show
+        var attachs = [];
         var id = this.model.get('id');
         if (!id) return;
-        //var attachs = this.options.attachs.toJSON();
-        var attachs = this.model.getMeta()[id].attachments;
+        console.log(this.model.getMeta());
+        if (!this.model.getMeta()) {
+            attachs = this.options.attachs.toJSON();
+        }
+        else {
+            attachs = this.model.getMeta()[id].attachments;
+        }
         var drop = this._dropZone;
         if (attachs.length) {
             attachs.forEach(function (file, i) {

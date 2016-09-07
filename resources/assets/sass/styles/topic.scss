@@ -95,6 +95,7 @@ TOPIC DETAILS
 
 .topic-comment-included {
   padding-left: 60px;
+  padding-right: 15px;
 }
 
 .topic-comment-flex {
@@ -301,4 +302,13 @@ TOPIC DETAILS
 }
 .attachments-container .file-name {
   overflow: hidden;
+}
+.topic-control .childs-btn {
+  padding: 10px;
+}
+.topic-comment-childs {
+  padding: 5px 0;
+}
+.topic-comment-childs .topic-comment-item {
+    border-color: #ffa500;
 }
