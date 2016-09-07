@@ -9,10 +9,10 @@
             <!-- if unread add class .unread -->
             <div class="messages-msg-body">
                 <div>
-                    <p>{{message.message}}</p>
+                    <p>{{{message}}}</p>
                 </div>
             </div>
-            <i>{{message.updated_at}}</i>
+            <i><span class="messageDate" realdate="{{updatedStaticDate}}">{{updatedDate}}</span></i>
         </div>
     </a>
 </div>

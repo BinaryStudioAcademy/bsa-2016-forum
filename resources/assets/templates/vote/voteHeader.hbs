@@ -2,6 +2,7 @@
     <div class="vote-header">
         <h3>{{ model.title }}</h3>
         <h5>Opened by: {{ meta.user.first_name }}  {{ meta.user.last_name }}</h5>
+        <button class="btn btn-info btn-xs text-info subscribe-btn">Subscribe</button>
         <div class="vote-tags"><p>
             {{#each meta.tags}}
                 <a href="#votes/tags/{{name}}" style="color: #333;"><span>#{{name}}</span></a>

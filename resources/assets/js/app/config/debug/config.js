@@ -1,5 +1,7 @@
 module.exports = {
     debug: true,
     baseUrl: '/api/v1',
-    socketUrl: 'http://localhost:3000'
+    socketUrl: 'http://localhost:3000',
+    messageChangeOnDelay: 15,
+    timeZone: 'Europe/Kiev'
 };

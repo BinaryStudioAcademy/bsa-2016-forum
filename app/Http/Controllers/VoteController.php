@@ -11,7 +11,9 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Carbon\Carbon;
 use App\Facades\TagService;
+use Illuminate\Support\Facades\Auth;
 
 class VoteController extends ApiController
 {
@@ -44,14 +46,22 @@ class VoteController extends ApiController
     {
         $data = [];
 
+        //find the difference between two days
+        $created = new Carbon($vote->created_at);
+        $now = Carbon::now();
+        $difference = ($created->diff($now)->days < 1)
+            ? 'today'
+            : $created->diffForHumans($now);
+
         $data[$vote->id] =
             [
                 'user' => $vote->user()->first(),
                 'likes' => $vote->likes()->count(),
                 'comments' => $vote->comments()->count(),
-                'tags' => $vote->tags()->get(['name'])
+                'tags' => $vote->tags()->get(),
+                'subscription' => $vote->subscription(Auth::user()->id),
+                'days_ago' => $difference
             ];
-
 
         return $data;
     }
@@ -116,9 +126,9 @@ class VoteController extends ApiController
 
         $vote->update($request->all());
         $vote = Vote::findOrfail($id);
-        if ($request->tags) {
-            TagService::TagsHandler($vote, $request->tags);
-        }
+
+        TagService::TagsHandler($vote, $request->tags);
+
         $vote->tags = $vote->tags()->get();
         return $this->setStatusCode(200)->respond($vote);
     }
@@ -166,7 +176,9 @@ class VoteController extends ApiController
             return $this->setStatusCode(200)->respond();
         }
 
-        return $this->setStatusCode(200)->respond($votes, ['user' => $user]);
+        $data = $this->getMetaDataForCollection($votes);
+
+        return $this->setStatusCode(200)->respond($votes, $data);
     }
 
     /**

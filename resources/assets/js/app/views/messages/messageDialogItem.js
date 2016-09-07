@@ -1,15 +1,21 @@
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
+var App = require('../../instances/appInstance');
+var dateHelper = require('../../helpers/dateHelper');
+var helper = require('../../helpers/helper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'messageDialogItem',
     ui: {
         delete: '.delete',
-        edit: '.edit'
+        edit: '.edit',
+        msgFrom: '.from'
     },
     events: {
         'click @ui.delete' : 'clickedDeleteMessage',
-        'click @ui.edit' : 'clickedEditMessage'
+        'click @ui.edit' : 'clickedEditMessage',
+        'mouseenter @ui.msgFrom' : 'mouseenterMsgFrom',
+        'mouseleave @ui.msgFrom' : 'mouseleaveMsgFrom',
     },
     clickedDeleteMessage: function () {
         Radio.channel('messagesChannel').trigger('deleteMessage', this.model);
@@ -17,6 +23,19 @@ module.exports = Marionette.ItemView.extend({
 
     clickedEditMessage: function () {
         Radio.channel('messagesChannel').trigger('editMessage', this.model);
+    },
+    mouseenterMsgFrom: function () {
+        var intervalMinutes = App.getConfigAttr('messageChangeOnDelay');
+        var intervalMilliseconds = intervalMinutes * 60 * 1000;
+        var createdAt = this.model.get('created_at');
+        if (!dateHelper.isTimePassed(createdAt, intervalMilliseconds)) {
+            this.ui.delete.removeClass('invisible');
+            this.ui.edit.removeClass('invisible');
+        }
+    },
+    mouseleaveMsgFrom: function () {
+        this.ui.delete.addClass('invisible');
+        this.ui.edit.addClass('invisible');
     },
 
     serializeData: function () {
@@ -41,11 +60,14 @@ module.exports = Marionette.ItemView.extend({
         }
 
         return {
-            message: this.model.toJSON(),
+            message: helper.formatText(this.model.get('message')),
             messageDirection: direction,
             edit_at: edit,
             user: with_user,
-            deleted: deleted
+            deleted: deleted,
+
+            updatedDate: dateHelper.relativeDate(dateHelper.dateWithTimezone(this.model.get('updated_at'))),
+            updatedStaticDate: dateHelper.dateWithTimezone(this.model.get('updated_at'))
         }
     }
 });

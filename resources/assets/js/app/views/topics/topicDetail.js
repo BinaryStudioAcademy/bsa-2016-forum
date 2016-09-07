@@ -1,16 +1,29 @@
+var _ = require('underscore');
 var Marionette = require('backbone.marionette');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
+var SubscribeBehavior = require('../subscribeBehavior');
+var dateHelper = require('../../helpers/dateHelper');
+var logger = require('../../instances/logger');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicDetail',
 
     ui: {
-        bookmarkTopic: '.bookmark-btn'
+        bookmarkTopic: '.bookmark-btn',
+        subscribeNotification: '.subscribe-btn'
     },
 
     events: {
         'click @ui.bookmarkTopic': 'bookmarkTopic'
+    },
+
+    behaviors: {
+        SubscribeBehavior: {
+            behaviorClass: SubscribeBehavior,
+            parent_url: _.result(currentUser, 'url'),
+            target_type: 'Topic'
+        }
     },
 
     unlockButton: function () {
@@ -25,19 +38,26 @@ module.exports = Marionette.ItemView.extend({
         this.ui.bookmarkTopic.addClass('text-muted');
     },
 
-    addOkIcon: function () {
+    addOkBookmarkIcon: function () {
         this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
+    },
+
+    serializeData: function () {
+        return {
+            model: this.model.toJSON(),
+            createdDate: dateHelper.middleDate(this.model.get('created_at'))
+        };
     },
 
     onRender: function () {
         var meta = this.model.getMeta();
 
         if (meta.bookmark) {
-            this.model.bookmarkId = meta.bookmark.id;
+            this.model.bookmarkId = meta.bookmark[this.model.get('id')].id;
         }
 
         if (this.model.bookmarkId) {
-            this.addOkIcon();
+            this.addOkBookmarkIcon();
         }
     },
 
@@ -64,7 +84,7 @@ module.exports = Marionette.ItemView.extend({
                         errorMsg += index + ': ' + value;
                     });
 
-                    alert(errorMsg);
+                    logger(errorMsg);
                 }
             });
 
@@ -76,7 +96,7 @@ module.exports = Marionette.ItemView.extend({
                 success: function (response) {
                     that.model.bookmarkId = response.id;
                     that.unlockButton();
-                    that.addOkIcon();
+                    that.addOkBookmarkIcon();
                 },
                 error: function (response, xhr) {
                     var errorMsg = '';

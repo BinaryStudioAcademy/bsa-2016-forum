@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
+var dateHelper = require('../../helpers/dateHelper');
 var Behavior = require('../../behaviors/send');
 
 module.exports = Marionette.ItemView.extend({
@@ -43,7 +44,9 @@ module.exports = Marionette.ItemView.extend({
 
         return {
             message: this.model.toJSON(),
-            edit_at: edit
+            edit_at: edit,
+            updatedDate: dateHelper.relativeDate(dateHelper.dateWithTimezone(this.model.get('updated_at'))),
+            updatedStaticDate: dateHelper.dateWithTimezone(this.model.get('updated_at'))
         }
     }
 });

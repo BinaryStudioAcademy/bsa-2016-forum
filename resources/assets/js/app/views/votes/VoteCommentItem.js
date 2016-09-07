@@ -1,4 +1,5 @@
 var Marionette = require('backbone.marionette');
+var dateHelper = require('../../helpers/dateHelper');
 var Radio = require('backbone.radio');
 
 var moment = require('moment');
@@ -54,6 +55,7 @@ module.exports = Marionette.LayoutView.extend({
         this.commentable = tempmeta.commentable;
         return {
             model: this.model.toJSON(),
+            createdDate: dateHelper.fullDate(this.model.get('created_at')),
             meta: {
                 user: tempmeta.user,
                 comments: tempmeta.comments,

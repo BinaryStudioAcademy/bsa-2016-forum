@@ -14,12 +14,6 @@ module.exports = new navigCollection([
         label: 'My topics',
     },
     {
-        href: '#users',
-        icon: '',
-        name: 'users',
-        label: 'Users'
-    },
-    {
         href: '#bookmarks',
         icon: '',
         name: 'bookmarks',
@@ -32,10 +26,27 @@ module.exports = new navigCollection([
         label: 'Votes',
     },
     {
+        href: '#userVotes',
+        icon: '',
+        name: 'myVotes',
+        label: 'My votes'
+    },
+    {
+        href: '#users',
+        icon: '',
+        name: 'users',
+        label: 'Users'
+    },
+    {
         href: '#messages',
         icon: '',
         name: 'messages',
         label: 'Messages'
+    },
+    {
+        href: '#subscriptions',
+        icon: '',
+        name: 'subscriptions',
+        label: 'Subscriptions'
     }
-
 ]);

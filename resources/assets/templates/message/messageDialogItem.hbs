@@ -7,9 +7,9 @@
         </div>
         <div class="message-msg-body {{deleted}}">
             <p><b>{{user.first_name}} {{user.last_name}}</b></p>
-            <p>{{message.message}}</p>
-            <span>{{edit_at}} {{message.updated_at}}</span>
-            <div><a class="edit">Edit</a>&nbsp;<a class="delete">Delete</a></div>
+            <p>{{{message}}}</p>
+            <span>{{edit_at}} <date class="messageDate" realdate="{{updatedStaticDate}}">{{updatedDate}}</date></span>
+            <div><a class="edit invisible">Edit</a>&nbsp;<a class="delete invisible">Delete</a></div>
         </div>
     </div>
 </div>

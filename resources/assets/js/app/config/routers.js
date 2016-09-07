@@ -3,6 +3,7 @@ var IdeaHubController = require('../controllers/IdeaHubController');
 var UserController = require('../controllers/UserController');
 var BookmarkController = require('../controllers/BookmarkController');
 var MessageController = require('../controllers/MessageController');
+var SubscriptionController = require('../controllers/SubscriptionController');
 
 module.exports = {
 
@@ -38,6 +39,14 @@ module.exports = {
         },
 
         {
+            controller: new IdeaHubController(),
+            appRoutes: {
+                'userVotes':'showUserVotes'
+            },
+            navigItemName: 'myVotes'
+        },
+
+        {
             controller: new UserController(),
             appRoutes: {
                 'users': 'index'
@@ -60,6 +69,14 @@ module.exports = {
                 'messages/user/:user': 'show'
             },
             navigItemName: 'messages'
+        },
+
+        {
+            controller: new SubscriptionController(),
+            appRoutes: {
+                'subscriptions': 'index'
+            },
+            navigItemName: 'subscriptions'
         }
     ],
 
