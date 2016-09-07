@@ -3,12 +3,9 @@ var Marionette = require('backbone.marionette');
 module.exports = Marionette.CollectionView.extend({
 
     onShow: function () {
-
-        if (!this.collection.isEmpty()) {
-            $(window).on('scroll', this.fetchPage.bind(this));
-        }
-
+        $(window).on('scroll', this.fetchPage.bind(this));
     },
+
     onDestroy: function () {
         $(window).off('scroll');
     },
@@ -18,6 +15,11 @@ module.exports = Marionette.CollectionView.extend({
 
     fetchPage: function () {
         var self = this;
+
+        if (this.collection.isEmpty()) {
+            return;
+        }
+
         if (this.getScrollTop() < this.getDocumentHeight() - window.innerHeight) {
             return;
         }
