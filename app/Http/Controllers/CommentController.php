@@ -522,6 +522,8 @@ class CommentController extends ApiController
     {
         $comment = Comment::create($request->all());
         $comment = $voteItem->comments()->save($comment);
+        event(new VoteNewCommentEvent($voteItem->vote, $comment));
+        
         return $this->setStatusCode(201)->respond($comment, [
             $comment->id => [
                 'user' => $comment->user()->first(),
@@ -530,8 +532,6 @@ class CommentController extends ApiController
                 'commentable' => !$comment->trashed()
             ]
         ]);
-        event(new VoteNewCommentEvent($voteItem->vote, $comment));
-        return $this->setStatusCode(201)->respond($comment);
     }
 
     /**
