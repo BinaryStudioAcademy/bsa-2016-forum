@@ -4,6 +4,8 @@ var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
 var $ = require('jquery');
 var logger = require('../../instances/logger');
+var _ = require('underscore');
+var SubscribeBehavior = require('../subscribeBehavior');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicItem',
@@ -11,11 +13,20 @@ module.exports = Marionette.ItemView.extend({
     tagName: 'div',
 
     ui: {
-        bookmarkTopic: '.bookmark-btn'
+        bookmarkTopic: '.bookmark-btn',
+        subscribeNotification: '.subscribe-btn'
     },
 
     events: {
         'click @ui.bookmarkTopic': 'bookmarkTopic'
+    },
+
+    behaviors: {
+        SubscribeBehavior: {
+            behaviorClass: SubscribeBehavior,
+            parent_url: _.result(currentUser, 'url'),
+            target_type: 'Topic'
+        }
     },
 
     unlockButton: function () {
@@ -49,7 +60,7 @@ module.exports = Marionette.ItemView.extend({
 
             $.each(meta.bookmark, function(index, value) {
                 if (value.topic_id == self.model.get('id')) {
-                    self.model.bookmarkId = value.id;
+                    self.model.bookmarkId = index;
                     return false;
                 }
             });
@@ -83,7 +94,7 @@ module.exports = Marionette.ItemView.extend({
                         errorMsg += index + ': ' + value;
                     });
 
-                    logger(errorMsg);
+                    alert(errorMsg);
                 }
             });
 
@@ -103,7 +114,7 @@ module.exports = Marionette.ItemView.extend({
                         errorMsg += index + ': ' + value;
                     });
 
-                    logger(errorMsg);
+                    alert(errorMsg);
                 }
             });
         }

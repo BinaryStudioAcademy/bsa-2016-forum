@@ -32,6 +32,10 @@ class TopicController extends ApiController
                 ->where('user_id', Auth::user()->id)->first();
         }
 
+        // requires common standards in the future
+        $data[$topic->id] = [
+            'subscription' => $topic->subscription(Auth::user()->id)
+        ];
 
         return $data;
 
@@ -149,9 +153,9 @@ class TopicController extends ApiController
         $this->authorize('update', $topic);
 
         $topic->update($request->all());
-        if ($request->tags) {
-            TagService::TagsHandler($topic, $request->tags);
-        }
+
+        TagService::TagsHandler($topic, $request->tags);
+        
         $topic->generated_description = MarkdownService::baseConvert($topic->description);
         $topic->save();
         $topic->tags = $topic->tags()->get();
