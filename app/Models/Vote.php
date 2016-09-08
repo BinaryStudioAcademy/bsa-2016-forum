@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 
 class Vote extends Model
@@ -14,7 +15,7 @@ class Vote extends Model
     protected $morphClass = 'Vote';
     use SoftDeletes;
 
-    protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at'];
+    protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at', 'is_saved'];
 
     protected $dates = ['deleted_at'];
 
@@ -29,7 +30,7 @@ class Vote extends Model
     {
         return $this->belongsTo(User::class);
     }
-   
+
     public function voteItems()
     {
         return $this->hasMany(VoteItem::class);
@@ -95,6 +96,12 @@ class Vote extends Model
         return $query;
     }
 
+    public function scopeNewOnTop(Builder $query)
+    {
+        $query = $query->orderBy('id', 'desc');
+        return $query;
+    }
+
     /**
      * Scope a query to only include votes which have tags with selected IDs
      *
@@ -110,6 +117,21 @@ class Vote extends Model
             });
         }
         return $query;
+    }
+
+    public function scopeCheckOnIsSaved(Builder $query)
+    {
+        if(!Auth::user()->isAdmin()) {
+            $query = $query->where('is_saved', 1);
+        }
+
+        return $query;
+    }
+    
+    public function canBeEdited() {
+        $user = Auth::user();
+        
+        return $user->isAdmin() || $user->owns($this);
     }
 
     public function subscribers()
