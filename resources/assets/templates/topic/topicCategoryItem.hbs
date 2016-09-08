@@ -7,9 +7,8 @@
     <span>Last topics:<span><br>
     {{/if}}
         {{#each lastThreeTopics}}
-            <a href="#topics/{{ id }}"> {{ name }} </a>
-            <span class="votes-item-time">Last update: {{updated_at}}</span>
-            <br>
+            <li><a href="#topics/{{ id }}"> {{ name }} </a>
+            <span class="votes-item-time">Last update: {{updated_at}}</span></li>
         {{/each}}
     </div>
 </div>
