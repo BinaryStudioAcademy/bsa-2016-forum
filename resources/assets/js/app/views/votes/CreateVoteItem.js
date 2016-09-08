@@ -38,11 +38,8 @@ module.exports = Marionette.ItemView.extend({
         });
     },
     serializeData: function () {
-        var def = {
 
-        };
-
-        var meta = this.model.getMetaById() || def;
+        var meta = this.model.getMetaById() || {};
 
         return {
             model: this.model.toJSON(),

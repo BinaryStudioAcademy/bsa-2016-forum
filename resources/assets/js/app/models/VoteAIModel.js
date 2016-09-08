@@ -12,5 +12,8 @@ module.exports = BaseModel.extend({
         if (!_.isEmpty(errors)) {
             return errors;
         }
+    },
+    defaults: {
+        name: ''
     }
 });
