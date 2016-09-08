@@ -3,7 +3,7 @@ var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var currentUser = require('../initializers/currentUser');
 
-var VoteAImodel = require('../models/VoteAImodel');
+var VoteAImodel = require('../models/VoteAIModel');
 var VoteModel = require('../models/VoteModel');
 var CommentModel = require('../models/CommentModel');
 var UserModel = require('../models/UserModel');
