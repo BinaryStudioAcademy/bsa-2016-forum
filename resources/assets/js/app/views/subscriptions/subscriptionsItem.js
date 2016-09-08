@@ -6,7 +6,7 @@ module.exports = Marionette.ItemView.extend({
     template: 'subscriptionItem',
     tagName: 'div',
     ui: {
-        delete: '.delete-button'
+        delete: '.delete-subscription-button'
     },
     events: {
         'click @ui.delete': 'delete'
