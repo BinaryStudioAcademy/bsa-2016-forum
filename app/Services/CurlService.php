@@ -57,8 +57,10 @@ class CurlService
             'users' => $data['users'],
         ];
 
-        $response = $this->sendRequest('POST', config('notification.url'), $request);
-
-        return $response;
+        if (strtolower(env('APP_ENV')) == 'local') {
+            return true;
+        } else {
+            return $this->sendRequest('POST', config('notification.url'), $request);
+        }
     }
 }
