@@ -7,7 +7,7 @@ module.exports = Marionette.ItemView.extend({
     className: 'vote-comment',
     template: 'voteDetailComment',
     ui: {
-        replyComment: '#comment_reply'
+        replyComment: '.comment_reply'
     },
 
     events: {
@@ -25,7 +25,14 @@ module.exports = Marionette.ItemView.extend({
     },
     replyComment: function () {
         var voteCommentAdd = new VoteCommentItemAdd();
-        $(voteCommentAdd.ui.text).val('>>> '+this.model.attributes.content_origin+'\n');
-        $(voteCommentAdd.ui.text).focus();
+        this.setComment(voteCommentAdd.ui.text,this.model.attributes.content_origin);
+        this.setFocus(voteCommentAdd.ui.text);
     },
+    setComment: function(id,content){
+        var value='>>> '+content+'\n'
+        $(id).val(value);
+    },
+    setFocus: function(id){
+       $(id).focus();
+    }
 });
