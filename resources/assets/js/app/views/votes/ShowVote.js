@@ -20,13 +20,76 @@ module.exports = Marionette.LayoutView.extend({
     },
     ui: {
         c_count: '.count',
-        newCommentButton: '.new-comment-notification'
+        newCommentButton: '.new-comment-notification',
+        moreButton: '.vote-comments-more',
+        lessButton: '.vote-comments-less'
+
     },
 
     events: {
-        'click @ui.newCommentButton': 'showNewComments'
+        'click @ui.newCommentButton': 'showNewComments',
+        'click @ui.moreButton': 'onClickVoteCommentsMore',
+        'click @ui.lessButton': 'onClickVoteCommentsLess'
     },
+
+    _pageMore: 2,
+    _pageLess: 1,
+    _allItemsUploaded:false,
     
+    onClickVoteCommentsMore: function(e) {
+        self = this;
+
+        if (this._allItemsUploaded) {
+            return;
+        }
+
+        var currentPage = this.collection.getMeta().currentPage;
+        var lastPage = this.collection.getMeta().lastPage;
+
+        this.collection.fetch({
+            remove: true,
+            data: {page: this._pageMore},
+            error: function (collection, response) {
+                console.log('error');
+                self._allItemsUploaded = true;
+                console.error(response.responseText);
+            },
+            success: function (collection, xhr) {
+
+                if (currentPage + 1 < lastPage) {
+                    this._pageMore++;
+                    this._pageLess = this._pageMore - 1;
+                }
+            }.bind(this)
+        });
+    },
+
+    onClickVoteCommentsLess: function(e) {
+
+        if (this._allItemsUploaded) {
+            return;
+        }
+
+        var currentPage = this.collection.getMeta().currentPage;
+
+        this.collection.fetch({
+            remove: true,
+            data: {page: this._pageLess},
+            error: function (collection, response) {
+                self._allItemsUploaded = true;
+                console.log('error');
+                console.error(response.responseText);
+            },
+            success: function (collection, xhr) {
+
+                if (currentPage >= 2) {
+                    this._pageLess--;
+                    this._pageMore = this._pageLess + 1;
+                }
+            }.bind(this)
+        });
+    },
+
     initialize: function () {
         this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.options.voteModel.id, function (n) {
             this.ui.c_count.text(n);
