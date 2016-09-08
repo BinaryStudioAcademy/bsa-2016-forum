@@ -277,9 +277,14 @@ TOPIC DETAILS
   color: #54dea0;
 }
 
+.category-topic-time {
+  font-size: 12px;
+  color: #999999;
+}
+
 .post-item {
   width: 100%;
-  height: 120px;
+  height: auto;
   display: flex;
   border-bottom: 1px solid #EEEEEE;
   overflow: hidden;
