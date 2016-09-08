@@ -13,7 +13,8 @@
         "felixkiss/uniquewith-validator": "2.*",
         "predis/predis": "^1.1",
         "doctrine/dbal": "~2.5",
-        "michelf/php-markdown": "^1.6"
+        "michelf/php-markdown": "^1.6",
+        "cviebrock/eloquent-sluggable": "4.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

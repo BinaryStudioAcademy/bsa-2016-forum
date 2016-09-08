@@ -25,10 +25,6 @@ class Message extends Model
     {
         return $this->morphToMany(Attachment::class, 'attachmenttable');
     }
-    public function notifications()
-    {
-        return $this->morphToMany(Notification::class, 'notificationable');
-    }
 
     public function getMessageAttribute($value)
     {
