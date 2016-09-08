@@ -52,6 +52,10 @@ var dateHelper = {
         var now = moment.utc();
         var createdAt = moment.utc(date);
         return !((now - createdAt) <= interval);
+    },
+
+    minutesToMilliseconds: function (minutes) {
+        return minutes * 60 * 1000;
     }
 };
 
