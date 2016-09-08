@@ -11,11 +11,19 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Collection;
 use App\Facades\TagService;
-
+use App\Facades\MarkdownService;
 
 class TopicController extends ApiController
 {
     protected $searchStr = null;
+
+    private function getTopicModel($id) {
+        if (is_numeric($id) === false) {
+            return  Topic::where('slug', '=', $id)->firstOrFail();
+        }
+
+        return Topic::findOrFail($id);
+    }
 
     /**
      * @param Topic $topic
@@ -48,13 +56,21 @@ class TopicController extends ApiController
     private function getMetaDataForModel(Topic $topic)
     {
         $data = [];
-        $bookmark = $topic->bookmarks()->where('user_id', Auth::user()->id)->first();
+        $bookmark = $topic->bookmarks()
+            ->where('user_id', Auth::user()->id)->first();
 
         if ($bookmark !== null) {
-            $data['bookmark'][$topic->id] = $topic->bookmarks()->where('user_id', Auth::user()->id)->first();
+            $data['bookmark'][$topic->id] = $topic->bookmarks()
+                ->where('user_id', Auth::user()->id)->first();
         }
 
+        // requires common standards in the future
+        $data[$topic->id] = [
+            'subscription' => $topic->subscription(Auth::user()->id)
+        ];
+
         return $data;
+
     }
 
 
@@ -67,10 +83,11 @@ class TopicController extends ApiController
         $data = [];
 
         foreach ($topics as $topic) {
-            $data = array_merge_recursive($data, $this->getMetaDataForModel($topic));
+            $data += $this->getMetaDataForModel($topic);
         }
 
         return $data;
+
     }
 
     /**
@@ -104,18 +121,25 @@ class TopicController extends ApiController
     public function indexInCategory($catId, TopicRequest $request)
     {
         $this->setFiltersData($request);
-
-        $topics = Topic::where('category_id', $catId)
-            ->filterByQuery($this->searchStr)
-            ->filterByTags($this->tagIds)
-            ->paginate(15)->getCollection();
+        if ($request->page) {
+            $paginationObject = Topic::where('category_id', $catId)
+                ->filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)
+                ->paginate(15);
+            $topics = $paginationObject->getCollection();
+            $meta = $this->getMetaDataForCollection($topics);
+            $meta['hasMorePages'] = $paginationObject->hasMorePages();
+        } else {
+            $topics = Topic::where('category_id', $catId)
+                ->filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)->get();
+            $meta = $this->getMetaDataForCollection($topics);
+        }
 
         foreach ($topics as $topic) {
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
         }
-
-        $meta = $this->getMetaDataForCollection($topics);
 
         return $this->setStatusCode(200)->respond($topics, $meta);
     }
@@ -132,6 +156,8 @@ class TopicController extends ApiController
         if ($request->tags) {
             TagService::TagsHandler($topic, $request->tags);
         }
+        $topic->generated_description = MarkdownService::baseConvert($topic->description);
+        $topic->save();
         $topic->tags = $topic->tags()->get();
         return $this->setStatusCode(201)->respond($topic);
     }
@@ -144,10 +170,9 @@ class TopicController extends ApiController
      */
     public function show($id)
     {
-        $topic = Topic::findOrFail($id);
+        $topic = $this->getTopicModel($id);
         $topic->tags = $topic->tags()->get();
-//        $meta = $this->getMetaDataForModel($topic);
-        $meta = $this->getItemMetaData($topic);
+        $meta = $this->getMetaDataForModel($topic);
 
         return $this->setStatusCode(200)->respond($topic, $meta);
     }
@@ -162,17 +187,16 @@ class TopicController extends ApiController
      */
     public function update($id, TopicRequest $request)
     {
-
-        $topic = Topic::findOrFail($id);
+        $topic = $this->getTopicModel($id);
 
         $this->authorize('update', $topic);
 
         $topic->update($request->all());
 
-        if ($request->tags) {
-            TagService::TagsHandler($topic, $request->tags);
-        }
+        TagService::TagsHandler($topic, $request->tags);
 
+        $topic->generated_description = MarkdownService::baseConvert($topic->description);
+        $topic->save();
         $topic->tags = $topic->tags()->get();
         return $this->setStatusCode(200)->respond($topic);
     }
@@ -186,7 +210,7 @@ class TopicController extends ApiController
      */
     public function destroy($id)
     {
-        $topic = Topic::findOrFail($id);
+        $topic = $this->getTopicModel($id);
 
         $this->authorize('delete', $topic);
 
@@ -201,17 +225,28 @@ class TopicController extends ApiController
      * @param  TopicRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-
     public function getUserTopics($userId, TopicRequest $request)
     {
         $user = User::findOrFail($userId);
         $this->setFiltersData($request);
 
-        $topics = $user->topics()
-            ->getQuery()
-            ->filterByQuery($this->searchStr)
-            ->filterByTags($this->tagIds)
-            ->paginate(15)->getCollection();
+        if ($request->page) {
+            $paginationObject = $user->topics()
+                ->getQuery()
+                ->filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)
+                ->paginate(15);
+            $topics = $paginationObject->getCollection();
+            $meta = $this->getMetaDataForCollection($topics);
+            $meta['hasMorePages'] = $paginationObject->hasMorePages();
+        } else {
+            $topics = $user->topics()
+                ->getQuery()
+                ->filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)
+                ->get();
+            $meta = $this->getMetaDataForCollection($topics);
+        }
 
         if (!$topics) {
             return $this->setStatusCode(200)->respond();
@@ -222,7 +257,6 @@ class TopicController extends ApiController
             $topic->answersCount = $topic->comments()->count();
         }
 
-        $meta = $this->getMetaDataForCollection($topics);
         $meta['user'] = $user;
 
         return $this->setStatusCode(200)->respond($topics, $meta);
@@ -244,6 +278,7 @@ class TopicController extends ApiController
         }
 
         return $this->setStatusCode(200)->respond($topic, ['user' => $user]);
+
     }
 
     /**

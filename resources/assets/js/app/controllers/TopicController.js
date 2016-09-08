@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var Marionette = require('backbone.marionette');
 var app = require('../instances/appInstance');
 var topicLayout = require('../views/topics/topicLayout');
@@ -12,7 +13,6 @@ var Radio = require('backbone.radio');
 var NewTopicCommentView = require('../views/comments/TopicCommentNew');
 var TopicCommentModel = require('../models/TopicCommentModel');
 var CommentsCollection = require('../collections/TopicCommentsCollection');
-var _ = require('underscore');
 var Topics = require('../instances/TopicCollection');
 var currentUser = require('../initializers/currentUser');
 var AttachmentCollection = require('../collections/AttachmentCollection');
@@ -48,17 +48,9 @@ module.exports = Marionette.Object.extend({
         app.render(new TopicCreate({model: topicModel, collection: topicCategoryCollection}));
     },
 
-    show: function (id) {
-        var topicModel = {};
-
-        if (Topics.get(id)) {
-            topicModel = Topics.get(id);
-        } else {
-            topicModel = new TopicModel({
-                id: id,
-            });
-            topicModel.fetch();
-        }
+    show: function (slug)  {
+        var topicModel = new TopicModel({slug: slug});
+        topicModel.fetchBySlag();
 
         var comments = new CommentsCollection();
         comments.parentUrl = _.result(topicModel, 'url');
@@ -114,8 +106,7 @@ module.exports = Marionette.Object.extend({
     myTopics: function () {
         var parentUrl = '/users/' + currentUser.id;
         var topicCollection = new UserTopicCollection({parentUrl: parentUrl});
-        topicCollection.fetch();
+        topicCollection.fetch({data: {page: 1}});
         app.render(new topicLayout({collection: topicCollection}));
     }
-
 });

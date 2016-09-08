@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TopicNewCommentEvent;
+use App\Events\VoteNewCommentEvent;
 use App\Models\Comment;
 use App\Models\Vote;
 use App\Models\VoteItem;
 use App\Http\Requests\CommentsRequest;
 use App\Models\Topic;
-use App\Http\Requests;
+use App\Events\NewBroadcastCommentEvent;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Gate;
+
 class CommentController extends ApiController
 {
 
@@ -101,11 +104,11 @@ class CommentController extends ApiController
      * @param CommentsRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-
     public function storeTopicComment(Topic $topic, CommentsRequest $request)
     {
         $comment = Comment::create($request->all());
         $comment = $topic->comments()->save($comment);
+        event(new TopicNewCommentEvent($topic, $comment));
         $meta[$comment->id] = $this->getItemMetaData($comment);
         return $this->setStatusCode(201)->respond($comment, $meta);
     }
@@ -175,8 +178,9 @@ class CommentController extends ApiController
     {
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $childComment = Comment::create($childCommentInput->all());
-//            $topic->comments()->save($childComment);
+            $topic->comments()->save($childComment);
             $childComment = $comment->comments()->save($childComment);
+            event(new TopicNewCommentEvent($topic, $childComment));
             $meta[$childComment->id] = $this->getItemMetaData($childComment);
             return $this->setStatusCode(201)->respond($childComment, $meta);
         } else {
@@ -315,9 +319,19 @@ class CommentController extends ApiController
         $comment = Comment::create($request->all());
         $comment = $vote->comments()->save($comment);
 
+        $user = $comment->user()->first();
+
+        event(new NewBroadcastCommentEvent($comment, [
+            $comment->id => [
+                'user' => $user
+            ]
+        ]));
+
+        event(new VoteNewCommentEvent($vote, $comment));
+
         return $this->setStatusCode(201)->respond($comment, [
             $comment->id => [
-                'user' => $comment->user()->first()
+                'user' => $user
             ]
         ]);
     }
@@ -386,6 +400,7 @@ class CommentController extends ApiController
         if ($this->isCommentBelongsToVote($vote, $comment)) {
             $childComment = Comment::create($childCommentInput->all());
             $childComment = $comment->comments()->save($childComment);
+            event(new VoteNewCommentEvent($vote, $childComment));
             return $this->setStatusCode(201)->respond($childComment);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
@@ -504,6 +519,7 @@ class CommentController extends ApiController
     {
         $comment = Comment::create($request->all());
         $comment = $voteItem->comments()->save($comment);
+        event(new VoteNewCommentEvent($voteItem->vote, $comment));
         return $this->setStatusCode(201)->respond($comment);
     }
 

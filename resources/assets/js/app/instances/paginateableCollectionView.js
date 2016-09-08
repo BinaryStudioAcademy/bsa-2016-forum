@@ -3,11 +3,10 @@ var Marionette = require('backbone.marionette');
 module.exports = Marionette.CollectionView.extend({
 
     onShow: function () {
-
         $(window).on('scroll', this.fetchPage.bind(this));
-
     },
-    onDestroy: function(){
+
+    onDestroy: function () {
         $(window).off('scroll');
     },
 
@@ -16,6 +15,11 @@ module.exports = Marionette.CollectionView.extend({
 
     fetchPage: function () {
         var self = this;
+
+        if (this.collection.isEmpty()) {
+            return;
+        }
+
         if (this.getScrollTop() < this.getDocumentHeight() - window.innerHeight) {
             return;
         }
@@ -28,16 +32,12 @@ module.exports = Marionette.CollectionView.extend({
             remove: false,
             data: {page: this._page},
             error: function (collection, response) {
-                self._allItemsUploaded = true;
                 console.error(response.responseText);
             },
             success: function (collection, xhr) {
-                if (!xhr.data.length) {
-                    // all items has been uploaded
-                    self._allItemsUploaded = true;
-                } else {
-                    this._page++;
-                }
+                var meta = this.collection.getMeta();
+                self._allItemsUploaded = !meta.hasMorePages;
+                this._page++;
             }.bind(this)
         });
     },
