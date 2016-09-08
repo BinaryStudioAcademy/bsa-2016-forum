@@ -17,7 +17,7 @@ module.exports = Marionette.ItemView.extend({
 
     ui: {
         bookmarkTopic: '.bookmark-btn',
-        subscribeNotification: '.subscribe-btn'
+        subscribeNotification: '.subscribe-btn',
         addLikeTopic: '.fa-star-o',
         removeLikeTopic: '.fa-star'
     },
