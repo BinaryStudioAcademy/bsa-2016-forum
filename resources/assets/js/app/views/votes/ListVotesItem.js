@@ -36,9 +36,10 @@ module.exports = Marionette.ItemView.extend({
                 likes: tempmeta[id].likes,
                 comments: tempmeta[id].comments,
                 tags: tempmeta[id].tags,
+                days_ago:tempmeta[id].days_ago,
+                hasMorePages:tempmeta.hasMorePages,
                 numberOfUniqueViews: tempmeta[id].numberOfUniqueViews,
-                usersWhoSaw: tempmeta[id].usersWhoSaw,
-                days_ago:tempmeta[id].days_ago
+                usersWhoSaw: tempmeta[id].usersWhoSaw
             }
         };
     }

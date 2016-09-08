@@ -9,6 +9,7 @@ var VoteAICollection = require('../collections/voteAICollection');
 var ListVotes = require('../views/votes/ListVotes');
 var ShowVote = require('../views/votes/ShowVote');
 var Votes = require('../instances/Votes');
+
 var voteCollection = require('../collections/voteCollection');
 
 module.exports = Marionette.Object.extend({
@@ -17,7 +18,7 @@ module.exports = Marionette.Object.extend({
         Votes.reset();
         var view = new ListVotes({vc: Votes});
         app.render(view);
-        Votes.fetch();
+        Votes.fetch({data: {page: 1}});
     },
 
     showVote: function (id) {
@@ -47,7 +48,6 @@ module.exports = Marionette.Object.extend({
             answers: VoteAnswers
         });
 
-
         view.listenTo(Radio.channel('votesChannel'), 'showAddCommentView', function (view) {
 
             view.getRegion('addcomment').show(
@@ -62,7 +62,7 @@ module.exports = Marionette.Object.extend({
 
     },
 
-    showUserVotes: function() {
+    showUserVotes: function () {
         var parentUrl = '/users/' + currentUser.id;
         var usersVotes = new voteCollection([], {parentUrl: parentUrl});
 
