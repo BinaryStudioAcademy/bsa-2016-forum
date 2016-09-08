@@ -60,7 +60,7 @@ module.exports = Marionette.ItemView.extend({
 
             $.each(meta.bookmark, function(index, value) {
                 if (value.topic_id == self.model.get('id')) {
-                    self.model.bookmarkId = index;
+                    self.model.bookmarkId = value.id;
                     return false;
                 }
             });
@@ -94,7 +94,7 @@ module.exports = Marionette.ItemView.extend({
                         errorMsg += index + ': ' + value;
                     });
 
-                    alert(errorMsg);
+                    logger(errorMsg);
                 }
             });
 
@@ -114,7 +114,7 @@ module.exports = Marionette.ItemView.extend({
                         errorMsg += index + ': ' + value;
                     });
 
-                    alert(errorMsg);
+                    logger(errorMsg);
                 }
             });
         }
