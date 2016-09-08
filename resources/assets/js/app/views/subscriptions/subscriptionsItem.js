@@ -12,22 +12,23 @@ module.exports = Marionette.ItemView.extend({
         'click @ui.delete': 'delete'
     },
     serializeData: function () {
-        var target = {};
-        target.id = this.model.get('subscription_id');
+        var url = "", title = "";
         switch (this.model.get('subscription_type')) {
             case 'Topic':
-                target.title = this.options.target.name;
-                target.type = 'topics';
+                title = this.options.target.name;
+                url = '#topics/'+this.options.target.slug;
                 break;
             case 'Vote':
-                target.title = this.options.target.title;
-                target.type = 'votes';
+                title = this.options.target.title;
+                url = '#votes/'+this.options.target.id;
                 break;
         }
 
         return {
             model: this.model.toJSON(),
-            target: target
+            url: url,
+            title: title
+            
         };
     },
     delete: function () {

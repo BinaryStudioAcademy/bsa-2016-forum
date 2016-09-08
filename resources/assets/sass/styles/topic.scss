@@ -95,7 +95,7 @@ TOPIC DETAILS
   margin: 20px 0;
 }
 
-.topic-comment-main {
+.topic-comment-main, .topic-comment {
   background: #FFF;
 }
 
@@ -245,6 +245,7 @@ TOPIC DETAILS
 }
 
 .topic-more {
+  margin-top: 15px;
   background: #fff;
   font-weight: 600;
   font-size: 16px;

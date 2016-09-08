@@ -13,7 +13,7 @@ module.exports = Marionette.ItemView.extend({
     tagName: 'a',
     attributes : function () {
         return {
-            href: "#/topics/"+this.model.get("id")
+            href: "#topics/"+this.model.get("slug")
         }
     },
 
