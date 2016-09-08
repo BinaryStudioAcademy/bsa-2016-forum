@@ -19,7 +19,7 @@ module.exports = Marionette.LayoutView.extend({
         answers: '#answers'
     },
     ui: {
-        c_count: '#count',
+        c_count: '.count',
         newCommentButton: '.new-comment-notification'
     },
 
@@ -30,7 +30,7 @@ module.exports = Marionette.LayoutView.extend({
 
     initialize: function () {
         this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.options.voteModel.id, function (n) {
-            this.ui.c_count.text(n + ' Comments');
+            this.ui.c_count.text(n);
         });
 
         socketCommentClient.bind('VoteComments', this.options.voteModel.id);
@@ -52,7 +52,7 @@ module.exports = Marionette.LayoutView.extend({
                 Radio.trigger('votesChannel', 'setCommentsCount' + self.options.voteModel.id, count);
 
                 if (comment.user_id != currentUser.id) {
-                    self.$('.new-comment-notification').show(300);
+                    self.ui.newCommentButton.show(300);
                 } else {
                     self.options.collection.add(self.addedCommentsCollection.toJSON());
                 }
@@ -61,7 +61,7 @@ module.exports = Marionette.LayoutView.extend({
 
     collectionEvents: {
         'update': function () {
-            this.ui.c_count.text(this.collection.length + ' Comments');
+            this.ui.c_count.text(this.collection.length);
         }
     },
 
