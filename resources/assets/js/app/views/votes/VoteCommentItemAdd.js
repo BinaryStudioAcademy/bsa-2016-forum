@@ -26,6 +26,7 @@ module.exports = Marionette.ItemView.extend({
                         if (parent.collection.level < 5) {
                             parent.collection.add(data);
                         } else {
+                            data.parentUrl = null;
                             parent.getOption('parent').collection.add(data);
                         }
                     }

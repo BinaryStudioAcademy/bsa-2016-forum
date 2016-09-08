@@ -19,6 +19,21 @@ use Illuminate\Support\Facades\DB;
 
 class CommentController extends ApiController
 {
+
+    /**
+     * @param $commentable
+     * @return mixed
+     */
+    protected function getCommentsCollection($commentable, $order = 'asc')
+    {
+        if(Auth::user()->isAdmin()) {
+            $comments = $commentable->comments()->withTrashed()->orderBy('id', $order)->get();
+        } else {
+            $comments = $commentable->comments()->orderBy('id', $order)->get();
+        }
+        return $comments;
+    }
+
     /**
      * @param Comment $comment
      * @return bool

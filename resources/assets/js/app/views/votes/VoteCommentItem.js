@@ -28,7 +28,7 @@ module.exports = Marionette.LayoutView.extend({
             e.stopPropagation();
             if(!this.opened){
                 Radio.trigger('votesChannel', 'loadNestedComments', this);
-                if(this.commentable)
+                //if(this.commentable)
                     Radio.trigger('votesChannel', 'showAddCommentView', {view: this, atStart: false});
                 this.ui.submit.text('Hide');
             } else {
@@ -48,7 +48,7 @@ module.exports = Marionette.LayoutView.extend({
     serializeData: function () {
         var id = this.model.get('id');
         var meta = this.model.getMeta();
-
+        this.commentable = false;
         if (!meta[id]) return {
             model: this.model.toJSON(),
             createdDate: dateHelper.fullDate(this.model.get('created_at')),
@@ -60,6 +60,7 @@ module.exports = Marionette.LayoutView.extend({
             }
         };
 
+        this.commentable = meta[id].commentable;
         return {
             model: this.model.toJSON(),
             createdDate: dateHelper.fullDate(this.model.get('created_at')),
