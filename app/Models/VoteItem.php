@@ -61,10 +61,4 @@ class VoteItem extends Model
     {
         return $this->morphMany(Comment::class, 'commentable');
     }
-
-    public function notifications()
-    {
-        return $this->morphToMany(Notification::class, 'notificationable');
-    }
-    
 }

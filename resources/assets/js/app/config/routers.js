@@ -3,6 +3,7 @@ var IdeaHubController = require('../controllers/IdeaHubController');
 var UserController = require('../controllers/UserController');
 var BookmarkController = require('../controllers/BookmarkController');
 var MessageController = require('../controllers/MessageController');
+var SubscriptionController = require('../controllers/SubscriptionController');
 var DashboardController = require('../controllers/DashboardController');
 
 module.exports = {
@@ -77,6 +78,14 @@ module.exports = {
                 'messages/user/:user': 'show'
             },
             navigItemName: 'messages'
+        },
+
+        {
+            controller: new SubscriptionController(),
+            appRoutes: {
+                'subscriptions': 'index'
+            },
+            navigItemName: 'subscriptions'
         }
     ],
 
