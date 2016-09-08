@@ -59,7 +59,7 @@ class TopicController extends ApiController
         $data = [];
 
         foreach ($topics as $topic) {
-            $data = array_merge_recursive($data, $this->getMetaDataForModel($topic));
+            $data += $this->getMetaDataForModel($topic);
         }
 
         return $data;
