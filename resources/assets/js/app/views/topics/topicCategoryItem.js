@@ -7,13 +7,19 @@ module.exports = Marionette.ItemView.extend({
     tagName: 'div',
 
     serializeData: function () {
+        var tempmeta = this.model.getMeta();
+        var id = this.model.get('id');
+        var meta = {};
+        meta.topicCount = tempmeta[id].topicCount;
+        meta.lastThreeTopics = tempmeta[id].lastThreeTopics;
         var model = this.model.toJSON();
-        for(var item in model.lastThreeTopics)
+        for(var item in meta.lastThreeTopics)
         {
-            model.lastThreeTopics[item].updated_at = dateHelper.relativeDate(this.model.get('updated_at'))
+            meta.lastThreeTopics[item].updated_at = dateHelper.relativeDate(meta.lastThreeTopics[item].updated_at)
         }
         return {
-            model: model
+            model: model,
+            meta: meta
         }
 
     }

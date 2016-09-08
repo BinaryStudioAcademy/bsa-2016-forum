@@ -16,14 +16,15 @@ class CategoryController extends ApiController
      */
     public function index()
     {
+        $data = [];
         $categories = Category::all();
         if($categories){
             foreach ($categories as $category){
-                $category->topicCount = $category->topics()->count();
-                $category->lastThreeTopics = $category->topics()->orderBy('updated_at', 'DESC')->limit(3)->get(['name','slug','updated_at']);
+                $data[$category->id]['topicCount'] = $category->topics()->count();
+                $data[$category->id]['lastThreeTopics'] = $category->topics()->orderBy('updated_at', 'DESC')->limit(3)->get(['name','slug','updated_at']);
             }
         }
-        return $this->setStatusCode(200)->respond($categories);
+        return $this->setStatusCode(200)->respond($categories,$data);
     }
 
 
