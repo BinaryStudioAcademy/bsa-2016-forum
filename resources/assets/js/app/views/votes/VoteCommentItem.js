@@ -47,17 +47,23 @@ module.exports = Marionette.LayoutView.extend({
     },
     serializeData: function () {
         var id = this.model.get('id');
-        var tempmeta = this.model.getMeta()[id];
-        this.commentable = tempmeta.commentable;
+        var meta = this.model.getMeta();
+
+        if (!meta[id]) return {
+            model: this.model.toJSON(),
+            createdDate: dateHelper.fullDate(this.model.get('created_at')),
+            meta: {
+                user: this.model.get('user')
+            }
+        };
+
         return {
             model: this.model.toJSON(),
             createdDate: dateHelper.fullDate(this.model.get('created_at')),
             meta: {
-                user: tempmeta.user,
-                comments: tempmeta.comments,
-                level: this.model.collection.level,
-                deletable: tempmeta.deletable
+                user: meta[id].user
             }
+        }
         };
     },
     updateCount: function () {

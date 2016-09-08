@@ -27,6 +27,7 @@ VOTE DETAIL
 .vote-body {
   /* width: calc(100% - 80px); */
   display: inline-block;
+  width: 100%;
 }
 
 .vote-header h3 {
@@ -45,6 +46,14 @@ VOTE DETAIL
   border-radius: 4px;
   margin-right: 10px;
   display: inline-block;
+}
+
+.vote-header select {
+  border:none;
+}
+
+.vote-tags {
+  color: #333;
 }
 
 .vote-control {
@@ -191,8 +200,18 @@ VOTE INDEX
   margin-top: 10px;
   display: inline-block;
 }
+.votes-item-tags {
+  color: #333;
+}
 
 .votes-item-details a {
+  color: #999999;
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 20px;
+}
+
+.votes-item-details span{
   color: #999999;
   font-size: 14px;
   font-weight: 500;

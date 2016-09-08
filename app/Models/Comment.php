@@ -53,10 +53,6 @@ class Comment extends Model
     /**
      * Get all of the notifications that are assigned this comment.
      */
-    public function notifications()
-    {
-        return $this->morphToMany(Notification::class, 'notificationable');
-    }
 
     /**
      * @return mixed

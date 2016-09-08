@@ -23,6 +23,16 @@ var cfg = {
     prod: !!util.env.prod
 };
 
+var customConfig = './resources/assets/js/app/config/config.custom.js';
+var fs = require('fs');
+
+try {
+    fs.accessSync(customConfig);
+} catch (e) {
+    var content = 'module.exports = {};';
+    fs.writeFileSync(customConfig, content);
+}
+
 gulp.task('clean', function () {
     return del([
         'public/css/*',
@@ -70,13 +80,14 @@ gulp.task('js', function () {
         entries: './resources/assets/js/app/app.js',
         debug: true
     };
-    var appConfig = './resources/assets/js/app/config/debug/config.js';
+    var appConfig = './resources/assets/js/app/config/config.dev.js';
     if (cfg.prod) {
-        appConfig = './resources/assets/js/app/config/prod/config.js';
+        appConfig = './resources/assets/js/app/config/config.prod.js';
         browserifyOpt.debug = false;
     }
     var b = browserify(browserifyOpt)
-        .require(appConfig, {expose: 'config'});
+        .require('./resources/assets/js/app/config/common.js', {expose: 'config'})
+        .require(appConfig, {expose: 'configBuild'});
 
     return b.bundle()
         .pipe(source('bundle.js'))

@@ -11,6 +11,7 @@ use App\Http\Requests\CommentsRequest;
 use App\Models\Topic;
 use App\Http\Requests;
 use Illuminate\Database\Eloquent\Collection;
+use App\Events\NewBroadcastCommentEvent;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Gate;
 use Illuminate\Support\Facades\Auth;
@@ -18,22 +19,6 @@ use Illuminate\Support\Facades\DB;
 
 class CommentController extends ApiController
 {
-    /**
-     * @param $commentable
-     * @return mixed
-     */
-    protected function getCommentsCollection($commentable, $order = 'asc')
-    {
-        if(Auth::user()->isAdmin()) {
-            $comments = $commentable->comments()->withTrashed()->orderBy('id', $order)->get();
-        } else {
-            $comments = $commentable->comments()->orderBy('id', $order)->get();
-        }
-
-        return $comments;
-
-    }
-
     /**
      * @param Comment $comment
      * @return bool
@@ -318,6 +303,15 @@ class CommentController extends ApiController
     {
         $comment = Comment::create($request->all());
         $comment = $vote->comments()->save($comment);
+
+        $user = $comment->user()->first();
+
+        event(new NewBroadcastCommentEvent($comment, [
+            $comment->id => [
+                'user' => $user
+            ]
+        ]));
+
         event(new VoteNewCommentEvent($vote, $comment));
         return $this->setStatusCode(201)->respond($comment, $this->getMetaDataForModel($comment));
     }
