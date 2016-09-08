@@ -7,3 +7,10 @@
 .dashboard .messages .messages-msg-avatar {
   display: none;
 }
+.dashboard .votes .votes-item {
+  min-height: 110px;
+  height: auto;
+}
+.dashboard .users .users-item-credential {
+  overflow: hidden;
+}
