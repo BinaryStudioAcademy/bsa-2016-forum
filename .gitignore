@@ -17,3 +17,6 @@ composer.lock
 /public/fonts/
 storage/debugbar/
 _ide_helper.php
+redis-stable/
+/resources/assets/js/app/config/config.custom.js
+

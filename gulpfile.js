@@ -70,13 +70,14 @@ gulp.task('js', function () {
         entries: './resources/assets/js/app/app.js',
         debug: true
     };
-    var appConfig = './resources/assets/js/app/config/debug/config.js';
+    var appConfig = './resources/assets/js/app/config/config.dev.js';
     if (cfg.prod) {
-        appConfig = './resources/assets/js/app/config/prod/config.js';
+        appConfig = './resources/assets/js/app/config/config.prod.js';
         browserifyOpt.debug = false;
     }
     var b = browserify(browserifyOpt)
-        .require(appConfig, {expose: 'config'});
+        .require('./resources/assets/js/app/config/common.js', {expose: 'config'})
+        .require(appConfig, {expose: 'configBuild'});
 
     return b.bundle()
         .pipe(source('bundle.js'))
