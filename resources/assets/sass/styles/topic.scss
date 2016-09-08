@@ -262,6 +262,11 @@ TOPIC DETAILS
   display: flex;
   margin-bottom: 20px;
 }
+.topic-count {
+  text-decoration: none;
+  text-transform: lowercase;
+  color: #54dea0;
+}
 
 .post-item {
   width: 100%;
