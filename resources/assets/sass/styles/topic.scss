@@ -25,6 +25,15 @@ NEW TOPIC VIEW STYLES
   font-size: 16px;
   font-weight: 400;
 }
+.topic-new-slug input {
+  width: 100%;
+  padding: 10px 15px;
+  background-color: #E9E9E9;
+  border: none;
+  color: #555;
+  font-size: 16px;
+  font-weight: 400;
+}
 .topic-new-body textarea {
   resize: vertical;
   width: 100%;

@@ -29,6 +29,8 @@ class VotesRequest extends ApiRequest
             'is_public' => 'integer|between:0,1',
             'is_saved' => 'integer|between:0,1',
             'tags' => 'json',
+            'users' => 'json',
+            'tags' => 'json|tags_validator',
         ];
     }
 
@@ -37,7 +39,8 @@ class VotesRequest extends ApiRequest
         return [
             'user_id.required' => 'User ID is required',
             'user_id.is_current_user' => 'User not is authorized',
-            'title.required'  => 'Title is required',
+            'title.required' => 'Title is required',
+            'tags.tags_validator' => 'Format of field tags is incorrect'
         ];
     }
 }
