@@ -14,7 +14,7 @@ module.exports = {
                 '': 'indexCategories',
                 'topics': 'index',
                 'topics/:id': 'show',
-                'topic/create': 'create',
+                'topic/create/:categoryId': 'create',
                 'categories/:catId/topics': 'indexInCategory',
                 'topicCategories': 'indexCategories'
             },

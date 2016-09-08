@@ -15,6 +15,17 @@ module.exports = Marionette.LayoutView.extend({
         this.container.show(new topicCollection({
             collection: this.collection
         }));
-    }
+    },
 
+    serializeData: function () {
+        if (this.options.categoryId) {
+            var catId = this.options.categoryId;
+        } else {
+            var catId = 0;
+        }
+
+        return {
+            categoryId: catId
+        }
+    }
 });
