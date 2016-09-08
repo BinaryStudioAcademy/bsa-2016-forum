@@ -236,6 +236,9 @@ class VoteController extends ApiController
         $response = ['checked' => true];
         if ($vote->is_single) {
             $results = $vote->voteResults()->where('user_id', $user->id)->get();
+            if(count($results) > 1) {
+                $vote->voteResults()->where('user_id', $user->id)->delete();
+            }
             if (count($results) == 1) {
                 $model = $results->first();
                 $model->voteItem()->associate($voteItem);
@@ -246,8 +249,6 @@ class VoteController extends ApiController
                 $model->vote()->associate($vote);
                 $model->vote_item_id = $request->vote_item_id;
                 $model->save();
-            } else {
-                return $this->setStatusCode(400)->respond(['error' => 'Count of results is not equal 1, it is: ' . count($results)]);
             }
         } else {
             $model = $vote->voteResults()->where('user_id', $user->id)->where('vote_item_id',
