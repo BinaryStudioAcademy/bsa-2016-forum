@@ -17,6 +17,14 @@ class TopicController extends ApiController
 {
     protected $searchStr = null;
 
+    private function getTopicModel($id) {
+        if (is_numeric($id) === false) {
+            return  Topic::where('slug', '=', $id)->firstOrFail();
+        }
+
+        return Topic::findOrFail($id);
+    }
+
     /**
      * @param Topic $topic
      * @return array
@@ -32,6 +40,10 @@ class TopicController extends ApiController
                 ->where('user_id', Auth::user()->id)->first();
         }
 
+        // requires common standards in the future
+        $data[$topic->id] = [
+            'subscription' => $topic->subscription(Auth::user()->id)
+        ];
 
         return $data;
 
@@ -47,7 +59,7 @@ class TopicController extends ApiController
         $data = [];
 
         foreach ($topics as $topic) {
-            $data = array_merge_recursive($data, $this->getMetaDataForModel($topic));
+            $data += $this->getMetaDataForModel($topic);
         }
 
         return $data;
@@ -126,7 +138,7 @@ class TopicController extends ApiController
      */
     public function show($id)
     {
-        $topic = Topic::findOrFail($id);
+        $topic = $this->getTopicModel($id);
         $topic->tags = $topic->tags()->get();
         $meta = $this->getMetaDataForModel($topic);
 
@@ -143,15 +155,14 @@ class TopicController extends ApiController
      */
     public function update($id, TopicRequest $request)
     {
-        $topic = Topic::findOrFail($id);
+        $topic = $this->getTopicModel($id);
 
         $this->authorize('update', $topic);
 
         $topic->update($request->all());
-        if ($request->tags) {
-            TagService::TagsHandler($topic, $request->tags);
-        }
 
+        TagService::TagsHandler($topic, $request->tags);
+        
         $topic->tags = $topic->tags()->get();
         return $this->setStatusCode(200)->respond($topic);
     }
@@ -165,7 +176,7 @@ class TopicController extends ApiController
      */
     public function destroy($id)
     {
-        $topic = Topic::findOrFail($id);
+        $topic = $this->getTopicModel($id);
 
         $this->authorize('delete', $topic);
 
