@@ -8,6 +8,15 @@ var dateHelper = {
         return moment.utc(date).tz(config.timeZone).format('YYYY-MM-DD HH:mm:ss')
     },
 
+    dateWithoutTimezone: function(date) {
+        if (_.isEmpty(date)) return '';
+        return moment(date).format('YYYY-MM-DD HH:mm:ss')
+    },
+    
+    getDateTimeDiff: function (date) {
+        return moment().diff(this.dateWithoutTimezone(date), 'minute');
+    },
+
     shortDate: function(date) {
         if (_.isEmpty(date)) return '';
         return moment.utc(date).tz(config.timeZone).format('DD.MM.YYYY')
@@ -34,6 +43,19 @@ var dateHelper = {
         }
 
         return moment(then, 'x').fromNow();
+    },
+
+    isTimePassed: function (date, interval) {
+        if (_.isEmpty(date)) {
+            return false;
+        }
+        var now = moment.utc();
+        var createdAt = moment.utc(date);
+        return !((now - createdAt) <= interval);
+    },
+
+    minutesToMilliseconds: function (minutes) {
+        return minutes * 60 * 1000;
     }
 };
 
