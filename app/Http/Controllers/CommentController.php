@@ -263,7 +263,7 @@ class CommentController extends ApiController
         $comments = $vote->comments()->orderBy('created_at', 'desc')->paginate(3);
         $meta = $this->makeCommentsMeta($comments);
 
-        return $this->setStatusCode(200)->respond($comments, $meta);
+        return $this->setStatusCode(200)->respond($comments->all(), $meta);
     }
 
     /**
