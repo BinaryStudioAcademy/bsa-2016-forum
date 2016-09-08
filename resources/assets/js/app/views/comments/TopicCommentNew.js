@@ -64,8 +64,6 @@ module.exports = Marionette.ItemView.extend({
 
         var view = this;
 
-        debugger;
-
         this.model.save(data, {
             success: function (model) {
                 if (view._dropZone && view._dropZone.files.length) {
@@ -73,8 +71,13 @@ module.exports = Marionette.ItemView.extend({
                     view._dropZone.processQueue();
                 }
 
-                Radio.channel('сommentCollection').trigger('addComment', model);
+                //Radio.channel('сommentCollection').trigger('addComment', model);
                 view.ui.commentDlg.modal('hide');
+
+                if (view.options.commentCollection) {
+                    view.options.commentCollection.add(model);
+                }
+
                 //Radio.channel('cent').trigger('addChildComment', view.options.childCommentsCollection, model);
             },
 
@@ -83,6 +86,8 @@ module.exports = Marionette.ItemView.extend({
                 view.showLoader(false);
                 view.ui.errors.empty().append(response.responseText);
             },
+
+            wait: true
         });
     },
 
@@ -173,6 +178,8 @@ module.exports = Marionette.ItemView.extend({
                 view.ui.errors.text(response.responseText);
                 view.showErrors(true);
             },
+
+            wait: true
         });
     },
 
@@ -189,7 +196,7 @@ module.exports = Marionette.ItemView.extend({
         var attachs = [];
         var id = this.model.get('id');
         if (!id) return;
-        console.log(this.model.getMeta());
+        //console.log(this.model.getMeta());
         if (!this.model.getMeta()) {
             attachs = this.options.attachs.toJSON();
         }

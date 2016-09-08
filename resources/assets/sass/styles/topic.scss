@@ -83,10 +83,8 @@ TOPIC DETAILS
 }
 
 .topic-comment-item {
-  background: #fff;
   border: 1px solid #EEEEEE;
-  //box-shadow: 0 2px 2px rgba(0,0,0,0.1);
-  margin: 20px 0;
+  margin-bottom: 20px;
 }
 
 .topic-comment-main {
@@ -96,6 +94,8 @@ TOPIC DETAILS
 .topic-comment-included {
   padding-left: 60px;
   padding-right: 15px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .topic-comment-flex {
@@ -305,10 +305,4 @@ TOPIC DETAILS
 }
 .topic-control .childs-btn {
   padding: 10px;
-}
-.topic-comment-childs {
-  padding: 5px 0;
-}
-.topic-comment-childs .topic-comment-item {
-    border-color: #ffa500;
 }

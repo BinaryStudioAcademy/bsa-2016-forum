@@ -6,7 +6,6 @@ module.exports = baseModel.extend({
 
     validate: function (attrs, options) {
         //logger('validate topic comment model', attrs);
-
         var error = {
             message: [],
         };
@@ -16,5 +15,9 @@ module.exports = baseModel.extend({
         }
 
         if (error.message.length) return error;
+    },
+
+    isChildComment: function() {
+        return this.get('commentable_type') === "App\\Models\\Comment";
     }
 });

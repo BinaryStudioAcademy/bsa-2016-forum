@@ -73,8 +73,9 @@ module.exports = Marionette.Object.extend({
             var model = {}, attachCollection = {}, childComments = {};
 
             if (commentModel) {
-                model = new TopicCommentModel(commentModel.toJSON());
-                //model = commentModel;
+                //model = new TopicCommentModel(commentModel.toJSON());
+                //model.setMeta(commentModel.getMeta());
+                model = commentModel;
                 model.parentUrl = _.result(commentModel, 'getParentUrl');
                 var modelAttachs = commentModel.getMeta()[commentModel.get('id')].attachments;
                 attachCollection = new AttachmentCollection(modelAttachs);
@@ -84,23 +85,18 @@ module.exports = Marionette.Object.extend({
                 attachCollection = new AttachmentCollection();
             }
 
-            //console.log(model);
-            //childComments = parentView._childs;
-            //console.log(childComments, model);
+            //console.log(model, 'model');
+            //console.log(parentView.collection);
 
             view.getRegion('newComment').show(new NewTopicCommentView({
                 model: model,
                 attachs: attachCollection,
-                //parentView: parentView,
-                //childCommentsCollection: childComments
+                commentCollection: parentView.collection
             }));
         });
 
         view.listenTo(Radio.channel('comment'), 'showChildComments', function (commentItemView) {
             var childs = new CommentsCollection();
-
-            //console.log(commentItemView, 'childs');
-
             childs.parentUrl = _.result(commentItemView.model, 'getEntityUrl');
             childs.fetch({
                 success: function () {
@@ -111,11 +107,6 @@ module.exports = Marionette.Object.extend({
                 collection: childs
             }));
         });
-
-        //view.listenTo(Radio.channel('cent'), 'addChildComment', function (collection, model) {
-        //    console.log(collection, model);
-        //    collection.add(model);
-        //});
 
         app.render(view);
     },

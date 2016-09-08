@@ -3,17 +3,10 @@ var _ = require('underscore');
 var logger = require('../../instances/logger');
 var Radio = require('backbone.radio');
 var currentUser = require('../../initializers/currentUser');
-var ChildCommentsCollection = require('../../collections/TopicCommentsCollection');
-var ChildCommentsView = require('./TopicCommentNew');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'TopicCommentItem',
     _childUpload: false,
-
-    initialize: function () {
-        //this._childs = new ChildCommentsCollection();
-        //this._childs.parentUrl = _.result(this.model, 'getEntityUrl');
-    },
 
     regions: {
         'attachments': '.attachs',
@@ -24,11 +17,15 @@ module.exports = Marionette.LayoutView.extend({
         'answer': '.answer-btn',
         'edit': '.comment-edit-btn',
         'remove': '#removeBtn',
-        'showChilds': '.btn-childs'
+        'showChilds': '.btn-childs',
+        'errors': '.errors'
     },
 
     events: {
         'click @ui.answer': function (event) {
+            if (this._childUpload) {
+                this.collection = this.getRegion('childComments').currentView.collection;
+            }
             Radio.channel('comment').trigger('addComment', this);
         },
 
@@ -43,19 +40,18 @@ module.exports = Marionette.LayoutView.extend({
             this.model.parentUrl = this.model.collection.parentUrl;
             this.model.destroy({
                 error: function (model, response) {
-                    this.$('.errors').text(response.responseText);
-                },
+                    //this.ui.errors.text(response.responseText).show();
+                    console.error(response.responseText);
+                }.bind(this),
+                wait: true
             });
         },
 
         'click @ui.showChilds': function (event) {
             event.preventDefault();
+            if (this._childUpload) return;
             Radio.channel('comment').trigger('showChildComments', this);
         },
-    },
-
-    childCommentsBtnIcon: function () {
-        this.ui.showChilds.find('span').toggleClass('glyphicon-chevron-down').toggleClass('glyphicon-chevron-up');
     },
 
     attachmentThumb: function (attachs) {
@@ -81,6 +77,7 @@ module.exports = Marionette.LayoutView.extend({
                 likes: meta[id].likes,
                 attachments: meta[id].attachments,
                 comments: meta[id].comments,
+                canReply: !this.model.isChildComment(),
                 isUserComment: currentUser.get('id') === meta[id].user.id
             }
         };
@@ -88,11 +85,5 @@ module.exports = Marionette.LayoutView.extend({
 
     modelEvents: {
         'change': 'render',
-        'destroy': 'modelDestroy'
     },
-
-    modelDestroy: function (model) {
-        console.log(model, 'destroy model');
-        //this.render();
-    }
 });

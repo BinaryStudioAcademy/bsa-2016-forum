@@ -21,6 +21,10 @@ module.exports = Backbone.Model.extend({
         return (_.result(this, '_meta')) || _.result(this.collection, '_meta');
     },
 
+    setMeta: function(meta) {
+        this._meta = meta;
+    },
+
     sync: function (method, model, options) {
         if (!options.url) {
             options.url = this._getRequestUrl(model);
