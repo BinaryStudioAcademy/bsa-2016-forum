@@ -9,4 +9,9 @@ class Subscription extends Model
     public static $name = 'subscription';
     protected $hidden = ['updated_at', 'user_id'];
     protected $fillable = ['subscription_id', 'subscription_type'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var Marionette = require('backbone.marionette');
 var app = require('../instances/appInstance');
 var topicLayout = require('../views/topics/topicLayout');
@@ -40,13 +41,10 @@ module.exports = Marionette.Object.extend({
         app.render(new TopicCreate({model: topicModel, collection: topicCategoryCollection}));
     },
 
-    show: function (id) {
-        var topicModel = new TopicModel({id: id});
-        topicModel.fetch({
-            success: function () {
-                app.render(new TopicDetailView({model: topicModel}));
-            }
-        });
+    show: function (slug)  {
+        var topicModel = new TopicModel({slug: slug});
+        topicModel.fetchBySlag();
+        app.render(new TopicDetailView({model: topicModel}));
     },
 
     myTopics: function () {

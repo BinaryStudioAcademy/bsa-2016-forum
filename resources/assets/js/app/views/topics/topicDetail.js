@@ -18,6 +18,10 @@ module.exports = Marionette.ItemView.extend({
         'click @ui.bookmarkTopic': 'bookmarkTopic'
     },
 
+    modelEvents: {
+        'change' : 'render'
+    },
+
     behaviors: {
         SubscribeBehavior: {
             behaviorClass: SubscribeBehavior,
@@ -52,12 +56,14 @@ module.exports = Marionette.ItemView.extend({
     onRender: function () {
         var meta = this.model.getMeta();
 
-        if (meta.bookmark) {
-            this.model.bookmarkId = meta.bookmark[this.model.get('id')].id;
-        }
+        if (meta && meta.hasOwnProperty("bookmark")) {
+            if (meta.bookmark) {
+                this.model.bookmarkId = meta.bookmark[this.model.get('id')].id;
+            }
 
-        if (this.model.bookmarkId) {
-            this.addOkBookmarkIcon();
+            if (this.model.bookmarkId) {
+                this.addOkBookmarkIcon();
+            }
         }
     },
 

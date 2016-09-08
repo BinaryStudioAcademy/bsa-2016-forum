@@ -12,5 +12,9 @@ module.exports = baseModel.extend({
         if (!_.isEmpty(errors)) {
             return errors;
         }
+    },
+    fetchBySlag: function () {
+        var url = _.result(this, '_getRequestUrl') + '/' + this.get('slug');
+        return this.fetch({url: url});
     }
 });
