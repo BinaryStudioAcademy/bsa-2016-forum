@@ -8,23 +8,25 @@ module.exports = function (grunt) {
             dev: {
                 options: {
                     alias: {
-                        'config': './resources/assets/js/app/config/debug/config.js'
+                        'configBuild': './resources/assets/js/app/config/config.dev.js',
+                        'config' : './resources/assets/js/app/config/common.js'
                     },
                     browserifyOptions: {
                         debug: true
                     }
                 },
                 src: 'resources/assets/js/app/app.js',
-                dest: 'public/js/bundle.js',
+                dest: 'public/js/bundle.js'
             },
             prod: {
                 options: {
                     alias: {
-                        'config': './resources/assets/js/app/config/prod/config.js'
+                        'configBuild': './resources/assets/js/app/config/config.prod.js',
+                        'config' : './resources/assets/js/app/config/common.js'
                     }
                 },
                 src: 'resources/assets/js/app/app.js',
-                dest: 'public/js/bundle.js',
+                dest: 'public/js/bundle.js'
             }
         },
 
@@ -67,7 +69,7 @@ module.exports = function (grunt) {
                     'public/css/styles.css': 'resources/assets/sass/index.scss',
                     'public/css/font-size-icons.css': 'resources/assets/sass/styles/font-size-icons/font-awesome.scss',
                 }
-            },
+            }
         },
 
         uglify: {
@@ -102,6 +104,14 @@ module.exports = function (grunt) {
             }
         }
     });
+
+    var customConfig = './resources/assets/js/app/config/config.custom.js';
+    var isFileExist = grunt.file.exists(customConfig);
+    if (!isFileExist) {
+        var content = 'module.exports = {};';
+        grunt.file.write(customConfig, content);
+    }
+
 
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');

@@ -96,6 +96,15 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
             'destroy' => 'voteItems.destroy'
         ]
     ]);
+    /*Routes for Subscription */
+    Route::resource('users/{user}/subscriptions', 'SubscriptionController', [
+        'except' => ['edit', 'create', 'show', 'update'],
+        'names' => [
+            'index' => 'subscriptions.index',
+            'store' => 'subscriptions.store',
+            'destroy' => 'subscriptions.destroy'
+        ]
+    ]);
 
     /*Routes for bookmarks*/
     Route::group(['prefix' => 'bookmarks'], function () {

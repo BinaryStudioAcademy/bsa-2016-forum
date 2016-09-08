@@ -3,6 +3,9 @@ var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
 var $ = require('jquery');
+var logger = require('../../instances/logger');
+var _ = require('underscore');
+var SubscribeBehavior = require('../subscribeBehavior');
 
 var TopicAddLikeModel = require('../../models/TopicAddLikeModel');
 var TopicRemoveLikeModel = require('../../models/TopicRemoveLikeModel');
@@ -14,6 +17,7 @@ module.exports = Marionette.ItemView.extend({
 
     ui: {
         bookmarkTopic: '.bookmark-btn',
+        subscribeNotification: '.subscribe-btn'
         addLikeTopic: '.fa-star-o',
         removeLikeTopic: '.fa-star'
     },
@@ -25,6 +29,14 @@ module.exports = Marionette.ItemView.extend({
     },
 
     modelEvents: { change: 'render' },
+
+    behaviors: {
+        SubscribeBehavior: {
+            behaviorClass: SubscribeBehavior,
+            parent_url: _.result(currentUser, 'url'),
+            target_type: 'Topic'
+        }
+    },
 
     unlockButton: function () {
         this.ui.bookmarkTopic.removeAttr('disabled');

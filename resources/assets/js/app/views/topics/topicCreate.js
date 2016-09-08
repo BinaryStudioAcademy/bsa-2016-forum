@@ -49,7 +49,7 @@ module.exports = Marionette.LayoutView.extend({
             e.preventDefault();
             this.model.save({}, {
                 success: function (model, response) {
-                    Backbone.history.navigate('topics/' + model.get('id'), {trigger: true});
+                    Backbone.history.navigate('topics/' + model.get('slug'), {trigger: true});
                 }
             });
         }
