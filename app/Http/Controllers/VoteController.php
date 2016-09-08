@@ -31,6 +31,8 @@ class VoteController extends ApiController
 
         if ($request->page) {
             $paginationObject = Vote::filterByQuery($this->searchStr)
+                ->newOnTop()
+                ->checkOnIsSaved()
                 ->filterByTags($this->tagIds)
                 ->paginate(15);
             $votes = $paginationObject->getCollection();
@@ -53,6 +55,22 @@ class VoteController extends ApiController
         $this->searchStr = $request->get('query');
         $tagIds = $request->get('tag_ids');
         $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+    }
+
+    /**
+     * @param Collection $votes
+     * @return array
+     */
+    private function getMetaDataForCollection(Collection $votes)
+    {
+        $data = [];
+
+        foreach ($votes as $vote) {
+
+            $data += $this->getMetaDataForModel($vote);
+        }
+
+        return $data;
     }
 
     private function getMetaDataForModel(Vote $vote)
@@ -81,25 +99,11 @@ class VoteController extends ApiController
                 'usersWhoSaw' => $usersWhoSaw
             ];
 
-        return $data;
-    }
-
-    /**
-     * @param Collection $votes
-     * @return array
-     */
-    private function getMetaDataForCollection(Collection $votes)
-    {
-        $data = [];
-
-        foreach ($votes as $vote) {
-
-            $data += $this->getMetaDataForModel($vote);
+        if (!$vote->is_saved && $vote->canBeEdited()) {
+            $data[$vote->id]['status'] = ' (Not saved)';
         }
-
         return $data;
     }
-
 
     /**
      * @param VotesRequest $request
@@ -111,8 +115,33 @@ class VoteController extends ApiController
         if ($request->tags) {
             TagService::TagsHandler($vote, $request->tags);
         }
-        $vote->tags = $vote->tags()->get();
+        if ($vote->is_public) {
+            $vote->votePermissions()->delete();
+        } elseif ($request->users) {
+            $this->VotePermissionsHandler($vote, $request->users);
+        }
+
         return $this->setStatusCode(201)->respond($vote);
+    }
+
+    /**
+     * @param $vote
+     * @param $users
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function VotePermissionsHandler($vote, $users)
+    {
+        $users = json_decode($users);
+
+        $vote->votePermissions()->whereNotIn('user_id', $users)->delete();
+
+        $permissions = $vote->votePermissions()->get();
+
+        foreach ($users as $user_id) {
+            if (!$permissions->contains('user_id', $user_id)) {
+                $vote->votePermissions()->create(['user_id' => $user_id]);
+            }
+        }
     }
 
     /**
@@ -154,15 +183,19 @@ class VoteController extends ApiController
     public function update(VotesRequest $request, $id)
     {
         $vote = Vote::findOrFail($id);
-
         $this->authorize('update', $vote);
 
         $vote->update($request->all());
-        $vote = Vote::findOrfail($id);
+        $vote->save();
+        if ($request->tags) {
+            TagService::TagsHandler($vote, $request->tags);
+        }
+        if ($vote->is_public) {
+            $vote->votePermissions()->forceDelete();
+        } elseif ($request->users) {
+            $this->VotePermissionsHandler($vote, $request->users);
+        }
 
-        TagService::TagsHandler($vote, $request->tags);
-
-        $vote->tags = $vote->tags()->get();
         return $this->setStatusCode(200)->respond($vote);
     }
 
@@ -201,6 +234,7 @@ class VoteController extends ApiController
         $this->setFiltersParameters($request);
         $votes = $user->votes()
             ->getQuery()
+            ->newOnTop()
             ->filterByQuery($this->searchStr)
             ->filterByTags($this->tagIds)
             ->get();

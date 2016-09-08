@@ -2,12 +2,19 @@ var app = require('../instances/appInstance');
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var currentUser = require('../initializers/currentUser');
+
+var VoteAImodel = require('../models/VoteAImodel');
 var VoteModel = require('../models/VoteModel');
 var CommentModel = require('../models/CommentModel');
+var UserModel = require('../models/UserModel');
+
+var usersCollection = require('../collections/userCollection');
 var CommentsCollection = require('../collections/commentCollection');
 var VoteAICollection = require('../collections/voteAICollection');
 var ListVotes = require('../views/votes/ListVotes');
 var ShowVote = require('../views/votes/ShowVote');
+var CreateVote = require('../views/votes/CreateVote');
+
 var Votes = require('../instances/Votes');
 
 var voteCollection = require('../collections/voteCollection');
@@ -60,6 +67,32 @@ module.exports = Marionette.Object.extend({
 
         app.render(view);
 
+    },
+    createVote: function () {
+        var VoteAnswers = new VoteAICollection([{name: ''}], {parentUrl: ''});
+        var UsersCollection = new usersCollection();
+        var accessedUsers = new usersCollection();
+
+        UsersCollection.fetch();
+
+        UsersCollection.opposite = accessedUsers;
+        UsersCollection.glyph = 'plus';
+        accessedUsers.opposite = UsersCollection;
+        accessedUsers.glyph = 'minus';
+
+        var model = new VoteModel({user_id: currentUser.get('id')});
+        var view = new CreateVote({
+            model: model,
+            collection: VoteAnswers,
+            users: UsersCollection,
+            accessedUsers: accessedUsers
+        });
+
+        view.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {
+            col.add(new VoteAImodel());
+        });
+
+        app.render(view);
     },
 
     showUserVotes: function () {

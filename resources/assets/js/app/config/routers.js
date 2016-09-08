@@ -33,6 +33,8 @@ module.exports = {
             controller: new IdeaHubController(),
             appRoutes: {
                 'votes': 'index',
+                'votes/create': 'createVote',
+                
                 'votes/:id': 'showVote'
             },
             navigItemName: 'votes'
