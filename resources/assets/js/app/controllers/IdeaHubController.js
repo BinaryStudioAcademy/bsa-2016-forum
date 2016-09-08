@@ -1,21 +1,16 @@
 var app = require('../instances/appInstance');
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
-
 var currentUser = require('../initializers/currentUser');
-
 var VoteModel = require('../models/VoteModel');
 var CommentModel = require('../models/CommentModel');
-
 var CommentsCollection = require('../collections/commentCollection');
 var VoteAICollection = require('../collections/voteAICollection');
-
 var ListVotes = require('../views/votes/ListVotes');
 var ShowVote = require('../views/votes/ShowVote');
-
 var Votes = require('../instances/Votes');
 
-var voteCollection=require('../collections/voteCollection');
+var voteCollection = require('../collections/voteCollection');
 
 module.exports = Marionette.Object.extend({
     index: function () {
@@ -23,8 +18,9 @@ module.exports = Marionette.Object.extend({
         Votes.reset();
         var view = new ListVotes({vc: Votes});
         app.render(view);
-        Votes.fetch();
+        Votes.fetch({data: {page: 1}});
     },
+
     showVote: function (id) {
         var AddCommentView = require('../views/votes/VoteCommentItemAdd');
         var view;
@@ -32,10 +28,11 @@ module.exports = Marionette.Object.extend({
         var parentUrl = '/votes/' + id;
         var myCommentsCollection = new CommentsCollection([], {parentUrl: parentUrl});
         var VoteAnswers = new VoteAICollection([], {parentUrl: parentUrl});
+
         VoteAnswers.fetch();
         myCommentsCollection.fetch({
             success: function (data) {
-                Radio.trigger('votesChannel', 'setCommentsCount', data.length);
+                Radio.trigger('votesChannel', 'setCommentsCount' + id, data.length);
             }
         });
 
@@ -65,7 +62,7 @@ module.exports = Marionette.Object.extend({
 
     },
 
-    showUserVotes: function() {
+    showUserVotes: function () {
         var parentUrl = '/users/' + currentUser.id;
         var usersVotes = new voteCollection([], {parentUrl: parentUrl});
 

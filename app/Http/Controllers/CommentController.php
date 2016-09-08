@@ -9,9 +9,10 @@ use App\Models\Vote;
 use App\Models\VoteItem;
 use App\Http\Requests\CommentsRequest;
 use App\Models\Topic;
-use App\Http\Requests;
+use App\Events\NewBroadcastCommentEvent;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Gate;
+
 class CommentController extends ApiController
 {
     /**
@@ -286,10 +287,20 @@ class CommentController extends ApiController
     {
         $comment = Comment::create($request->all());
         $comment = $vote->comments()->save($comment);
+
+        $user = $comment->user()->first();
+
+        event(new NewBroadcastCommentEvent($comment, [
+            $comment->id => [
+                'user' => $user
+            ]
+        ]));
+
         event(new VoteNewCommentEvent($vote, $comment));
+
         return $this->setStatusCode(201)->respond($comment, [
             $comment->id => [
-                'user' => $comment->user()->first()
+                'user' => $user
             ]
         ]);
     }
