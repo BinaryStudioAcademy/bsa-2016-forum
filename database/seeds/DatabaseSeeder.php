@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(SubscriptionsSeeder::class);
         $this->call(LikesSeeder::class);
+        $this->call(VoteUniqueViewSeeder::class);
 
         Model::reguard();
     }
