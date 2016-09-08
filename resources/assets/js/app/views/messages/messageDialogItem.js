@@ -18,17 +18,27 @@ module.exports = Marionette.ItemView.extend({
         'mouseleave @ui.msgFrom' : 'mouseleaveMsgFrom',
     },
     clickedDeleteMessage: function () {
+        if (dateHelper.isTimePassed(this.model.get('created_at'),
+                dateHelper.minutesToMilliseconds(config.messageChangeOnDelay))) {
+            this.ui.delete.addClass('invisible');
+            this.ui.edit.addClass('invisible');
+            return;
+        }
         Radio.channel('messagesChannel').trigger('deleteMessage', this.model);
     },
 
     clickedEditMessage: function () {
+        if (dateHelper.isTimePassed(this.model.get('created_at'),
+                dateHelper.minutesToMilliseconds(config.messageChangeOnDelay))) {
+            this.ui.delete.addClass('invisible');
+            this.ui.edit.addClass('invisible');
+            return;
+        }
         Radio.channel('messagesChannel').trigger('editMessage', this.model);
     },
     mouseenterMsgFrom: function () {
-        var intervalMinutes = config.messageChangeOnDelay;
-        var intervalMilliseconds = intervalMinutes * 60 * 1000;
-        var createdAt = this.model.get('created_at');
-        if (!dateHelper.isTimePassed(createdAt, intervalMilliseconds)) {
+        if (!dateHelper.isTimePassed(this.model.get('created_at'),
+                dateHelper.minutesToMilliseconds(config.messageChangeOnDelay))) {
             this.ui.delete.removeClass('invisible');
             this.ui.edit.removeClass('invisible');
         }
