@@ -11,6 +11,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Collection;
 use App\Facades\TagService;
+use App\Models\Like;
 
 
 class TopicController extends ApiController
@@ -46,7 +47,29 @@ class TopicController extends ApiController
         ];
 
         return $data;
+    }
 
+    /**
+     * @param Topic $topic
+     * @return array
+     */
+    private function getLikesOfTopic(Topic $topic)
+    {
+        $topic->countOfLikes = $topic->likes()->count();
+
+        $like = $topic->likes()->where('user_id', Auth::user()->id)->first();
+        if(!empty($topic->likes()->where('user_id', Auth::user()->id)->get()->first()))
+        {
+            $topic->is_user = true;
+            $topic->like_id = $topic->likes()->where('user_id', Auth::user()->id)->get()->first()->id;
+        }
+        else
+        {
+            $topic->is_user= false;
+            $topic->like_id = null;
+        }
+
+        return $topic;
     }
 
 
@@ -63,7 +86,6 @@ class TopicController extends ApiController
         }
 
         return $data;
-
     }
 
     /**
@@ -79,6 +101,7 @@ class TopicController extends ApiController
         $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
 
         foreach ($topics as $topic) {
+            $topic=$this->getLikesOfTopic($topic);
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
         }
@@ -96,6 +119,8 @@ class TopicController extends ApiController
      */
     public function indexInCategory($catId, TopicRequest $request)
     {
+        $user = Auth::user();
+
         $this->setFiltersData($request);
 
         $topics = Topic::where('category_id', $catId)
@@ -104,10 +129,11 @@ class TopicController extends ApiController
             ->paginate(15)->getCollection();
 
         foreach ($topics as $topic) {
+            $topic=$this->getLikesOfTopic($topic);
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
+            $topic->currentUser = $user->id;
         }
-
         $meta = $this->getMetaDataForCollection($topics);
 
         return $this->setStatusCode(200)->respond($topics, $meta);
@@ -140,6 +166,8 @@ class TopicController extends ApiController
     {
         $topic = $this->getTopicModel($id);
         $topic->tags = $topic->tags()->get();
+        $topic=$this->getLikesOfTopic($topic);
+
         $meta = $this->getMetaDataForModel($topic);
 
         return $this->setStatusCode(200)->respond($topic, $meta);
@@ -164,6 +192,52 @@ class TopicController extends ApiController
         TagService::TagsHandler($topic, $request->tags);
         
         $topic->tags = $topic->tags()->get();
+        return $this->setStatusCode(200)->respond($topic);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $idTopic
+     * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
+     */
+    public function addLike($id)
+    {
+        $topic = Topic::findOrFail($id);
+
+        $user=Auth::user();
+
+        $like = new Like();
+        $like->user()->associate($user);
+
+        //User can't add like to his own topic
+        if($user->id!=$topic->user_id)
+        {
+            $topic->likes()->save($like);
+        }
+
+        return $this->setStatusCode(200)->respond($topic);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $idTopic
+     * @param  int $idLike
+     * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
+     */
+    public function removeLike($idTopic,$idLike)
+    {
+        $topic = Topic::findOrFail($idTopic);
+
+        $like = Like::findOrFail($idLike);
+
+        $user=Auth::user();
+
+        $like->delete();
+
         return $this->setStatusCode(200)->respond($topic);
     }
 
@@ -207,6 +281,7 @@ class TopicController extends ApiController
         }
 
         foreach ($topics as $topic) {
+            $topic=$this->getLikesOfTopic($topic);
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
         }
@@ -233,7 +308,6 @@ class TopicController extends ApiController
         }
 
         return $this->setStatusCode(200)->respond($topic, ['user' => $user]);
-
     }
 
     /**
@@ -247,5 +321,4 @@ class TopicController extends ApiController
         $tagIds = $request->get('tag_ids');
         $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
     }
-
 }
