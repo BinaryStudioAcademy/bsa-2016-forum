@@ -248,6 +248,8 @@ class CommentController extends ApiController
         foreach ($comments as $comment) {
             $meta[$comment->id]['user'] = $comment->user()->first();
         }
+        $meta['lastPage'] = $comments->lastPage();
+        $meta['currentPage'] = $comments->currentPage();
 
         return $meta;
     }
@@ -258,7 +260,7 @@ class CommentController extends ApiController
      */
     public function getVoteComments(Vote $vote)
     {
-        $comments = $vote->comments()->get();
+        $comments = $vote->comments()->orderBy('created_at', 'desc')->paginate(3);
         $meta = $this->makeCommentsMeta($comments);
 
         return $this->setStatusCode(200)->respond($comments, $meta);

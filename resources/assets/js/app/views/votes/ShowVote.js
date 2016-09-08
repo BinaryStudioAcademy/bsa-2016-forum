@@ -26,8 +26,7 @@ module.exports = Marionette.LayoutView.extend({
     events: {
         'click @ui.newCommentButton': 'showNewComments'
     },
-
-
+    
     initialize: function () {
         this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.options.voteModel.id, function (n) {
             this.ui.c_count.text(n);
