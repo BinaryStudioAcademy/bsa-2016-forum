@@ -13,10 +13,8 @@ var Radio = require('backbone.radio');
 var NewTopicCommentView = require('../views/comments/TopicCommentNew');
 var TopicCommentModel = require('../models/TopicCommentModel');
 var CommentsCollection = require('../collections/TopicCommentsCollection');
-var Topics = require('../instances/TopicCollection');
-var currentUser = require('../initializers/currentUser');
-var AttachmentCollection = require('../collections/AttachmentCollection');
 var CommentsCollectionView = require('../views/comments/TopicCommentsCollection');
+var currentUser = require('../initializers/currentUser');
 
 module.exports = Marionette.Object.extend({
 
@@ -69,12 +67,12 @@ module.exports = Marionette.Object.extend({
                 //model.setMeta(commentModel.getMeta());
                 model = commentModel;
                 model.parentUrl = _.result(commentModel, 'getParentUrl');
-                var modelAttachs = commentModel.getMeta()[commentModel.get('id')].attachments;
-                attachCollection = new AttachmentCollection(modelAttachs);
+                //var modelAttachs = commentModel.getMeta()[commentModel.get('id')].attachments;
+                //attachCollection = new AttachmentCollection(modelAttachs);
             } else {
                 model = new TopicCommentModel();
                 model.parentUrl = _.result(parentView.model, 'getEntityUrl');
-                attachCollection = new AttachmentCollection();
+                //attachCollection = new AttachmentCollection();
             }
 
             //console.log(model, 'model');
@@ -82,7 +80,7 @@ module.exports = Marionette.Object.extend({
 
             view.getRegion('newComment').show(new NewTopicCommentView({
                 model: model,
-                attachs: attachCollection,
+                //attachs: attachCollection,
                 commentCollection: parentView.collection
             }));
         });

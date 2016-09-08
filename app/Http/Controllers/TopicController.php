@@ -36,7 +36,8 @@ class TopicController extends ApiController
             'user' => $topic->user()->first(),
             'likes' => $topic->likes()->count(),
             'comments' => $topic->comments()->count(),
-            'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first()
+            'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
+            'subscription' => $topic->subscription(Auth::user()->id)
         ];
     }
 
@@ -66,6 +67,11 @@ class TopicController extends ApiController
 
         // requires common standards in the future
         $data[$topic->id] = [
+            'subscription' => $topic->subscription(Auth::user()->id),
+            'user' => $topic->user()->first(),
+            'likes' => $topic->likes()->count(),
+            'comments' => $topic->comments()->count(),
+            'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
             'subscription' => $topic->subscription(Auth::user()->id)
         ];
 
@@ -172,8 +178,8 @@ class TopicController extends ApiController
     {
         $topic = $this->getTopicModel($id);
         $topic->tags = $topic->tags()->get();
-        $meta = $this->getMetaDataForModel($topic);
-
+//        $meta = $this->getMetaDataForModel($topic);
+        $meta = $this->getItemMetaData($topic);
         return $this->setStatusCode(200)->respond($topic, $meta);
     }
 

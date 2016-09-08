@@ -12,7 +12,7 @@
             <h4>{{ model.name }}</h4>
         </div>
         <div class="topic-msg">
-            <p> {{ model.description }}</p>
+            <p> {{{ model.generated_description }}}</p>
         </div>
         <div class="topic-tags">
             {{#each model.tags}}
@@ -26,9 +26,9 @@
     <div class="topic-history">{{ model.created_at }} {{ meta.user.display_name }}</div>
     <div class="topic-control-btn">
         <a class="topic-edit-btn">Edit</a>
+        <a class="topic-answer-btn">Answer</a>
         <button class="bookmark-btn text-info">Bookmark</button>
-        <a class="topic-answer-btn">Reply</a>
-        <a class="topic-notification-btn">Notification</a>
+        <button class="subscribe-btn text-info">Subscribe</button>
     </div>
 </div>
 

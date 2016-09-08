@@ -3,6 +3,7 @@ var _ = require('underscore');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
+var SubscribeBehavior = require('../subscribeBehavior');
 var logger = require('../../instances/logger');
 
 module.exports = Marionette.ItemView.extend({
@@ -36,7 +37,8 @@ module.exports = Marionette.ItemView.extend({
 
     ui: {
         bookmarkTopic: '.bookmark-btn',
-        icon: '.bookmarked'
+        icon: '.bookmarked',
+        subscribeNotification: '.subscribe-btn',
     },
 
     events: {
@@ -55,19 +57,29 @@ module.exports = Marionette.ItemView.extend({
         this.ui.bookmarkTopic.addClass('text-muted');
     },
 
-    addOkIcon: function () {
+    addOkBookmarkIcon: function () {
         this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
     },
 
     onRender: function () {
         var meta = this.model.getMeta();
-        if (!meta) return;
-        if (meta.bookmark) {
-            this.model.bookmarkId = meta.bookmark.id;
-        }
 
-        if (this.model.bookmarkId) {
-            this.addOkIcon();
+        if (meta && meta.hasOwnProperty("bookmark")) {
+            if (meta.bookmark) {
+                this.model.bookmarkId = meta.bookmark[this.model.get('id')].id;
+            }
+
+            if (this.model.bookmarkId) {
+                this.addOkBookmarkIcon();
+            }
+        }
+    },
+
+    behaviors: {
+        SubscribeBehavior: {
+            behaviorClass: SubscribeBehavior,
+            parent_url: _.result(currentUser, 'url'),
+            target_type: 'Topic'
         }
     },
 
@@ -85,7 +97,7 @@ module.exports = Marionette.ItemView.extend({
             bookmark.destroy({
                 success: function () {
                     that.unlockButton();
-                    that.ui.icon.remove();
+                    that.$('i.bookmarked').remove();
                     that.model.bookmarkId = undefined;
                 },
                 error: function (response, xhr) {
@@ -94,7 +106,7 @@ module.exports = Marionette.ItemView.extend({
                         errorMsg += index + ': ' + value;
                     });
 
-                    alert(errorMsg);
+                    logger(errorMsg);
                 }
             });
 
@@ -106,7 +118,7 @@ module.exports = Marionette.ItemView.extend({
                 success: function (response) {
                     that.model.bookmarkId = response.id;
                     that.unlockButton();
-                    that.addOkIcon();
+                    that.addOkBookmarkIcon();
                 },
                 error: function (response, xhr) {
                     var errorMsg = '';
@@ -119,5 +131,4 @@ module.exports = Marionette.ItemView.extend({
             });
         }
     }
-
 });
