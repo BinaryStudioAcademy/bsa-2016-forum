@@ -80,7 +80,7 @@ module.exports = Marionette.Object.extend({
         accessedUsers.opposite = UsersCollection;
         accessedUsers.glyph = 'minus';
 
-        var model = new VoteModel();
+        var model = new VoteModel({user_id: currentUser.get('id')});
         var view = new CreateVote({
             model: model,
             collection: VoteAnswers,

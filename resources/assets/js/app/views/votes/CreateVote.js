@@ -15,9 +15,6 @@ var userCollectionView = require('../users/userCollection');
 module.exports = Marionette.LayoutView.extend({
     className: 'well',
     template: 'voteCreateLayout',
-    initialize: function () {
-        this.model.set({user_id: currentUser.get('id')});
-    },
     regions: {
         answers: '#vote-answers',
         voteAcessedUsers: '#vote-access-users',
@@ -33,7 +30,8 @@ module.exports = Marionette.LayoutView.extend({
         isPublic: 'input[name=access]',
         finished: '#finished',
         dateerrors: '.js-date-errors',
-        isSingle: 'input[name=isSingle]'
+        isSingle: 'input[name=isSingle]',
+        selectAccessedUsersBlock: '.vote-new-access'
     },
     modelEvents: {
         'invalid': function (model, errors) {
@@ -69,7 +67,7 @@ module.exports = Marionette.LayoutView.extend({
         'click @ui.isPublic': function () {
             this.saveModel({is_public: this.ui.isPublic.filter(':checked').val()});
             if (this.ui.isPublic.prop('checked')) {
-                this.$('.vote-new-access').hide();
+                this.ui.selectAccessedUsersBlock.hide();
             } else
                 this.$('.vote-new-access').show();
         },
@@ -85,10 +83,9 @@ module.exports = Marionette.LayoutView.extend({
         }
     },
     onRender: function () {
-        var self = this;
         this.getRegion('answers').show(new CreateVoteItemCollection({
             collection: this.collection,
-            parent: self.model
+            parent: this.model
         }));
 
         this.getRegion('voteNotAccessedUsers').show(new userCollectionView({

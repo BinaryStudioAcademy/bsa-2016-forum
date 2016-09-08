@@ -31,6 +31,8 @@ class VoteController extends ApiController
 
         if ($request->page) {
             $paginationObject = Vote::filterByQuery($this->searchStr)
+                ->newOnTop()
+                ->checkOnIsSaved()
                 ->filterByTags($this->tagIds)
                 ->paginate(15);
             $votes = $paginationObject->getCollection();
@@ -97,7 +99,7 @@ class VoteController extends ApiController
                 'usersWhoSaw' => $usersWhoSaw
             ];
 
-        if ($vote->is_saved == 0 && $vote->canBeEdited()) {
+        if (!$vote->is_saved && $vote->canBeEdited()) {
             $data[$vote->id]['status'] = ' (Not saved)';
         }
         return $data;

@@ -36,6 +36,7 @@ module.exports = Marionette.ItemView.extend({
                 likes: tempmeta[id].likes,
                 comments: tempmeta[id].comments,
                 tags: tempmeta[id].tags,
+                status: tempmeta[id].status,
                 days_ago:tempmeta[id].days_ago,
                 hasMorePages:tempmeta.hasMorePages,
                 numberOfUniqueViews: tempmeta[id].numberOfUniqueViews,
