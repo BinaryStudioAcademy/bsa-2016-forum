@@ -15,23 +15,47 @@ io = io.listen(config.socketPort);
 console.log("Bind to port: " + config.socketPort);
 
 try {
-    redis.subscribe('messagesChannel', function(err, count) {
-    });
-    
+    redis.subscribe('messagesChannel', 'commentsChannel', function(err, count) {});
+
     console.log("Subscribe to redis success");
 } catch (e) {
     console.log(e.message);
 }
 
 redis.on('message', function(channel, eventData) {
-    eventData = JSON.parse(eventData);
+    var eventData = JSON.parse(eventData);
 
-    var message = JSON.parse(eventData.data.message);
-    var socketId = users.getSocketId(message.user_to_id);
+    switch (channel) {
+        case 'commentsChannel':
+            commentsLoad();
+            break;
+        case 'messagesChannel':
+            messagesLoad();
+            break;
+    }
 
-    if (io.sockets.sockets[socketId]) {
-        io.sockets.sockets[socketId].emit(eventData.data.socketEvent, message);
-        console.log("Message for user id: " + message.user_to_id);
+    function commentsLoad () {
+        var comment = JSON.parse(eventData.data.comment);
+        var meta = JSON.parse(eventData.data.meta);
+        comment.user = meta[comment.id].user;
+
+        var commentType = comment.commentable_type.split('\\');
+        commentType = commentType[commentType.length-1];
+        var channelName = commentType + 'Comments' + comment.commentable_id;
+
+        io.sockets.emit(channelName, comment);
+        console.log("Comment from user id: " + comment.user_id +
+            ", through channel " + channelName);
+    }
+
+    function messagesLoad () {
+        var message = JSON.parse(eventData.data.message);
+        var socketId = users.getSocketId(message.user_to_id);
+
+        if (io.sockets.sockets[socketId]) {
+            io.sockets.sockets[socketId].emit(eventData.data.socketEvent, message);
+            console.log("Message for user id: " + message.user_to_id);
+        }
     }
 });
 
