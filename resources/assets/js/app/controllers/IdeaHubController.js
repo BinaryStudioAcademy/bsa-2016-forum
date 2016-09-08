@@ -53,7 +53,10 @@ module.exports = Marionette.Object.extend({
             options.view.getRegion('addcomment').show(
                 new AddCommentView({
                     parent: options.view,
-                    model: new CommentModel({user_id: currentUser.get('id')}, {parentUrl: options.view.collection.parentUrl}),
+                    model: new CommentModel({
+                        user_id: currentUser.get('id'),
+                        level: options.view.collection.level
+                    }, {parentUrl: options.view.collection.parentUrl}),
                     atStart: options.atStart
                 })
             );
@@ -64,6 +67,9 @@ module.exports = Marionette.Object.extend({
             myCommentsCollection.level = view.model.collection.level + 1;
             view.collection = myCommentsCollection;
             myCommentsCollection.view = view;
+            view.collection.on('update', function () {
+                view.updateCount();
+            });
             view.getRegion('answers').show(new CommentsCollectionView({
                 collection: myCommentsCollection,
                 parent: view

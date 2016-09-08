@@ -80,7 +80,7 @@ class Comment extends Model
     public function canBeDeleted()
     {
         $user = Auth::user();
-        return ($user->isAdmin() || $user->owns($this)) && !$this->trashed();
+        return ($user->isAdmin() || ($user->owns($this) && !$this->comments()->exists())) && !$this->trashed();
     }
 
     /**
@@ -89,12 +89,8 @@ class Comment extends Model
      */
     public function getContentOriginAttribute($value)
     {
-        if ($this->trashed()) {
-            if (Auth::user()->isAdmin()) {
-                return $value . ' (Deleted)';
-            } else {
-                return '(Deleted by user or Admin)';
-            }
+        if ($this->trashed() && Auth::user()->isAdmin()) {
+            return $value . ' (Deleted)';
         } else {
             return $value;
         }

@@ -18,15 +18,23 @@ module.exports = Marionette.ItemView.extend({
         'click @ui.addButton': function () {
             var parent = this.getOption('parent');
             var atStart = this.getOption('atStart');
-            this.model.save({content_origin: this.ui.text.val()}, {
+            this.model.save({}, {
                 success: function (data) {
                     if (atStart)
                         parent.collection.add(data, {at: 0});
-                    else
-                        parent.collection.add(data);
+                    else {
+                        if (parent.collection.level < 5) {
+                            parent.collection.add(data);
+                        } else {
+                            parent.getOption('parent').collection.add(data);
+                        }
+                    }
                     Radio.trigger('votesChannel', 'showAddCommentView', {view: parent, atStart: atStart});
                 }
             });
+        },
+        'change @ui.text': function () {
+            this.model.set({content_origin: this.ui.text.val()});
         }
     }
 });

@@ -19,11 +19,7 @@ module.exports = Marionette.LayoutView.extend({
     modelEvents: {
         'change': 'render'
     },
-    collectionEvents: {
-        'update':'updateCount'
-    },
     initialize: function (options) {
-        if(options.parent) this.parent = options.parent;
         this.opened = false;
         this.commentable = false;
     },
@@ -38,7 +34,7 @@ module.exports = Marionette.LayoutView.extend({
             } else {
                 this.getRegion('addcomment').empty();
                 this.getRegion('answers').empty();
-                this.ui.submit.text('Show comments branch');
+                this.ui.submit.text('Open and Answer');
             }
             this.opened = !this.opened;
         },
@@ -46,7 +42,7 @@ module.exports = Marionette.LayoutView.extend({
             e.preventDefault();
             e.stopPropagation();
             this.model.destroy({async: false});
-            if(this.parent.collection) this.parent.collection.fetch({async: false});
+            if(this.getOption('parent').collection) this.getOption('parent').collection.fetch();
         }
     },
     serializeData: function () {
@@ -65,6 +61,13 @@ module.exports = Marionette.LayoutView.extend({
         };
     },
     updateCount: function () {
+        if(this.collection.length == 0)
+            this.ui.delete.show();
+        else
+            this.ui.delete.hide();
         this.ui.count.text('Comments: ' + this.collection.length);
+    },
+    remove: function () {
+        this.$el.fadeOut();
     }
 });

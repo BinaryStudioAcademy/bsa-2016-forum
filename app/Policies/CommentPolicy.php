@@ -66,7 +66,7 @@ class CommentPolicy
 
     public function deleteCommentComments(User $user, Comment $comment)
     {
-        return $user->owns($comment);
+        return $comment->canBeDeleted();
     }
 
     public function updateCommentComments(User $user, Comment $comment)

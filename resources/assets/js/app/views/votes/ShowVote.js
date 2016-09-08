@@ -17,28 +17,25 @@ module.exports = Marionette.LayoutView.extend({
     },
     events: {
         'click @ui.general_comments': function () {
-            Radio.trigger('votesChannel', 'renderCommentsView', {parentUrl: '/votes/' + this.options.id, view: this});
+            Radio.trigger('votesChannel', 'renderCommentsView', {parentUrl: '/votes/' + this.getOption('id'), view: this});
         }
     },
     collectionEvents: {
-        'update': function () {
-            this.ui.c_count.text(this.collection.length + ' Comments');
-        }
+        'update': 'updateCount'
     },
     onRender: function () {
         var self = this;
 
-
-        Radio.trigger('votesChannel', 'renderCommentsView', {parentUrl: '/votes/' + this.options.id, view: this});
+        Radio.trigger('votesChannel', 'renderCommentsView', {parentUrl: '/votes/' + this.getOption('id'), view: this});
         Radio.trigger('votesChannel', 'showAddCommentView', {view: this, atStart: true});
 
         this.getRegion('voteheader').show(
-            new VoteHeader({model: this.options.voteModel})
+            new VoteHeader({model: this.getOption('voteModel')})
         );
 
         this.getRegion('answers').show(
             new VoteAnswersCollectionView({
-                collection: this.options.answers,
+                collection: this.getOption('answers'),
                 parent: self
             })
         );
