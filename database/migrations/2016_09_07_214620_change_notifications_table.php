@@ -17,7 +17,7 @@ class ChangeNotificationsTable extends Migration
         {
             $table->integer('subscription_id');
             $table->string('subscription_type');
-            $table->removeColumn('deleted_at');
+            $table->dropColumn('deleted_at');
         });
     }
 
@@ -28,6 +28,7 @@ class ChangeNotificationsTable extends Migration
      */
     public function down()
     {
+        Schema::rename('subscriptions', 'notifications');
         Schema::table('notifications', function(Blueprint $table)
         {
             $table->removeColumn('subscription_id');
