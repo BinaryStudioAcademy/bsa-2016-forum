@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Requests\VotesRequest;
 use App\Http\Requests\VoteResultRequest;
 use App\Models\VoteResult;
+use App\Models\VoteUniqueView;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -45,7 +46,10 @@ class VoteController extends ApiController
     private function getMetaDataForModel(Vote $vote)
     {
         $data = [];
-
+        $usersWhoSaw = [];
+        foreach ($vote->voteUniqueViews()->get()->load('user') as $view) {
+            $usersWhoSaw[] = $view->user;
+        }
         //find the difference between two days
         $created = new Carbon($vote->created_at);
         $now = Carbon::now();
@@ -60,7 +64,9 @@ class VoteController extends ApiController
                 'comments' => $vote->comments()->count(),
                 'tags' => $vote->tags()->get(),
                 'subscription' => $vote->subscription(Auth::user()->id),
-                'days_ago' => $difference
+                'days_ago' => $difference,
+                'numberOfUniqueViews' => $vote->voteUniqueViews()->count(),
+                'usersWhoSaw' => $usersWhoSaw
             ];
 
         return $data;
@@ -98,12 +104,27 @@ class VoteController extends ApiController
     }
 
     /**
+     * @param $vote
+     * @return bool
+     */
+    protected function isUniqueViewExist($vote)
+    {
+        return !!VoteUniqueView::where(['vote_id' => $vote->id, 'user_id' => Auth::user()->id])->first();
+    }
+
+    /**
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
         $vote = Vote::findOrFail($id);
+        if (Auth::user()->id &&
+            !$this->isUniqueViewExist($vote)
+        ) {
+            $voteUniqueView = VoteUniqueView::create(['vote_id' => $vote->id, 'user_id' => Auth::user()->id]);
+            $voteUniqueView->save();
+        }
 
         $meta = $this->getMetaDataForModel($vote);
 
