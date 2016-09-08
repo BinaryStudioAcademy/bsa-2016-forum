@@ -1,12 +1,16 @@
 <!--<div class="vote-comment">-->
-    <div class="vote-comment-avatar">
-        <img src="/images/user.png">
-    </div>
-    <div class="vote-comment-body">
-        <h4>{{ meta.user.first_name }} {{ meta.user.last_name }} <span>{{ createdDate }}</span></h4>
-        <p class="vote-comment-text">{{ model.content_origin }}</p>
-    </div>
-    <div class="vote-comments" id="comment-answer">
+<div class="vote-comment-avatar">
+    <img src="/images/user.png">
+</div>
+<div class="vote-comment-body" style="position: relative;">
+    <h4>{{ meta.user.first_name }} {{ meta.user.last_name }} <span>{{createdDate}}</span> {{comments meta}} <span>
 
-    </div>
+        </span></h4>
+    <p class="vote-comment-text">{{ model.content_origin }}</p>
+    {{#if meta.deletable}}<button class="btn btn-md btn-danger js-delete" type="button"><span class="glyphicon glyphicon-remove-circle"></span></button>{{/if}}
+    <button class="btn btn-default js-show-branch" type="button">Show comments branch</button>
+</div>
+<div class="vote-comments" id="comment-answer">
+</div>
+<div id="add-comment"></div>
 <!--</div>-->

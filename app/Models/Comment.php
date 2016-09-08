@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Comment extends Model
 {
@@ -34,14 +35,6 @@ class Comment extends Model
     }
 
     /**
-     * Get all of the comment's comments.
-     */
-    public function comments()
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
-
-    /**
      * Get all of the attachments that are assigned this comment.
      */
     public function attachments()
@@ -61,8 +54,41 @@ class Comment extends Model
      * Get all of the notifications that are assigned this comment.
      */
 
+    /**
+     * @return mixed
+     */
     public function hasChildComments()
     {
         return $this->comments()->exists();
+    }
+
+    /**
+     * Get all of the comment's comments.
+     */
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    /**
+     * @return bool
+     */
+    public function canBeDeleted()
+    {
+        $user = Auth::user();
+        return ($user->isAdmin() || ($user->owns($this) && !$this->comments()->exists())) && !$this->trashed();
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    public function getContentOriginAttribute($value)
+    {
+        if ($this->trashed() && Auth::user()->isAdmin()) {
+            return $value . ' (Deleted)';
+        } else {
+            return $value;
+        }
     }
 }

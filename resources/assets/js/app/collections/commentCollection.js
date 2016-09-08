@@ -8,8 +8,5 @@ module.exports = BaseCollection.extend({
         if (options.parentUrl) {
             this.parentUrl = options.parentUrl;
         }
-    },
-    comparator: function (model) {
-        return -model.get("id");
     }
 });

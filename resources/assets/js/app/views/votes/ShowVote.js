@@ -2,7 +2,6 @@ var Marionette = require('backbone.marionette');
 var _ = require('underscore');
 var $ = require('jquery');
 var Radio = require('backbone.radio');
-var CommentsCollectionView = require('../../views/votes/VoteCommentsCollection');
 var VoteHeader = require('../../views/votes/voteHeader');
 var VoteAnswersCollectionView = require('../../views/votes/VoteAnswersCollection');
 var CommentModel = require('../../models/CommentModel');
@@ -20,11 +19,14 @@ module.exports = Marionette.LayoutView.extend({
     },
     ui: {
         c_count: '.count',
+        general_comments: '.js-show-general-comments',
         newCommentButton: '.new-comment-notification'
     },
-
     events: {
-        'click @ui.newCommentButton': 'showNewComments'
+        'click @ui.general_comments': function () {
+            Radio.trigger('votesChannel', 'renderCommentsView', {parentUrl: '/votes/' + this.getOption('id'), view: this});
+        }
+
     },
 
 
@@ -59,9 +61,7 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     collectionEvents: {
-        'update': function () {
-            this.ui.c_count.text(this.collection.length);
-        }
+        'update': 'updateCount'
     },
 
     showNewComments: function () {
@@ -70,19 +70,23 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onRender: function () {
-        Radio.trigger('votesChannel', 'showAddCommentView', this);
+        var self = this;
 
-        this.getRegion('comments').show(
-            new CommentsCollectionView({
-                collection: this.options.collection
-            }));
+        Radio.trigger('votesChannel', 'renderCommentsView', {parentUrl: '/votes/' + this.getOption('id'), view: this});
+        Radio.trigger('votesChannel', 'showAddCommentView', {view: this, atStart: true});
 
         this.getRegion('voteheader').show(
-            new VoteHeader({model: this.options.voteModel})
+            new VoteHeader({model: this.getOption('voteModel')})
         );
 
         this.getRegion('answers').show(
-            new VoteAnswersCollectionView({collection: this.options.answers})
+            new VoteAnswersCollectionView({
+                collection: this.getOption('answers'),
+                parent: self
+            })
         );
+    },
+    updateCount: function () {
+        this.ui.c_count.text(this.collection.length + ' Comments');
     }
 });
