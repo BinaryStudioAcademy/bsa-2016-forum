@@ -23,6 +23,16 @@ var cfg = {
     prod: !!util.env.prod
 };
 
+var customConfig = './resources/assets/js/app/config/config.custom.js';
+var fs = require('fs');
+
+try {
+    fs.accessSync(customConfig);
+} catch (e) {
+    var content = 'module.exports = {};';
+    fs.writeFileSync(customConfig, content);
+}
+
 gulp.task('clean', function () {
     return del([
         'public/css/*',
