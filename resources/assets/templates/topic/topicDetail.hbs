@@ -14,7 +14,7 @@
                     <h4>{{ model.name }}</h4>
                 </div>
                 <div class="topic-msg">
-                    <p> {{ model.description }}</p>
+                    <p> {{{ model.generated_description }}}</p>
                 </div>
                 <div class="topic-tags">
                     <span>#movie</span><span>#cinema</span>
@@ -25,7 +25,7 @@
             <div class="topic-bar hidden-xs"></div>
             <div class="topic-history">{{ createdDate }}: usernik</div>
             <div class="topic-control-btn">
-                <a>Edit</a><a>Answer</a><button class="bookmark-btn text-info">Bookmark</button>
+                <a>Edit</a><a>Answer</a><button class="bookmark-btn text-info">Bookmark</button> <button class="subscribe-btn text-info">Subscribe</button>
             </div>
         </div>
     </div>

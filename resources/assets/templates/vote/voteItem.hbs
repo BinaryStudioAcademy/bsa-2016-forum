@@ -9,12 +9,13 @@
             <span><a id="label">{{ model.title }}</a></span> Opened by: <span> {{ meta.user.first_name}} {{ meta.user.last_name }} </span>
         </div>
         <div class="votes-item-details">
-            <a>{{ meta.comments}} Comments</a><a>{{ meta.likes }} likes</a>
-            <a>Finished at {{model.finished_at}}</a><a>{{model.views}} Views</a>
+            <span>{{ meta.comments}} Comments</span> <span>{{ meta.likes }} likes</span> <span>{{ meta.numberOfUniqueViews }} unique views</span>
+            <span>Finished at {{model.finished_at}}</span><span>{{model.views}} Views</span>
+            <button class="btn btn-info btn-xs text-info subscribe-btn">Subscribe</button>
         </div>
         <div class="votes-item-tags">
             {{#each meta.tags}}
-                <a href="#votes/tags/{{name}}" style="color: #333;"><span>#{{name}}</span></a>
+                <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
             {{/each}}
         </div>
         <!--<span class="votes-item-time">Created at {{ model.created_at }}</span>-->

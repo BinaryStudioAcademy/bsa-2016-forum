@@ -40,9 +40,19 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
-    public function notifications()
+    public function subscriptions()
     {
-        return $this->hasMany(Notification::class);
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function topicSubscriptions()
+    {
+        return $this->morphedByMany(Topic::class, 'subscription');
+    }
+
+    public function voteSubscriptions()
+    {
+        return $this->morphedByMany(Vote::class, 'subscription');
     }
 
     public function topics()
@@ -68,6 +78,11 @@ class User extends Authenticatable
     public function voteItems()
     {
         return $this->hasMany(VoteItem::class);
+    }
+    
+    public function voteUniqueViews()
+    {
+        return $this->hasMany(VoteUniqueView::class);
     }
 
     public function votePermissions()

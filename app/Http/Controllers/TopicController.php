@@ -11,11 +11,19 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Collection;
 use App\Facades\TagService;
-
+use App\Facades\MarkdownService;
 
 class TopicController extends ApiController
 {
     protected $searchStr = null;
+
+    private function getTopicModel($id) {
+        if (is_numeric($id) === false) {
+            return  Topic::where('slug', '=', $id)->firstOrFail();
+        }
+
+        return Topic::findOrFail($id);
+    }
 
     /**
      * @param Topic $topic
@@ -32,6 +40,10 @@ class TopicController extends ApiController
                 ->where('user_id', Auth::user()->id)->first();
         }
 
+        // requires common standards in the future
+        $data[$topic->id] = [
+            'subscription' => $topic->subscription(Auth::user()->id)
+        ];
 
         return $data;
 
@@ -120,7 +132,8 @@ class TopicController extends ApiController
         if ($request->tags) {
             TagService::TagsHandler($topic, $request->tags);
         }
-
+        $topic->generated_description = MarkdownService::baseConvert($topic->description);
+        $topic->save();
         $topic->tags = $topic->tags()->get();
         return $this->setStatusCode(201)->respond($topic);
     }
@@ -133,7 +146,7 @@ class TopicController extends ApiController
      */
     public function show($id)
     {
-        $topic = Topic::findOrFail($id);
+        $topic = $this->getTopicModel($id);
         $topic->tags = $topic->tags()->get();
         $meta = $this->getMetaDataForModel($topic);
 
@@ -150,15 +163,16 @@ class TopicController extends ApiController
      */
     public function update($id, TopicRequest $request)
     {
-        $topic = Topic::findOrFail($id);
+        $topic = $this->getTopicModel($id);
 
         $this->authorize('update', $topic);
 
         $topic->update($request->all());
-        if ($request->tags) {
-            TagService::TagsHandler($topic, $request->tags);
-        }
 
+        TagService::TagsHandler($topic, $request->tags);
+        
+        $topic->generated_description = MarkdownService::baseConvert($topic->description);
+        $topic->save();
         $topic->tags = $topic->tags()->get();
         return $this->setStatusCode(200)->respond($topic);
     }
@@ -172,7 +186,7 @@ class TopicController extends ApiController
      */
     public function destroy($id)
     {
-        $topic = Topic::findOrFail($id);
+        $topic = $this->getTopicModel($id);
 
         $this->authorize('delete', $topic);
 

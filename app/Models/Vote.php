@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Vote extends Model
 
 {
+    public static $morphTag = 'Vote';
+    protected $morphClass = 'Vote';
     use SoftDeletes;
 
     protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at'];
@@ -31,6 +33,11 @@ class Vote extends Model
     public function voteItems()
     {
         return $this->hasMany(VoteItem::class);
+    }
+
+    public function voteUniqueViews()
+    {
+        return $this->hasMany(VoteUniqueView::class);
     }
 
     public function votePermissions()
@@ -103,5 +110,15 @@ class Vote extends Model
             });
         }
         return $query;
+    }
+
+    public function subscribers()
+    {
+        return $this->morphToMany(User::class, Subscription::$name)->withTimestamps();
+    }
+
+    public function subscription($userId)
+    {
+        return $this->morphMany(Subscription::class, Subscription::$name)->where('user_id', $userId)->first();
     }
 }
