@@ -18,19 +18,15 @@ module.exports = Marionette.LayoutView.extend({
         answers: '#answers'
     },
     ui: {
-        c_count: '#count',
-        general_comments: '.js-show-general-comments'
+        c_count: '.count',
+        general_comments: '.js-show-general-comments',
+        newCommentButton: '.new-comment-notification'
     },
     events: {
         'click @ui.general_comments': function () {
             Radio.trigger('votesChannel', 'renderCommentsView', {parentUrl: '/votes/' + this.getOption('id'), view: this});
         }
-        c_count: '.count',
-        newCommentButton: '.new-comment-notification'
-    },
 
-    events: {
-        'click @ui.newCommentButton': 'showNewComments'
     },
 
 

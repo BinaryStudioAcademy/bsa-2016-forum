@@ -53,7 +53,10 @@ module.exports = Marionette.LayoutView.extend({
             model: this.model.toJSON(),
             createdDate: dateHelper.fullDate(this.model.get('created_at')),
             meta: {
-                user: this.model.get('user')
+                user: this.model.get('user'),
+                deletable: false,
+                level: 0,
+                comments: 0
             }
         };
 
@@ -61,10 +64,12 @@ module.exports = Marionette.LayoutView.extend({
             model: this.model.toJSON(),
             createdDate: dateHelper.fullDate(this.model.get('created_at')),
             meta: {
-                user: meta[id].user
+                user: meta[id].user,
+                comments: meta[id].comments,
+                level: this.model.collection.level,
+                deletable: meta[id].deletable
             }
         }
-        };
     },
     updateCount: function () {
         if(this.collection.length == 0)
