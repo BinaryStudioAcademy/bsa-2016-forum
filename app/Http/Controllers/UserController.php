@@ -12,11 +12,30 @@ class UserController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(UserStore $userStore)
+    public function index(UserStore $userStore, Request $request)
     {
+        $this->setFiltersParameters($request);
         $users = $userStore->all();
+
+        if ($this->status) {
+            $users = $this->getUsersByStatus($users, $this->status);
+        }
+
         return $this->setStatusCode(200)->respond($users);
     }
+
+    public function getUsersByStatus($users, $status) {
+        $filteredUsers = [];
+
+        foreach ($users as $user) {
+            if ($user['status'] == $status) {
+                array_push($filteredUsers, $user);
+            }
+        }
+
+        return $filteredUsers;
+    }
+
     /**
      * Display the specified resource.
      *
@@ -67,5 +86,13 @@ class UserController extends ApiController
         }
         $userProfile = $userStore->get($user);
         return $this->setStatusCode(200)->respond($userProfile);
+    }
+
+    protected function setFiltersParameters(Request $request)
+    {
+        $this->status = $request->get('status');
+        $this->limit = $request->get('limit');
+        $this->order = $request->get('order');
+        $this->orderType = $request->get('orderType');
     }
 }

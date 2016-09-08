@@ -1,0 +1,9 @@
+.dashboard .sidebar .bookmarks {
+  width: auto;
+}
+.dashboard .bookmarks, .dashboard .messages {
+  box-shadow: 0 2px 10px rgba(0,0,0,.25);
+}
+.dashboard .messages .messages-msg-avatar {
+  display: none;
+}

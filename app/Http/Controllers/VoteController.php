@@ -26,9 +26,16 @@ class VoteController extends ApiController
     public function index(Request $request)
     {
         $this->setFiltersParameters($request);
-        $votes = Vote::filterByQuery($this->searchStr)
-            ->filterByTags($this->tagIds)
-            ->paginate(15)->getCollection();
+        if ($this->limit) {
+            $votes = Vote::filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)
+                ->filterByLimit($this->limit)->get();
+        } else {
+            $votes = Vote::filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)
+                ->paginate(15)->getCollection();
+        }
+
         $meta = $this->getMetaDataForCollection($votes);
 
         return $this->setStatusCode(200)->respond($votes, $meta);
@@ -39,6 +46,9 @@ class VoteController extends ApiController
         $this->searchStr = $request->get('query');
         $tagIds = $request->get('tag_ids');
         $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+        $this->limit = $request->get('limit');
+        $this->order = $request->get('order');
+        $this->orderType = $request->get('orderType');
     }
 
     private function getMetaDataForModel(Vote $vote)

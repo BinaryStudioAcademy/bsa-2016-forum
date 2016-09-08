@@ -125,4 +125,16 @@ class Topic extends Model
         return $query;
     }
 
+    /**
+     * Scope a query to only include limit of topics
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param $limit
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+
+    public function scopeFilterByLimit(Builder $query, $limit)
+    {
+        return $limit ? $query->limit($limit) : $query;
+    }
 }

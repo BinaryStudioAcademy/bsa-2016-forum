@@ -17,7 +17,11 @@ module.exports = Marionette.LayoutView.extend({
         this.getRegion('counters').show(new CountersCollectionView({
             collection: this.options.countersCollection
         }));
-        this.getRegion('content').show(new DashBoardMainView());
+        this.getRegion('content').show(new DashBoardMainView({
+            topics: this.options.topics,
+            users: this.options.users,
+            votes: this.options.votes
+        }));
         this.getRegion('sidebar').show(new DashBoardProfileView({
             bookmarks: this.options.bookmarks,
             messages: this.options.messages

@@ -5,6 +5,8 @@ var CounterCollection = require('../collections/dashboardCounters');
 var BookmarkCollection = require('../collections/bookmarkCollection');
 var MessageCollection = require('../collections/messageCollection');
 var TopicCollection = require('../collections/topicCollection');
+var VotesCollection = require('../collections/voteCollection');
+var UserCollection = require('../collections/userCollection');
 var currentUser = require('../initializers/currentUser');
 var _ = require('underscore');
 
@@ -12,22 +14,40 @@ module.exports = Marionette.Object.extend({
     index: function () {
         var counters = new CounterCollection();
         //counters.fetch();
+
         var bookmarks = new BookmarkCollection();
-        bookmarks.fetch();
+        bookmarks.fetch({ data: { limit: 5 } });
 
         var messages = new MessageCollection();
         messages.parentUrl = _.result(currentUser, 'url');
-        messages.fetch();
+        messages.fetch({
+            data: { limit: 5 }
+        });
 
         var topics = new TopicCollection();
-        topics.fetch();
+        topics.fetch({
+            data: { limit: 5 }
+        });
+
+        var votes = new VotesCollection();
+        votes.fetch({
+            data: { limit: 5 }
+        });
+
+        //console.log(votes);
+
+        var users = new UserCollection();
+        users.fetch({
+            data: { status: 'online' }
+        });
 
         var view = new DashBoardLayout({
             countersCollection: counters,
             bookmarks: bookmarks,
             messages: messages,
-            topics: topics,
-
+            votes: votes,
+            users: users,
+            topics: topics
         });
 
         app.render(view);
