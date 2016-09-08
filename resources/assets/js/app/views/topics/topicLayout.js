@@ -20,8 +20,6 @@ module.exports = Marionette.LayoutView.extend({
     serializeData: function () {
         if (this.options.categoryId) {
             var catId = this.options.categoryId;
-        } else {
-            var catId = 0;
         }
 
         return {
