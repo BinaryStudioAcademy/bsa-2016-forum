@@ -160,6 +160,8 @@ return [
         App\Providers\MarkdownServiceProvider::class,
         App\Providers\CurlServiceProvider::class,
 
+        Cviebrock\EloquentSluggable\ServiceProvider::class,
+
         /**
          * External providers
          */
