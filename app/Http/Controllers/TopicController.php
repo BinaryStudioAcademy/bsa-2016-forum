@@ -16,6 +16,7 @@ use App\Facades\MarkdownService;
 class TopicController extends ApiController
 {
     protected $searchStr = null;
+    protected $tagIds = [];
 
     private function getTopicModel($id) {
         if (is_numeric($id) === false) {
