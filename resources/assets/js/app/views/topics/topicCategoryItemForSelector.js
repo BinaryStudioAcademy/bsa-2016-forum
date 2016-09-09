@@ -1,4 +1,5 @@
 var Marionette = require('backbone.marionette');
+var _ = require('underscore');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicCategoryItemForSelector',
@@ -7,17 +8,23 @@ module.exports = Marionette.ItemView.extend({
         'sync': 'reRender'
     },
 
+    serializeData: function () {
+        return {
+            selectOptions: this.selectOptions
+        }
+    },
+
     reRender: function () {
         var self = this;
+        this.selectOptions = this.collection.toJSON();
 
-        this.collection.forEach (function (model, index) {
-            if (self.options.topicModel.get('category_id') == model.get('id')) {
-                model.attributes.selectedItem = 'selected'
+        this.selectOptions = _.each(this.selectOptions, function (model, key) {
+            if (self.options.topicModel.get('category_id') == model.id) {
+                model.selectedItem = 'selected'
             } else {
-                model.attributes.selectedItem = ''
+                model.selectedItem = ''
             }
         });
-
         this.render();
     }
 });
