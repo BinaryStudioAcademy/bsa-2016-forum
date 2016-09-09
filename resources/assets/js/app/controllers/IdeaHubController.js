@@ -28,6 +28,7 @@ module.exports = Marionette.Object.extend({
         var parentUrl = '/votes/' + id;
         var myCommentsCollection = new CommentsCollection([], {parentUrl: parentUrl});
         var VoteAnswers = new VoteAICollection([], {parentUrl: parentUrl});
+        var addComment = new AddCommentView();
 
         VoteAnswers.fetch();
         myCommentsCollection.fetch({

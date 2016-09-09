@@ -1,6 +1,7 @@
 var Marionette = require('backbone.marionette');
 var dateHelper = require('../../helpers/dateHelper');
 var VoteCommentItemAdd = require('./VoteCommentItemAdd');
+var Radio = require('backbone.radio');
 
 module.exports = Marionette.ItemView.extend({
     tagName: 'div',
@@ -34,16 +35,6 @@ module.exports = Marionette.ItemView.extend({
         };
     },
     replyComment: function () {
-        var voteCommentAdd = new VoteCommentItemAdd();
-        this.setComment(voteCommentAdd.ui.text,this.model.attributes.content_origin);
-        this.setFocus(voteCommentAdd.ui.text);
-    },
-    setComment: function(id,content){
-        var value='>>> '+content+'\n'
-        $(id).val(value);
-    },
-    setFocus: function(id){
-       $(id).focus();
-        }
+        Radio.trigger('votesChannel', 'setCommentQuote', this.model.attributes.content_origin);
     }
 });

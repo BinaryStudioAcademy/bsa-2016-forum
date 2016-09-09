@@ -23,6 +23,19 @@ module.exports = Marionette.ItemView.extend({
                     Radio.trigger('votesChannel', 'showAddCommentView', parent);
                 }
             });
-        }
+        },
+    },
+    initialize: function(){
+        this.listenTo(Radio.channel('votesChannel'), 'setCommentQuote', function (quote) {
+            this.setComment(quote);
+            this.setFocus();
+        })
+    },
+    setComment: function(content){
+        var value='>>> '+content+'\n';
+        $(this.ui.text).val(value);
+    },
+    setFocus: function(){
+        $(this.ui.text).focus();
     }
 });
