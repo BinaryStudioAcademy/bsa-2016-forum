@@ -22,7 +22,7 @@ class VoteResultRequest extends ApiRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|integer|is_current_user|multi_unique',
+            'user_id' => 'required|integer|is_current_user',//|multi_unique
             'vote_id' => 'required|integer|exists:votes,id',
             'vote_item_id' => 'required|integer|exists:vote_items,id|voteitem_exist',
         ];

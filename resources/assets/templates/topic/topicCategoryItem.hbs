@@ -1,3 +1,18 @@
 <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-    <div class="category-title"><a href="#categories/{{ id }}/topics"> {{ name }} </a></div>
+    <div class="category-title">
+    <a href="#categories/{{ model.id }}/topics"> {{ model.name }} </a>
+    <span class="topic-count"> (Total : {{meta.topicCount}} topics)<span>
+    <br>
+    {{#if meta.topicCount}}
+    <span>Last topics:<span>{{model.value}}<br>
+    {{/if}}
+    <ul>
+        {{#each meta.lastThreeTopics}}
+            <li>
+            <a href="#topics/{{ slug }}"> {{ name }} </a>
+            <span class="category-topic-time">update: {{updated_at}}</span>
+            </li>
+        {{/each}}
+    </ul>
+    </div>
 </div>
