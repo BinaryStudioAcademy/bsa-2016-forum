@@ -32,10 +32,14 @@ module.exports = Marionette.ItemView.extend({
         })
     },
     setComment: function(content){
-        var value='>>> '+content+'\n';
+        var value=this.EditQuote(content);
         $(this.ui.text).val(value);
     },
     setFocus: function(){
         $(this.ui.text).focus();
+    },
+    EditQuote: function (value) {
+        value='>>> '+value+'\n';
+        return value;
     }
 });
