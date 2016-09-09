@@ -22,7 +22,7 @@ module.exports = Marionette.LayoutView.extend({
     onBeforeShow: function () {
         this.categories.show(new topicCategoryItemForSelector({
             collection: this.collection,
-            categoryId: this.options.categoryId
+            topicModel: this.model
         }))
     },
 

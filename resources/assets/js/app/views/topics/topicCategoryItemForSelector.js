@@ -11,7 +11,7 @@ module.exports = Marionette.ItemView.extend({
         var self = this;
 
         this.collection.forEach (function (model, index) {
-            if (self.options.categoryId == model.get('id')) {
+            if (self.options.topicModel.get('category_id') == model.get('id')) {
                 model.attributes.selectedItem = 'selected'
             } else {
                 model.attributes.selectedItem = ''
