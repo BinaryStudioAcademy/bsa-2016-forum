@@ -13,15 +13,19 @@ module.exports = Marionette.LayoutView.extend({
         container: '#posts',
         breadcrumbs: '#categoryForBreadcrumbs'
     },
-
+    events: {
+        'change': function () {
+            this.render();
+        }
+    },
     onRender: function () {
 
         this.container.show(new topicCollection({
             collection: this.collection
         }));
-
+        
         this.breadcrumbs.show(new topicCategoryItemForBreadcrumbs({
-            model: TopicCategoryModel
+            model: this.model
         }));
     }
 
