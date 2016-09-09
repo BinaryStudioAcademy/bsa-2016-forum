@@ -35,7 +35,7 @@ body {
   font-weight: bold;
 }
 .category-title {
-  padding-top: 25px;
+  padding-top: 5px;
   margin-left: 25px;
   color: #ffa500;
   font-weight: bold;
@@ -59,4 +59,14 @@ body {
 .dashboard-container {
   padding: 0;
   margin: 15px auto;
+}
+
+.spinner {
+  background: rgba(187, 187, 187, 0.5) url("/images/spinner.gif") no-repeat center center fixed;
+  background-size: 200px;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top:0;
+  left: 0;
 }
