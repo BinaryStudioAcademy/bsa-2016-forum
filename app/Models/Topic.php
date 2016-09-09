@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Cviebrock\EloquentSluggable\Sluggable;
+use App\Traits\SluggableModel;
 
 class Topic extends Model
 {
     public static $morphTag = 'Topic';
     protected $morphClass = 'Topic';
     use SoftDeletes;
-    use Sluggable;
+    use SluggableModel;
 
     /**
      * The attributes that are mass assignable.
@@ -137,29 +137,5 @@ class Topic extends Model
     public function subscription($userId)
     {
         return $this->morphMany(Subscription::class, Subscription::$name)->where('user_id', $userId)->first();
-    }
-
-    /**
-     * Return the sluggable configuration array for this model.
-     *
-     * @return array
-     */
-    public function sluggable()
-    {
-        return [
-            'slug' => [
-                'source' => 'name'
-            ]
-        ];
-    }
-
-    /**
-     * Get the route key for the model.
-     *
-     * @return string
-     */
-    public function getRouteKeyName()
-    {
-        return 'slug';
     }
 }
