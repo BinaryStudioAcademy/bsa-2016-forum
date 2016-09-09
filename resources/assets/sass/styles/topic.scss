@@ -95,7 +95,7 @@ TOPIC DETAILS
   margin: 20px 0;
 }
 
-.topic-comment-main {
+.topic-comment-main, .topic-comment {
   background: #FFF;
 }
 
@@ -245,6 +245,7 @@ TOPIC DETAILS
 }
 
 .topic-more {
+  margin-top: 15px;
   background: #fff;
   font-weight: 600;
   font-size: 16px;
@@ -282,6 +283,12 @@ TOPIC DETAILS
   color: #999999;
 }
 
+.posts a:hover {
+  text-decoration: none;
+  cursor: pointer;
+  background-color: papayawhip;
+}
+
 .post-item {
   width: 100%;
   height: auto;
@@ -294,6 +301,7 @@ TOPIC DETAILS
   margin-left: 0 !important;
   margin-bottom: 10px;
 }
+
 .post-item:nth-child(even) {
   background: #fff;
 }

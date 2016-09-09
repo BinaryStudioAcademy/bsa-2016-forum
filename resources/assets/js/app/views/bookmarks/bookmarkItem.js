@@ -6,7 +6,7 @@ module.exports = Marionette.ItemView.extend({
     tagName: 'div',
 
     ui: {
-        bookmarkDelete: '.delete-button'
+        bookmarkDelete: '.delete-bookmark-button'
     },
 
     events: {
