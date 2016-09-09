@@ -100,8 +100,8 @@ class VoteController extends ApiController
             ];
 
         if ($access) {
-            $data[$vote->id]['deletable'] = !$vote->canBeDeleted();
-            $data[$vote->id]['editable'] = !$vote->canBeEdited();
+            $data[$vote->id]['deletable'] = $vote->canBeDeleted();
+            $data[$vote->id]['editable'] = $vote->canBeEdited();
             $data[$vote->id]['accessedUsers'] = $vote->votePermissions()->get(['user_id']);
         }
         return $data;
@@ -193,7 +193,7 @@ class VoteController extends ApiController
             TagService::TagsHandler($vote, $request->tags);
         }
         if ($vote->is_public) {
-            $vote->votePermissions()->forceDelete();
+            //$vote->votePermissions()->forceDelete();
         } elseif ($request->users) {
             $this->VotePermissionsHandler($vote, $request->users);
         }

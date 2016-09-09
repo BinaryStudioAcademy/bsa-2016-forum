@@ -19,29 +19,34 @@ module.exports = Marionette.LayoutView.extend({
         answers: '#vote-answers',
         voteAcessedUsers: '#vote-access-users',
         voteNotAccessedUsers: '#vote-new-addUsers',
-        voteHeader: '.vote-new-head'
+        voteHeader: '#vote-new-head'
     },
     ui: {
         add: '#addAnswer',
-        start: '#start',
-        delete: '#delete',
         selectAccessedUsersBlock: '.vote-new-access',
         toAccessed: '.js-to-accessed',
-        toNotAccessed: '.js-to-not-accessed'
+        toNotAccessed: '.js-to-not-accessed',
+        start: '#start',
+        delete: '#delete'
     },
     events: {
         'click @ui.add': function () {
             Radio.trigger('votesChannel', 'createEmptyVoteItem', this.collection);
-        },
-        'click @ui.start': 'createVote',
-        'click @ui.delete': function () {
-            this.model.destroy({success: function() {Backbone.history.navigate('votes', {trigger: true});}});
         },
         'click @ui.toAccessed': function () {
             this.moveUsers(this.getOption('users'), this.getOption('accessedUsers'));
         },
         'click @ui.toNotAccessed': function () {
             this.moveUsers(this.getOption('accessedUsers'), this.getOption('users'));
+        },
+        'click @ui.start': function() {
+            if(this.model.get('user_id') == currentUser.id || currentUser.get('role') == 'Admin')
+                this.model.trigger('save');
+            else
+                Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
+        },
+        'click @ui.delete': function () {
+            this.model.destroy({success: function() {Backbone.history.navigate('votes', {trigger: true});}});
         }
     },
     modelEvents: {
@@ -51,16 +56,41 @@ module.exports = Marionette.LayoutView.extend({
             this.collection.parentUrl = '/votes/' + id;
 
             this.collection.each(function (model, index) {
+                if(!model.get('vote_id') || !model.get('id'))
                 model.save({
                     vote_id: id
                 });
             });
+        },
+        'change:is_public': function (model) {
+            if (model.get('is_public') == '0' && (!model.get('user_id') || model.get('user_id') == currentUser.get('id')) || currentUser.get('role') == 'Admin') {
+                var naUsers =  this.getOption('users');
+                var aUsers = this.getOption('accessedUsers');
+                naUsers.remove(naUsers.models);
+                aUsers.remove(aUsers.models);
+                if (model.get('id')) {
+                    naUsers.fetch({
+                        success: function (response) {
+                            aUsers.add(response.remove(_.pluck(model._meta[model.get('id')].accessedUsers, 'user_id')));
+                        }
+                    });
+                } else {
+                    naUsers.fetch();
+                }
+                this.ui.selectAccessedUsersBlock.show();
+            } else
+                this.ui.selectAccessedUsersBlock.hide();
+        },
+        'sync': function (model) {
+            var meta = model.getMetaById() || {deletable: false};
+            meta.deletable ? this.ui.delete.show() : this.ui.delete.hide();
         }
     },
     onRender: function () {
         var model = this.model;
         this.getRegion('voteHeader').show(new CreateVoteHeader({
-            model: model
+            model: model,
+            parent: this
         }));
 
         this.getRegion('answers').show(new CreateVoteItemCollection({
@@ -73,48 +103,11 @@ module.exports = Marionette.LayoutView.extend({
             childView: require('./CreateVoteUserItemExtend')
         }));
 
+
         this.getRegion('voteAcessedUsers').show(new userCollectionView({
             collection: this.getOption('accessedUsers'),
             childView: require('./CreateVoteUserItemExtend')
         }));
-    },
-    createVote: function () {
-        var view = this;
-        var users = [];
-        var tags = [];
-
-        if (view.model.get('is_public') == '0') {
-            view.getOption('accessedUsers').each(function (model, index) {
-                users.push(model.get('id'));
-            });
-        }
-
-        if (view.ui.tags.val().trim().length > 0) {
-            var splitted = view.ui.tags.val().split(' ');
-            _.each(splitted, function (value, index) {
-                tags.push({name: value});
-            });
-        }
-        view.model.save({
-            users: JSON.stringify(users),
-            tags: JSON.stringify(tags),
-            is_saved: 1
-        }, {
-            success: function (data) {
-                Backbone.history.navigate('votes/' + data.get('id'), {trigger: true});
-            }
-        });
-    },
-    serializeData: function () {
-        var meta = this.model.getMetaById() || {
-                deletable: !true,
-                editable: !true
-            };
-
-        return {
-            model: this.model.toJSON(),
-            meta: meta
-        };
     },
     moveUsers: function (from, to) {
         var models = from.clone().models;

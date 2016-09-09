@@ -12,6 +12,11 @@ var dateHelper = {
         if (_.isEmpty(date)) return '';
         return moment(date).format('YYYY-MM-DD HH:mm:ss')
     },
+
+    dateWithTimezoneInFormat: function (date) {
+        if (_.isEmpty(date) || date == '0000-00-00 00:00:00') return '';
+        return moment(date).format('YYYY-MM-DDTHH:mm:ss')
+    },
     
     getDateTimeDiff: function (date) {
         return moment().diff(this.dateWithoutTimezone(date), 'minute');

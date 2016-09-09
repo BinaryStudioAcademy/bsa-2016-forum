@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 
 class VoteItem extends Model
@@ -61,4 +62,15 @@ class VoteItem extends Model
     {
         return $this->morphMany(Comment::class, 'commentable');
     }
+
+    public function canBeDeleted()
+    {
+        return Auth::user()->isAdmin() || Auth::user()->owns($this);
+    }
+
+    public function canBeEdited()
+    {
+        return Auth::user()->isAdmin() || Auth::user()->owns($this);
+    }
+
 }

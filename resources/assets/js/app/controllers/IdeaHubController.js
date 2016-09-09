@@ -69,7 +69,7 @@ module.exports = Marionette.Object.extend({
 
     },
     createVote: function () {
-        var VoteAnswers = new VoteAICollection([{name: ''}], {parentUrl: ''});
+        var VoteAnswers = new VoteAICollection([{}], {parentUrl: ''});
         var UsersCollection = new usersCollection();
         var accessedUsers = new usersCollection();
 
@@ -107,7 +107,8 @@ module.exports = Marionette.Object.extend({
     },
     
     editVote: function (id) {
-        var VoteAnswers = new VoteAICollection([{name: ''}], {parentUrl: '/votes/' + id});
+        var VoteAnswers = new VoteAICollection([], {parentUrl: '/votes/' + id});
+        VoteAnswers.fetch();
         var UsersCollection = new usersCollection();
         var accessedUsers = new usersCollection();
 

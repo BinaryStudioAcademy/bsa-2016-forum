@@ -1,4 +1,7 @@
+var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
+var DateHelper = require('../../helpers/dateHelper');
+var _ = require('underscore');
 
 module.exports = Marionette.ItemView.extend({
     template: 'create-vote-header',
@@ -11,7 +14,8 @@ module.exports = Marionette.ItemView.extend({
         isSingle: 'input[name=isSingle]'
     },
     modelEvents: {
-        'change':'render',
+        'change:title':'render',
+        'save':'saveVote',
         'invalid': function (model, errors) {
             this.ui.errors.empty();
             var self = this;
@@ -19,27 +23,11 @@ module.exports = Marionette.ItemView.extend({
                 self.$('.js-error-' + key).html(error);
             });
         },
-        
-        // 'change:is_public': function (model) {
-        //
-        //     if(!model.get('is_public') || model.get('is_public') == "0") {
-        //         var naUsers =  this.getOption('users');
-        //         var aUsers = this.getOption('accessedUsers');
-        //         naUsers.remove(naUsers.models);
-        //         aUsers.remove(aUsers.models);
-        //         if(model.get('id')) {
-        //             naUsers.fetch({success: function (response) {
-        //                 aUsers.add(response.remove(_.pluck(model._meta[model.get('id')].accessedUsers, 'user_id')));
-        //             }});
-        //         } else {
-        //             naUsers.fetch();
-        //         }
-        //
-        //     }
-        // },
-        // 'sync': function () {
-        //     this.ui.errors.empty();
-        // }
+        'sync': function () {
+            this.$('.public-' + this.model.get('is_public')).prop('checked', true);
+            this.$('.single-' + this.model.get('is_single')).prop('checked', true);
+            this.ui.errors.empty();
+        }
     },
     events: {
         'change @ui.title': function () {
@@ -47,14 +35,9 @@ module.exports = Marionette.ItemView.extend({
         },
         'click @ui.isPublic': function () {
             this.saveModel({is_public: this.ui.isPublic.filter(':checked').val()});
-            if (this.ui.isPublic.prop('checked')) {
-                this.ui.selectAccessedUsersBlock.hide();
-            } else
-                this.ui.selectAccessedUsersBlock.show();
         },
         'click @ui.isSingle': function () {
             this.saveModel({is_single: this.ui.isSingle.filter(':checked').val()});
-
         },
         'change @ui.finished': function () {
             this.saveModel({finished_at: DateHelper.dateWithoutTimezone(this.ui.finished.val())});
@@ -62,12 +45,12 @@ module.exports = Marionette.ItemView.extend({
     },
     serializeData: function () {
         var meta = this.model.getMetaById() || {
-                deletable: !true,
-                editable: !true,
-                title:'',
+                editable: true,
+                deletable: true,
                 tags:''
             };
-
+        meta.tags = (_.pluck(meta.tags, 'name')).join(' ');
+        meta.finished_at = DateHelper.dateWithTimezoneInFormat(this.model.get('finished_at'));
         return {
             model: this.model.toJSON(),
             meta: meta
@@ -79,5 +62,35 @@ module.exports = Marionette.ItemView.extend({
         } else {
             this.model.set(obj);
         }
+    },
+    saveVote: function () {
+        var view = this;
+        var users = [];
+        var tags = [];
+
+        if (view.model.get('is_public') == '0') {
+            view.getOption('parent').getOption('accessedUsers').each(function (model, index) {
+                users.push(model.get('id'));
+            });
+        }
+
+        if (view.ui.tags.val().trim().length > 0) {
+            var splitted = view.ui.tags.val().split(' ');
+            _.each(splitted, function (value, index) {
+                tags.push({name: value});
+            });
+        }
+        if(view.model.get('finished_at') == '0000-00-00 00:00:00' || view.model.get('finished_at') == '')
+            view.model.set('finished_at', null);
+
+        view.model.save({
+            users: JSON.stringify(users),
+            tags: JSON.stringify(tags),
+            is_saved: 1
+        }, {
+            success: function (data) {
+                Backbone.history.navigate('votes/' + data.get('id'), {trigger: true});
+            }
+        });
     }
 });
