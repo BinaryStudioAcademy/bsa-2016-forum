@@ -5,7 +5,6 @@ module.exports = paginateableCollectionView.extend({
 
     serializeData: function () {
         var meta = this.collection.getMeta();
-        console.log(meta);
         return {
             meta: meta
         }

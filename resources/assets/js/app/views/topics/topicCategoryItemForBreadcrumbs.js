@@ -1,6 +1,9 @@
 var Marionette = require('backbone.marionette');
 
 module.exports = Marionette.ItemView.extend({
-    template: 'topicCategoryForBreadcrumbs'
+    template: 'topicCategoryForBreadcrumbs',
 
+    modelEvents: {
+        'change': 'render'
+    }
 });

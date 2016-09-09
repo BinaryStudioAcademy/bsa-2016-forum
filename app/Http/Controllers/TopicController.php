@@ -43,7 +43,8 @@ class TopicController extends ApiController
 
         // requires common standards in the future
         $data[$topic->id] = [
-            'subscription' => $topic->subscription(Auth::user()->id)
+            'subscription' => $topic->subscription(Auth::user()->id),
+            'category' => $topic->category
         ];
 
         return $data;
