@@ -23,6 +23,7 @@ class CommentController extends ApiController
             'likes' => $comment->likes()->count(),
             'attachments' => $comment->attachments()->get(),
             'comments' => $comment->comments()->count(),
+
         ];
     }
 
@@ -79,8 +80,10 @@ class CommentController extends ApiController
      */
     public function getTopicComments(Topic $topic)
     {
+        dd(12);
         $comments = $topic->comments()->get();
-        $meta = $this->getCollectionMetaData($comments);
+//        $meta = $this->getCollectionMetaData($comments);
+        $meta = [];
         return $this->setStatusCode(200)->respond($comments, $meta);
     }
 

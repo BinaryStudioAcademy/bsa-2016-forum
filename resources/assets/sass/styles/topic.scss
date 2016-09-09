@@ -92,19 +92,18 @@ TOPIC DETAILS
 }
 
 .topic-comment-item {
-  border: 1px solid #EEEEEE;
+  //border: 1px solid #EEEEEE;
   margin-bottom: 20px;
 }
 
 .topic-comment-main {
-  background: #FFF;
+  //background: #FFF;
+  //border: 1px solid #EEEEEE;
 }
 
 .topic-comment-included {
   padding-left: 60px;
   padding-right: 15px;
-  padding-top: 15px;
-  padding-bottom: 15px;
 }
 
 .topic-comment-flex {
@@ -279,8 +278,9 @@ TOPIC DETAILS
 }
 
 .topic-head {
-  border: 1px solid #EEEEEE;
-  background: #fff;
+  //border: 1px solid #EEEEEE;
+  //background: #fff;
+  margin-bottom: 20px;
 }
 
 .topic-comment-main .close-btn {

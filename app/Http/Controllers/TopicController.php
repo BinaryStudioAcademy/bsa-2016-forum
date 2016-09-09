@@ -30,29 +30,29 @@ class TopicController extends ApiController
      * @return array
      */
 
-    private function getItemMetaData($topic)
-    {
-        return [
-            'user' => $topic->user()->first(),
-            'likes' => $topic->likes()->count(),
-            'comments' => $topic->comments()->count(),
-            'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
-            'subscription' => $topic->subscription(Auth::user()->id)
-        ];
-    }
-
-    private function getCollectionMetaData($topics)
-    {
-        $data = [];
-
-        if ($topics) {
-            foreach ($topics as $topic) {
-                $data[$topic->id] = $this->getItemMetaData($topic);
-            }
-        }
-
-        return $data;
-    }
+//    private function getItemMetaData($topic)
+//    {
+//        return [
+//            'user' => $topic->user()->first(),
+//            'likes' => $topic->likes()->count(),
+//            'comments' => $topic->comments()->count(),
+//            'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
+//            'subscription' => $topic->subscription(Auth::user()->id)
+//        ];
+//    }
+//
+//    private function getCollectionMetaData($topics)
+//    {
+//        $data = [];
+//
+//        if ($topics) {
+//            foreach ($topics as $topic) {
+//                $data[$topic->id] = $this->getItemMetaData($topic);
+//            }
+//        }
+//
+//        return $data;
+//    }
 
     private function getMetaDataForModel(Topic $topic)
     {
@@ -71,8 +71,6 @@ class TopicController extends ApiController
             'user' => $topic->user()->first(),
             'likes' => $topic->likes()->count(),
             'comments' => $topic->comments()->count(),
-            'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
-            'subscription' => $topic->subscription(Auth::user()->id)
         ];
 
         return $data;
@@ -178,8 +176,7 @@ class TopicController extends ApiController
     {
         $topic = $this->getTopicModel($id);
         $topic->tags = $topic->tags()->get();
-//        $meta = $this->getMetaDataForModel($topic);
-        $meta = $this->getItemMetaData($topic);
+        $meta = $this->getMetaDataForModel($topic);
         return $this->setStatusCode(200)->respond($topic, $meta);
     }
 

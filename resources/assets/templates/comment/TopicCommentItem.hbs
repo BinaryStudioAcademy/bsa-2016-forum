@@ -43,17 +43,20 @@
                 {{/if}}
             </div>
             <div class="row">
-                {{#if meta.comments}}
-                    <button class="btn-childs btn btn-default col-xs-12" data-toggle="collapse"
-                            data-target=".topic-comment-included-{{ model.id }}">
+                <!--data-toggle="collapse"-->
+                <!--data-target=".childs-{{ model.id }}"-->
+                {{#if meta.canReply}}
+                    <button class="btn-childs btn btn-default col-xs-12">
                         <span class="glyphicon glyphicon-chevron-down"></span>
                     </button>
+                {{/if}}
+                {{#if meta.comments}}
                 {{/if}}
             </div>
         </div>
     </div>
 
-    <div class="topic-comment-included-{{ model.id }} collapse">
+    <div class="topic-comment-included childs-{{ model.id }} collapse">
         <div class="topic-comment-childs"></div>
     </div>
 </div>

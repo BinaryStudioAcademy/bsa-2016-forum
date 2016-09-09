@@ -8,6 +8,12 @@ var TopicHeaderView = require('./topicHeader');
 module.exports = Marionette.LayoutView.extend({
     template: 'topicDetail',
 
+    regions: {
+        'newComment': '#newcomment',
+        'topicHeader': '.topic-head',
+        'comments': '.topic-comments'
+    },
+
     ui: {
         'answer': '.topic-answer-btn'
     },
@@ -16,16 +22,6 @@ module.exports = Marionette.LayoutView.extend({
         'click @ui.answer': function (event) {
             Radio.channel('comment').trigger('addComment', this);
         }
-    },
-
-    modelEvents: {
-        'change' : 'render'
-    },
-
-    regions: {
-        'newComment': '#newcomment',
-        'topicHeader': '.topic-head',
-        'comments': '.topic-comments'
     },
 
     onRender: function () {

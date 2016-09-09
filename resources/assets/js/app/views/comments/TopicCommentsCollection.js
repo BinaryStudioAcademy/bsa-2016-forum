@@ -8,7 +8,7 @@ module.exports = Marionette.CollectionView.extend({
     childView: CommentItem,
 
     collectionEvents: {
-        'update': 'render'
+        'update': 'render',
     },
 
     modelEvents: {

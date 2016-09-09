@@ -48,11 +48,10 @@ module.exports = Marionette.Object.extend({
 
     show: function (slug)  {
         var topicModel = new TopicModel({slug: slug});
-        topicModel.fetchBySlag();
-
         var comments = new CommentsCollection();
-        comments.parentUrl = _.result(topicModel, 'url');
+        comments.parentUrl = _.result(topicModel, 'url') + '/' + slug;
         comments.fetch();
+        topicModel.fetchBySlag();
 
         var view = new TopicDetailView({
             model: topicModel,
@@ -67,25 +66,22 @@ module.exports = Marionette.Object.extend({
                 //model.setMeta(commentModel.getMeta());
                 model = commentModel;
                 model.parentUrl = _.result(commentModel, 'getParentUrl');
-                //var modelAttachs = commentModel.getMeta()[commentModel.get('id')].attachments;
-                //attachCollection = new AttachmentCollection(modelAttachs);
             } else {
                 model = new TopicCommentModel();
                 model.parentUrl = _.result(parentView.model, 'getEntityUrl');
-                //attachCollection = new AttachmentCollection();
             }
-
-            //console.log(model, 'model');
-            //console.log(parentView.collection);
 
             view.getRegion('newComment').show(new NewTopicCommentView({
                 model: model,
-                //attachs: attachCollection,
-                commentCollection: parentView.collection
+                commentCollection: parentView.collection,
+                commentView: parentView
             }));
         });
 
         view.listenTo(Radio.channel('comment'), 'showChildComments', function (commentItemView) {
+            //if (this._childUpload) return;
+            commentItemView.ui.childs.slideToggle('fast');
+            if (commentItemView._childUpload) return;
             var childs = new CommentsCollection();
             childs.parentUrl = _.result(commentItemView.model, 'getEntityUrl');
             childs.fetch({

@@ -18,7 +18,8 @@ module.exports = Marionette.LayoutView.extend({
         'edit': '.comment-edit-btn',
         'remove': '#removeBtn',
         'showChilds': '.btn-childs',
-        'errors': '.errors'
+        'errors': '.errors',
+        'childs': '.topic-comment-included'
     },
 
     events: {
@@ -49,7 +50,7 @@ module.exports = Marionette.LayoutView.extend({
 
         'click @ui.showChilds': function (event) {
             event.preventDefault();
-            if (this._childUpload) return;
+            //if (this._childUpload) return;
             Radio.channel('comment').trigger('showChildComments', this);
         },
     },
@@ -86,4 +87,8 @@ module.exports = Marionette.LayoutView.extend({
     modelEvents: {
         'change': 'render',
     },
+
+    //onRender: function () {
+    //    console.log('fuccck');
+    //}
 });

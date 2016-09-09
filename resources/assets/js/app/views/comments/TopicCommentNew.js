@@ -77,8 +77,6 @@ module.exports = Marionette.ItemView.extend({
                 if (view.options.commentCollection) {
                     view.options.commentCollection.add(model);
                 }
-
-                //Radio.channel('cent').trigger('addChildComment', view.options.childCommentsCollection, model);
             },
 
             error: function (model, response) {
