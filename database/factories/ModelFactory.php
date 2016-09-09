@@ -72,7 +72,11 @@ $factory->define(App\Models\Tag::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Models\Category::class, function (Faker\Generator $faker) {
+    $name = $faker->unique()->word;
+    $slug = str_slug($name, '-');
+
     return [
-        'name' => $faker->unique()->word
+        'name' => $name,
+        'slug' => $slug,
     ];
 });

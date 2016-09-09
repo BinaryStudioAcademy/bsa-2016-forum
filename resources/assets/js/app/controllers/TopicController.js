@@ -21,7 +21,7 @@ module.exports = Marionette.Object.extend({
     },
 
     indexInCategory: function (catId) {
-        var topicCollection = new TopicCollection({catId: catId});
+        var topicCollection = new TopicCollection();
         topicCollection.parentUrl = '/categories/' + catId;
         topicCollection.fetch();
         app.render(new topicLayout({collection: topicCollection}));
@@ -34,6 +34,14 @@ module.exports = Marionette.Object.extend({
     },
 
     create: function () {
+        var topicCategoryCollection = new TopicCategoryCollection();
+        topicCategoryCollection.fetch();
+
+        var topicModel = new TopicModel();
+        app.render(new TopicCreate({model: topicModel, collection: topicCategoryCollection}));
+    },
+
+    createCategory: function () {
         var topicCategoryCollection = new TopicCategoryCollection();
         topicCategoryCollection.fetch();
 

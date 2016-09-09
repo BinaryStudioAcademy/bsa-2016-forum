@@ -25,6 +25,7 @@ class CategoryRequest extends ApiRequest
             case 'POST':
                 return [
                     'name' => 'required|max:255|unique:categories,name',
+                    'slug' => 'unique:categories,slug',
                 ];
 
                 break;
@@ -32,6 +33,7 @@ class CategoryRequest extends ApiRequest
             case 'PATCH':
                 return [
                     'name' => 'required|max:255|unique:categories,name,' . $this->categories,
+                    'slug' => 'unique:categories,slug',
                 ];
 
                 break;
@@ -46,6 +48,7 @@ class CategoryRequest extends ApiRequest
             'name.required' => 'Category name is required',
             'name.unique' => 'Category name already exist',
             'name.max' => 'Category name is too long',
+            'slug.unique' => 'Sluggable Url already exist',
         ];
     }
 }
