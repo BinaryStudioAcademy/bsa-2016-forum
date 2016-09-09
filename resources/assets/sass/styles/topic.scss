@@ -88,17 +88,15 @@ TOPIC DETAILS
 
 .topic {
   width: 100%;
-  //padding: 0 15px;
+  padding: 0 15px;
 }
 
 .topic-comment-item {
-  //border: 1px solid #EEEEEE;
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
-.topic-comment-main {
-  //background: #FFF;
-  //border: 1px solid #EEEEEE;
+.topic-comment-main, .topic-comment {
+  background: #FFF;
 }
 
 .topic-comment-included {
@@ -203,7 +201,7 @@ TOPIC DETAILS
 }
 
 .topic-control {
-  padding: 0px 15px;
+  padding: 0 15px;
   overflow: hidden;
 }
 
@@ -248,6 +246,7 @@ TOPIC DETAILS
 }
 
 .topic-more {
+  margin-top: 15px;
   background: #fff;
   font-weight: 600;
   font-size: 16px;
@@ -271,10 +270,10 @@ TOPIC DETAILS
 .topic-item {
   height: 80px;
   margin-bottom: 20px;
-  border: 1px solid #EEEEEE;
-  padding-top: 15px;
-  overflow: hidden;
-  background: #fff;
+  //border: 1px solid #EEEEEE;
+  //padding-top: 15px;
+  //overflow: hidden;
+  //background: #fff;
 }
 
 .topic-head {
@@ -290,10 +289,26 @@ TOPIC DETAILS
 .new-comment-container .loader img {
   height: 30px;
 }
+.topic-count {
+  text-decoration: none;
+  text-transform: lowercase;
+  color: #54dea0;
+}
+
+.category-topic-time {
+  font-size: 12px;
+  color: #999999;
+}
+
+.posts a:hover {
+  text-decoration: none;
+  cursor: pointer;
+  background-color: papayawhip;
+}
 
 .post-item {
   width: 100%;
-  height: 120px;
+  height: auto;
   display: flex;
   border-bottom: 1px solid #EEEEEE;
   overflow: hidden;
@@ -303,6 +318,7 @@ TOPIC DETAILS
   margin-left: 0 !important;
   margin-bottom: 10px;
 }
+
 .post-item:nth-child(even) {
   background: #fff;
 }

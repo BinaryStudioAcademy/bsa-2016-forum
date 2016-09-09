@@ -30,6 +30,7 @@ $factory->define(App\Models\Topic::class, function (Faker\Generator $faker) {
         'reviewed_number' => $faker->numberBetween(0, 1000),
         'name' => $name,
         'description' => $faker->sentence,
+        'generated_description' => $faker->text,
         'rating' => $faker->numberBetween(0, 1000),
         'slug' => $slug,
     ];
@@ -73,6 +74,6 @@ $factory->define(App\Models\Tag::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\Category::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->unique()->word
+        'name' => $faker->unique()->word . ' ' . $faker->unique()->word
     ];
 });

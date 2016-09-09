@@ -23,6 +23,14 @@ var appInstance = require('../instances/appInstance');
 
 var logger = require('../instances/logger');
 
+$( document ).ajaxStart(function() {
+    Radio.channel('spinnerChannel').trigger('show');
+});
+
+$( document ).ajaxStop(function() {
+    Radio.channel('spinnerChannel').trigger('hide');
+});
+
 var Handlebars = require('handlebars');
 var Templates = require('../templates')(Handlebars);
 

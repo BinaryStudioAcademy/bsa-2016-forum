@@ -16,14 +16,7 @@ use App\Facades\MarkdownService;
 class TopicController extends ApiController
 {
     protected $searchStr = null;
-
-    private function getTopicModel($id) {
-        if (is_numeric($id) === false) {
-            return  Topic::where('slug', '=', $id)->firstOrFail();
-        }
-
-        return Topic::findOrFail($id);
-    }
+    protected $tagIds = [];
 
     /**
      * @param Topic $topic
@@ -174,7 +167,7 @@ class TopicController extends ApiController
      */
     public function show($id)
     {
-        $topic = $this->getTopicModel($id);
+        $topic = Topic::getSluggableModel($id);
         $topic->tags = $topic->tags()->get();
         $meta = $this->getMetaDataForModel($topic);
         return $this->setStatusCode(200)->respond($topic, $meta);
@@ -190,7 +183,7 @@ class TopicController extends ApiController
      */
     public function update($id, TopicRequest $request)
     {
-        $topic = $this->getTopicModel($id);
+        $topic = Topic::getSluggableModel($id);
 
         $this->authorize('update', $topic);
 
@@ -213,7 +206,7 @@ class TopicController extends ApiController
      */
     public function destroy($id)
     {
-        $topic = $this->getTopicModel($id);
+        $topic = Topic::getSluggableModel($id);
 
         $this->authorize('delete', $topic);
 
