@@ -16,6 +16,7 @@ use App\Facades\MarkdownService;
 class TopicController extends ApiController
 {
     protected $searchStr = null;
+    protected $tagIds = [];
 
     private function getTopicModel($id) {
         if (is_numeric($id) === false) {
@@ -59,7 +60,7 @@ class TopicController extends ApiController
         $data = [];
 
         foreach ($topics as $topic) {
-            $data = array_merge_recursive($data, $this->getMetaDataForModel($topic));
+            $data += $this->getMetaDataForModel($topic);
         }
 
         return $data;

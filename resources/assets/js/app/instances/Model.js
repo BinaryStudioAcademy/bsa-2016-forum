@@ -6,14 +6,14 @@ module.exports = Backbone.Model.extend({
     parentUrl: null,
 
     getEntityUrl: function () {
-        return (_.result(this, 'parentUrl') || '') + (_.result(this, 'url') || _.result(this, 'urlRoot'));
+        return (_.result(this, 'parentUrl') || _.result(this.collection, 'parentUrl') || '') + (_.result(this, 'url') || _.result(this, 'urlRoot'));
     },
 
     _getRequestUrl: function () {
         return App.getBaseUrl() + this.getEntityUrl();
     },
 
-    getMeta: function() {
+    getMeta: function () {
         return (_.result(this, '_meta') || _.result(this.collection, '_meta'));
     },
 
@@ -21,7 +21,7 @@ module.exports = Backbone.Model.extend({
         if (!options.url) {
             options.url = this._getRequestUrl(model);
         }
-        
+
         if (!options.statusCode) options.statusCode = {};
         options.statusCode['400'] = function (xhr, textStatus, errorThrown) {
             if (xhr.responseJSON) {
@@ -32,16 +32,23 @@ module.exports = Backbone.Model.extend({
         return Backbone.sync(method, model, options);
     },
 
-    getMeta: function() {
-        return (_.result(this, '_meta') || _.result(this.collection, '_meta'));
-    },
-
     parse: function (response, options) {
         if (!options.collection) {
             this._meta = response._meta;
             return response.data;
         } else {
             return response;
+        }
+    },
+
+    getMetaById: function () {
+        if (this.getMeta())
+            return this.getMeta()[this.get('id')] || null;
+    },
+
+    initialize: function (data, options) {
+        if (options && options.parentUrl) {
+            this.parentUrl = options.parentUrl;
         }
     }
 });

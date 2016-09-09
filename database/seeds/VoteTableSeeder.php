@@ -15,7 +15,7 @@ class VoteTableSeeder extends Seeder
     public function run()
     {
       
-        $votesCount = 20;
+        $votesCount = 60;
         $users = User::all();
         $tags = Tag::all();
 
