@@ -2,8 +2,8 @@ var Marionette = require('backbone.marionette');
 var logger = require('../../instances/logger');
 var _ = require('underscore');
 var CountersCollectionView = require('./CountersCollection');
-var DashBoardProfileView = require('./DashBoardProfile');
-var DashBoardMainView = require('./DashBoardMain');
+var DashBoardProfileView = require('./DashboardProfile');
+var DashBoardMainView = require('./DashboardMain');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'DashboardLayout',

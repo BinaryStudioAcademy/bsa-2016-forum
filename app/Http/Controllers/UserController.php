@@ -15,7 +15,7 @@ class UserController extends ApiController
     public function index(UserStore $userStore, Request $request)
     {
         $this->setFiltersParameters($request);
-        $users = $userStore->all();
+        $users = collect($userStore->all());
 
         if ($this->status) {
             $users = $this->getUsersByStatus($users, $this->status);
@@ -25,15 +25,7 @@ class UserController extends ApiController
     }
 
     public function getUsersByStatus($users, $status) {
-        $filteredUsers = [];
-
-        foreach ($users as $user) {
-            if ($user['status'] == $status) {
-                array_push($filteredUsers, $user);
-            }
-        }
-
-        return $filteredUsers;
+        return $users->where('status', $status)->values();
     }
 
     /**
