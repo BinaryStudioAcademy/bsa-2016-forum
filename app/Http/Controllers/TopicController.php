@@ -117,8 +117,6 @@ class TopicController extends ApiController
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
         }
-        $category = Category::find($catId)->name;
-        $meta['category'] = $category;
         return $this->setStatusCode(200)->respond($topics, $meta);
     }
 
