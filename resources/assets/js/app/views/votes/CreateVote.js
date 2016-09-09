@@ -10,7 +10,7 @@ var currentUser = require('../../initializers/currentUser');
 
 var CreateVoteItemCollection = require('./CreateVoteItemCollection');
 var userCollectionView = require('../users/userCollection');
-
+var CreateVoteHeader = require('./CreateVoteHeader');
 
 module.exports = Marionette.LayoutView.extend({
     className: 'well',
@@ -18,29 +18,33 @@ module.exports = Marionette.LayoutView.extend({
     regions: {
         answers: '#vote-answers',
         voteAcessedUsers: '#vote-access-users',
-        voteNotAccessedUsers: '#vote-new-addUsers'
+        voteNotAccessedUsers: '#vote-new-addUsers',
+        voteHeader: '.vote-new-head'
     },
     ui: {
         add: '#addAnswer',
         start: '#start',
         delete: '#delete',
-        title: '#question-title',
-        errors: '.js-errors',
-        tags: '#tags',
-        isPublic: 'input[name=access]',
-        finished: '#finished',
-        dateerrors: '.js-date-errors',
-        isSingle: 'input[name=isSingle]',
-        selectAccessedUsersBlock: '.vote-new-access'
+        selectAccessedUsersBlock: '.vote-new-access',
+        toAccessed: '.js-to-accessed',
+        toNotAccessed: '.js-to-not-accessed'
+    },
+    events: {
+        'click @ui.add': function () {
+            Radio.trigger('votesChannel', 'createEmptyVoteItem', this.collection);
+        },
+        'click @ui.start': 'createVote',
+        'click @ui.delete': function () {
+            this.model.destroy({success: function() {Backbone.history.navigate('votes', {trigger: true});}});
+        },
+        'click @ui.toAccessed': function () {
+            this.moveUsers(this.getOption('users'), this.getOption('accessedUsers'));
+        },
+        'click @ui.toNotAccessed': function () {
+            this.moveUsers(this.getOption('accessedUsers'), this.getOption('users'));
+        }
     },
     modelEvents: {
-        'invalid': function (model, errors) {
-            this.ui.errors.empty();
-            var self = this;
-            _.each(errors, function (error, key) {
-                self.$('.js-error-' + key).html(error);
-            });
-        },
         'change:id': function () {
             var id = this.model.get('id');
 
@@ -51,38 +55,14 @@ module.exports = Marionette.LayoutView.extend({
                     vote_id: id
                 });
             });
-        },
-        'sync': function (data) {
-            this.ui.errors.empty();
-        }
-    },
-    events: {
-        'click @ui.add': function () {
-            Radio.trigger('votesChannel', 'createEmptyVoteItem', this.collection);
-        },
-        'click @ui.start': 'createVote',
-        'change @ui.title': function () {
-            this.model.save({title: this.ui.title.val()});
-        },
-        'click @ui.isPublic': function () {
-            this.saveModel({is_public: this.ui.isPublic.filter(':checked').val()});
-            if (this.ui.isPublic.prop('checked')) {
-                this.ui.selectAccessedUsersBlock.hide();
-            } else
-                this.$('.vote-new-access').show();
-        },
-        'click @ui.isSingle': function () {
-            this.saveModel({is_single: this.ui.isSingle.filter(':checked').val()});
-
-        },
-        'change @ui.finished': function () {
-            this.saveModel({finished_at: DateHelper.dateWithoutTimezone(this.ui.finished.val())});
-        },
-        'click @ui.delete': function () {
-            this.model.destroy({success: function() {Backbone.history.navigate('votes', {trigger: true});}});
         }
     },
     onRender: function () {
+        var model = this.model;
+        this.getRegion('voteHeader').show(new CreateVoteHeader({
+            model: model
+        }));
+
         this.getRegion('answers').show(new CreateVoteItemCollection({
             collection: this.collection,
             parent: this.model
@@ -125,11 +105,22 @@ module.exports = Marionette.LayoutView.extend({
             }
         });
     },
-    saveModel: function (obj) {
-        if (this.model.get('id')) {
-            this.model.save(obj);
-        } else {
-            this.model.set(obj);
-        }
+    serializeData: function () {
+        var meta = this.model.getMetaById() || {
+                deletable: !true,
+                editable: !true
+            };
+
+        return {
+            model: this.model.toJSON(),
+            meta: meta
+        };
+    },
+    moveUsers: function (from, to) {
+        var models = from.clone().models;
+
+        from.remove(from.models);
+
+        to.add(models);
     }
 });

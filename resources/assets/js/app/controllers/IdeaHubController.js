@@ -104,5 +104,31 @@ module.exports = Marionette.Object.extend({
         app.render(new ListVotes({
             vc: usersVotes
         }));
+    },
+    
+    editVote: function (id) {
+        var VoteAnswers = new VoteAICollection([{name: ''}], {parentUrl: '/votes/' + id});
+        var UsersCollection = new usersCollection();
+        var accessedUsers = new usersCollection();
+
+        UsersCollection.opposite = accessedUsers;
+        UsersCollection.glyph = 'plus';
+        accessedUsers.opposite = UsersCollection;
+        accessedUsers.glyph = 'minus';
+
+        var model = new VoteModel({id: id, user_id: currentUser.get('id')});
+        model.fetch();
+        var view = new CreateVote({
+            model: model,
+            collection: VoteAnswers,
+            users: UsersCollection,
+            accessedUsers: accessedUsers
+        });
+
+        view.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {
+            col.add(new VoteAImodel());
+        });
+
+        app.render(view);
     }
 });

@@ -423,14 +423,14 @@ VOTE INDEX
   text-decoration: underline;
 }
 
-.delete-button {
+.corner-button {
   position: absolute;
   //float:right;
   top:0;
   right:0;
 }
 
-.limited-block-for-delete-button {
+.limited-block-for-corner-button {
   width: calc(100% - 50px);
   display: block;
 }

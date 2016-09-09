@@ -133,6 +133,12 @@ class Vote extends Model
         
         return $user->isAdmin() || $user->owns($this);
     }
+    
+    public function canBeDeleted() {
+        $user = Auth::user();
+        
+        return $user->isAdmin() || $user->owns($this);
+    }
 
     public function subscribers()
     {

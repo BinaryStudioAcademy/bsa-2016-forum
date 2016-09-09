@@ -73,7 +73,7 @@ class VoteController extends ApiController
         return $data;
     }
 
-    private function getMetaDataForModel(Vote $vote)
+    private function getMetaDataForModel(Vote $vote, $access = false)
     {
         $data = [];
         $usersWhoSaw = [];
@@ -99,8 +99,10 @@ class VoteController extends ApiController
                 'usersWhoSaw' => $usersWhoSaw
             ];
 
-        if (!$vote->is_saved && $vote->canBeEdited()) {
-            $data[$vote->id]['status'] = ' (Not saved)';
+        if ($access) {
+            $data[$vote->id]['deletable'] = !$vote->canBeDeleted();
+            $data[$vote->id]['editable'] = !$vote->canBeEdited();
+            $data[$vote->id]['accessedUsers'] = $vote->votePermissions()->get(['user_id']);
         }
         return $data;
     }
@@ -121,7 +123,7 @@ class VoteController extends ApiController
             $this->VotePermissionsHandler($vote, $request->users);
         }
 
-        return $this->setStatusCode(201)->respond($vote);
+        return $this->setStatusCode(201)->respond($vote, $this->getMetaDataForModel($vote, true));
     }
 
     /**
@@ -167,7 +169,7 @@ class VoteController extends ApiController
             $voteUniqueView->save();
         }
 
-        $meta = $this->getMetaDataForModel($vote);
+        $meta = $this->getMetaDataForModel($vote, true);
 
         return $this->setStatusCode(200)->respond($vote, $meta);
     }
@@ -196,7 +198,7 @@ class VoteController extends ApiController
             $this->VotePermissionsHandler($vote, $request->users);
         }
 
-        return $this->setStatusCode(200)->respond($vote);
+        return $this->setStatusCode(200)->respond($vote, $this->getMetaDataForModel($vote, true));
     }
 
     /**
