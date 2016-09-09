@@ -130,6 +130,11 @@ VOTE INDEX
 
 }
 
+.votes a:hover {
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .votes-item-add a {
   text-transform: capitalize;
   display: block;

@@ -55,7 +55,8 @@ module.exports = Marionette.Behavior.extend({
         }
     },
 
-    subscribe: function() {
+    subscribe: function(e) {
+        e.preventDefault();
         var subscription = new Subscription();
         subscription.parentUrl = this.options.parent_url;
         this.lockButton(this.ui.subscribeNotification);
