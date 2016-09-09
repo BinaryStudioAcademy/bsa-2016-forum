@@ -1,16 +1,17 @@
 {{#if meta.vote.is_single}}
-    <div class="radio">
-        <label>
-            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">
+    <div class="radio" >
+        <label class="js-item-click">
+            <input type="radio" class="js-select" name="optionsRadios" id="optionsRadios1" value="{{model.id}}" {{#if model.checked}} checked {{/if}}>
             {{ model.name }}
         </label>
+
     </div>
 
 {{else}}
     <div class="checkbox">
-        <label>
-            <input type="checkbox" value="">
+        <label class="js-item-click">
+            <input type="checkbox" class="js-select" value="{{model.id}}" {{#if model.checked}} checked {{/if}}>
             {{ model.name }}
-        </label>
+        </label><br>
     </div>
 {{/if}}
