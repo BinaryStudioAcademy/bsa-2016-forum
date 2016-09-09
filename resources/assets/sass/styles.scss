@@ -64,7 +64,7 @@ body {
 .spinner {
   background: rgba(187, 187, 187, 0.5) url("/images/spinner.gif") no-repeat center center fixed;
   background-size: 200px;
-  position: absolute;
+  position: fixed;
   height: 100%;
   width: 100%;
   top:0;
