@@ -70,7 +70,7 @@ module.exports = Marionette.LayoutView.extend({
     saveVotingOption: function () {
         var self = this;
 
-        if (!self.ui.voteCommit.hasClass( "disabled" )) {
+        if (!self.ui.voteCommit.hasClass('disabled')) {
             if (this.options.voteModel.get('is_single') == 1) {
                 var voteOption = this.$('input[name=optionsRadios]:checked').val();
 
@@ -87,7 +87,7 @@ module.exports = Marionette.LayoutView.extend({
             } else {
                 var selectedVotes = [];
 
-                this.$("input:checkbox[name=optionsCheckboxes]").each(function () {
+                this.$('input:checkbox[name=optionsCheckboxes]').each(function () {
                     var option = [];
                     option['id'] = $(this).val();
 
@@ -100,10 +100,7 @@ module.exports = Marionette.LayoutView.extend({
                     selectedVotes.push(option);
                 });
 
-                console.log(selectedVotes);
-
                 _.each(selectedVotes, function(num, key) {
-
                     var voteOptionModel = self.createVoteOptionModel(num['id'], num['value']);
 
                     if (num == (selectedVotes.length + 1)) {
