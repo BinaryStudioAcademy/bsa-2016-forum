@@ -9,14 +9,6 @@ use App\Http\Requests\CategoryRequest;
 
 class CategoryController extends ApiController
 {
-    private function getCategoryModel($id) {
-        if (is_numeric($id) === false) {
-            return  Category::where('slug', '=', $id)->firstOrFail();
-        }
-
-        return Category::findOrFail($id);
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -56,7 +48,7 @@ class CategoryController extends ApiController
      */
     public function show($id)
     {
-        $category = $this->getCategoryModel($id);
+        $category = Category::getSluggableModel($id);
         return $this->setStatusCode(200)->respond($category);
     }
 
@@ -68,7 +60,7 @@ class CategoryController extends ApiController
      */
     public function update(CategoryRequest $request, $id)
     {
-        $category = $this->getCategoryModel($id);
+        $category = Category::getSluggableModel($id);
         $this->authorize('updateCategory', $category);
 
         $category->update($request->all());
@@ -83,7 +75,7 @@ class CategoryController extends ApiController
      */
     public function destroy($id)
     {
-        $category = $this->getCategoryModel($id);
+        $category = Category::getSluggableModel($id);
         $this->authorize('destroyCategory', $category);
 
         $category->delete();

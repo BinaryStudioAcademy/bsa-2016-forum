@@ -143,7 +143,7 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
     /*Routes for Topic comments*/
     Route::group(['prefix' => 'topics/{topic}/comments'], function () {
         Route::bind('topic', function ($value) {
-            return App\Models\Topic::getTopicModel($value);
+            return App\Models\Topic::getSluggableModel($value);
         });
         Route::get('', 'CommentController@getTopicComments')->name('topicComments');
         Route::post('', 'CommentController@storeTopicComment')->name('storeTopicComment');
