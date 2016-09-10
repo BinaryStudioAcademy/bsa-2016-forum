@@ -8,8 +8,10 @@ var TopicCollection = require('../collections/topicCollection');
 var UserTopicCollection = require('../collections/userTopicCollection');
 var TopicCreate = require('../views/topics/topicCreate');
 var TopicModel = require('../models/TopicModel');
+var TopicCategoryModel = require('../models/TopicCategoryModel');
 var TopicDetailView = require('../views/topics/topicDetail');
 var currentUser = require('../initializers/currentUser');
+var TopicCategoryCreate = require('../views/topics/topicCategoryCreate');
 
 module.exports = Marionette.Object.extend({
 
@@ -24,7 +26,7 @@ module.exports = Marionette.Object.extend({
         var topicCollection = new TopicCollection();
         topicCollection.parentUrl = '/categories/' + catId;
         topicCollection.fetch();
-        app.render(new topicLayout({collection: topicCollection}));
+        app.render(new topicLayout({collection: topicCollection, catId: catId}));
     },
 
     indexCategories: function () {
@@ -42,11 +44,17 @@ module.exports = Marionette.Object.extend({
     },
 
     createCategory: function () {
-        var topicCategoryCollection = new TopicCategoryCollection();
-        topicCategoryCollection.fetch();
+        var topicCategoryModel = new TopicCategoryModel();
+        topicCategoryModel.fetch();
 
-        var topicModel = new TopicModel();
-        app.render(new TopicCreate({model: topicModel, collection: topicCategoryCollection}));
+        app.render(new TopicCategoryCreate({model: topicCategoryModel}));
+    },
+
+    editCategory: function (catId) {
+        var topicCategoryModel = new TopicCategoryModel({id: catId});
+        topicCategoryModel.fetch();
+
+        app.render(new TopicCategoryCreate({model: topicCategoryModel}));
     },
 
     show: function (slug)  {
@@ -59,6 +67,6 @@ module.exports = Marionette.Object.extend({
         var parentUrl = '/users/' + currentUser.id;
         var topicCollection = new UserTopicCollection({parentUrl: parentUrl});
         topicCollection.fetch({data: {page: 1}});
-        app.render(new topicLayout({collection: topicCollection}));
+        app.render(new topicLayout({collection: topicCollection, blockhide: true}));
     }
 });

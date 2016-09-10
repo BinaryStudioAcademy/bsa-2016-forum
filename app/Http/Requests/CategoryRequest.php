@@ -31,9 +31,11 @@ class CategoryRequest extends ApiRequest
                 break;
             case 'PUT':
             case 'PATCH':
+                $id = $this->route('categories');
+
                 return [
                     'name' => 'required|max:255|unique:categories,name,' . $this->categories,
-                    'slug' => 'unique:categories,slug',
+                    'slug' => 'unique:categories,slug,' . $id,
                 ];
 
                 break;

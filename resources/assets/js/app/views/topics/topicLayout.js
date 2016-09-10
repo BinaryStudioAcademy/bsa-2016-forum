@@ -13,8 +13,15 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     serializeData: function () {
+        var shows = true;
+        
+        if (this.options.blockhide) {
+            shows = false;
+        }
+
         return {
-            role: (currentUser.isAdmin()) ? '' : 'hide'
+            role: (currentUser.isAdmin() && shows) ? '' : 'hide',
+            slug: this.options.catId
         };
     },
 
