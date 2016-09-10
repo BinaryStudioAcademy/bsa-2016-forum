@@ -19,6 +19,10 @@ Route::group(['middleware' =>'api', 'prefix' => 'api/v1'], function () {
     });
 });
 
+Route::bind('topic', function ($value) {
+    return App\Models\Topic::getSluggableModel($value);
+});
+
 Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], function () {
 
     /*Routes for Users*/
