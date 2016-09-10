@@ -7,6 +7,9 @@ var logger = require('../../instances/logger');
 var _ = require('underscore');
 var SubscribeBehavior = require('../subscribeBehavior');
 
+var TopicAddLikeModel = require('../../models/TopicAddLikeModel');
+var TopicRemoveLikeModel = require('../../models/TopicRemoveLikeModel');
+
 module.exports = Marionette.ItemView.extend({
     template: 'topicItem',
     className: 'row post-item',
@@ -19,12 +22,18 @@ module.exports = Marionette.ItemView.extend({
 
     ui: {
         bookmarkTopic: '.bookmark-btn',
-        subscribeNotification: '.subscribe-btn'
+        subscribeNotification: '.subscribe-btn',
+        addLikeTopic: '.fa-star-o',
+        removeLikeTopic: '.fa-star'
     },
 
     events: {
-        'click @ui.bookmarkTopic': 'bookmarkTopic'
+        'click @ui.bookmarkTopic': 'bookmarkTopic',
+        'click @ui.addLikeTopic': 'addLikeTopic',
+        'click @ui.removeLikeTopic': 'removeLikeTopic'
     },
+
+    modelEvents: { change: 'render' },
 
     behaviors: {
         SubscribeBehavior: {
@@ -51,8 +60,22 @@ module.exports = Marionette.ItemView.extend({
     },
 
     serializeData: function () {
+        var style='';
+        var href='';
+        if(this.model.get('is_user'))
+        {
+            style = 'fa fa-star fa-2x';
+            href =  '#topics/'+this.model.get('id')+'/likes/'+this.model.get('like_id');
+        }
+        else
+        {
+            style='fa fa-star-o fa-2x';
+            href =  '#topics/'+this.model.get('id')+'/likes';
+        }
         return {
             model: this.model.toJSON(),
+            style: style,
+            href: href,
             createdDate: dateHelper.shortDate(this.model.get('created_at'))
         };
     },
@@ -124,5 +147,31 @@ module.exports = Marionette.ItemView.extend({
                 }
             });
         }
+    },
+
+    addLikeTopic: function(){
+        var parentUrl = '/topics/'+this.model.id;
+        var topicAddLikeModel=new TopicAddLikeModel({parentUrl: parentUrl});
+        topicAddLikeModel.save();
+        this.model.fetch({id:this.model.id});
+        this.model.set({
+            is_user:this.model.attributes.is_user,
+            countOfLikes:this.model.attributes.countOfLikes,
+        });
+    },
+
+    removeLikeTopic: function(){
+        console.log(this.model.attributes.like_id);
+        var parentUrl = '/topics/'+this.model.id+'/likes/'+this.model.attributes.like_id;
+        var topicRemoveLikeModel = new TopicRemoveLikeModel({parentUrl: parentUrl,id:this.model.attributes.like_id});
+        topicRemoveLikeModel.destroy({success: function(model, response) {
+        },
+            error:function(){
+            }});
+        this.model.fetch({id:this.model.id});
+        this.model.set({
+            is_user:this.model.attributes.is_user,
+            countOfLikes:this.model.attributes.countOfLikes,
+        });
     }
 });
