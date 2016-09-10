@@ -143,4 +143,12 @@ class Vote extends Model
     {
         return $this->morphMany(Subscription::class, Subscription::$name)->where('user_id', $userId)->first();
     }
+
+    public function getFinishedAtAttribute($value)
+    {
+        if($value == '0000-00-00 00:00:00'){
+            return null;
+        }
+        return $value;
+    }
 }
