@@ -1,7 +1,6 @@
 var Marionette = require('backbone.marionette');
 var logger = require('../../instances/logger');
 var _ = require('underscore');
-var Radio = require('backbone.radio');
 var Dropzone = require('dropzone');
 var currentUser = require('../../initializers/currentUser');
 var AttachmentModel = require('../../models/AttachmentModel');
@@ -12,6 +11,12 @@ module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentNew',
     _dropZone: null,
     _files: [],
+
+    initialize: function (options) {
+        if (this.model.get('id')) {
+            this._isEditComment = true;
+        }
+    },
 
     ui: {
         'submit': '#submit',
@@ -71,12 +76,14 @@ module.exports = Marionette.ItemView.extend({
                     view._dropZone.processQueue();
                 }
 
-                //Radio.channel('сommentCollection').trigger('addComment', model);
-                view.ui.commentDlg.modal('hide');
-
+                // add comment to comment collection
                 if (view.options.commentCollection) {
-                    view.options.commentCollection.add(model);
+                    view.options.commentCollection.add(model, { merge: true });
+                } else if (!view._isEditComment) {
+                    view.options.parentView.showChildCommentsButton(true);
                 }
+
+                view.ui.commentDlg.modal('hide');
             },
 
             error: function (model, response) {
@@ -143,16 +150,23 @@ module.exports = Marionette.ItemView.extend({
         // add attachments to model meta
         var id = this.model.get('id');
         var view = this;
-
         // if model has attachments we must push new to it
         if (this._files.length) {
             this._files.forEach(function (file, i) {
                 view.model.getMeta()[id].attachments.push(file);
             });
+            this._files.splice(0, this._files.length);
+            this.modelChangeMeta();
+        }
+    },
+
+    modelChangeMeta: function () {
+        if (this.options.commentCollection) {
+            var model = this.options.commentCollection.findWhere({ id: this.model.get('id') });
+            return model.trigger('change');
         }
 
-        this._files.splice(0, this._files.length);
-        this.model.trigger('change');
+        return false;
     },
 
     removeAttachmentFromServer: function (file) {
@@ -167,7 +181,7 @@ module.exports = Marionette.ItemView.extend({
                 view.ui.errors.text('File was successfully removed');
                 view.showErrors(true);
                 view.destroyAttachsFromMeta(file.id);
-                view.model.trigger('change');
+                view.modelChangeMeta();
             },
 
             error: function (response) {
@@ -193,14 +207,9 @@ module.exports = Marionette.ItemView.extend({
         // if comment already has attachments they will be show
         var attachs = [];
         var id = this.model.get('id');
+        // if model is new there is no id
         if (!id) return;
-        //console.log(this.model.getMeta());
-        if (!this.model.getMeta()) {
-            attachs = this.options.attachs.toJSON();
-        }
-        else {
-            attachs = this.model.getMeta()[id].attachments;
-        }
+        attachs = this.model.getMeta()[id].attachments;
         var drop = this._dropZone;
         if (attachs.length) {
             attachs.forEach(function (file, i) {

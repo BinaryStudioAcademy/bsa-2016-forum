@@ -80,10 +80,8 @@ class CommentController extends ApiController
      */
     public function getTopicComments(Topic $topic)
     {
-        dd(12);
         $comments = $topic->comments()->get();
-//        $meta = $this->getCollectionMetaData($comments);
-        $meta = [];
+        $meta = $this->getCollectionMetaData($comments);
         return $this->setStatusCode(200)->respond($comments, $meta);
     }
 

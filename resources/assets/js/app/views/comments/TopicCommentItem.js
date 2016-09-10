@@ -16,7 +16,7 @@ module.exports = Marionette.LayoutView.extend({
     ui: {
         'answer': '.answer-btn',
         'edit': '.comment-edit-btn',
-        'remove': '#removeBtn',
+        'remove': '.removeBtn',
         'showChilds': '.btn-childs',
         'errors': '.errors',
         'childs': '.topic-comment-included'
@@ -24,24 +24,22 @@ module.exports = Marionette.LayoutView.extend({
 
     events: {
         'click @ui.answer': function (event) {
-            if (this._childUpload) {
-                this.collection = this.getRegion('childComments').currentView.collection;
-            }
             Radio.channel('comment').trigger('addComment', this);
         },
 
         'click @ui.edit': function (event) {
             event.preventDefault();
             event.stopPropagation();
-            //console.log(this.model);
+            // set collection which has this view model
+            this.collection = this._parent.collection;
             Radio.channel('comment').trigger('addComment', this, this.model);
         },
 
         'click @ui.remove': function (event) {
-            this.model.parentUrl = this.model.collection.parentUrl;
+            event.preventDefault();
+            event.stopPropagation();
             this.model.destroy({
                 error: function (model, response) {
-                    //this.ui.errors.text(response.responseText).show();
                     console.error(response.responseText);
                 }.bind(this),
                 wait: true
@@ -50,9 +48,14 @@ module.exports = Marionette.LayoutView.extend({
 
         'click @ui.showChilds': function (event) {
             event.preventDefault();
-            //if (this._childUpload) return;
+            this.ui.childs.slideToggle('fast');
+            if (this._childUpload) return;
             Radio.channel('comment').trigger('showChildComments', this);
         },
+    },
+
+    showChildCommentsButton: function (show) {
+        this.ui.showChilds.toggle(show);
     },
 
     attachmentThumb: function (attachs) {
@@ -87,8 +90,4 @@ module.exports = Marionette.LayoutView.extend({
     modelEvents: {
         'change': 'render',
     },
-
-    //onRender: function () {
-    //    console.log('fuccck');
-    //}
 });

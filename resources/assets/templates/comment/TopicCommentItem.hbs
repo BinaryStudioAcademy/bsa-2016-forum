@@ -43,14 +43,14 @@
                 {{/if}}
             </div>
             <div class="row">
-                <!--data-toggle="collapse"-->
-                <!--data-target=".childs-{{ model.id }}"-->
-                {{#if meta.canReply}}
+                {{#if meta.comments}}
                     <button class="btn-childs btn btn-default col-xs-12">
                         <span class="glyphicon glyphicon-chevron-down"></span>
                     </button>
-                {{/if}}
-                {{#if meta.comments}}
+                {{else}}
+                    <button class="btn-childs btn btn-default col-xs-12 collapse">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </button>
                 {{/if}}
             </div>
         </div>
@@ -71,7 +71,7 @@
                 <p>Are you sure?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="removeBtn" data-dismiss="modal">Submit</button>
+                <button type="button" class="btn btn-default removeBtn" data-dismiss="modal">Submit</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
