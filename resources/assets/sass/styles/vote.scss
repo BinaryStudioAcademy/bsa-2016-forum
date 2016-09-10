@@ -432,7 +432,7 @@ VOTE INDEX
   position: absolute;
   //float:right;
   top:0;
-  right:0;
+  right:-40px;
 }
 
 .limited-block-for-corner-button {
@@ -442,4 +442,9 @@ VOTE INDEX
 
 .relative {
   position: relative;
+}
+
+.not-saved {
+  color: #333;
+  font-style: italic;
 }

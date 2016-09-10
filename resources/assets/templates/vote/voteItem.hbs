@@ -6,7 +6,7 @@
     </div>
     <div class="votes-item-body">
         <div class="votes-item-title">
-            <span><a id="label">{{ model.title }}</a></span> {{#ifCond model.is_saved '==' 0}}<span>(not saved)</span>{{/ifCond}} Opened by: <span> {{ meta.user.first_name}} {{ meta.user.last_name }} </span>
+            <span><a id="label">{{ model.title }}</a></span> {{#ifCond model.is_saved '==' 0}}<span class="not-saved">(not saved)</span>{{/ifCond}} Opened by: <span> {{ meta.user.first_name}} {{ meta.user.last_name }} </span>
         </div>
         <div class="votes-item-details">
             <span>{{ meta.comments}} Comments</span> <span>{{ meta.likes }} likes</span> <span>{{ meta.numberOfUniqueViews }} unique views</span>
