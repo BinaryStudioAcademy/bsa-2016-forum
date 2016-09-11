@@ -24,7 +24,7 @@ module.exports = Marionette.LayoutView.extend({
         }
 
         return {
-            role: (currentUser.isAdmin() && shows) ? '' : 'hide',
+            isAdmin: currentUser.isAdmin(),
             categoryId: catId
         };
     },
