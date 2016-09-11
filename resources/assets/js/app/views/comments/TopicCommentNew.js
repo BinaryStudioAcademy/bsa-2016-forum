@@ -82,10 +82,8 @@ module.exports = Marionette.ItemView.extend({
                 }
 
                 // add comment to comment collection
-                if (view.options.commentCollection) {
-                    view.options.commentCollection.add(model, { merge: true });
-                } else if (!view._isEditComment) {
-                    //view.options.parentView.showChildCommentsButton(true);
+                if (view.getOption('commentCollection')) {
+                    view.getOption('commentCollection').add(model, { merge: true });
                 }
 
                 view.ui.commentDlg.modal('hide');

@@ -95,7 +95,7 @@ module.exports = Marionette.Object.extend({
             view.getRegion('newComment').show(new NewTopicCommentView({
                 model: model,
                 commentCollection: parentView.collection,
-                parentView: parentView
+                parentCommentView: parentView
             }));
         });
 

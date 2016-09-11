@@ -97,7 +97,7 @@ module.exports = Marionette.LayoutView.extend({
                 attachments: meta[id].attachments,
                 comments: meta[id].comments,
                 canReply: !this.model.isChildComment(),
-                isUserComment: currentUser.get('id') === meta[id].user.id
+                canEditDelete: (currentUser.get('id') === meta[id].user.id) && !meta[id].comments,
             }
         };
     },

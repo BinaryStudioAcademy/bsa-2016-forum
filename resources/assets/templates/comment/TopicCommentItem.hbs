@@ -12,7 +12,7 @@
             </div>
             <div class="topic-body">
                 <div class="topic-msg">
-                    <h4>{{ model.content_origin }}</h4>
+                    <p>{{ model.content_origin }}</p>
                 </div>
                 <div class="attachments-container">
                     {{#each meta.attachments}}
@@ -34,7 +34,7 @@
             <div class="topic-history">Rating {{ model.rating }}</div>
             <div class="topic-control-btn">
                 {{!-- only output if user comment belongs to current user --}}
-                {{#if meta.isUserComment}}
+                {{#if meta.canEditDelete}}
                     <a class="comment-edit-btn">Edit</a>
                     <a class="" data-toggle="modal" data-target="#confirmDialog-{{ model.id }}">Remove</a>
                 {{/if}}
