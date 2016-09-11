@@ -7,6 +7,7 @@
     <div class="votes-item-body">
         <div class="votes-item-title">
             <span><a id="label">{{ model.title }} {{meta.status}}</a></span> Opened by: <span> {{ meta.user.first_name}} {{ meta.user.last_name }} </span>
+            <button class="text-info subscribe-btn"> Subscribe</button>
         </div>
         <div class="votes-item-details">
             <span>{{ meta.comments}} Comments</span>
@@ -18,8 +19,7 @@
             <span>End date is not defined</span>
             {{/if}}
             <span>{{model.views}} Views</span>
-            <button class="btn btn-info btn-xs text-info subscribe-btn">Subscribe</button>
-        </div>
+            </div>
         <div class="votes-item-tags">
             {{#each meta.tags}}
                 <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
