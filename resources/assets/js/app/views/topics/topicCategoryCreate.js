@@ -13,7 +13,6 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     initialize: function () {
-        console.log(this.model);
         this.model.set({user_id: currentUser.id});
     },
     regions: {

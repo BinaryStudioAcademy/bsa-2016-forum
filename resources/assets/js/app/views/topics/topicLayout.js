@@ -14,14 +14,18 @@ module.exports = Marionette.LayoutView.extend({
 
     serializeData: function () {
         var shows = true;
-        
+
+        if (this.options.categoryId) {
+            var catId = this.options.categoryId;
+        }
+
         if (this.options.blockhide) {
             shows = false;
         }
 
         return {
             role: (currentUser.isAdmin() && shows) ? '' : 'hide',
-            slug: this.options.catId
+            categoryId: catId
         };
     },
 
@@ -31,14 +35,4 @@ module.exports = Marionette.LayoutView.extend({
             paginate: this.options.paginate
         }));
     },
-
-    serializeData: function () {
-        if (this.options.categoryId) {
-            var catId = this.options.categoryId;
-        }
-
-        return {
-            categoryId: catId
-        }
-    }
 });
