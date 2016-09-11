@@ -6,7 +6,7 @@ module.exports = Marionette.ItemView.extend({
     className: 'form-group relative',
     ui: {
         name: '.js-item-name',
-        deleteButton: '.delete-button',
+        deleteButton: '.corner-button',
         error_name: '.js-error-field'
     },
     events: {
@@ -17,9 +17,11 @@ module.exports = Marionette.ItemView.extend({
             if (this.model.get('vote_id') && this.model.hasChanged('name'))
                 this.model.save();
         },
-        'click @ui.deleteButton': function () {
+        'click @ui.deleteButton': function (e) {
+            e.stopPropagation();
+            e.preventDefault();
             this.model.destroy();
-        }
+        },
     },
     modelEvents: {
         'invalid': function (model, errors) {
@@ -38,15 +40,17 @@ module.exports = Marionette.ItemView.extend({
         });
     },
     serializeData: function () {
-
-        var meta = this.model.getMetaById() || {};
+        var meta = this.model.getMetaById() || {
+                deletable: true,
+                editable: true
+            };
 
         return {
             model: this.model.toJSON(),
             meta: meta
         };
-    },
-    remove: function () {
-        this.$el.fadeOut();
     }
+    // remove: function () {
+    //     this.$el.fadeOut();
+    // }
 });

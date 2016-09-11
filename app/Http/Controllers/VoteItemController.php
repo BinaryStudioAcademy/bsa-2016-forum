@@ -11,9 +11,35 @@ use Illuminate\Contracts\Validation\UnauthorizedException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Http\Requests;
+use Illuminate\Support\Collection;
 
 class VoteItemController extends ApiController
 {
+
+    /**
+     * @param Collection $votes
+     * @return array
+     */
+    private function getMetaDataForCollection(Collection $items)
+    {
+        $data = [];
+
+        foreach ($items as $item) {
+
+            $data += $this->getMetaDataForModel($item);
+        }
+
+        return $data;
+    }
+
+
+    private function getMetaDataForModel(VoteItem $item)
+    {
+        $data = [];
+        $data[$item->id]['deletable'] = $item->canBeDeleted();
+        $data[$item->id]['editable'] = $item->canBeEdited();
+        return $data;
+    }
 
     /**
      * Display a listing of the resource.
@@ -28,7 +54,7 @@ class VoteItemController extends ApiController
             $this->setStatusCode(200)->respond();
         }
 
-        return $this->setStatusCode(200)->respond($voteItems, ['vote' => $vote]);
+        return $this->setStatusCode(200)->respond($voteItems, $this->getMetaDataForCollection($voteItems));
 
     }
 
@@ -49,7 +75,7 @@ class VoteItemController extends ApiController
         $voteItem->vote()->associate($vote);
         $voteItem->save();
 
-        return $this->setStatusCode(201)->respond($voteItem->fresh());
+        return $this->setStatusCode(201)->respond($voteItem->fresh(), $this->getMetaDataForModel($voteItem));
     }
 
     /**
@@ -68,7 +94,7 @@ class VoteItemController extends ApiController
         }
 
         $user = $voteItem->user()->first();
-        return $this->setStatusCode(200)->respond($voteItem, ['vote' => $vote, 'user' => $user]);
+        return $this->setStatusCode(200)->respond($voteItem, $this->getMetaDataForModel($voteItem));
 
     }
 
@@ -92,7 +118,7 @@ class VoteItemController extends ApiController
         $this->authorize('update', $voteItem);
 
         $voteItem->update($request->all());
-        return $this->setStatusCode(200)->respond($voteItem, ['vote' => $vote]);
+        return $this->setStatusCode(200)->respond($voteItem, $this->getMetaDataForModel($voteItem));
 
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -129,6 +130,12 @@ class Vote extends Model
     }
     
     public function canBeEdited() {
+        $user = Auth::user();
+        
+        return $user->isAdmin() || $user->owns($this);
+    }
+    
+    public function canBeDeleted() {
         $user = Auth::user();
         
         return $user->isAdmin() || $user->owns($this);

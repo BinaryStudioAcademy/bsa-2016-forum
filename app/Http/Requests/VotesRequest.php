@@ -28,7 +28,6 @@ class VotesRequest extends ApiRequest
             'is_single' => 'integer|between:0,1',
             'is_public' => 'integer|between:0,1',
             'is_saved' => 'integer|between:0,1',
-            'tags' => 'json',
             'users' => 'json',
             'tags' => 'json|tags_validator',
         ];
