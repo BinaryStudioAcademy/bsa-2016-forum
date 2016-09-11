@@ -94,6 +94,11 @@ class TopicController extends ApiController
     public function indexInCategory($catId, TopicRequest $request)
     {
         $this->setFiltersData($request);
+
+        if (is_numeric($catId) === false) {
+            $catId = Category::where('slug', '=', $catId)->firstOrFail()->id;
+        }
+
         if ($request->page) {
             $paginationObject = Topic::where('category_id', $catId)
                 ->filterByQuery($this->searchStr)
