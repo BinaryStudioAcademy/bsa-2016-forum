@@ -69,7 +69,8 @@ class TopicController extends ApiController
     {
         $this->setFiltersData($request);
 
-        $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
+        $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)
+            ->filterByLimit($this->limit)->get();
 
         foreach ($topics as $topic) {
             $topic->usersCount = $topic->activeUsersCount();
@@ -260,6 +261,7 @@ class TopicController extends ApiController
         $this->searchStr = $request->get('query');
         $tagIds = $request->get('tag_ids');
         $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+        $this->limit = $request->get('limit');
     }
 
 }
