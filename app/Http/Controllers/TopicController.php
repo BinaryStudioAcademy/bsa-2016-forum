@@ -22,31 +22,6 @@ class TopicController extends ApiController
      * @param Topic $topic
      * @return array
      */
-
-//    private function getItemMetaData($topic)
-//    {
-//        return [
-//            'user' => $topic->user()->first(),
-//            'likes' => $topic->likes()->count(),
-//            'comments' => $topic->comments()->count(),
-//            'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
-//            'subscription' => $topic->subscription(Auth::user()->id)
-//        ];
-//    }
-//
-//    private function getCollectionMetaData($topics)
-//    {
-//        $data = [];
-//
-//        if ($topics) {
-//            foreach ($topics as $topic) {
-//                $data[$topic->id] = $this->getItemMetaData($topic);
-//            }
-//        }
-//
-//        return $data;
-//    }
-
     private function getMetaDataForModel(Topic $topic)
     {
         $data = [];
