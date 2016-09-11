@@ -21,7 +21,8 @@ module.exports = Marionette.LayoutView.extend({
 
     onBeforeShow: function () {
         this.categories.show(new topicCategoryItemForSelector({
-            collection: this.collection
+            collection: this.collection,
+            topicModel: this.model
         }))
     },
 

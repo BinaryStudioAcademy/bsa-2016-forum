@@ -138,4 +138,9 @@ class Topic extends Model
     {
         return $this->morphMany(Subscription::class, Subscription::$name)->where('user_id', $userId)->first();
     }
+
+    public function scopeFilterByLimit(Builder $query, $limit)
+    {
+        return $limit ? $query->limit($limit) : $query;
+    }
 }
