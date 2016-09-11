@@ -96,7 +96,8 @@ class TopicController extends ApiController
     {
         $this->setFiltersData($request);
 
-        $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
+        $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)
+            ->filterByLimit($this->limit)->get();
 
         foreach ($topics as $topic) {
             $topic=$this->getLikesOfTopic($topic);
@@ -120,6 +121,11 @@ class TopicController extends ApiController
         $user = Auth::user();
 
         $this->setFiltersData($request);
+
+        if (is_numeric($catId) === false) {
+            $catId = Category::where('slug', '=', $catId)->firstOrFail()->id;
+        }
+
         if ($request->page) {
             $paginationObject = Topic::where('category_id', $catId)
                 ->filterByQuery($this->searchStr)
@@ -340,5 +346,6 @@ class TopicController extends ApiController
         $this->searchStr = $request->get('query');
         $tagIds = $request->get('tag_ids');
         $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+        $this->limit = $request->get('limit');
     }
 }

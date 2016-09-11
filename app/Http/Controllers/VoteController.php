@@ -41,7 +41,8 @@ class VoteController extends ApiController
             $meta['hasMorePages'] = $paginationObject->hasMorePages();
         } else {
             $votes = Vote::filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)->get();
+                ->filterByTags($this->tagIds)
+                ->filterByLimit($this->limit)->get();
             $meta = $this->getMetaDataForCollection($votes);
         }
 
@@ -56,6 +57,9 @@ class VoteController extends ApiController
         $this->searchStr = $request->get('query');
         $tagIds = $request->get('tag_ids');
         $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+        $this->limit = $request->get('limit');
+        $this->order = $request->get('order');
+        $this->orderType = $request->get('orderType');
     }
 
     /**

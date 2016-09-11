@@ -6,7 +6,7 @@ var topicCategoryCollectionForSelector = require('../../views/topics/topicCatego
 var topicCategoryItemForSelector = require('../../views/topics/topicCategoryItemForSelector');
 
 module.exports = Marionette.LayoutView.extend({
-    template: 'topicCreateNew',
+    template: 'topicCategoryCreate',
 
     ui: {
         createForm: '.topic-form'
@@ -19,13 +19,6 @@ module.exports = Marionette.LayoutView.extend({
         categories: '#categories'
     },
 
-    onBeforeShow: function () {
-        this.categories.show(new topicCategoryItemForSelector({
-            collection: this.collection,
-            topicModel: this.model
-        }))
-    },
-
     onRender: function () {
     },
 
@@ -35,7 +28,8 @@ module.exports = Marionette.LayoutView.extend({
             for (var error in errors) {
                 this.$('[name="' + error + '"]').siblings('.errors').html(errors[error]);
             }
-        }
+        },
+        change: 'render'
     },
 
     events: {
@@ -50,7 +44,7 @@ module.exports = Marionette.LayoutView.extend({
             e.preventDefault();
             this.model.save({}, {
                 success: function (model, response) {
-                    Backbone.history.navigate('topics/' + model.get('slug'), {trigger: true});
+                    Backbone.history.navigate('topicCategories', {trigger: true});
                 }
             });
         }
