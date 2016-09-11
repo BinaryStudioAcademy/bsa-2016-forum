@@ -13,7 +13,7 @@ class NullableFinishedAtInVotesTable extends Migration
     public function up()
     {
         Schema::table('votes', function (Blueprint $table) {
-            $table->unsignedInteger('finished_at')->nullable()->change();
+            $table->dateTime('finished_at')->nullable()->change();
         });
     }
 
@@ -25,7 +25,7 @@ class NullableFinishedAtInVotesTable extends Migration
     public function down()
     {
         Schema::table('votes', function (Blueprint $table) {
-            $table->unsignedInteger('finished_at')->nullable(false)->change();
+            $table->dateTime('finished_at')->nullable(false)->change();
         });
     }
 }
