@@ -147,7 +147,7 @@ class Vote extends Model
     public function getFinishedAtAttribute($value)
     {
         if($value == '0000-00-00 00:00:00'){
-            return null;
+            return '';
         }
         return $value;
     }
