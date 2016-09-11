@@ -321,13 +321,13 @@ class VoteController extends ApiController
         } else {
             $model = $vote->voteResults()->where('user_id', $user->id)->where('vote_item_id',
                 $request->vote_item_id)->first();
-            if ((count($model) == 0) && ($request->vote_item_value == 1)) {
+            if (!$model && ($request->vote_item_value == 1)) {
                 $model = new VoteResult();
                 $model->user()->associate($user);
                 $model->vote()->associate($vote);
                 $model->vote_item_id = $request->vote_item_id;
                 $model->save();
-            } elseif ((count($model) == 1) && ($request->vote_item_value == 0)) {
+            } elseif ($model && ($request->vote_item_value == 0)) {
                 $model->delete();
                 $response['checked'] = false;
             }

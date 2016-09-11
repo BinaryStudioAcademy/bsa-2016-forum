@@ -78,10 +78,7 @@ module.exports = Marionette.LayoutView.extend({
 
                 voteOptionModel.save({}, {
                     success: function () {
-                        self.$('i.voted').remove();
-                        self.ui.voteCommit.append(' <i class="glyphicon glyphicon-ok voted"></i>');
-                        self.ui.voteCommit.removeClass('btn-primary');
-                        self.ui.voteCommit.addClass('disabled btn-default');
+                        self.changeVoteButton();
                     }
                 });
             } else {
@@ -108,10 +105,7 @@ module.exports = Marionette.LayoutView.extend({
                     } else {
                         voteOptionModel.save({}, {
                             success: function () {
-                                self.$('i.voted').remove();
-                                self.ui.voteCommit.append(' <i class="glyphicon glyphicon-ok voted"></i>');
-                                self.ui.voteCommit.removeClass('btn-primary');
-                                self.ui.voteCommit.addClass('disabled btn-default');
+                                self.changeVoteButton();
                             }
                         });
                     }
@@ -127,6 +121,13 @@ module.exports = Marionette.LayoutView.extend({
             vote_item_id: voteOption,
             vote_item_value: voteValue
         }, {parentUrl: this.options.collection.parentUrl});
+    },
+
+    changeVoteButton: function() {
+        this.$('i.voted').remove();
+        this.ui.voteCommit.append(' <i class="glyphicon glyphicon-ok voted"></i>');
+        this.ui.voteCommit.removeClass('btn-primary');
+        this.ui.voteCommit.addClass('disabled btn-default');
     },
 
     collectionEvents: {
