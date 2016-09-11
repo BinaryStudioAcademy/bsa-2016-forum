@@ -4,11 +4,29 @@ var app = require('../../instances/appInstance');
 var logger = require('../../instances/logger');
 var topicCollection = require('./topicCollection');
 var _ = require('underscore');
+var currentUser = require('../../initializers/currentUser');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'topicLayout',
     regions: {
         container: '#posts'
+    },
+
+    serializeData: function () {
+        var shows = true;
+
+        if (this.options.categoryId) {
+            var catId = this.options.categoryId;
+        }
+
+        if (this.options.blockhide) {
+            shows = false;
+        }
+
+        return {
+            role: (currentUser.isAdmin() && shows) ? '' : 'hide',
+            categoryId: catId
+        };
     },
 
     onRender: function () {
@@ -17,14 +35,4 @@ module.exports = Marionette.LayoutView.extend({
             paginate: this.options.paginate
         }));
     },
-
-    serializeData: function () {
-        if (this.options.categoryId) {
-            var catId = this.options.categoryId;
-        }
-
-        return {
-            categoryId: catId
-        }
-    }
 });

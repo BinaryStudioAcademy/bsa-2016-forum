@@ -48,7 +48,7 @@ class CategoryController extends ApiController
      */
     public function show($id)
     {
-        $category = Category::findOrFail($id);
+        $category = Category::getSluggableModel($id);
         return $this->setStatusCode(200)->respond($category);
     }
 
@@ -60,7 +60,7 @@ class CategoryController extends ApiController
      */
     public function update(CategoryRequest $request, $id)
     {
-        $category = Category::findOrFail($id);
+        $category = Category::getSluggableModel($id);
         $this->authorize('updateCategory', $category);
 
         $category->update($request->all());
@@ -75,7 +75,7 @@ class CategoryController extends ApiController
      */
     public function destroy($id)
     {
-        $category = Category::findOrFail($id);
+        $category = Category::getSluggableModel($id);
         $this->authorize('destroyCategory', $category);
 
         $category->delete();
