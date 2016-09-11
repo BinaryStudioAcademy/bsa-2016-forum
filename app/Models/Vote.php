@@ -143,4 +143,32 @@ class Vote extends Model
     {
         return $this->morphMany(Subscription::class, Subscription::$name)->where('user_id', $userId)->first();
     }
+
+    /**
+     * Scope a query to only include votes ordered by custom field
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param $order
+     * @param $orderType
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilterByOrder(Builder $query, $order, $orderType = 'asc')
+    {
+        if ($order && $orderType) {
+            $query = $query->orderBy($order, $orderType);
+        }
+        return $query;
+    }
+
+    /**
+     * Scope a query to only include limit of votes
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param $limit
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilterByLimit(Builder $query, $limit)
+    {
+        return $limit ? $query->limit($limit) : $query;
+    }
 }
