@@ -13,7 +13,7 @@ module.exports = Marionette.LayoutView.extend({
 
     serializeData: function () {
         return {
-            role: (currentUser.isAdmin()) ? '' : 'hide'
+            isAdmin: currentUser.isAdmin()
         };
     },
 
