@@ -14,9 +14,7 @@ module.exports = Marionette.LayoutView.extend({
         breadcrumbs: '#categoryForBreadcrumbs'
     },
     events: {
-        'change': function () {
-            this.render();
-        }
+        'change': 'render'
     },
     onRender: function () {
 
