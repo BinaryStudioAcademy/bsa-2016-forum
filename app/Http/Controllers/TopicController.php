@@ -213,7 +213,7 @@ class TopicController extends ApiController
      */
     public function addLike($id)
     {
-        $topic = Topic::findOrFail($id);
+        $topic = Topic::getSluggableModel($id);
 
         $user=Auth::user();
 
@@ -239,7 +239,7 @@ class TopicController extends ApiController
      */
     public function removeLike($idTopic,$idLike)
     {
-        $topic = Topic::findOrFail($idTopic);
+        $topic = Topic::getSluggableModel($idTopic);
 
         $like = Like::findOrFail($idLike);
 
