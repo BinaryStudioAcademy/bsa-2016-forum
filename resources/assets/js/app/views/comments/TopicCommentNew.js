@@ -11,6 +11,7 @@ module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentNew',
     _dropZone: null,
     _files: [],
+    _deletedFiles: [],
 
     initialize: function (options) {
         if (this.model.get('id')) {
@@ -76,11 +77,15 @@ module.exports = Marionette.ItemView.extend({
                     view._dropZone.processQueue();
                 }
 
+                if (view._deletedFiles.length) {
+                    view.removeFilesFromServer();
+                }
+
                 // add comment to comment collection
                 if (view.options.commentCollection) {
                     view.options.commentCollection.add(model, { merge: true });
                 } else if (!view._isEditComment) {
-                    view.options.parentView.showChildCommentsButton(true);
+                    //view.options.parentView.showChildCommentsButton(true);
                 }
 
                 view.ui.commentDlg.modal('hide');
@@ -132,7 +137,8 @@ module.exports = Marionette.ItemView.extend({
                 if (file.id) {
                     view.$(file.previewElement).remove();
                     view.$('.dz-message').hide();
-                    view.removeAttachmentFromServer(file);
+                    view._deletedFiles.push(file);
+                    //view.removeAttachmentFromServer(file);
                 } else {
                     view.$(file.previewElement).remove();
                 }
@@ -163,34 +169,30 @@ module.exports = Marionette.ItemView.extend({
     modelChangeMeta: function () {
         if (this.options.commentCollection) {
             var model = this.options.commentCollection.findWhere({ id: this.model.get('id') });
+            model.setMeta(this.model.getMeta());
             return model.trigger('change');
         }
 
         return false;
     },
 
+    removeFilesFromServer: function() {
+        var self = this;
+        this._deletedFiles.forEach(function (file, i) {
+            self.destroyAttachsFromMeta(file.id);
+            self.removeAttachmentFromServer(file);
+        });
+
+        this._deletedFiles.splice(0, this._deletedFiles.length);
+        this.modelChangeMeta();
+    },
+
     removeAttachmentFromServer: function (file) {
         // remove single file from server
-        this.showLoader(true);
         var model = new AttachmentModel({ id: file.id });
         var view = this;
         model.parentUrl = _.result(this.model, 'url');
         model.destroy({
-            success: function () {
-                view.showLoader(false);
-                view.ui.errors.text('File was successfully removed');
-                view.showErrors(true);
-                view.destroyAttachsFromMeta(file.id);
-                view.modelChangeMeta();
-            },
-
-            error: function (response) {
-                view.showLoader(false);
-                view.ui.errors.empty();
-                view.ui.errors.text(response.responseText);
-                view.showErrors(true);
-            },
-
             wait: true
         });
     },

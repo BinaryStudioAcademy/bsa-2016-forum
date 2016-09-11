@@ -86,14 +86,12 @@ module.exports = Marionette.Object.extend({
         view.listenTo(Radio.channel('comment'), 'showChildComments', function (commentItemView) {
             var childs = new CommentsCollection();
             childs.parentUrl = _.result(commentItemView.model, 'getEntityUrl');
-            childs.fetch({
-                success: function () {
-                    commentItemView._childUpload = true;
-                    commentItemView.collection = childs;
-                }
-            });
+            childs.fetch();
+            commentItemView._childUpload = true;
+            commentItemView.collection = childs;
             commentItemView.getRegion('childComments').show(new CommentsCollectionView({
-                collection: childs
+                collection: childs,
+                parentCommentView: commentItemView
             }));
         });
 

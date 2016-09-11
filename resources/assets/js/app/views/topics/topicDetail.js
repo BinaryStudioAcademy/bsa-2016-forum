@@ -30,7 +30,7 @@ module.exports = Marionette.LayoutView.extend({
         }));
 
         this.getRegion('comments').show(new CommentsCollectionView({
-          collection: this.collection
+          collection: this.collection,
         }));
     }
 

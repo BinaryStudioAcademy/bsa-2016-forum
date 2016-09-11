@@ -8,6 +8,10 @@ module.exports = Marionette.LayoutView.extend({
     template: 'TopicCommentItem',
     _childUpload: false,
 
+    initialize: function() {
+        this.childsCollection = this.options.collection;
+    },
+
     regions: {
         'attachments': '.attachs',
         'childComments': '.topic-comment-childs'
@@ -24,14 +28,17 @@ module.exports = Marionette.LayoutView.extend({
 
     events: {
         'click @ui.answer': function (event) {
+            event.preventDefault();
+            this.collection = this.childsCollection;
             Radio.channel('comment').trigger('addComment', this);
+            this.showChildCommentsButton(true);
         },
 
         'click @ui.edit': function (event) {
             event.preventDefault();
             event.stopPropagation();
             // set collection which has this view model
-            this.collection = this._parent.collection;
+            this.collection = this.model.collection;
             Radio.channel('comment').trigger('addComment', this, this.model);
         },
 
@@ -39,6 +46,12 @@ module.exports = Marionette.LayoutView.extend({
             event.preventDefault();
             event.stopPropagation();
             this.model.destroy({
+                success: function () {
+                    // if parent comments collection is empty then hide childs btn
+                    if (!this.options.parentCommentView.collection.length) {
+                        this.options.parentCommentView.showChildCommentsButton(false);
+                    }
+                }.bind(this),
                 error: function (model, response) {
                     console.error(response.responseText);
                 }.bind(this),
@@ -89,5 +102,5 @@ module.exports = Marionette.LayoutView.extend({
 
     modelEvents: {
         'change': 'render',
-    },
+    }
 });
