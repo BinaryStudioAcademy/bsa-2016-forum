@@ -48,8 +48,10 @@ module.exports = Marionette.LayoutView.extend({
             this.model.destroy({
                 success: function () {
                     // if parent comments collection is empty then hide childs btn
-                    if (!this.options.parentCommentView.collection.length) {
-                        this.options.parentCommentView.showChildCommentsButton(false);
+                    if (this.options.parentCommentView) {
+                        if (!this.options.parentCommentView.collection.length) {
+                            this.options.parentCommentView.showChildCommentsButton(false);
+                        }
                     }
                 }.bind(this),
                 error: function (model, response) {
