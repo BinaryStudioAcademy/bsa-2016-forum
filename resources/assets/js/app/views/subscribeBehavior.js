@@ -34,11 +34,11 @@ module.exports = Marionette.Behavior.extend({
     },
 
     addOkIcon: function () {
-        this.ui.subscribeNotification.append(' <i class="glyphicon glyphicon-ok subscribed"></i>');
+        this.ui.subscribeNotification.html('<i class="glyphicon glyphicon-ok subscribed"></i> Subscribed');
     },
 
     removeOkIcon: function () {
-        this.ui.subscribeNotification.children('.subscribed').remove();
+        this.ui.subscribeNotification.html('Subscribe');
     },
 
     saveSubscribe: function(subscribe)

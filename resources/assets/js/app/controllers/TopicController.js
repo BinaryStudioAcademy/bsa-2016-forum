@@ -8,8 +8,10 @@ var TopicCollection = require('../collections/topicCollection');
 var UserTopicCollection = require('../collections/userTopicCollection');
 var TopicCreate = require('../views/topics/topicCreate');
 var TopicModel = require('../models/TopicModel');
+var TopicCategoryModel = require('../models/TopicCategoryModel');
 var TopicDetailView = require('../views/topics/topicDetail');
 var currentUser = require('../initializers/currentUser');
+var TopicCategoryCreate = require('../views/topics/topicCategoryCreate');
 var TopicCategoryModel = require('../models/TopicCategoryModel');
 
 module.exports = Marionette.Object.extend({
@@ -22,12 +24,16 @@ module.exports = Marionette.Object.extend({
     },
 
     indexInCategory: function (catId) {
-        var topicCollection = new TopicCollection({catId: catId});
+        var topicCollection = new TopicCollection();
         topicCollection.parentUrl = '/categories/' + catId;
         topicCollection.fetch();
         var topicCategoryModel = new TopicCategoryModel({id:catId});
         topicCategoryModel.fetch();
-        app.render(new topicLayout({collection: topicCollection, model:topicCategoryModel}));
+        app.render(new topicLayout({
+            collection: topicCollection,
+            categoryId: catId,
+            model:topicCategoryModel
+        }));
     },
 
     indexCategories: function () {
@@ -36,12 +42,29 @@ module.exports = Marionette.Object.extend({
         app.render(new topicCategoryLayout({collection: topicCategoryCollection}));
     },
 
-    create: function () {
+    create: function (categoryId) {
         var topicCategoryCollection = new TopicCategoryCollection();
         topicCategoryCollection.fetch();
 
-        var topicModel = new TopicModel();
-        app.render(new TopicCreate({model: topicModel, collection: topicCategoryCollection}));
+        var topicModel = new TopicModel({category_id: categoryId});
+        app.render(new TopicCreate({
+            model: topicModel,
+            collection: topicCategoryCollection
+        }));
+    },
+
+    createCategory: function () {
+        var topicCategoryModel = new TopicCategoryModel();
+        topicCategoryModel.fetch();
+
+        app.render(new TopicCategoryCreate({model: topicCategoryModel}));
+    },
+
+    editCategory: function (catId) {
+        var topicCategoryModel = new TopicCategoryModel({id: catId});
+        topicCategoryModel.fetch();
+
+        app.render(new TopicCategoryCreate({model: topicCategoryModel}));
     },
 
     show: function (slug)  {
@@ -54,6 +77,6 @@ module.exports = Marionette.Object.extend({
         var parentUrl = '/users/' + currentUser.id;
         var topicCollection = new UserTopicCollection({parentUrl: parentUrl});
         topicCollection.fetch({data: {page: 1}});
-        app.render(new topicLayout({collection: topicCollection}));
+        app.render(new topicLayout({collection: topicCollection, blockhide: true}));
     }
 });
