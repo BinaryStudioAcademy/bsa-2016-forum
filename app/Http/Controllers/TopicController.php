@@ -18,14 +18,6 @@ class TopicController extends ApiController
     protected $searchStr = null;
     protected $tagIds = [];
 
-    private function getTopicModel($id) {
-        if (is_numeric($id) === false) {
-            return  Topic::where('slug', '=', $id)->firstOrFail();
-        }
-
-        return Topic::findOrFail($id);
-    }
-
     /**
      * @param Topic $topic
      * @return array
@@ -77,7 +69,8 @@ class TopicController extends ApiController
     {
         $this->setFiltersData($request);
 
-        $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
+        $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)
+            ->filterByLimit($this->limit)->get();
 
         foreach ($topics as $topic) {
             $topic->usersCount = $topic->activeUsersCount();
@@ -98,6 +91,11 @@ class TopicController extends ApiController
     public function indexInCategory($catId, TopicRequest $request)
     {
         $this->setFiltersData($request);
+
+        if (is_numeric($catId) === false) {
+            $catId = Category::where('slug', '=', $catId)->firstOrFail()->id;
+        }
+
         if ($request->page) {
             $paginationObject = Topic::where('category_id', $catId)
                 ->filterByQuery($this->searchStr)
@@ -147,7 +145,7 @@ class TopicController extends ApiController
      */
     public function show($id)
     {
-        $topic = $this->getTopicModel($id);
+        $topic = Topic::getSluggableModel($id);
         $topic->tags = $topic->tags()->get();
         $meta = $this->getMetaDataForModel($topic);
 
@@ -164,7 +162,7 @@ class TopicController extends ApiController
      */
     public function update($id, TopicRequest $request)
     {
-        $topic = $this->getTopicModel($id);
+        $topic = Topic::getSluggableModel($id);
 
         $this->authorize('update', $topic);
 
@@ -187,7 +185,7 @@ class TopicController extends ApiController
      */
     public function destroy($id)
     {
-        $topic = $this->getTopicModel($id);
+        $topic = Topic::getSluggableModel($id);
 
         $this->authorize('delete', $topic);
 
@@ -268,6 +266,7 @@ class TopicController extends ApiController
         $this->searchStr = $request->get('query');
         $tagIds = $request->get('tag_ids');
         $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+        $this->limit = $request->get('limit');
     }
 
 }
