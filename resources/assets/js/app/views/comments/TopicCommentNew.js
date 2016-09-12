@@ -85,7 +85,10 @@ module.exports = Marionette.ItemView.extend({
                 if (view.getOption('commentCollection')) {
                     view.getOption('commentCollection').add(model, { merge: true });
                 } else if (view.getOption('parentCommentView') && !view._isEditComment) {
+                    // if view hasnt child comments collection yet show childs btn
                     view.getOption('parentCommentView').showChildCommentsButton(true);
+                    // hide edit/delete btns
+                    view.getOption('parentCommentView').showEditDeleteBtn(false);
                 }
 
                 view.ui.commentDlg.modal('hide');

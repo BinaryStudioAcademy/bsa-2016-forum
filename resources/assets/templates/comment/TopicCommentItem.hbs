@@ -1,79 +1,10 @@
 <div class="topic-comment-item">
     <div class="topic-comment-main">
         <div class="alert errors collapse"></div>
-        <div class="topic-comment-flex">
-            <div class="topic-bar hidden-xs">
-                <div class="topic-avatar">
-                    <img src="/images/user.png">
-                </div>
-                <div class="topic-addition">
-
-                </div>
-            </div>
-            <div class="topic-body">
-                <div class="topic-msg">
-                    <p>{{ model.content_origin }}</p>
-                </div>
-                <div class="attachments-container">
-                    {{#each meta.attachments}}
-                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                            <a href="{{ url }}" class="thumbnail" target="_blank">
-                                <img src="{{ thumb }}" alt="{{ url }}">
-                            </a>
-                            <div class="file-name">{{ cloud_public_id }}</div>
-                        </div>
-                    {{/each}}
-                </div>
-                <div class="attachs"></div>
-            </div>
-        </div>
-        <div class="topic-control">
-            <div class="topic-bar hidden-xs"></div>
-            <div class="topic-history">{{ model.created_at }}</div>
-            <div class="topic-history">{{ meta.user.display_name }}</div>
-            <div class="topic-history">Rating {{ model.rating }}</div>
-            <div class="topic-control-btn">
-                {{!-- only output if user comment belongs to current user --}}
-                {{#if meta.canEditDelete}}
-                    <a class="comment-edit-btn">Edit</a>
-                    <a class="" data-toggle="modal" data-target="#confirmDialog-{{ model.id }}">Remove</a>
-                {{/if}}
-                {{#if meta.canReply}}
-                    <a class="answer-btn">Answer</a>
-                {{/if}}
-            </div>
-            <div class="row">
-                {{#if meta.comments}}
-                    <button class="btn-childs btn btn-default col-xs-12">
-                        <span class="glyphicon glyphicon-chevron-down"></span>
-                    </button>
-                {{else}}
-                    <button class="btn-childs btn btn-default col-xs-12 collapse">
-                        <span class="glyphicon glyphicon-chevron-down"></span>
-                    </button>
-                {{/if}}
-            </div>
-        </div>
+        <div class="comment-header"></div>
     </div>
 
-    <div class="topic-comment-included childs-{{ model.id }} collapse">
+    <div class="topic-comment-included collapse">
         <div class="topic-comment-childs"></div>
-    </div>
-</div>
-
-<div id="confirmDialog-{{ model.id }}" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Confirm delete</h4>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default removeBtn" data-dismiss="modal">Submit</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
     </div>
 </div>
