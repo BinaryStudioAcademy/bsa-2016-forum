@@ -130,6 +130,11 @@ VOTE INDEX
 
 }
 
+.votes a:hover {
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .votes-item-add a {
   text-transform: capitalize;
   display: block;
@@ -156,7 +161,6 @@ VOTE INDEX
   padding: 10px;
   display: flex;
   width: 100%;
-  height: 110px;
 }
 
 .votes-item:hover {
@@ -229,6 +233,18 @@ VOTE INDEX
   float: right;
   font-size: 12px;
   color: #999999;
+}
+
+.votes-item .subscribe-btn {
+  float: right;
+  background: transparent;
+  color: #337ab7;
+  border: none;
+  font-weight: 600;
+}
+
+.votes-item .subscribed {
+  margin-right: 7px;
 }
 
 /*
@@ -438,7 +454,6 @@ VOTE INDEX
 .relative {
   position: relative;
 }
-
 .vote-comments-btn {
   background: #fff;
   font-weight: 600;
@@ -458,4 +473,7 @@ VOTE INDEX
   text-decoration: none;
   background: #ddd;
   animation-duration: 1s;
+}
+.vote-attachments {
+  padding-top: 15px;
 }

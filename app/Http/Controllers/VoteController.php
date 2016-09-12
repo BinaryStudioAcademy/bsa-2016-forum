@@ -6,6 +6,7 @@ use App\Models\Vote;
 use App\Models\User;
 use App\Http\Requests\VotesRequest;
 use App\Http\Requests\VoteResultRequest;
+use App\Models\VoteItem;
 use App\Models\VoteResult;
 use App\Models\VoteUniqueView;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -40,7 +41,8 @@ class VoteController extends ApiController
             $meta['hasMorePages'] = $paginationObject->hasMorePages();
         } else {
             $votes = Vote::filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)->get();
+                ->filterByTags($this->tagIds)
+                ->filterByLimit($this->limit)->get();
             $meta = $this->getMetaDataForCollection($votes);
         }
 
@@ -55,6 +57,9 @@ class VoteController extends ApiController
         $this->searchStr = $request->get('query');
         $tagIds = $request->get('tag_ids');
         $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+        $this->limit = $request->get('limit');
+        $this->order = $request->get('order');
+        $this->orderType = $request->get('orderType');
     }
 
     /**
@@ -187,9 +192,9 @@ class VoteController extends ApiController
 
         $vote->update($request->all());
         $vote->save();
-        if ($request->tags) {
-            TagService::TagsHandler($vote, $request->tags);
-        }
+        
+        TagService::TagsHandler($vote, $request->tags);
+        
         if ($vote->is_public) {
             $vote->votePermissions()->forceDelete();
         } elseif ($request->users) {
@@ -230,14 +235,24 @@ class VoteController extends ApiController
     public function getUserVotes($userId, Request $request)
     {
         $user = User::findOrFail($userId);
-
+        $votes = null;
         $this->setFiltersParameters($request);
-        $votes = $user->votes()
-            ->getQuery()
-            ->newOnTop()
-            ->filterByQuery($this->searchStr)
-            ->filterByTags($this->tagIds)
-            ->get();
+        if ($request->with_draft && $request->with_draft == 1 && Auth::user()->id == $user->id) {
+            $votes = $user->votes()
+                ->getQuery()
+                ->newOnTop()
+                ->filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)
+                ->get();
+        }else{
+            $votes = $user->votes()
+                ->getQuery()
+                ->onlySaved()
+                ->newOnTop()
+                ->filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)
+                ->get();
+        }
 
         if (!$votes) {
             return $this->setStatusCode(200)->respond();
@@ -271,25 +286,67 @@ class VoteController extends ApiController
      * @param $voteId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getUserVoteResult($voteId)
+    public function getUserVoteResult(Vote $vote)
     {
-        $vote = Vote::findOrFail($voteId);
-        $voteResults = $vote->voteResults()->get();
-
-        if (!$voteResults) {
-            throw (new ModelNotFoundException)->setModel(VoteResult::class);
+        $user = Auth::user();
+        $voteItems = $vote->voteItems()->get();
+        if (!$voteItems) {
+            throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
+        $meta['checked'] = [];
+        $userVoteResults = $vote->voteResults()->where('user_id', $user->id)->get();
+        foreach ($userVoteResults as $res) {
+            $temp = $voteItems->where('id', $res->vote_item_id);
+            foreach ($temp as $item) {
+                $item->checked = 1;
+            }
+        }
+        $meta['vote'] = $vote;
+        return $this->setStatusCode(200)->respond($voteItems, $meta);
 
-        return $this->setStatusCode(200)->respond($voteResults, ['vote' => $vote]);
     }
 
     /**
      * Display the specific vote all results
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createUserVoteResult(VoteResultRequest $request)
+    public function createUserVoteResult($id, VoteResultRequest $request)
     {
-        $voteresult = VoteResult::create($request->all());
-        return $this->setStatusCode(201)->respond($voteresult);
+        $model = null;
+        $vote = Vote::findOrFail($request->vote_id);
+        $user = Auth::user();
+        $voteItem = VoteItem::findOrFail($request->vote_item_id);
+        $response = ['checked' => true];
+        if ($vote->is_single) {
+            $results = $vote->voteResults()->where('user_id', $user->id)->get();
+            if (count($results) > 1) {
+                $vote->voteResults()->where('user_id', $user->id)->delete();
+            }
+            if (count($results) == 1) {
+                $model = $results->first();
+                $model->voteItem()->associate($voteItem);
+                $model->save();
+            } elseif (count($results) == 0) {
+                $model = new VoteResult();
+                $model->user()->associate($user);
+                $model->vote()->associate($vote);
+                $model->vote_item_id = $request->vote_item_id;
+                $model->save();
+            }
+        } else {
+            $model = $vote->voteResults()->where('user_id', $user->id)->where('vote_item_id',
+                $request->vote_item_id)->first();
+            if (!$model && ($request->vote_item_value == 1)) {
+                $model = new VoteResult();
+                $model->user()->associate($user);
+                $model->vote()->associate($vote);
+                $model->vote_item_id = $request->vote_item_id;
+                $model->save();
+            } elseif ($model && ($request->vote_item_value == 0)) {
+                $model->delete();
+                $response['checked'] = false;
+            }
+        }
+        return $this->setStatusCode(201)->respond($response);
     }
 }
