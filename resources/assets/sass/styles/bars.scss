@@ -72,6 +72,30 @@ SUBSCRIPTIONS BAR
   float: right;
 }
 
+.subscription-control {
+  padding-top: 5px;
+  overflow: hidden;
+}
+
+.subscription-control button {
+  float: right;
+  padding: 5px 15px;
+  border-radius: 0;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  font-weight: 800;
+  background-color: #ffd992;
+  margin-left: 10px;
+}
+
+.subscription-control button:hover {
+  background-color: #f9c172;
+}
+
+.subscription-control button:disabled {
+  background-color: #DDDDDD
+}
 
 /*
 FORUM STATS

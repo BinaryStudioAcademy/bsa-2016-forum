@@ -1,6 +1,7 @@
 var Marionette = require('backbone.marionette');
 var dateHelper = require('../../helpers/dateHelper');
 var Radio = require('backbone.radio');
+var _ = require('underscore');
 
 module.exports = Marionette.ItemView.extend({
     template: 'subscriptionConfirmDelete',
@@ -25,16 +26,26 @@ module.exports = Marionette.ItemView.extend({
     },
         
     serializeData: function () {
-        var edit = '';
-        if(this.model.get('created_at') != this.model.get('updated_at')) {
-            edit = 'Edit at';
+        var url = "", title = "";
+        var meta = _.findWhere(
+            this.model.getMeta()[this.model.get('subscription_type')],
+            {id: parseInt(this.model.get('subscription_id'))}
+        );
+        
+        switch (this.model.get('subscription_type')) {
+            case 'Topic':
+                title = meta.name;
+                url = '#topics/'+meta.slug;
+                break;
+            case 'Vote':
+                title = meta.title;
+                url = '#votes/'+meta.id;
+                break;
         }
 
         return {
-            message: this.model.toJSON(),
-            edit_at: edit,
-            updatedDate: dateHelper.relativeDate(dateHelper.dateWithTimezone(this.model.get('updated_at'))),
-            updatedStaticDate: dateHelper.dateWithTimezone(this.model.get('updated_at'))
-        }
+            url: url,
+            title: title
+        };
     }
 });

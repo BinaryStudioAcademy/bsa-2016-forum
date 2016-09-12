@@ -31,7 +31,6 @@ module.exports = Marionette.ItemView.extend({
             model: this.model.toJSON(),
             url: url,
             title: title
-            
         };
     },
     delete: function () {
