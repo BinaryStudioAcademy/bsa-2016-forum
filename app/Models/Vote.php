@@ -175,4 +175,12 @@ class Vote extends Model
     {
         return $limit ? $query->limit($limit) : $query;
     }
+
+    public function getFinishedAtAttribute($value)
+    {
+        if($value == '0000-00-00 00:00:00'){
+            return '';
+        }
+        return $value;
+    }
 }
