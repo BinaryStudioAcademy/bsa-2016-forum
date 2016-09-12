@@ -12,6 +12,7 @@ var TopicCategoryModel = require('../models/TopicCategoryModel');
 var TopicDetailView = require('../views/topics/topicDetail');
 var currentUser = require('../initializers/currentUser');
 var TopicCategoryCreate = require('../views/topics/topicCategoryCreate');
+var TopicCategoryModel = require('../models/TopicCategoryModel');
 
 module.exports = Marionette.Object.extend({
 
@@ -26,9 +27,12 @@ module.exports = Marionette.Object.extend({
         var topicCollection = new TopicCollection();
         topicCollection.parentUrl = '/categories/' + catId;
         topicCollection.fetch();
+        var topicCategoryModel = new TopicCategoryModel({id:catId});
+        topicCategoryModel.fetch();
         app.render(new topicLayout({
             collection: topicCollection,
-            categoryId: catId
+            categoryId: catId,
+            model:topicCategoryModel
         }));
     },
 

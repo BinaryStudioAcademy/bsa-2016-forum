@@ -1,21 +1,29 @@
 /*
 NEW TOPIC VIEW STYLES
 */
+#categoryForBreadcrumbs {
+  float: left;
+  text-transform: uppercase;
+  color: #eb8764;
+}
 
 .topic-form {
   width: 100%;
   padding: 20px;
   background: #fff;
 }
+
 .topic-form > div {
   width: 100%;
   margin: 5px 0 15px;
 }
-.topic-new-head h4{
+
+.topic-new-head h4 {
   margin: 0 0 15px;
   font-weight: 400;
   font-size: 18px;
 }
+
 .topic-new-title input {
   width: 100%;
   padding: 10px 15px;
@@ -25,6 +33,7 @@ NEW TOPIC VIEW STYLES
   font-size: 16px;
   font-weight: 400;
 }
+
 .topic-new-slug input {
   width: 100%;
   padding: 10px 15px;
@@ -34,6 +43,7 @@ NEW TOPIC VIEW STYLES
   font-size: 16px;
   font-weight: 400;
 }
+
 .topic-new-body textarea {
   resize: vertical;
   width: 100%;
@@ -45,30 +55,37 @@ NEW TOPIC VIEW STYLES
   font-size: 14px;
   font-weight: 400;
 }
+
 .topic-new-body a {
   float: right;
 }
+
 .topic-new-attachment {
   width: 100%;
   overflow: hidden;
 }
+
 .topic-new-control {
   border-top: #ddd 1px solid;
   padding: 15px 0 15px;
 }
+
 .topic-new-notification {
   display: inline-block;
   float: left;
 }
+
 .topic-new-notification label {
   color: #555;
   font-size: 14px;
   font-weight: 400;
 }
+
 .topic-new-submit {
   display: inline-block;
   float: right;
 }
+
 .topic-new-submit input {
   padding: 5px 35px;
   border-radius: 0;
@@ -78,6 +95,7 @@ NEW TOPIC VIEW STYLES
   font-weight: 800;
   background-color: #ffd992;
 }
+
 .topic-new-submit input:hover {
   background-color: #f9c172;
 }
@@ -138,7 +156,7 @@ TOPIC DETAILS
   display: inline-block;
 }
 
-.topic-body textarea{
+.topic-body textarea {
   resize: vertical;
   width: 100%;
 }
@@ -161,7 +179,6 @@ TOPIC DETAILS
   color: #777;
   margin-top: 10px;
 }
-
 
 .topic-msg .topic-comment {
   border: #DDD 1px solid;
@@ -224,7 +241,7 @@ TOPIC DETAILS
 .topic-control-btn button {
   border: 0;
   background: transparent;
-//  color: #337ab7;
+  //  color: #337ab7;
 }
 
 .topic-control-btn a, .topic-control-btn button {
@@ -272,6 +289,7 @@ TOPIC DETAILS
   display: flex;
   margin-bottom: 20px;
 }
+
 .topic-count {
   text-decoration: none;
   text-transform: lowercase;
@@ -305,8 +323,9 @@ TOPIC DETAILS
 .post-item:nth-child(even) {
   background: #fff;
 }
+
 .errors {
-  color:red;
+  color: red;
 }
 .edit-category {
   margin-right: 20px;
