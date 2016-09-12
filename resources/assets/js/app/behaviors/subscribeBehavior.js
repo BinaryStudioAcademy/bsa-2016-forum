@@ -71,12 +71,11 @@ module.exports = Marionette.Behavior.extend({
         var subscription_meta = that.getSubscribe();
 
         if (subscription_meta) {
-            subscription.set({
-                id: subscription_meta.id
-            });
+            subscription.set(subscription_meta);
 
             var modal = new ConfirmDeleteView({
-                model: subscription
+                model: subscription,
+                meta: that.view.model.toJSON()
             });
 
             modal.listenTo(Radio.channel('subscriptionChannel'), 'cancel', function (subscription_model) {
@@ -106,7 +105,7 @@ module.exports = Marionette.Behavior.extend({
                 subscription_type: that.options.target_type
             }, {
                 success: function (response) {
-                    that.saveSubscribe(response);
+                    that.saveSubscribe(response.toJSON());
                     that.unlockButton();
                     that.addOkIcon();
                 },

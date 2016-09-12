@@ -27,10 +27,7 @@ module.exports = Marionette.ItemView.extend({
         
     serializeData: function () {
         var url = "", title = "";
-        var meta = _.findWhere(
-            this.model.getMeta()[this.model.get('subscription_type')],
-            {id: parseInt(this.model.get('subscription_id'))}
-        );
+        var meta = this.options.meta;
         
         switch (this.model.get('subscription_type')) {
             case 'Topic':

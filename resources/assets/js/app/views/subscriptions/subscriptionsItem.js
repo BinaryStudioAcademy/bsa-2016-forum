@@ -37,7 +37,8 @@ module.exports = Marionette.ItemView.extend({
         this.model.parentUrl = _.result(currentUser, 'url');
 
         var modal = new ConfirmDeleteView({
-            model: this.model
+            model: this.model,
+            meta: this.options.target
         });
         
         modal.listenTo(Radio.channel('subscriptionChannel'), 'cancel', function (subscription_model) {
