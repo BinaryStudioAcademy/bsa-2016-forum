@@ -6,7 +6,6 @@ var currentUser = require('../initializers/currentUser');
 var VoteAImodel = require('../models/VoteAIModel');
 var VoteModel = require('../models/VoteModel');
 var CommentModel = require('../models/CommentModel');
-var VoteRImodel = require('../models/VoteRImodel');
 var UserModel = require('../models/UserModel');
 
 var usersCollection = require('../collections/userCollection');
@@ -67,21 +66,7 @@ module.exports = Marionette.Object.extend({
             );
         });
 
-        view.listenTo(Radio.channel('votesChannel'), 'saveUserChoice', function (view) {
-            var model = new VoteRImodel({
-                user_id: currentUser.get('id'),
-                vote_id: view.vote.id,
-                vote_item_id: view.model.get('id')
-            }, {parentUrl: view.model.collection.parentUrl});
-            model.save({}, {
-                success: function (data) {
-                    if (view.vote.is_single)
-                        view.ui.select.prop('checked', true);
-                    else
-                        view.ui.select.prop('checked', data.get('checked'));
-                }
-            });
-        });
+
 
         app.render(view);
 
