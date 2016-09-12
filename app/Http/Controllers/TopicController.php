@@ -217,9 +217,9 @@ class TopicController extends ApiController
      * @return \Illuminate\Http\Response
      * @throws AuthorizationException
      */
-    public function addLike($id)
+    public function addLike(Topic $topic)
     {
-        $topic = Topic::getSluggableModel($id);
+//        $topic = Topic::getSluggableModel($id);
 
         $user=Auth::user();
 
@@ -243,9 +243,9 @@ class TopicController extends ApiController
      * @return \Illuminate\Http\Response
      * @throws AuthorizationException
      */
-    public function removeLike($idTopic,$idLike)
+    public function removeLike($topic,$idLike)
     {
-        $topic = Topic::getSluggableModel($idTopic);
+//        $topic = Topic::getSluggableModel($idTopic);
 
         $like = Like::findOrFail($idLike);
 

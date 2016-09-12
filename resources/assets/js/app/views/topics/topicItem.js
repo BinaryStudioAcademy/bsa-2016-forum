@@ -153,7 +153,7 @@ module.exports = Marionette.ItemView.extend({
         var parentUrl = '/topics/'+this.model.id;
         var topicAddLikeModel=new TopicAddLikeModel({parentUrl: parentUrl});
         topicAddLikeModel.save();
-        this.model.fetch({id:this.model.id});
+        this.model.fetch({id:this.model.attributes.slug});
         this.model.set({
             is_user:this.model.attributes.is_user,
             countOfLikes:this.model.attributes.countOfLikes,
@@ -165,10 +165,8 @@ module.exports = Marionette.ItemView.extend({
         var parentUrl = '/topics/'+this.model.id+'/likes/'+this.model.attributes.like_id;
         var topicRemoveLikeModel = new TopicRemoveLikeModel({parentUrl: parentUrl,id:this.model.attributes.like_id});
         topicRemoveLikeModel.destroy({success: function(model, response) {
-        },
-            error:function(){
-            }});
-        this.model.fetch({id:this.model.id});
+        }});
+        this.model.fetch({id:this.model.slug});
         this.model.set({
             is_user:this.model.attributes.is_user,
             countOfLikes:this.model.attributes.countOfLikes,
