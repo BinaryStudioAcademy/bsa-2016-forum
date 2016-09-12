@@ -260,7 +260,7 @@ class CommentController extends ApiController
      */
     public function getVoteComments(Vote $vote)
     {
-        $comments = $vote->comments()->orderBy('created_at', 'desc')->paginate(3);
+        $comments = $vote->comments()->orderBy('created_at', 'desc')->paginate(5);
         $meta = $this->makeCommentsMeta($comments);
 
         return $this->setStatusCode(200)->respond($comments->all(), $meta);

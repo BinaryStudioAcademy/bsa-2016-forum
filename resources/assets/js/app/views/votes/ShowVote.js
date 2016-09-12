@@ -48,6 +48,9 @@ module.exports = Marionette.LayoutView.extend({
         var currentPage = this.collection.getMeta().currentPage;
         var lastPage = this.collection.getMeta().lastPage;
 
+        if (currentPage == lastPage){
+            return;
+        }
         this.collection.fetch({
             remove: true,
             data: {page: this._pageMore},
@@ -57,11 +60,8 @@ module.exports = Marionette.LayoutView.extend({
                 console.error(response.responseText);
             },
             success: function (collection, xhr) {
-
-                if (currentPage + 1 < lastPage) {
-                    this._pageMore++;
-                    this._pageLess = this._pageMore - 1;
-                }
+                this._pageLess = this._pageMore - 1;
+                this._pageMore++;
             }.bind(this)
         });
     },
@@ -74,6 +74,10 @@ module.exports = Marionette.LayoutView.extend({
 
         var currentPage = this.collection.getMeta().currentPage;
 
+        if (currentPage == 1){
+            return;
+        }
+
         this.collection.fetch({
             remove: true,
             data: {page: this._pageLess},
@@ -83,11 +87,8 @@ module.exports = Marionette.LayoutView.extend({
                 console.error(response.responseText);
             },
             success: function (collection, xhr) {
-
-                if (currentPage >= 2) {
-                    this._pageLess--;
-                    this._pageMore = this._pageLess + 1;
-                }
+                this._pageMore = this._pageLess + 1;
+                this._pageLess--;
             }.bind(this)
         });
     },
@@ -112,12 +113,14 @@ module.exports = Marionette.LayoutView.extend({
         this.collection.listenTo(Radio.channel('VoteComments'), 'newComment', function (comment) {
             self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
             var count = self.addedCommentsCollection.length + self.collection.length;
+            console.log(count);
             Radio.trigger('votesChannel', 'setCommentsCount' + self.options.voteModel.id, count);
 
             if (comment.user_id != currentUser.id) {
                 self.ui.newCommentButton.show(300);
             } else {
                 self.options.collection.add(self.addedCommentsCollection.toJSON());
+                console.log(self.options.length);
             }
         });
 
