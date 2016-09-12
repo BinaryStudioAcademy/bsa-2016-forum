@@ -113,14 +113,12 @@ module.exports = Marionette.LayoutView.extend({
         this.collection.listenTo(Radio.channel('VoteComments'), 'newComment', function (comment) {
             self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
             var count = self.addedCommentsCollection.length + self.collection.length;
-            console.log(count);
             Radio.trigger('votesChannel', 'setCommentsCount' + self.options.voteModel.id, count);
 
             if (comment.user_id != currentUser.id) {
                 self.ui.newCommentButton.show(300);
             } else {
                 self.options.collection.add(self.addedCommentsCollection.toJSON());
-                console.log(self.options.length);
             }
         });
 
