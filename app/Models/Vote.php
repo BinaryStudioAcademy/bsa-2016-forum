@@ -127,6 +127,10 @@ class Vote extends Model
 
         return $query;
     }
+    public function scopeOnlySaved(Builder $query)
+    {
+        return $query->where('is_saved', 1);
+    }
     
     public function canBeEdited() {
         $user = Auth::user();
@@ -170,5 +174,13 @@ class Vote extends Model
     public function scopeFilterByLimit(Builder $query, $limit)
     {
         return $limit ? $query->limit($limit) : $query;
+    }
+
+    public function getFinishedAtAttribute($value)
+    {
+        if($value == '0000-00-00 00:00:00'){
+            return '';
+        }
+        return $value;
     }
 }
