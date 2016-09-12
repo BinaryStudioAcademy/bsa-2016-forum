@@ -76,7 +76,7 @@ module.exports = Marionette.LayoutView.extend({
 
         },
         'change @ui.finished': function () {
-            this.saveModel({finished_at: DateHelper.dateWithoutTimezone(this.ui.finished.val())});
+            this.saveModel({finished_at: DateHelper.dateToSave(this.ui.finished.val())});
         },
         'click @ui.delete': function () {
             this.model.destroy({success: function() {Backbone.history.navigate('votes', {trigger: true});}});
