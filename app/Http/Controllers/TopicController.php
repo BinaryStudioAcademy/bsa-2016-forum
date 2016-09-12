@@ -35,7 +35,8 @@ class TopicController extends ApiController
 
         // requires common standards in the future
         $data[$topic->id] = [
-            'subscription' => $topic->subscription(Auth::user()->id)
+            'subscription' => $topic->subscription(Auth::user()->id),
+            'category' => $topic->category
         ];
 
         return $data;
@@ -69,7 +70,8 @@ class TopicController extends ApiController
     {
         $this->setFiltersData($request);
 
-        $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
+        $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)
+            ->filterByLimit($this->limit)->get();
 
         foreach ($topics as $topic) {
             $topic->usersCount = $topic->activeUsersCount();
@@ -90,6 +92,11 @@ class TopicController extends ApiController
     public function indexInCategory($catId, TopicRequest $request)
     {
         $this->setFiltersData($request);
+
+        if (is_numeric($catId) === false) {
+            $catId = Category::where('slug', '=', $catId)->firstOrFail()->id;
+        }
+
         if ($request->page) {
             $paginationObject = Topic::where('category_id', $catId)
                 ->filterByQuery($this->searchStr)
@@ -109,7 +116,6 @@ class TopicController extends ApiController
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
         }
-
         return $this->setStatusCode(200)->respond($topics, $meta);
     }
 
@@ -260,6 +266,7 @@ class TopicController extends ApiController
         $this->searchStr = $request->get('query');
         $tagIds = $request->get('tag_ids');
         $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+        $this->limit = $request->get('limit');
     }
 
 }

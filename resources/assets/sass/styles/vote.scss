@@ -161,7 +161,6 @@ VOTE INDEX
   padding: 10px;
   display: flex;
   width: 100%;
-  height: 110px;
 }
 
 .votes-item:hover {
@@ -234,6 +233,18 @@ VOTE INDEX
   float: right;
   font-size: 12px;
   color: #999999;
+}
+
+.votes-item .subscribe-btn {
+  float: right;
+  background: transparent;
+  color: #337ab7;
+  border: none;
+  font-weight: 600;
+}
+
+.votes-item .subscribed {
+  margin-right: 7px;
 }
 
 /*
@@ -442,6 +453,10 @@ VOTE INDEX
 
 .relative {
   position: relative;
+}
+
+.vote-attachments {
+  padding-top: 15px;
 }
 
 .not-saved {

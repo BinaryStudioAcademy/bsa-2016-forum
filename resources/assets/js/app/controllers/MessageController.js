@@ -102,7 +102,7 @@ module.exports = Marionette.Object.extend({
 
         DialogView.listenTo(Radio.channel('messagesChannel'),'editMessage', function (message){
             var EditView = require('../views/messages/messageDialogEditItem');
-            DialogView.editModal.show(new EditView({model: message}));
+            app.renderModal(new EditView({model: message}));
         });
 
         app.render(DialogView);
