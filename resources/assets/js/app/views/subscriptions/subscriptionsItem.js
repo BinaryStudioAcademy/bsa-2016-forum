@@ -1,6 +1,9 @@
 var _ = require('underscore');
 var Marionette = require('backbone.marionette');
 var currentUser = require('../../initializers/currentUser');
+var ConfirmDeleteView = require('./subscriptionsConfirmDeleteView');
+var Radio = require('backbone.radio');
+var app = require('../../instances/appInstance');
 
 module.exports = Marionette.ItemView.extend({
     template: 'subscriptionItem',
@@ -33,6 +36,24 @@ module.exports = Marionette.ItemView.extend({
     },
     delete: function () {
         this.model.parentUrl = _.result(currentUser, 'url');
-        this.model.destroy();
+
+        var modal = new ConfirmDeleteView({
+            model: this.model
+        });
+        
+        modal.listenTo(Radio.channel('subscriptionChannel'), 'cancel', function (subscription_model) {
+            subscription_model.destroy({
+                error: function (response, xhr) {
+                    var errorMsg = '';
+                    $.each(xhr.responseJSON, function (index, value) {
+                        errorMsg += index + ': ' + value;
+                    });
+
+                    logger(errorMsg);
+                }
+            });
+        });
+
+        app.renderModal(modal);
     }
 });

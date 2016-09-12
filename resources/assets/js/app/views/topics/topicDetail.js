@@ -2,7 +2,7 @@ var _ = require('underscore');
 var Marionette = require('backbone.marionette');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
-var SubscribeBehavior = require('../subscribeBehavior');
+var SubscribeBehavior = require('../../behaviors/subscribeBehavior');
 var dateHelper = require('../../helpers/dateHelper');
 var logger = require('../../instances/logger');
 

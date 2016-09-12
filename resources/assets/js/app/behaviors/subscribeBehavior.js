@@ -1,7 +1,11 @@
 var _ = require("underscore");
 var Marionette = require('backbone.marionette');
 var Subscription = require('../models/SubscriptionModel');
+var ConfirmDeleteView = require('./../views/subscriptions/subscriptionsConfirmDeleteView');
 var logger = require('../instances/logger');
+var Radio = require('backbone.radio');
+var app = require('../instances/appInstance');
+
 module.exports = Marionette.Behavior.extend({
 
     defaults: {
@@ -34,7 +38,7 @@ module.exports = Marionette.Behavior.extend({
     },
 
     addOkIcon: function () {
-        this.ui.subscribeNotification.html('<i class="glyphicon glyphicon-ok subscribed"></i> Subscribed');
+        this.ui.subscribeNotification.html('<i class="glyphicon glyphicon-ok subscribed"></i> Unsubscribe');
     },
 
     removeOkIcon: function () {
@@ -59,7 +63,7 @@ module.exports = Marionette.Behavior.extend({
         e.preventDefault();
         var subscription = new Subscription();
         subscription.parentUrl = this.options.parent_url;
-        this.lockButton(this.ui.subscribeNotification);
+
 
         var that = this;
         var view = this.view;
@@ -70,23 +74,33 @@ module.exports = Marionette.Behavior.extend({
             subscription.set({
                 id: subscription_meta.id
             });
-            subscription.destroy({
-                success: function () {
-                    that.unlockButton(that.ui.subscribeNotification);
-                    that.removeOkIcon();
-                    that.saveSubscribe(undefined);
-                },
-                error: function (response, xhr) {
-                    var errorMsg = '';
-                    $.each(xhr.responseJSON, function (index, value) {
-                        errorMsg += index + ': ' + value;
-                    });
 
-                    logger(errorMsg);
-                }
+            var modal = new ConfirmDeleteView({
+                model: subscription
             });
 
+            modal.listenTo(Radio.channel('subscriptionChannel'), 'cancel', function (subscription_model) {
+                subscription_model.destroy({
+                    success: function () {
+                        that.unlockButton(that.ui.subscribeNotification);
+                        that.removeOkIcon();
+                        that.saveSubscribe(undefined);
+                    },
+                    error: function (response, xhr) {
+                        var errorMsg = '';
+                        $.each(xhr.responseJSON, function (index, value) {
+                            errorMsg += index + ': ' + value;
+                        });
+
+                        logger(errorMsg);
+                    }
+                });
+            });
+
+            app.renderModal(modal);
+
         } else {
+            this.lockButton(this.ui.subscribeNotification);
             subscription.save({
                 subscription_id: view.model.id,
                 subscription_type: that.options.target_type
