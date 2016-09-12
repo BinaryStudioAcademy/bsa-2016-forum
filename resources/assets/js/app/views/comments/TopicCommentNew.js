@@ -84,6 +84,8 @@ module.exports = Marionette.ItemView.extend({
                 // add comment to comment collection
                 if (view.getOption('commentCollection')) {
                     view.getOption('commentCollection').add(model, { merge: true });
+                } else if (view.getOption('parentCommentView') && !view._isEditComment) {
+                    view.getOption('parentCommentView').showChildCommentsButton(true);
                 }
 
                 view.ui.commentDlg.modal('hide');
@@ -117,11 +119,11 @@ module.exports = Marionette.ItemView.extend({
             //if max files count
             maxfilesexceeded: function (file) {
                 this.removeFile(file);
-                view.ui.errors.text('Max files is 5');
+                view.ui.errors.text(config.maxFilesMessage);
             },
             uploadMultiple: false,
             addRemoveLinks: true,
-            acceptedFiles: 'image/*,.pdf,.docx,.doc,.xlsx,.xls',
+            acceptedFiles: config.acceptedFiles,
             error: function (xhr) {
                 view.showErrors(true);
                 view.ui.errors.append(xhr.responseText);
@@ -136,7 +138,6 @@ module.exports = Marionette.ItemView.extend({
                     view.$(file.previewElement).remove();
                     view.$('.dz-message').hide();
                     view._deletedFiles.push(file);
-                    //view.removeAttachmentFromServer(file);
                 } else {
                     view.$(file.previewElement).remove();
                 }

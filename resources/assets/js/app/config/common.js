@@ -10,7 +10,9 @@ var defaults = {
     timeZone: 'Europe/Kiev',
     parallelFileUploads : 10,
     maxFileSize: 8,
-    maxFiles: 5
+    maxFiles: 5,
+    acceptedFiles: 'image/*,.pdf,.docx,.doc,.xlsx,.xls',
+    maxFilesMessage: 'Max files is 5. File types are ' + this.acceptedFiles
 };
 
 

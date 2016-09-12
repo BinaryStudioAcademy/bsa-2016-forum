@@ -8,10 +8,6 @@ module.exports = Marionette.LayoutView.extend({
     template: 'TopicCommentItem',
     _childUpload: false,
 
-    initialize: function() {
-        this.childsCollection = this.options.collection;
-    },
-
     regions: {
         'attachments': '.attachs',
         'childComments': '.topic-comment-childs'
@@ -29,17 +25,18 @@ module.exports = Marionette.LayoutView.extend({
     events: {
         'click @ui.answer': function (event) {
             event.preventDefault();
-            this.collection = this.childsCollection;
-            Radio.channel('comment').trigger('addComment', this);
-            this.showChildCommentsButton(true);
+            if (this.childCommentsCollection) {
+                Radio.channel('comment').trigger('addComment', this, null, this.childCommentsCollection);
+            }
+            else {
+                Radio.channel('comment').trigger('addComment', this);
+            }
         },
 
         'click @ui.edit': function (event) {
             event.preventDefault();
             event.stopPropagation();
-            // set collection which has this view model
-            this.collection = this.model.collection;
-            Radio.channel('comment').trigger('addComment', this, this.model);
+            Radio.channel('comment').trigger('addComment', this, this.model, this.model.collection);
         },
 
         'click @ui.remove': function (event) {
@@ -48,8 +45,10 @@ module.exports = Marionette.LayoutView.extend({
             this.model.destroy({
                 success: function () {
                     // if parent comments collection is empty then hide childs btn
-                    if (this.options.parentCommentView) {
-                        if (!this.options.parentCommentView.collection.length) {
+                    if (this.options.parentCommentView &&
+                        this.options.parentCommentView.childCommentsCollection
+                    ) {
+                        if (!this.options.parentCommentView.childCommentsCollection.length) {
                             this.options.parentCommentView.showChildCommentsButton(false);
                         }
                     }

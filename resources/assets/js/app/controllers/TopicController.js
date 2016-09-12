@@ -80,9 +80,8 @@ module.exports = Marionette.Object.extend({
             collection: comments
         });
 
-        view.listenTo(Radio.channel('comment'), 'addComment', function (parentView, commentModel) {
+        view.listenTo(Radio.channel('comment'), 'addComment', function (parentView, commentModel, commentCollection) {
             var model = {}, attachCollection = {}, childComments = {};
-
             if (commentModel) {
                 model = new TopicCommentModel(commentModel.toJSON());
                 model.setMeta(commentModel.getMeta());
@@ -94,7 +93,7 @@ module.exports = Marionette.Object.extend({
 
             view.getRegion('newComment').show(new NewTopicCommentView({
                 model: model,
-                commentCollection: parentView.collection,
+                commentCollection: commentCollection,
                 parentCommentView: parentView
             }));
         });
@@ -104,7 +103,7 @@ module.exports = Marionette.Object.extend({
             childs.parentUrl = _.result(commentItemView.model, 'getEntityUrl');
             childs.fetch();
             commentItemView._childUpload = true;
-            commentItemView.collection = childs;
+            commentItemView.childCommentsCollection = childs;
             commentItemView.getRegion('childComments').show(new CommentsCollectionView({
                 collection: childs,
                 parentCommentView: commentItemView
