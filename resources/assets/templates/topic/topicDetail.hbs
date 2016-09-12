@@ -9,6 +9,7 @@
 
                 </div>
             </div>
+
             <div class="topic-body">
                 <div class="topic-header">
                     <h4>{{ model.name }}</h4>
@@ -16,6 +17,9 @@
                 <div class="topic-msg">
                     <p> {{{ model.generated_description }}}</p>
                 </div>
+                <span>
+                Category: <a href="#categories/{{model.category.slug}}/topics">{{ model.category.name }}</a>
+                </span>
                 <div class="topic-tags">
                     <span>#movie</span><span>#cinema</span>
                 </div>
@@ -25,7 +29,9 @@
             <div class="topic-bar hidden-xs"></div>
             <div class="topic-history">{{ createdDate }}: usernik</div>
             <div class="topic-control-btn">
-                <a>Edit</a><a>Answer</a><button class="bookmark-btn text-info">Bookmark</button> <button class="subscribe-btn text-info">Subscribe</button>
+                <a>Edit</a><a>Answer</a>
+                <button class="bookmark-btn text-info">Bookmark</button>
+                <button class="subscribe-btn text-info">Subscribe</button>
             </div>
         </div>
     </div>
