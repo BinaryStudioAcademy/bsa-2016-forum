@@ -27,19 +27,18 @@ module.exports = Marionette.ItemView.extend({
     },
     initialize: function(){
         this.listenTo(Radio.channel('votesChannel'), 'setCommentQuote', function (quote) {
-            this.setComment(quote);
+            this.setQuotableComment(quote);
             this.setFocus();
         })
     },
     setComment: function(content){
-        var value=this.EditQuote(content);
-        $(this.ui.text).val(value);
+        $(this.ui.text).val(content);
+    },
+    setQuotableComment: function(content){
+        var value='>>> '+content+'\n';
+        this.setComment(value);
     },
     setFocus: function(){
         $(this.ui.text).focus();
-    },
-    EditQuote: function (value) {
-        value='>>> '+value+'\n';
-        return value;
     }
 });
