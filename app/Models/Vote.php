@@ -127,6 +127,10 @@ class Vote extends Model
 
         return $query;
     }
+    public function scopeOnlySaved(Builder $query)
+    {
+        return $query->where('is_saved', 1);
+    }
     
     public function canBeEdited() {
         $user = Auth::user();
