@@ -12,9 +12,9 @@ class UserController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(UserStore $userStore)
+    public function index(UserStore $userStore, Request $request)
     {
-        $users = $userStore->all();
+        $users = $userStore->all(null, $request);
         return $this->setStatusCode(200)->respond($users);
     }
     /**

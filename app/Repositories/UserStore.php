@@ -1,10 +1,12 @@
 <?php
 namespace App\Repositories;
+use Illuminate\Http\Request;
 use App\Repositories\Contracts\UserStoreInterface;
 use App\Facades\CurlService;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Status;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class UserStore implements UserStoreInterface
 {
@@ -13,13 +15,21 @@ class UserStore implements UserStoreInterface
      * @return mixed
      * @throws ServiceUnavailableHttpException
      */
-    public function all($user = null)
+    public function all($user = null, Request $request = null)
     {
+        $searchStr = null;
+        $limit = null;
+        if ($request) {
+            $searchStr = $request->get('query');
+            $limit = $request->get('limit');
+        }
+
         if ($user) {
             $usersInner[] = $user->toArray();
         } else {
-            $usersInner = User::all()->toArray();
+            $usersInner = User::filterByQuery($searchStr)->take($limit)->get()->toArray();
         }
+
         if (strtolower(env('APP_ENV')) <> 'local') {
             if ($user){
                 $response = CurlService::sendUsersRequest($user->global_id);
