@@ -10,7 +10,8 @@ var mainLayoutView = Marionette.LayoutView.extend({
         header: '#header',
         navigationMenu: '#navigationMenu',
         content: '#main-content',
-        breadCrumbs: '#breadcrumbs'
+        breadCrumbs: '#breadcrumbs',
+        modalWindow: '#modal-container'
     },
     ui: {
         spinner: '#spinner'

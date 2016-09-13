@@ -36,6 +36,7 @@ class TopicController extends ApiController
         // requires common standards in the future
         $data[$topic->id] = [
             'subscription' => $topic->subscription(Auth::user()->id),
+            'category' => $topic->category
             'user' => $topic->user()->first(),
             'likes' => $topic->likes()->count(),
             'comments' => $topic->comments()->count(),
@@ -118,7 +119,6 @@ class TopicController extends ApiController
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
         }
-
         return $this->setStatusCode(200)->respond($topics, $meta);
     }
 
@@ -151,6 +151,7 @@ class TopicController extends ApiController
         $topic = Topic::getSluggableModel($id);
         $topic->tags = $topic->tags()->get();
         $meta = $this->getMetaDataForModel($topic);
+
         return $this->setStatusCode(200)->respond($topic, $meta);
     }
 
@@ -171,7 +172,7 @@ class TopicController extends ApiController
         $topic->update($request->all());
 
         TagService::TagsHandler($topic, $request->tags);
-
+        
         $topic->generated_description = MarkdownService::baseConvert($topic->description);
         $topic->save();
         $topic->tags = $topic->tags()->get();

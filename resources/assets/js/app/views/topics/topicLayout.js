@@ -5,12 +5,18 @@ var logger = require('../../instances/logger');
 var topicCollection = require('./topicCollection');
 var _ = require('underscore');
 var currentUser = require('../../initializers/currentUser');
+var topicCategoryItemForBreadcrumbs = require('../../views/topics/topicCategoryItemForBreadcrumbs');
+var TopicCategoryModel = require('../../models/TopicCategoryModel');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'topicLayout',
 
     regions: {
-        container: '#posts'
+        container: '#posts',
+        breadcrumbs: '#categoryForBreadcrumbs'
+    },
+    events: {
+        'change': 'render'
     },
 
     serializeData: function () {
@@ -35,5 +41,10 @@ module.exports = Marionette.LayoutView.extend({
             collection: this.collection,
             paginate: this.options.paginate
         }));
-    },
+        
+        this.breadcrumbs.show(new topicCategoryItemForBreadcrumbs({
+            model: this.model
+        }));
+    }
+
 });
