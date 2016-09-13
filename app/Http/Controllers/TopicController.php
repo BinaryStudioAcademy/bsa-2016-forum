@@ -186,6 +186,12 @@ class TopicController extends ApiController
         return $this->setStatusCode(200)->respond($topic, $meta);
     }
 
+    public function showInCategory($categoryId,$topicId)
+    {
+        $topic = $this->getTopicModel($topicId);
+        return $this->setStatusCode(200)->respond($topic);
+    }
+
     /**
      * Update the specified resource in storage.
      *
