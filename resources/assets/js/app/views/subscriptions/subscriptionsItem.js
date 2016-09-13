@@ -1,6 +1,8 @@
 var _ = require('underscore');
 var Marionette = require('backbone.marionette');
 var currentUser = require('../../initializers/currentUser');
+var ConfirmDeleteView = require('./subscriptionsConfirmDeleteView');
+var app = require('../../instances/appInstance');
 
 module.exports = Marionette.ItemView.extend({
     template: 'subscriptionItem',
@@ -28,11 +30,14 @@ module.exports = Marionette.ItemView.extend({
             model: this.model.toJSON(),
             url: url,
             title: title
-            
         };
     },
     delete: function () {
         this.model.parentUrl = _.result(currentUser, 'url');
-        this.model.destroy();
+
+        app.renderModal(new ConfirmDeleteView({
+            model: this.model,
+            meta: this.options.target
+        }));
     }
 });
