@@ -1,50 +1,10 @@
 <div class="topic-comment-item">
     <div class="topic-comment-main">
-        <div class="topic-comment-flex">
-            <div class="topic-bar hidden-xs">
-                <div class="topic-avatar">
-                    <img src="/images/user.png">
-                </div>
-                <div class="topic-addition">
-
-                </div>
-            </div>
-            <div class="topic-body">
-                <div class="topic-msg">
-                    <a href="{{ comment_url }}">{{ model.content_origin }}</a>
-                </div>
-                <div class="attachments-container">
-                    {{#each meta.attachments}}
-                        <div class="col-xs-6 col-md-3">
-                            <a href="{{ url }}" class="thumbnail">
-                                <img src="{{ url }}" alt="">
-                            </a>
-                        </div>
-                    {{/each}}
-                </div>
-            </div>
-        </div>
-        <div class="topic-control">
-            <div class="topic-bar hidden-xs"></div>
-            <div class="topic-history">{{ model.created_at }}: usernik</div>
-            <div class="topic-history">{{ meta.user.display_name }}</div>
-            <div class="topic-history">Rating {{ model.rating }}</div>
-            <div class="topic-control-btn">
-                <a class="edit-btn">Edit</a>
-                <a class="bookmark-btn">Bookmark</a>
-                <a class="share-btn">Share</a>
-                <a class="answer-btn">Reply</a>
-                <a class="notification-btn">Notification</a>
-            </div>
-        </div>
+        <div class="alert errors collapse"></div>
+        <div class="comment-header"></div>
     </div>
 
-    <div class="topic-comment-included">
-        <!-- comments on this comment container -->
-        <!-- comment item such as this item -->
-        <!-- <div class="topic-comment-item">
-                <div class="topic-comment-main">
-                    <di ... -->
+    <div class="topic-comment-included collapse">
+        <div class="topic-comment-childs"></div>
     </div>
 </div>
-<div class="new-comment-container"></div>

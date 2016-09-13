@@ -1,44 +1,31 @@
 <?php
-
 namespace App\Http\Controllers;
-
+use App\Models\Role;
 use App\Models\User;
-
+use App\Repositories\UserStore;
 use Auth;
-use DCN\RBAC\Exceptions\RoleDeniedException;
-use DCN\RBAC\Models\Role;
 use Illuminate\Http\Request;
-
-use DCN\RBAC\Traits\HasRoleAndPermission;
-use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
-
-class UserController extends ApiController implements HasRoleAndPermissionContract
+class UserController extends ApiController
 {
-    use HasRoleAndPermission;
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(UserStore $userStore, Request $request)
     {
-        $users = User::all();
+        $this->setFiltersParameters($request);
+        $users = collect($userStore->all());
+
+        if ($this->status) {
+            $users = $this->getUsersByStatus($users, $this->status);
+        }
+
         return $this->setStatusCode(200)->respond($users);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-
-        $user = User::create($request->all());
-
-        return $this->setStatusCode(201)->respond($user);
+    public function getUsersByStatus($users, $status) {
+        return $users->where('status', $status)->values();
     }
 
     /**
@@ -47,71 +34,27 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(UserStore $userStore, $id)
     {
         $user = User::findOrFail($id);
-
-        return $this->setStatusCode(200)->respond($user);
+        $this->authorize('show', $user);
+        $userProfile = $userStore->get($user);
+        return $this->setStatusCode(200)->respond($userProfile);
     }
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-
-        $user = User::findOrFail($id);
-
-        $user->update($request->all());
-
-        return $this->setStatusCode(200)->respond($user);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-
-        $user = User::findOrFail($id);
-
-        $user->delete();
-        if ($user->trashed()) {
-            return $this->setStatusCode(204)->respond();
-        } else {
-            throw new \PDOException();
-        }
-    }
-
     /**
      * @param $userId
-     * @param Request $requestst
      * @param $roleId
      * @return \Illuminate\Http\JsonResponse
-     * @throws RoleDeniedException
      */
-    public function updateRole($userId, Request $requestst, $roleId)
+    public function updateRole($userId, $roleId)
     {
-//        Auth::login(User::find(1));   //uncomment for test when there is no user Admin login in
-
-        if(!Auth::user()->is('admin')){
-            throw (new RoleDeniedException('Admin'));
-        }
         $user = User::findOrFail($userId);
+        $this->authorize('updateRole', $user);
         $role = Role::findOrFail($roleId);
-        $user->detachAllRoles();
-        $user->attachRole($role);
+        $user->role()->associate($role);
+        $user->save();
         return $this->setStatusCode(200)->respond(['user' => $user, 'role' => $role] );
     }
-
     /**
      * @param $userId
      * @return \Illuminate\Http\JsonResponse
@@ -119,18 +62,29 @@ class UserController extends ApiController implements HasRoleAndPermissionContra
     public function getUserRole($userId)
     {
         $user = User::findOrFail($userId);
-        $role = $user->grantedRoles()->get();
-
+        $this->authorize('getUserRole', $user);
+        $role = $user->role()->first();
         return $this->setStatusCode(200)->respond($role, ['user' => $user]);
-
     }
-
-    public function getUser()
+    /**
+     * Return AuthUser Profile to the frontend
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUser(UserStore $userStore)
     {
         $user = Auth::user();
         if(!$user){
             return $this->setStatusCode(401)->respond();
         }
-        return $this->setStatusCode(200)->respond($user);
+        $userProfile = $userStore->get($user);
+        return $this->setStatusCode(200)->respond($userProfile);
+    }
+
+    protected function setFiltersParameters(Request $request)
+    {
+        $this->status = $request->get('status');
+        $this->limit = $request->get('limit');
+        $this->order = $request->get('order');
+        $this->orderType = $request->get('orderType');
     }
 }

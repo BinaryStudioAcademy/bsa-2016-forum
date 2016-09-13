@@ -1,0 +1,29 @@
+<div>
+    {{#if isAdmin}}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="create-topic pull-right">
+                <a href="#topicCategories/create">
+                    <button class="btn btn-warning btn-lg">
+                        <span class="hidden-xs">Create category</span>
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                </a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    {{/if}}
+    <div class="post-head">
+        <div class="">
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <div>TOPIC CATEGORIES</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="posts" id="categories">
+
+    </div>
+</div>

@@ -1,69 +1,126 @@
+var _ = require('underscore');
 var Marionette = require('backbone.marionette');
 var app = require('../instances/appInstance');
 var topicLayout = require('../views/topics/topicLayout');
+var topicCategoryLayout = require('../views/topics/topicCategoryLayout');
+var TopicCategoryCollection = require('../collections/topicCategoryCollection');
 var TopicCollection = require('../collections/topicCollection');
+var UserTopicCollection = require('../collections/userTopicCollection');
 var TopicCreate = require('../views/topics/topicCreate');
 var TopicModel = require('../models/TopicModel');
+var TopicCategoryModel = require('../models/TopicCategoryModel');
 var TopicDetailView = require('../views/topics/topicDetail');
 var Radio = require('backbone.radio');
 var NewTopicCommentView = require('../views/comments/TopicCommentNew');
 var TopicCommentModel = require('../models/TopicCommentModel');
 var CommentsCollection = require('../collections/TopicCommentsCollection');
-var _ = require('underscore');
-var Topics = require('../instances/TopicCollection');
+var CommentsCollectionView = require('../views/comments/TopicCommentsCollection');
+var currentUser = require('../initializers/currentUser');
+var TopicCategoryCreate = require('../views/topics/topicCategoryCreate');
+var TopicCategoryModel = require('../models/TopicCategoryModel');
 
 module.exports = Marionette.Object.extend({
 
     index: function () {
         var topicCollection = new TopicCollection();
+        topicCollection.url = '/topics';
         topicCollection.fetch();
         app.render(new topicLayout({collection: topicCollection}));
     },
-    create: function () {
-        var topicModel = new TopicModel();
-        app.render(new TopicCreate({model: topicModel}));
+
+    indexInCategory: function (catId) {
+        var topicCollection = new TopicCollection();
+        topicCollection.parentUrl = '/categories/' + catId;
+        topicCollection.fetch();
+        var topicCategoryModel = new TopicCategoryModel({id:catId});
+        topicCategoryModel.fetch();
+        app.render(new topicLayout({
+            collection: topicCollection,
+            categoryId: catId,
+            model:topicCategoryModel
+        }));
     },
 
-    show: function (id) {
-        var topicModel = {};
+    indexCategories: function () {
+        var topicCategoryCollection = new TopicCategoryCollection();
+        topicCategoryCollection.fetch();
+        app.render(new topicCategoryLayout({collection: topicCategoryCollection}));
+    },
 
-        if (Topics.get(id)) {
-            console.log(id);
-            topicModel = Topics.get(id);
+    create: function (categoryId) {
+        var topicCategoryCollection = new TopicCategoryCollection();
+        topicCategoryCollection.fetch();
 
-        } else {
-            topicModel = new TopicModel({
-                id: id,
-            });
+        var topicModel = new TopicModel({category_id: categoryId});
+        app.render(new TopicCreate({
+            model: topicModel,
+            collection: topicCategoryCollection
+        }));
+    },
 
-            topicModel.fetch();
-        }
+    createCategory: function () {
+        var topicCategoryModel = new TopicCategoryModel();
+        topicCategoryModel.fetch();
 
-        var collection = new CommentsCollection();
-        collection.parentUrl = _.result(topicModel, 'url');
-        collection.fetch();
+        app.render(new TopicCategoryCreate({model: topicCategoryModel}));
+    },
+
+    editCategory: function (catId) {
+        var topicCategoryModel = new TopicCategoryModel({id: catId});
+        topicCategoryModel.fetch();
+
+        app.render(new TopicCategoryCreate({model: topicCategoryModel}));
+    },
+
+    show: function (slug)  {
+        var topicModel = new TopicModel({slug: slug});
+        var comments = new CommentsCollection();
+        comments.parentUrl = _.result(topicModel, 'url') + '/' + slug;
+        comments.fetch();
+        topicModel.fetchBySlag();
 
         var view = new TopicDetailView({
             model: topicModel,
-            collection: collection
+            collection: comments
         });
 
-        view.listenTo(Radio.channel('newComment'), 'showCommentForm', function (parentView, childCommentId) {
-            var model = new TopicCommentModel();
+        view.listenTo(Radio.channel('comment'), 'addComment', function (parentView, commentModel, commentCollection) {
+            var model = {}, childComments = {};
+            if (commentModel) {
+                model = new TopicCommentModel(commentModel.toJSON());
+                model.setMeta(commentModel.getMeta());
+                model.parentUrl = _.result(commentModel, 'getParentUrl');
+            } else {
+                model = new TopicCommentModel();
+                model.parentUrl = _.result(parentView.model, 'getEntityUrl');
+            }
 
-            // maybe choose some better method to get child comment url
-            childCommentId ? model.parentUrl = _.result(topicModel, 'url') + _.result(model, 'url') +
-                    '/' + childCommentId :
-                model.parentUrl = _.result(topicModel, 'url');
+            view.getRegion('newComment').show(new NewTopicCommentView({
+                model: model,
+                commentCollection: commentCollection,
+                parentCommentView: parentView
+            }));
+        });
 
-
-            //console.log(model.parentUrl);
-
-            parentView.getRegion('newComment').show(new NewTopicCommentView({
-                model: model
+        view.listenTo(Radio.channel('comment'), 'showChildComments', function (commentItemView) {
+            var childs = new CommentsCollection();
+            childs.parentUrl = _.result(commentItemView.model, 'getEntityUrl');
+            childs.fetch();
+            commentItemView._childUpload = true;
+            commentItemView._childCommentsCollection = childs;
+            commentItemView.getRegion('childComments').show(new CommentsCollectionView({
+                collection: childs,
+                parentCommentView: commentItemView
             }));
         });
 
         app.render(view);
     },
+
+    myTopics: function () {
+        var parentUrl = '/users/' + currentUser.id;
+        var topicCollection = new UserTopicCollection({parentUrl: parentUrl});
+        topicCollection.fetch({data: {page: 1}});
+        app.render(new topicLayout({collection: topicCollection, blockhide: true}));
+    }
 });

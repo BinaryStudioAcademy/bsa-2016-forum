@@ -6,14 +6,26 @@
     </div>
     <div class="votes-item-body">
         <div class="votes-item-title">
-            <span>Vote title</span>
+            <span><a id="label">{{ model.title }} {{meta.status}}</a></span> Opened by: <span> {{ meta.user.first_name}} {{ meta.user.last_name }} </span>
+            <button class="text-info subscribe-btn"> Subscribe</button>
         </div>
         <div class="votes-item-details">
-            <a>0 Comments</a><a>0 Votes</a><a>0 Views</a>
+            <span>{{ meta.comments}} Comments</span>
+            <span>{{ meta.likes }} likes</span>
+            <span>{{ meta.numberOfUniqueViews }} unique views</span>
+            {{#if model.finished_at}}
+            <span>Finished at {{model.finished_at}}</span>
+            {{else}}
+            <span class="green-text">Currently in process</span>
+            {{/if}}
+            <span>{{model.views}} Views</span>
         </div>
         <div class="votes-item-tags">
-            <span>#Vote</span><span>#Votes</span><span>#Vote</span>
+            {{#each meta.tags}}
+                <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
+            {{/each}}
         </div>
-        <span class="votes-item-time">Asked 1 day ago</span>
+        <!--<span class="votes-item-time">Created at {{ model.created_at }}</span>-->
+    <span class="votes-item-time">Asked {{meta.days_ago}}</span>
     </div>
 </div>

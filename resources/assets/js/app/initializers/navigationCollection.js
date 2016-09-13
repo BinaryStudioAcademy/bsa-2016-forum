@@ -6,14 +6,36 @@ module.exports = new navigCollection([
         icon: '',
         name: 'dashboard',
         label: 'Dashboard',
-        active: true
     },
-
     {
-        href: '#topics',
+        href: '#topicCategories',
         icon: '',
         name: 'topics',
         label: 'Topics',
+    },
+    {
+        href: '#mytopics',
+        icon: '',
+        name: 'myTopics',
+        label: 'My topics',
+    },
+    {
+        href: '#bookmarks',
+        icon: '',
+        name: 'bookmarks',
+        label: 'Bookmarks',
+    },
+    {
+        href: '#votes',
+        icon: '',
+        name: 'votes',
+        label: 'Votes',
+    },
+    {
+        href: '#userVotes',
+        icon: '',
+        name: 'myVotes',
+        label: 'My votes'
     },
     {
         href: '#users',
@@ -22,16 +44,15 @@ module.exports = new navigCollection([
         label: 'Users'
     },
     {
-        href: '#subscribes',
+        href: '#messages',
         icon: '',
-        name: 'subscribes',
-        label: 'Subscribes',
+        name: 'messages',
+        label: 'Messages'
     },
     {
-        href: '#votes',
+        href: '#subscriptions',
         icon: '',
-        name: 'votes',
-        label: 'Votes',
+        name: 'subscriptions',
+        label: 'Subscriptions'
     }
-
 ]);

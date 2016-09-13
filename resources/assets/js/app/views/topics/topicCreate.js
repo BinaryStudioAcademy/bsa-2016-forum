@@ -2,8 +2,12 @@ var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 var TopicModel = require('../../models/TopicModel');
 var bootstrapTags = require('bootstrap-tagsinput');
+var currentUser = require('../../initializers/currentUser');
+var topicCategoryCollectionForSelector = require('../../views/topics/topicCategoryCollectionForSelector');
+var topicCategoryItemForSelector = require('../../views/topics/topicCategoryItemForSelector');
 
-module.exports = Marionette.ItemView.extend({
+
+module.exports = Marionette.LayoutView.extend({
     template: 'topicCreateNew',
 
     ui: {
@@ -11,10 +15,21 @@ module.exports = Marionette.ItemView.extend({
     },
 
     initialize: function () {
-        this.model.set({user_id: 2});
         this.$('.tags').tagsinput();
+        this.model.set({user_id: currentUser.id});
     },
 
+    regions: {
+        categories: '#categories'
+    },
+
+    onBeforeShow: function () {
+        this.categories.show(new topicCategoryItemForSelector({
+            collection: this.collection,
+            topicModel: this.model
+        }))
+    },
+    
     modelEvents: {
         'invalid': function (model, errors, options) {
             this.$('.errors').empty();
@@ -36,9 +51,10 @@ module.exports = Marionette.ItemView.extend({
             e.preventDefault();
             this.model.save({}, {
                 success: function (model, response) {
-                    Backbone.history.navigate('topics/' + model.get('id'), {trigger: true});
+                    Backbone.history.navigate('topics/' + model.get('slug'), {trigger: true});
                 }
             });
         }
     }
+
 });

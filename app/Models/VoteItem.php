@@ -46,19 +46,19 @@ class VoteItem extends Model
         return $this->morphToMany(Attachment::class, 'attachmenttable');
     }
 
+    /**
+     * Get all of the voteItem's likes
+     */
     public function likes()
     {
-        return $this->morphToMany(Like::class, 'likeable');
+        return $this->morphMany(Like::class, 'likeable');
     }
 
+    /**
+     * Get all of the voteItem's comments.
+     */
     public function comments()
     {
-        return $this->morphToMany(Comment::class, 'commentable');
+        return $this->morphMany(Comment::class, 'commentable');
     }
-
-    public function notifications()
-    {
-        return $this->morphToMany(Notification::class, 'notificationable');
-    }
-    
 }

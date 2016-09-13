@@ -2,40 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TopicNewCommentEvent;
+use App\Events\VoteNewCommentEvent;
 use App\Models\Comment;
 use App\Models\Vote;
 use App\Models\VoteItem;
 use App\Http\Requests\CommentsRequest;
 use App\Models\Topic;
-use App\Http\Requests;
+use App\Events\NewBroadcastCommentEvent;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Gate;
 
 class CommentController extends ApiController
 {
 
+    private function getItemMetaData($comment)
+    {
+        return [
+            'user' => $comment->user()->first(),
+            'likes' => $comment->likes()->count(),
+            'attachments' => $comment->attachments()->get(),
+            'comments' => $comment->comments()->count(),
+
+        ];
+    }
+
     private function getCollectionMetaData($comments)
     {
         $data = [];
-
         if ($comments) {
             foreach ($comments as $comment) {
-                $data['user'][$comment->id] = $comment->user()->first();
-                $data['likes'][$comment->id] = $comment->likes()->count();
-                $data['attachments'][$comment->id] = $comment->attachments()->get();
-                $data['tags'][$comment->id] = $comment->tags()->get(['name']);
+                $data[$comment->id] = $this->getItemMetaData($comment);
             }
         }
-
-        return $data;
-    }
-
-    private function getItemMetaData($comment)
-    {
-        $data = [];
-        $data['user'][$comment->id] = $comment->user()->first();
-        $data['likes'][$comment->id] = $comment->likes()->count();
-        $data['attachments'][$comment->id] = $comment->attachments()->get();
-        $data['tags'][$comment->id] = $comment->tags()->get(['name']);
 
         return $data;
     }
@@ -46,10 +45,7 @@ class CommentController extends ApiController
      */
     protected function isCommentHasAnyChild(Comment $comment)
     {
-        if ($comment->comments()->get()) {
-            return true;
-        }
-        return false;
+        return $comment->comments()->exists();
     }
 
     /**
@@ -75,9 +71,7 @@ class CommentController extends ApiController
      */
     protected function isCommentBelongsToTopic(Topic $topic, Comment $comment)
     {
-        $topicWhichHasThisComment = $comment->topics()->get()->first();
-
-        return ($topicWhichHasThisComment && $topicWhichHasThisComment->id === $topic->id);
+        return !!$topic->comments()->find($comment->id);
     }
 
     /**
@@ -99,7 +93,7 @@ class CommentController extends ApiController
     public function getTopicComment(Topic $topic, Comment $comment)
     {
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
-            $meta = $this->getItemMetaData($comment);
+            $meta[$comment->id] = $this->getItemMetaData($comment);
             return $this->setStatusCode(200)->respond($comment, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
@@ -111,12 +105,12 @@ class CommentController extends ApiController
      * @param CommentsRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-
     public function storeTopicComment(Topic $topic, CommentsRequest $request)
     {
         $comment = Comment::create($request->all());
         $comment = $topic->comments()->save($comment);
-        $meta = $this->getItemMetaData($comment);
+        event(new TopicNewCommentEvent($topic, $comment));
+        $meta[$comment->id] = $this->getItemMetaData($comment);
         return $this->setStatusCode(201)->respond($comment, $meta);
     }
 
@@ -128,9 +122,12 @@ class CommentController extends ApiController
      */
     public function updateTopicComment(Topic $topic, Comment $comment, CommentsRequest $request)
     {
+        $this->authorize('updateTopicsComment', [$comment, $topic]);
+
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comment->update($request->all());
-            return $this->setStatusCode(200)->respond($comment);
+            $meta[$comment->id] = $this->getItemMetaData($comment);
+            return $this->setStatusCode(200)->respond($comment, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -144,6 +141,8 @@ class CommentController extends ApiController
      */
     public function destroyTopicComment(Topic $topic, Comment $comment)
     {
+        $this->authorize('deleteTopicsComment', [$comment, $topic]);
+
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comment->delete();
             return $this->setStatusCode(204)->respond();
@@ -163,7 +162,8 @@ class CommentController extends ApiController
     {
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comments = $comment->comments()->get();
-            return $this->setStatusCode(200)->respond($comments);
+            $meta = $this->getCollectionMetaData($comments);
+            return $this->setStatusCode(200)->respond($comments, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -179,12 +179,11 @@ class CommentController extends ApiController
     {
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $childComment = Comment::create($childCommentInput->all());
-            // save to the topic
             $topic->comments()->save($childComment);
             $childComment = $comment->comments()->save($childComment);
-            // set meta data
-            $meta = $this->getItemMetaData($childComment);
-            return $this->setStatusCode(200)->respond($childComment, $meta);
+            event(new TopicNewCommentEvent($topic, $childComment));
+            $meta[$childComment->id] = $this->getItemMetaData($childComment);
+            return $this->setStatusCode(201)->respond($childComment, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -201,7 +200,8 @@ class CommentController extends ApiController
         if ($this->isCommentBelongsToTopic($topic, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
-            return $this->setStatusCode(200)->respond($commentChild);
+            $meta[$comment->id] = $this->getItemMetaData($commentChild);
+            return $this->setStatusCode(200)->respond($commentChild, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -220,11 +220,15 @@ class CommentController extends ApiController
         Comment $commentChild,
         CommentsRequest $request
     ) {
+
+//        $this->authorize('updateTopicsComment', [$comment, $topic]);
+        $this->authorize('updateTopicsComment', [$commentChild, $topic]);
         if ($this->isCommentBelongsToTopic($topic, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
             $commentChild->update($request->all());
-            return $this->setStatusCode(200)->respond($commentChild);
+            $meta[$commentChild->id] = $this->getItemMetaData($commentChild);
+            return $this->setStatusCode(200)->respond($commentChild, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -239,6 +243,8 @@ class CommentController extends ApiController
      */
     public function destroyTopicCommentChild(Topic $topic, Comment $comment, Comment $commentChild)
     {
+//        $this->authorize('deleteTopicsComment', [$comment, $topic]);
+        $this->authorize('deleteTopicsComment', [$commentChild, $topic]);
         if ($this->isCommentBelongsToTopic($topic, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
@@ -258,9 +264,24 @@ class CommentController extends ApiController
      */
     protected function isCommentBelongsToVote(Vote $vote, Comment $comment)
     {
-        $voteWhichHasThisComment = $comment->votes()->get()->first();
+        $voteWhichHasThisComment = $comment->commentable()->get()->first();
 
         return ($voteWhichHasThisComment && $voteWhichHasThisComment->id === $vote->id);
+    }
+
+    /**
+     * @param $comments
+     * @return array
+     */
+    protected function makeCommentsMeta($comments)
+    {
+        $meta = [];
+
+        foreach ($comments as $comment) {
+            $meta[$comment->id]['user'] = $comment->user()->first();
+        }
+
+        return $meta;
     }
 
     /**
@@ -270,7 +291,9 @@ class CommentController extends ApiController
     public function getVoteComments(Vote $vote)
     {
         $comments = $vote->comments()->get();
-        return $this->setStatusCode(200)->respond($comments);
+        $meta = $this->makeCommentsMeta($comments);
+
+        return $this->setStatusCode(200)->respond($comments, $meta);
     }
 
     /**
@@ -296,7 +319,22 @@ class CommentController extends ApiController
     {
         $comment = Comment::create($request->all());
         $comment = $vote->comments()->save($comment);
-        return $this->setStatusCode(201)->respond($comment);
+
+        $user = $comment->user()->first();
+
+        event(new NewBroadcastCommentEvent($comment, [
+            $comment->id => [
+                'user' => $user
+            ]
+        ]));
+
+        event(new VoteNewCommentEvent($vote, $comment));
+
+        return $this->setStatusCode(201)->respond($comment, [
+            $comment->id => [
+                'user' => $user
+            ]
+        ]);
     }
 
     /**
@@ -307,6 +345,8 @@ class CommentController extends ApiController
      */
     public function updateVoteComment(Vote $vote, Comment $comment, CommentsRequest $request)
     {
+        $this->authorize('updateVotesComment', [$comment, $vote]);
+
         if ($this->isCommentBelongsToVote($vote, $comment)) {
             $comment->update($request->all());
             return $this->setStatusCode(200)->respond($comment);
@@ -323,6 +363,8 @@ class CommentController extends ApiController
      */
     public function destroyVoteComment(Vote $vote, Comment $comment)
     {
+        $this->authorize('deleteVotesComment', [$comment, $vote]);
+
         if ($this->isCommentBelongsToVote($vote, $comment)) {
             $comment->delete();
             return $this->setStatusCode(204)->respond();
@@ -359,7 +401,8 @@ class CommentController extends ApiController
         if ($this->isCommentBelongsToVote($vote, $comment)) {
             $childComment = Comment::create($childCommentInput->all());
             $childComment = $comment->comments()->save($childComment);
-            return $this->setStatusCode(200)->respond($childComment);
+            event(new VoteNewCommentEvent($vote, $childComment));
+            return $this->setStatusCode(201)->respond($childComment);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -395,6 +438,8 @@ class CommentController extends ApiController
         Comment $commentChild,
         CommentsRequest $request
     ) {
+        $this->authorize('updateVotesComment', [$comment, $vote]);
+
         if ($this->isCommentBelongsToVote($vote, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
@@ -414,6 +459,8 @@ class CommentController extends ApiController
      */
     public function destroyVoteCommentChild(Vote $vote, Comment $comment, Comment $commentChild)
     {
+        $this->authorize('deleteVotesComment', [$comment, $vote]);
+
         if ($this->isCommentBelongsToVote($vote, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
@@ -433,27 +480,28 @@ class CommentController extends ApiController
      */
     protected function isCommentBelongsToVoteItem(VoteItem $voteItem, Comment $comment)
     {
-        $voteItemWhichHasThisComment = $comment->voteItems()->get()->first();
-
-        return ($voteItemWhichHasThisComment && $voteItemWhichHasThisComment->id === $voteItem->id);
+        return !!$voteItem->comments()->find($comment->id);
     }
 
+
     /**
+     * @param Vote $vote
      * @param VoteItem $voteItem
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getVoteItemComments(VoteItem $voteItem)
+    public function getVoteItemComments(Vote $vote, VoteItem $voteItem)
     {
         $comments = $voteItem->comments()->get();
         return $this->setStatusCode(200)->respond($comments);
     }
 
     /**
+     * @param Vote $vote
      * @param VoteItem $voteItem
      * @param Comment $comment
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getVoteItemComment(VoteItem $voteItem, Comment $comment)
+    public function getVoteItemComment(Vote $vote, VoteItem $voteItem, Comment $comment)
     {
         if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
             return $this->setStatusCode(200)->respond($comment);
@@ -463,25 +511,30 @@ class CommentController extends ApiController
     }
 
     /**
+     * @param Vote $vote
      * @param VoteItem $voteItem
      * @param CommentsRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeVoteItemComment(VoteItem $voteItem, CommentsRequest $request)
+    public function storeVoteItemComment(Vote $vote, VoteItem $voteItem, CommentsRequest $request)
     {
         $comment = Comment::create($request->all());
         $comment = $voteItem->comments()->save($comment);
+        event(new VoteNewCommentEvent($voteItem->vote, $comment));
         return $this->setStatusCode(201)->respond($comment);
     }
 
     /**
+     * @param Vote $vote
      * @param VoteItem $voteItem
      * @param Comment $comment
      * @param CommentsRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateVoteItemComment(VoteItem $voteItem, Comment $comment, CommentsRequest $request)
+    public function updateVoteItemComment(Vote $vote, VoteItem $voteItem, Comment $comment, CommentsRequest $request)
     {
+        $this->authorize('updateVoteItemsComment', [$comment, $voteItem]);
+
         if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
             $comment->update($request->all());
             return $this->setStatusCode(200)->respond($comment);
@@ -491,13 +544,16 @@ class CommentController extends ApiController
     }
 
     /**
+     * @param Vote $vote
      * @param VoteItem $voteItem
      * @param Comment $comment
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    public function destroyVoteItemComment(VoteItem $voteItem, Comment $comment)
+    public function destroyVoteItemComment(Vote $vote, VoteItem $voteItem, Comment $comment)
     {
+        $this->authorize('deleteVoteItemsComment', [$comment, $voteItem]);
+
         if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
             $comment->delete();
             return $this->setStatusCode(204)->respond();

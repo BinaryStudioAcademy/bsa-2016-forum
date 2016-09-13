@@ -40,8 +40,9 @@ path/to/project/$ php artisan migrate; path/to/project/$ php artisan db:seed
 
 5) Run local php server
 ```
-path/to/project/$ php artisan serve
+path/to/project/$ php artisan serve --host=127.0.0.1
 ```
+(--host=127.0.0.1 need for socket server)
 
 6) You can find project on
 ```
@@ -55,7 +56,7 @@ http://localhost:8000/
 npm install
 ```
 
-2) install Ruby (for sass dependency)
+2) install Ruby (for sass dependency) _ONLY if you plan to use Grunt_
 
 *Ubuntu*
 ```
@@ -65,7 +66,7 @@ sudo apt-get install ruby-full
 *Windows*
 Go to http://rubyinstaller.org/downloads/ and download stable version
 
-3) install sass package from rubygems.org
+3) install sass package from rubygems.org _ONLY if you plan to use Grunt_
 
 *Ubuntu*
 ```
@@ -77,7 +78,70 @@ sudo gem install sass
 gem install sass
 ```
 
-4) compile all resources
+4) install Gulp globally if you plan use it
+*Ubuntu*
+```
+sudo npm i -g gulp
+```
+
+*Windows*
+```
+npm i -g gulp
+```
+
+5) you can set your own config's values in the /resources/assets/js/app/config/config.custom.js like that
+```
+module.exports = {
+    socketUrl: 'you.own.value:3000'
+};
+```
+
+6) compile all resources
+*Grunt*
 ```
 grunt dev
+```
+
+*Gulp* (development)
+```
+gulp
+```
+*Gulp* (production)
+```
+gulp --prod
+```
+### Socket server part
+
+1) install all javascript packages
+```
+npm install
+```
+
+2) install Redis
+
+*Ubuntu*
+Go to https://www.digitalocean.com/community/tutorials/how-to-install-and-use-redis
+
+*Windows*
+Go to https://github.com/rgl/redis/downloads and download stable version
+
+3) run redis server
+
+*Ubuntu*
+will start automatic
+
+*Windows*
+go to instalation folder and run redis-server.exe
+
+4) Check file .env in the root directory and put redis settings
+```
+BROADCAST_DRIVER=redis
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+```
+
+5) start socket server (enter in root directory)
+```
+node socket/server.js
 ```

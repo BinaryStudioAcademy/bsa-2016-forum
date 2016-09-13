@@ -18,20 +18,21 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
         'display_name' => $faker->unique()->userName,
         'email' => $faker->safeEmail,
         'reputation' => $faker->numberBetween(0, 1000),
-        'status_id' => App\Models\Status::all()->random(1)->id,
-        'hash_password' => bcrypt(str_random(10)),
-        'token' => $faker->md5,
-        'last_visit_at' => $faker->dateTimeThisYear,
+        'last_visit_at' => $faker->dateTimeThisYear
     ];
 });
 
 $factory->define(App\Models\Topic::class, function (Faker\Generator $faker) {
+    $name = $faker->unique()->sentence;
+    $slug = str_slug($name, '-');
+
     return [
         'reviewed_number' => $faker->numberBetween(0, 1000),
-        'name' => $faker->unique()->sentence,
+        'name' => $name,
         'description' => $faker->sentence,
+        'generated_description' => $faker->text,
         'rating' => $faker->numberBetween(0, 1000),
-        'user_id' => App\Models\User::all()->random(1)->id,
+        'slug' => $slug,
     ];
 });
 
@@ -39,21 +40,14 @@ $factory->define(App\Models\Comment::class, function (Faker\Generator $faker) {
     return [
         'content_origin' => $faker->text,
         'rating' => $faker->numberBetween(0, 1000),
-        'user_id' => App\Models\User::all()->random(1)->id,
         'content_generated' => $faker->text,
     ];
 });
 
 $factory->define(App\Models\Message::class, function (Faker\Generator $faker) {
-    $from_id = App\Models\User::all()->random(1)->id;
-    $to_id = App\Models\User::all()->except($from_id)->random(1)->id;
-
-
     return [
-        'user_from_id' => $from_id,
-        'user_to_id' => $to_id,
         'message' => $faker->text,
-        'is_read' => $faker->numberBetween(0, 1),
+        'is_read' => $faker->numberBetween(0, 1)
     ];
 });
 
@@ -62,27 +56,28 @@ $factory->define(App\Models\Vote::class, function (Faker\Generator $faker) {
         'title' => $faker->word,
         'is_public' => $faker->numberBetween(0, 1),
         'is_saved' => $faker->numberBetween(0, 1),
-        'user_id' => App\Models\User::all()->random(1)->id,
         'finished_at' => date('Y:m:d H:m:s', strtotime('+' . $faker->numberBetween(5, 15) . ' days'))
     ];
 });
 
 $factory->define(App\Models\VoteItem::class, function (Faker\Generator $faker) {
     return [
-        'vote_id' => App\Models\Vote::all()->random(1)->id,
-        'user_id' => App\Models\User::all()->random(1)->id,
-        'name' => $faker->unique()->sentence,
+        'name' => $faker->unique()->sentence
     ];
 });
 
 $factory->define(App\Models\Tag::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->unique()->word,
+        'name' => $faker->unique()->word
     ];
 });
 
-$factory->define(App\Models\Like::class, function () {
+$factory->define(App\Models\Category::class, function (Faker\Generator $faker) {
+    $name = $faker->unique()->word . ' ' . $faker->unique()->word;
+    $slug = str_slug($name, '-');
+
     return [
-        'user_id' => App\Models\User::all()->random(1)->id,
+        'name' => $name,
+        'slug' => $slug
     ];
 });

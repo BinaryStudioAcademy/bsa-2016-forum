@@ -9,7 +9,11 @@ Marionette.Application.prototype._initChannel = function () {
     this.channel = _.result(this, 'channel') || Radio.channel(this.channelName);
 };
 
+var socket = require('./socketClient');
+
 var $ = require('jquery');
+
+var currentUser = require('../initializers/currentUser');
 
 var appRouter = require('../router');
 
@@ -18,6 +22,14 @@ var mainLayoutView = require('../views/mainLayout');
 var appInstance = require('../instances/appInstance');
 
 var logger = require('../instances/logger');
+
+$( document ).ajaxStart(function() {
+    Radio.channel('spinnerChannel').trigger('show');
+});
+
+$( document ).ajaxStop(function() {
+    Radio.channel('spinnerChannel').trigger('hide');
+});
 
 var Handlebars = require('handlebars');
 var Templates = require('../templates')(Handlebars);
@@ -45,7 +57,7 @@ var app = Marionette.Application.extend({
         var routers = require('../config/routers');
         var myRoutes = routers.getRouters();
         myRoutes.forEach(function (item, index) {
-            var myRouter = appRouter(item.controller, item.appRoutes);
+            var myRouter = appRouter(item.controller, item.appRoutes, item.navigItemName);
             var router = new myRouter();
         });
     },
@@ -60,9 +72,12 @@ var app = Marionette.Application.extend({
     },
     onStart: function (config) {
         this.config = config;
+        this.socket = socket;
+        currentUser.fetch({url: this.config.baseUrl + '/user', async:false});
         this.templateCashing();
         this.setRootLayout(new mainLayoutView({ collection: NavigCollection }));
         appInstance.setInstance(this);
+        socket.Login();
         this.showRootLayout();
         this.setRouting();
 

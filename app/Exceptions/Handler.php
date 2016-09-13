@@ -12,7 +12,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use \DCN\RBAC\Exceptions\PermissionDeniedException;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Cloudinary\Error as CloudinaryErorr;
 
 class Handler extends ExceptionHandler
 {
@@ -54,7 +55,7 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $e)
     {
         if ($e instanceof AuthenticationException) {
-            return response($e->getMessage(), 401);
+            return response('You do not have valid credentials', 401);
         }
 
         if ($e instanceof MethodNotAllowedHttpException) {
@@ -67,7 +68,11 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof \PDOException) {
-            return response('Internal Server Error', 500);
+            if (strtolower(env('APP_ENV')) == 'local') {
+                return response($e->getMessage(), 500);
+            } else {
+                return response('Internal Server Error', 500);
+            }
         }
 
         if ($e instanceof ModelNotFoundException) {
@@ -80,10 +85,18 @@ class Handler extends ExceptionHandler
             return response('Resource not found', 404);
         }
 
-        if ($e instanceof PermissionDeniedException){
+        if ($e instanceof AuthorizationException) {
             return response($e->getMessage(), 403);
         }
-        
+
+        if ($e instanceof ServiceUnavailableHttpException){
+            return response('Authentication Service is not available. Try later.', 503);
+        }
+
+        if ($e instanceof CloudinaryErorr) {
+            return response('Cloud error: ' . $e->getMessage(), 400);
+        }
+
         return parent::render($request, $e);
     }
 }

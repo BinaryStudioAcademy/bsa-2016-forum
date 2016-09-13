@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Collection;
+use App\Models\Vote;
+use App\Models\User;
+use App\Models\VoteItem;
 
 class VoteItemSeeder extends Seeder
 {
@@ -11,6 +15,23 @@ class VoteItemSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Models\VoteItem::class, 30)->create();
+        $votes = Vote::all();
+        $users = User::all();
+
+        $votes->each(function ($vote) use($users) {
+            $voteItemsCount = rand(1, 4);
+            $voteItems = factory(VoteItem::class, $voteItemsCount)
+                ->make();
+            if (!$voteItems instanceof Collection) {
+                $voteItems =  new Collection([$voteItems]);
+            }
+            $voteItems->each(function ($voteItem) use ($vote, $users) {
+                $randomUser = $users->random();
+                $voteItem->vote()->associate($vote);
+                $voteItem->user()->associate($randomUser);
+                $voteItem->save();
+            });
+        });
+
     }
 }

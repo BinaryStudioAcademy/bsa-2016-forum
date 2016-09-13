@@ -1,147 +1,247 @@
 var Marionette = require('backbone.marionette');
 var logger = require('../../instances/logger');
 var _ = require('underscore');
-var Radio = require('backbone.radio');
 var Dropzone = require('dropzone');
+var currentUser = require('../../initializers/currentUser');
+var AttachmentModel = require('../../models/AttachmentModel');
+var App = require('../../instances/appInstance');
+var config = require('config');
 
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentNew',
     _dropZone: null,
     _files: [],
-    className: 'topic-comment-item',
-
-    ui: {
-        'attach': '.topic-attachment button',
-        'submit': '#submit',
-        'close': '.close-btn button'
-    },
-
-    events: {
-        'click @ui.attach': 'attachFile',
-        'click @ui.submit': 'submitComment',
-        'click @ui.close': 'close'
-    },
+    _deletedFiles: [],
 
     initialize: function (options) {
-        console.log(options);
-    },
-
-    close: function (event) {
-        this.remove();
-    },
-
-    attachFile: function (event) {
-        if (this.$('.dropzone-container').hasClass('hidden')) {
-            this.$('.dropzone-container').removeClass('hidden')
-        } else {
-            this.$('.dropzone-container').addClass('hidden')
+        if (this.model.get('id')) {
+            this._isEditComment = true;
         }
     },
 
+    ui: {
+        'submit': '#submit',
+        'close': '.close',
+        'errors': '.errors',
+        'loader': '.loader',
+        'commentDlg': '#commentdlg'
+    },
+
+    serializeData: function () {
+        return {
+            model: this.model.toJSON(),
+            title: (this._isEditComment ? 'Edit comment' : 'Create comment')
+        };
+    },
+
+    modelEvents: {
+        'invalid': function (model, errors, options) {
+            //logger('model is invalid', errors, options);
+            this.showLoader(false);
+            var ui = this.ui;
+            ui.errors.empty();
+            errors.message.forEach(function (message, i) {
+                ui.errors.append(message);
+            });
+            this.showErrors(true);
+        },
+    },
+
+    events: {
+        'click @ui.submit': 'submitComment',
+    },
+
     showLoader: function (show) {
-        return show ? this.$('.topic-control-add .loader')
-            .removeClass('hidden') : this.$('.topic-control-add .loader').addClass('hidden');
+        return this.ui.loader.toggleClass('hidden', !show);
+    },
+
+    showErrors: function (show) {
+        return this.ui.errors.toggleClass('hidden', !show);
     },
 
     submitComment: function (event) {
         event.preventDefault();
 
+        this.showErrors(false);
+        this.showLoader(true);
+
+        var user_id = currentUser.toJSON().id;
+
         var data = {
-            // user id from server is default
-            user_id: 2,
+            user_id: user_id
         };
 
         _.each(this.$('form').serializeArray(), function(input) {
             data[ input.name ] = input.value;
         });
 
-        this.model.set(data);
+        var view = this;
 
-        var parent = this;
-
-        if (this.model.isValid()) {
-            this.showLoader(true);
-
-            this.model.save({}, {
-                success: function (model) {
-                    logger('comment saved successfully');
-                    //console.log(model, model.getMeta());
-                    if (parent._dropZone && parent._dropZone.files.length) {
-                        parent._dropZone.processQueue();
-                    } else {
-                        Radio.channel('newComment').trigger('addCommentModel', model);
-                        parent.remove();
-                    }
-                },
-
-                error: function (response) {
-                    console.error(response.responseText);
+        this.model.save(data, {
+            success: function (model) {
+                if (view._dropZone && view._dropZone.files.length) {
+                    // start upload to server
+                    view._dropZone.processQueue();
                 }
-            });
-        }
-    },
 
-    initDropZone: function () {
-        var parent = this;
-        var model = this.model;
-
-        this._dropZone = new Dropzone(this.$('#drop')[0], {
-
-            url: function(file) {
-                return model.getSelfUrl() + '/attachments';
-            },
-
-            method: 'post',
-            // input file name, registered on server
-            paramName: "f",
-            parallelUploads : 10,
-            autoProcessQueue : false,
-            uploadMultiple: false,
-            addRemoveLinks: true,
-
-            init: function () {
-
-            },
-
-            sending: function(file, xhr, formData) {
-                // triggered on each file
-                //console.log(xhr, formData, 'sending');
-            },
-
-            error: function (xhr) {
-                console.error('error');
-            },
-
-            success: function (file, xhr) {
-                xhr.data ? parent._files.push(xhr.data) : '';
-
-                //logger(file, model);
-                //Radio.channel('attachment').trigger('addAttachmentModel', file);
-            },
-
-            complete: function(file) {
-                if (file.status !== 'canceled') {
-                    this.removeFile(file);
+                if (view._deletedFiles.length) {
+                    view.removeFilesFromServer();
                 }
+
+                // add comment to comment collection
+                if (view.getOption('commentCollection')) {
+                    view.getOption('commentCollection').add(model, { merge: true });
+                } else if (view.getOption('parentCommentView') && !view._isEditComment) {
+                    // if view hasnt child comments collection yet show childs btn
+                    view.getOption('parentCommentView').showChildCommentsButton(true);
+                    // hide edit/delete btns
+                    view.getOption('parentCommentView').showEditDeleteBtn(false);
+                    view.getOption('parentCommentView').ui.showChilds.trigger('click');
+                }
+
+                view.ui.commentDlg.modal('hide');
             },
 
-            // file canceled to upload
-            canceled: function(file) {
-
+            error: function (model, response) {
+                view.showErrors(true);
+                view.showLoader(false);
+                view.ui.errors.empty().append(response.responseText);
             },
 
-            // event triggers when all files has been uploaded
-            queuecomplete: function () {
-                parent.remove();
-                //console.log(model.getMeta());
-                model.getMeta().attachments[model.get('id')] = parent._files;
-                Radio.channel('newComment').trigger('addCommentModel', model);
-                parent._files = [];
-            }
+            wait: true
         });
     },
 
-    onRender: function () {
+    initDropZone: function () {
+        var view = this;
+        var attachModel = new AttachmentModel();
+        this._dropZone = new Dropzone(this.$('#drop')[0], {
+            url: function(file) {
+                return App.getBaseUrl() + _.result(view.model, 'url') + _.result(attachModel, 'url');
+            },
+            method: 'post',
+            // input file name, registered on server
+            paramName: "f",
+            hiddenInputContainer: '#drop',
+            autoProcessQueue : false,
+            parallelUploads : config.parallelFileUploads,
+            maxFilesize: config.maxFileSize,
+            maxFiles: config.maxFiles,
+            //if max files count
+            maxfilesexceeded: function (file) {
+                this.removeFile(file);
+                view.ui.errors.text(config.maxFilesMessage);
+            },
+            uploadMultiple: false,
+            addRemoveLinks: true,
+            acceptedFiles: config.acceptedFiles,
+            error: function (xhr) {
+                view.showErrors(true);
+                view.ui.errors.append(xhr.responseText);
+            },
+            success: function (file, xhr) {
+                if (xhr.data) {
+                    view._files.push(xhr.data);
+                }
+            },
+            removedfile: function (file) {
+                if (file.id) {
+                    view.$(file.previewElement).remove();
+                    view.$('.dz-message').hide();
+                    view._deletedFiles.push(file);
+                } else {
+                    view.$(file.previewElement).remove();
+                }
+            },
+            // event triggers when all files has been uploaded
+            queuecomplete: function () {
+                view.setModelWithAttachments();
+            }
+        });
+
+        this.showAttachments();
+    },
+
+    setModelWithAttachments: function () {
+        // add attachments to model meta
+        var id = this.model.get('id');
+        var view = this;
+        // if model has attachments we must push new to it
+        if (this._files.length) {
+            this._files.forEach(function (file, i) {
+                view.model.getMeta()[id].attachments.push(file);
+            });
+            this._files.splice(0, this._files.length);
+            this.modelChangeMeta();
+        }
+    },
+
+    modelChangeMeta: function () {
+        if (this.options.commentCollection) {
+            var model = this.options.commentCollection.findWhere({ id: this.model.get('id') });
+            model.setMeta(this.model.getMeta());
+            return model.trigger('change');
+        }
+
+        return false;
+    },
+
+    removeFilesFromServer: function() {
+        var self = this;
+        this._deletedFiles.forEach(function (file, i) {
+            self.destroyAttachsFromMeta(file.id);
+            self.removeAttachmentFromServer(file);
+        });
+
+        this._deletedFiles.splice(0, this._deletedFiles.length);
+        this.modelChangeMeta();
+    },
+
+    removeAttachmentFromServer: function (file) {
+        // remove single file from server
+        var model = new AttachmentModel({ id: file.id });
+        var view = this;
+        model.parentUrl = _.result(this.model, 'url');
+        model.destroy({
+            wait: true
+        });
+    },
+
+    destroyAttachsFromMeta: function (id) {
+        var attachs = this.model.getMeta()[this.model.get('id')].attachments.filter(function (file) {
+            return file.id !== id;
+        });
+
+        this.model.getMeta()[this.model.get('id')].attachments = attachs;
+    },
+
+    showAttachments: function () {
+        // if comment already has attachments they will be show
+        var attachs = [];
+        var id = this.model.get('id');
+        // if model is new there is no id
+        if (!id) return;
+        attachs = this.model.getMeta()[id].attachments;
+        var drop = this._dropZone;
+        if (attachs.length) {
+            attachs.forEach(function (file, i) {
+                var mockFile = {
+                    name: file.cloud_public_id,
+                    type: file.type,
+                    id: file.id
+                };
+                drop.emit("addedfile", mockFile);
+                drop.emit("thumbnail", mockFile, file.url);
+            });
+        }
+        this._dropZone.options.maxFiles = this._dropZone.options.maxFiles - attachs.length;
+    },
+
+    onShow: function() {
         this.initDropZone();
+        this.ui.commentDlg.modal('show');
+        this.ui.commentDlg.on('hidden.bs.modal', function (e) {
+            this.remove();
+        }.bind(this));
     }
 });
