@@ -1,118 +1,41 @@
 var _ = require('underscore');
 var Marionette = require('backbone.marionette');
-var Bookmark = require('../../models/BookmarkModel');
-var currentUser = require('../../initializers/currentUser');
-var SubscribeBehavior = require('../subscribeBehavior');
-var dateHelper = require('../../helpers/dateHelper');
+var CommentsCollectionView = require('../comments/TopicCommentsCollection');
 var logger = require('../../instances/logger');
+var Radio = require('backbone.radio');
+var TopicHeaderView = require('./topicHeader');
 
-module.exports = Marionette.ItemView.extend({
+module.exports = Marionette.LayoutView.extend({
     template: 'topicDetail',
 
+    initialize: function () {
+        this.childCommentsCollection = this.getOption('collection');
+    },
+
+    regions: {
+        'newComment': '.newcomment',
+        'topicHeader': '.topic-head',
+        'comments': '.topic-comments'
+    },
+
     ui: {
-        bookmarkTopic: '.bookmark-btn',
-        subscribeNotification: '.subscribe-btn'
+        'answer': '.topic-answer-btn'
     },
 
     events: {
-        'click @ui.bookmarkTopic': 'bookmarkTopic'
-    },
-
-    modelEvents: {
-        'change' : 'render'
-    },
-
-    behaviors: {
-        SubscribeBehavior: {
-            behaviorClass: SubscribeBehavior,
-            parent_url: _.result(currentUser, 'url'),
-            target_type: 'Topic'
+        'click @ui.answer': function (event) {
+            Radio.channel('comment').trigger('addComment', this, null, this.childCommentsCollection);
         }
-    },
-
-    unlockButton: function () {
-        this.ui.bookmarkTopic.removeAttr('disabled');
-        this.ui.bookmarkTopic.addClass('text-info');
-        this.ui.bookmarkTopic.removeClass('text-muted');
-    },
-
-    lockButton: function () {
-        this.ui.bookmarkTopic.attr('disabled', 'disabled');
-        this.ui.bookmarkTopic.removeClass('text-info');
-        this.ui.bookmarkTopic.addClass('text-muted');
-    },
-
-    addOkBookmarkIcon: function () {
-        this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
-    },
-
-    serializeData: function () {
-        return {
-            model: this.model.toJSON(),
-            createdDate: dateHelper.middleDate(this.model.get('created_at'))
-        };
     },
 
     onRender: function () {
-        var meta = this.model.getMeta();
+        this.getRegion('topicHeader').show(new TopicHeaderView({
+            model: this.model
+        }));
 
-        if (meta && meta.hasOwnProperty("bookmark")) {
-            if (meta.bookmark) {
-                this.model.bookmarkId = meta.bookmark[this.model.get('id')].id;
-            }
-
-            if (this.model.bookmarkId) {
-                this.addOkBookmarkIcon();
-            }
-        }
-    },
-
-    bookmarkTopic: function () {
-        var bookmark = new Bookmark();
-
-        this.lockButton();
-
-        var that = this;
-
-        if (this.model.bookmarkId) {
-            bookmark.set({
-                id: this.model.bookmarkId
-            });
-            bookmark.destroy({
-                success: function () {
-                    that.unlockButton();
-                    that.$('i.bookmarked').remove();
-                    that.model.bookmarkId = undefined;
-                },
-                error: function (response, xhr) {
-                    var errorMsg = '';
-                    $.each(xhr.responseJSON, function(index, value) {
-                        errorMsg += index + ': ' + value;
-                    });
-
-                    logger(errorMsg);
-                }
-            });
-
-        } else {
-            bookmark.save({
-                topic_id: this.model.id,
-                user_id: currentUser.id
-            }, {
-                success: function (response) {
-                    that.model.bookmarkId = response.id;
-                    that.unlockButton();
-                    that.addOkBookmarkIcon();
-                },
-                error: function (response, xhr) {
-                    var errorMsg = '';
-                    $.each(xhr.responseJSON, function(index, value) {
-                        errorMsg += index + ': ' + value;
-                    });
-
-                    alert(errorMsg);
-                }
-            });
-        }
+        this.getRegion('comments').show(new CommentsCollectionView({
+          collection: this.collection,
+        }));
     }
+
 });

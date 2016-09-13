@@ -146,6 +146,7 @@ class User extends Authenticatable
         catch  (ModelNotFoundException $e){
             return null;
         }
+
         return $user;
     }
 

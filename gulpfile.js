@@ -44,7 +44,10 @@ gulp.task('clean', function () {
 gulp.task('sass', function () {
     return gulp.src('resources/assets/sass/index.scss')
         .pipe(cfg.prod ? util.noop() : sourcemaps.init())
-        .pipe(sass({includePaths: 'node_modules/bootstrap-sass/assets/stylesheets'}))
+        .pipe(sass({includePaths: [
+            'node_modules/bootstrap-sass/assets/stylesheets',
+            'node_modules/dropzone/src'
+        ]}))
         .pipe(cfg.prod ? cleanCSS() : util.noop())
         .pipe(rename('styles.css'))
         .pipe(cfg.prod ? util.noop() : sourcemaps.write('.'))
