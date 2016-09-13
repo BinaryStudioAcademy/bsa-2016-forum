@@ -27,6 +27,12 @@ module.exports = Marionette.ItemView.extend({
         'commentDlg': '#commentdlg'
     },
 
+    serializeData: function () {
+        return {
+            title: (this._isEditComment ? 'Edit comment' : 'Create comment')
+        };
+    },
+
     modelEvents: {
         'invalid': function (model, errors, options) {
             //logger('model is invalid', errors, options);
