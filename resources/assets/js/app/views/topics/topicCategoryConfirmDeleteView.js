@@ -25,6 +25,7 @@ module.exports = Marionette.ItemView.extend({
     deleteCategory: function () {
         var view = this;
         this.model.destroy({
+            wait: true,
             success: function () {
                 view.ui.modal.modal('hide');
             }
