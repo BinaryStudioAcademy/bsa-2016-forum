@@ -15,6 +15,30 @@ use Gate;
 
 class CommentController extends ApiController
 {
+
+    private function getItemMetaData($comment)
+    {
+        return [
+            'user' => $comment->user()->first(),
+            'likes' => $comment->likes()->count(),
+            'attachments' => $comment->attachments()->get(),
+            'comments' => $comment->comments()->count(),
+
+        ];
+    }
+
+    private function getCollectionMetaData($comments)
+    {
+        $data = [];
+        if ($comments) {
+            foreach ($comments as $comment) {
+                $data[$comment->id] = $this->getItemMetaData($comment);
+            }
+        }
+
+        return $data;
+    }
+
     /**
      * @param Comment $comment
      * @return bool
@@ -57,7 +81,8 @@ class CommentController extends ApiController
     public function getTopicComments(Topic $topic)
     {
         $comments = $topic->comments()->get();
-        return $this->setStatusCode(200)->respond($comments);
+        $meta = $this->getCollectionMetaData($comments);
+        return $this->setStatusCode(200)->respond($comments, $meta);
     }
 
     /**
@@ -68,7 +93,8 @@ class CommentController extends ApiController
     public function getTopicComment(Topic $topic, Comment $comment)
     {
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
-            return $this->setStatusCode(200)->respond($comment);
+            $meta[$comment->id] = $this->getItemMetaData($comment);
+            return $this->setStatusCode(200)->respond($comment, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -84,7 +110,8 @@ class CommentController extends ApiController
         $comment = Comment::create($request->all());
         $comment = $topic->comments()->save($comment);
         event(new TopicNewCommentEvent($topic, $comment));
-        return $this->setStatusCode(201)->respond($comment);
+        $meta[$comment->id] = $this->getItemMetaData($comment);
+        return $this->setStatusCode(201)->respond($comment, $meta);
     }
 
     /**
@@ -99,7 +126,8 @@ class CommentController extends ApiController
 
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comment->update($request->all());
-            return $this->setStatusCode(200)->respond($comment);
+            $meta[$comment->id] = $this->getItemMetaData($comment);
+            return $this->setStatusCode(200)->respond($comment, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -134,7 +162,8 @@ class CommentController extends ApiController
     {
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comments = $comment->comments()->get();
-            return $this->setStatusCode(200)->respond($comments);
+            $meta = $this->getCollectionMetaData($comments);
+            return $this->setStatusCode(200)->respond($comments, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -153,7 +182,8 @@ class CommentController extends ApiController
             $topic->comments()->save($childComment);
             $childComment = $comment->comments()->save($childComment);
             event(new TopicNewCommentEvent($topic, $childComment));
-            return $this->setStatusCode(201)->respond($childComment);
+            $meta[$childComment->id] = $this->getItemMetaData($childComment);
+            return $this->setStatusCode(201)->respond($childComment, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -170,7 +200,8 @@ class CommentController extends ApiController
         if ($this->isCommentBelongsToTopic($topic, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
-            return $this->setStatusCode(200)->respond($commentChild);
+            $meta[$comment->id] = $this->getItemMetaData($commentChild);
+            return $this->setStatusCode(200)->respond($commentChild, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -190,13 +221,14 @@ class CommentController extends ApiController
         CommentsRequest $request
     ) {
 
-        $this->authorize('updateTopicsComment', [$comment, $topic]);
-
+//        $this->authorize('updateTopicsComment', [$comment, $topic]);
+        $this->authorize('updateTopicsComment', [$commentChild, $topic]);
         if ($this->isCommentBelongsToTopic($topic, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
             $commentChild->update($request->all());
-            return $this->setStatusCode(200)->respond($commentChild);
+            $meta[$commentChild->id] = $this->getItemMetaData($commentChild);
+            return $this->setStatusCode(200)->respond($commentChild, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -211,8 +243,8 @@ class CommentController extends ApiController
      */
     public function destroyTopicCommentChild(Topic $topic, Comment $comment, Comment $commentChild)
     {
-        $this->authorize('deleteTopicsComment', [$comment, $topic]);
-
+//        $this->authorize('deleteTopicsComment', [$comment, $topic]);
+        $this->authorize('deleteTopicsComment', [$commentChild, $topic]);
         if ($this->isCommentBelongsToTopic($topic, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {

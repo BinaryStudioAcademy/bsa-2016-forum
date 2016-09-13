@@ -10,6 +10,7 @@ var TopicCategoryModel = require('../../models/TopicCategoryModel');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'topicLayout',
+
     regions: {
         container: '#posts',
         breadcrumbs: '#categoryForBreadcrumbs'
