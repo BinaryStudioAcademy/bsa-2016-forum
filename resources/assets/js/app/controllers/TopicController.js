@@ -50,7 +50,7 @@ module.exports = Marionette.Object.extend({
     create: function (categoryId) {
         var topicCategoryCollection = new TopicCategoryCollection();
 
-        var topicModel = new TopicModel({category_id: categoryId});
+        var topicModel = new TopicModel();
         app.render(new TopicCreate({
             model: topicModel,
             collection: topicCategoryCollection
