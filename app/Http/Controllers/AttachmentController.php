@@ -156,6 +156,16 @@ class AttachmentController extends ApiController
 
     /**
      * @param Comment $comment
+     * @param Attachment $attachment
+     * @return bool
+     */
+    protected function isAttachmentBelongsToComment(Comment $comment, Attachment $attachment)
+    {
+        return !!$comment->attachments()->find($attachment->id);
+    }
+
+    /**
+     * @param Comment $comment
      * @return \Illuminate\Http\JsonResponse
      */
     public function getAllCommentAttachments(Comment $comment)

@@ -63,7 +63,10 @@ module.exports = function (grunt) {
         sass: {
             index: {
                 options: {
-                    loadPath: 'node_modules/bootstrap-sass/assets/stylesheets'
+                    loadPath: [
+                        'node_modules/bootstrap-sass/assets/stylesheets',
+                        'node_modules/dropzone/src',
+                    ]
                 },
                 files: {
                     'public/css/styles.css': 'resources/assets/sass/index.scss',

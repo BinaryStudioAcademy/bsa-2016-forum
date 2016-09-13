@@ -7,7 +7,12 @@ var defaults = {
     baseUrl: '/api/v1',
     socketUrl: 'http://localhost:3000',
     messageChangeOnDelay: 15,
-    timeZone: 'Europe/Kiev'
+    timeZone: 'Europe/Kiev',
+    parallelFileUploads : 10,
+    maxFileSize: 8,
+    maxFiles: 5,
+    acceptedFiles: 'image/*,.pdf,.docx,.doc,.xlsx,.xls',
+    maxFilesMessage: 'Max files is 5. File types are ' + this.acceptedFiles
 };
 
 
