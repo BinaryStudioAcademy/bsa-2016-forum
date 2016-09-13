@@ -29,7 +29,7 @@ class VoteController extends ApiController
     public function index(Request $request)
     {
         $this->setFiltersParameters($request);
-
+        $meta = [];
         if ($request->page) {
             $paginationObject = Vote::filterByQuery($this->searchStr)
                 ->newOnTop()
@@ -37,15 +37,19 @@ class VoteController extends ApiController
                 ->filterByTags($this->tagIds)
                 ->paginate(15);
             $votes = $paginationObject->getCollection();
-            $meta = $this->getMetaDataForCollection($votes);
             $meta['hasMorePages'] = $paginationObject->hasMorePages();
         } else {
             $votes = Vote::filterByQuery($this->searchStr)
                 ->filterByTags($this->tagIds)
                 ->filterByLimit($this->limit)->get();
-            $meta = $this->getMetaDataForCollection($votes);
-        }
 
+        }
+//
+//        $votes = $votes->filter(function ($vote) {
+//            return \Gate::allows('show', $vote);
+//        });
+
+        $meta += $this->getMetaDataForCollection($votes);
         return $this->setStatusCode(200)->respond($votes, $meta);
     }
 
@@ -192,9 +196,9 @@ class VoteController extends ApiController
 
         $vote->update($request->all());
         $vote->save();
-        
+
         TagService::TagsHandler($vote, $request->tags);
-        
+
         if ($vote->is_public) {
             $vote->votePermissions()->forceDelete();
         } elseif ($request->users) {
@@ -244,7 +248,7 @@ class VoteController extends ApiController
                 ->filterByQuery($this->searchStr)
                 ->filterByTags($this->tagIds)
                 ->get();
-        }else{
+        } else {
             $votes = $user->votes()
                 ->getQuery()
                 ->onlySaved()

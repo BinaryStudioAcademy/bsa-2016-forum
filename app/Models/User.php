@@ -161,4 +161,9 @@ class User extends Authenticatable
         }
         return $user;
     }
+
+    public function votesWithPermission()
+    {
+        return $this->belongsToMany(User::class, 'vote_permissions', 'user_id')->withTimestamps();
+    }
 }
