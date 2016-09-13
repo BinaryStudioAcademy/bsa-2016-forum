@@ -19,7 +19,7 @@ module.exports = Marionette.ItemView.extend({
         this.selectOptions = this.collection.toJSON();
 
         this.selectOptions = _.each(this.selectOptions, function (model, key) {
-            if (self.options.topicModel.get('category_id') == model.slug) {
+            if (self.options.topicModel.get('category_id') == model.id) {
                 model.selectedItem = 'selected'
             } else {
                 model.selectedItem = ''
