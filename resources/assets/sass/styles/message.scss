@@ -10,7 +10,6 @@ MESSAGES LIST
 .messages-user-item > a{
   width: 100%;
   display: flex;
-  border-bottom: #DDD 1px solid;
   background-color: #fff;
 }
 
@@ -32,8 +31,11 @@ MESSAGES LIST
 }
 
 .messages-msg {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin: 5px;
   width: 100%;
-  padding: 10px 10px 10px 5px;
+  padding: 5px;
 }
 
 .messages-msg > * {
@@ -227,4 +229,8 @@ MESSAGE DIALOG
 
 input.hotkey-checkbox {
   margin-left: 20px;
+}
+
+.from-to-user {
+  font-weight: bold;
 }
