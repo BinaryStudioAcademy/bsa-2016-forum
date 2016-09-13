@@ -15,7 +15,7 @@ class Vote extends Model
     protected $morphClass = 'Vote';
     use SoftDeletes;
 
-    protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at', 'is_saved'];
+    protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at', 'is_saved', 'description'];
 
     protected $dates = ['deleted_at'];
 
@@ -91,7 +91,7 @@ class Vote extends Model
     public function scopeFilterByQuery(Builder $query, $searchStr)
     {
         if ($searchStr) {
-            $query = $query->where('title','LIKE','%'.$searchStr.'%');
+            $query = $query->where('title', 'LIKE', '%' . $searchStr . '%');
         }
         return $query;
     }
@@ -112,7 +112,7 @@ class Vote extends Model
     public function scopeFilterByTags(Builder $query, array $tagIds)
     {
         if (!empty($tagIds)) {
-            $query = $query->whereHas('tags', function($q) use ($tagIds){
+            $query = $query->whereHas('tags', function ($q) use ($tagIds) {
                 $q->whereIn('tag_id', $tagIds);
             });
         }
@@ -121,20 +121,22 @@ class Vote extends Model
 
     public function scopeCheckOnIsSaved(Builder $query)
     {
-        if(!Auth::user()->isAdmin()) {
+        if (!Auth::user()->isAdmin()) {
             $query = $query->where('is_saved', 1);
         }
 
         return $query;
     }
+
     public function scopeOnlySaved(Builder $query)
     {
         return $query->where('is_saved', 1);
     }
-    
-    public function canBeEdited() {
+
+    public function canBeEdited()
+    {
         $user = Auth::user();
-        
+
         return $user->isAdmin() || $user->owns($this);
     }
 
@@ -178,7 +180,7 @@ class Vote extends Model
 
     public function getFinishedAtAttribute($value)
     {
-        if($value == '0000-00-00 00:00:00'){
+        if ($value == '0000-00-00 00:00:00') {
             return '';
         }
         return $value;
