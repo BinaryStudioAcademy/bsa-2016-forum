@@ -2,7 +2,7 @@
     <div class="vote-header">
         <h3>{{ model.title }}  {{meta.status}}</h3>
         <h5>Opened by: {{ meta.user.first_name }}  {{ meta.user.last_name }}</h5>
-        <span>{{ model.description_generated }}</span><br>
+        <span>{{{ model.description_generated }}}</span><br>
             <select class="vote-tags">
             <option>{{ meta.numberOfUniqueViews }} users have seen this voting</option>
                 {{#each meta.usersWhoSaw}}
