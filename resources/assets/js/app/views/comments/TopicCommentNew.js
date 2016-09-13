@@ -89,6 +89,7 @@ module.exports = Marionette.ItemView.extend({
                     view.getOption('parentCommentView').showChildCommentsButton(true);
                     // hide edit/delete btns
                     view.getOption('parentCommentView').showEditDeleteBtn(false);
+                    view.getOption('parentCommentView').ui.showChilds.trigger('click');
                 }
 
                 view.ui.commentDlg.modal('hide');
