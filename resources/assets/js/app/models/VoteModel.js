@@ -19,6 +19,7 @@ module.exports = BaseModel.extend({
             return errors;
     },
     defaults: {
+        description: '',
         is_saved: 0,
         is_public: true,
         is_single: true,
