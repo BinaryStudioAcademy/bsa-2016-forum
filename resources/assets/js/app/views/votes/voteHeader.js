@@ -44,7 +44,7 @@ module.exports = Marionette.ItemView.extend({
                 usersWhoSaw: tempmeta[id].usersWhoSaw
             }
         }
-
+        console.log(meta);
         return {
             model: this.model.toJSON(),
             meta: meta

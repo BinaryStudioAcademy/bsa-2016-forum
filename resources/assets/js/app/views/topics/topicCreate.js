@@ -15,8 +15,6 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     initialize: function () {
-        this.bindUIElements();
-        this.ui.tagsInput.tagsinput();
         this.model.set({user_id: currentUser.id});
     },
 
@@ -56,6 +54,14 @@ module.exports = Marionette.LayoutView.extend({
                 }
             });
         }
+    },
+
+    onRender: function() {
+        this.ui.tagsInput.tagsinput();
+    },
+
+    onBeforeDestroy: function() {
+        this.ui.tagsInput.tagsinput('destroy');
     }
 
 });

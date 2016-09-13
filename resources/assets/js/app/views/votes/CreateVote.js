@@ -85,6 +85,7 @@ module.exports = Marionette.LayoutView.extend({
         }
     },
     onRender: function () {
+        this.ui.tagsInput.tagsinput();//
         this.getRegion('answers').show(new CreateVoteItemCollection({
             collection: this.collection,
             parent: this.model
@@ -111,15 +112,9 @@ module.exports = Marionette.LayoutView.extend({
             });
         }
 
-        if (view.ui.tags.val().trim().length > 0) {
-            var splitted = view.ui.tags.val().split(' ');
-            _.each(splitted, function (value, index) {
-                tags.push({name: value});
-            });
-        }
         view.model.save({
             users: JSON.stringify(users),
-            tags: JSON.stringify(tags),
+            tags: this.ui.tagsInput.val(),
             is_saved: 1
         }, {
             success: function (data) {
@@ -134,8 +129,7 @@ module.exports = Marionette.LayoutView.extend({
             this.model.set(obj);
         }
     },
-    initialize: function() {
-        this.bindUIElements();
-        this.ui.tagsInput.tagsinput();
+    onBeforeDestroy: function() {
+        this.ui.tagsInput.tagsinput('destroy');
     }
 });

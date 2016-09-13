@@ -118,7 +118,7 @@ class VoteController extends ApiController
     {
         $vote = Vote::create($request->all());
         if ($request->tags) {
-            TagService::TagsHandler($vote, $request->tags);
+            TagService::TagsHandler($vote, explode(',', $request->tags));
         }
         if ($vote->is_public) {
             $vote->votePermissions()->delete();
@@ -189,11 +189,10 @@ class VoteController extends ApiController
     {
         $vote = Vote::findOrFail($id);
         $this->authorize('update', $vote);
-
         $vote->update($request->all());
         $vote->save();
         
-        TagService::TagsHandler($vote, $request->tags);
+        TagService::TagsHandler($vote, explode(',', $request->tags));
         
         if ($vote->is_public) {
             $vote->votePermissions()->forceDelete();
