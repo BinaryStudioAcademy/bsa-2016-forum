@@ -29,6 +29,7 @@ module.exports = Marionette.ItemView.extend({
 
     serializeData: function () {
         return {
+            model: this.model.toJSON(),
             title: (this._isEditComment ? 'Edit comment' : 'Create comment')
         };
     },
