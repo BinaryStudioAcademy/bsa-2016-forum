@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 var dateHelper = require('../../helpers/dateHelper');
+var currentUser = require('../../initializers/currentUser');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicCategoryItem',
@@ -19,10 +20,9 @@ module.exports = Marionette.ItemView.extend({
         }
         return {
             model: model,
-            meta: meta
+            meta: meta,
+            isAdmin: currentUser.isAdmin()
         }
 
     }
-
-
 });
