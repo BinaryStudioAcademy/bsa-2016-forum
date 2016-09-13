@@ -32,10 +32,7 @@ module.exports = Backbone.Model.extend({
         };
 
         options.statusCode['404'] = function (xhr, textStatus, errorThrown) {
-            if (xhr.responseText) {
-                model.validationError = xhr.responseText;
-                model.trigger('notFound', model, model.validationError);
-            }
+            model.trigger('notFound', model, xhr.responseText);
         };
 
         return Backbone.sync(method, model, options);
