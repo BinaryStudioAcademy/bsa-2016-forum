@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Vote;
 use App\Models\VoteItem;
 use App\Models\VoteResult;
+use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -52,6 +53,10 @@ class AppServiceProvider extends ServiceProvider
             } else {
                 return false;
             }
+        });
+
+        Validator::extend('is_five_minutes_time', function ($attribute, $value, $parameters, $validator) {
+            return Carbon::parse($value)->gt(Carbon::now('UTC')->addMinutes(5));
         });
 
     }
