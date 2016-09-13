@@ -66,7 +66,6 @@ module.exports = Marionette.LayoutView.extend({
             this.model.save({title: this.ui.title.val()});
         },
         'change @ui.description': function () {
-            console.log(this.ui.description.val());
             this.saveModel({description: this.ui.description.val()});
         },
         'click @ui.isPublic': function () {
@@ -84,7 +83,11 @@ module.exports = Marionette.LayoutView.extend({
             this.saveModel({finished_at: DateHelper.dateWithoutTimezone(this.ui.finished.val())});
         },
         'click @ui.delete': function () {
-            this.model.destroy({success: function() {Backbone.history.navigate('votes', {trigger: true});}});
+            this.model.destroy({
+                success: function () {
+                    Backbone.history.navigate('votes', {trigger: true});
+                }
+            });
         }
     },
     onRender: function () {
