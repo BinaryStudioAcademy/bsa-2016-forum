@@ -5,11 +5,12 @@
                 <h4 class="modal-title">Confirm action</h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure you wish to remove <b><a href="{{url}}">{{title}}</a></b> from subscriptions?</p>
+                <p>Are you sure you wish to remove &quot;<b>{{title}}</b>&quot; from subscriptions?</p>
+                <div class="errors"></div>
             </div>
             <div class="modal-footer subscription-control">
-                <button class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button class="btn btn-secondary" id="subscribe-cancel-btn">Yes</button>
+                <button class="btn" data-dismiss="modal">No</button>
+                <button class="btn btn-primary" id="unsubscribe-confirm-btn">Yes</button>
             </div>
         </div>
     </div>

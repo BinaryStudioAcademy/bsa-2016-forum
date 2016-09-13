@@ -78,22 +78,10 @@ module.exports = Marionette.Behavior.extend({
                 meta: that.view.model.toJSON()
             });
 
-            modal.listenTo(Radio.channel('subscriptionChannel'), 'cancel', function (subscription_model) {
-                subscription_model.destroy({
-                    success: function () {
-                        that.unlockButton(that.ui.subscribeNotification);
-                        that.removeOkIcon();
-                        that.saveSubscribe(undefined);
-                    },
-                    error: function (response, xhr) {
-                        var errorMsg = '';
-                        $.each(xhr.responseJSON, function (index, value) {
-                            errorMsg += index + ': ' + value;
-                        });
-
-                        logger(errorMsg);
-                    }
-                });
+            modal.listenTo(Radio.channel('subscriptionChannel'), 'unsubscribed', function () {
+                that.unlockButton(that.ui.subscribeNotification);
+                that.removeOkIcon();
+                that.saveSubscribe(undefined);
             });
 
             app.renderModal(modal);

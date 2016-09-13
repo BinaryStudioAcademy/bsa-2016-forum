@@ -23,12 +23,21 @@ module.exports = Backbone.Model.extend({
         }
 
         if (!options.statusCode) options.statusCode = {};
+
         options.statusCode['400'] = function (xhr, textStatus, errorThrown) {
             if (xhr.responseJSON) {
                 model.validationError = xhr.responseJSON;
                 model.trigger('invalid', model, model.validationError);
             }
         };
+
+        options.statusCode['404'] = function (xhr, textStatus, errorThrown) {
+            if (xhr.responseText) {
+                model.validationError = xhr.responseText;
+                model.trigger('notFound', model, model.validationError);
+            }
+        };
+
         return Backbone.sync(method, model, options);
     },
 

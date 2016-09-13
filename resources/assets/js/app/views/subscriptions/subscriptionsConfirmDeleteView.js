@@ -6,42 +6,59 @@ var _ = require('underscore');
 module.exports = Marionette.ItemView.extend({
     template: 'subscriptionConfirmDelete',
     ui: {
-        yes: '#subscribe-cancel-btn'
+        confirm: '#unsubscribe-confirm-btn',
+        modal: '.modal',
+        errors: '.errors'
     },
     events: {
-        'click @ui.yes': 'cancelSubscribe'
+        'click @ui.confirm': 'unSubscribe'
     },
 
-    cancelSubscribe: function () {
-        Radio.channel('subscriptionChannel').trigger('cancel', this.model);
-        this.$('.modal').modal('hide');
+    modelEvents: {
+        'notFound': function (model, error) {
+            this.ui.errors.empty();
+            this.ui.errors.html(error);
+            Radio.channel('subscriptionChannel').trigger('unsubscribed');
+        }
+    },
+    
+    initialize: function () {
+        
+    },
+
+    unSubscribe: function () {
+        var view = this;
+        this.model.destroy({
+            success: function () {
+                view.ui.modal.modal('hide');
+                Radio.channel('subscriptionChannel').trigger('unsubscribed');
+            }
+        });
+
     },
 
     onRender: function () {
         var view = this;
-        this.$('.modal').modal('show');
-        this.$('.modal').on('hidden.bs.modal', function (e) {
+        this.ui.modal.modal('show');
+        this.ui.modal.on('hidden.bs.modal', function (e) {
             view.destroy();
         });
     },
         
     serializeData: function () {
-        var url = "", title = "";
+        var title = "";
         var meta = this.options.meta;
         
         switch (this.model.get('subscription_type')) {
             case 'Topic':
                 title = meta.name;
-                url = '#topics/'+meta.slug;
                 break;
             case 'Vote':
                 title = meta.title;
-                url = '#votes/'+meta.id;
                 break;
         }
 
         return {
-            url: url,
             title: title
         };
     }
