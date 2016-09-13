@@ -54,7 +54,7 @@ module.exports = Marionette.Behavior.extend({
         if (_.isUndefined(model.getMetaById().subscription) || _.isNull(model.getMetaById().subscription)) {
             return undefined;
         } else {
-            return model.getMeta()[model.get('id')].subscription;
+            return model.getMetaById().subscription;
         }
     },
 
