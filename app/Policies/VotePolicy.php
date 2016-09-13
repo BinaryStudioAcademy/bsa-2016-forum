@@ -52,7 +52,6 @@ class VotePolicy
         if (!$vote->is_public) {
             return $user->votesWithPermission()->wherePivot('vote_id', $vote->id)->exists() || $user->owns($vote) || $user->isAdmin();
         }
-        else
-            return true;
+        return true;
     }
 }

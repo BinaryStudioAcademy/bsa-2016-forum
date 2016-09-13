@@ -21,7 +21,7 @@ module.exports = Backbone.Model.extend({
         if (!options.url) {
             options.url = this._getRequestUrl(model);
         }
-        
+
         if (!options.statusCode) options.statusCode = {};
         options.statusCode['400'] = function (xhr, textStatus, errorThrown) {
             if (xhr.responseJSON) {
@@ -29,14 +29,19 @@ module.exports = Backbone.Model.extend({
                 model.trigger('invalid', model, model.validationError);
             }
         };
+
+        options.statusCode['403'] = function (xhr, textStatus, errorThrown) {
+            Backbone.history.navigate('/', {trigger: true});
+        };
+
         return Backbone.sync(method, model, options);
     },
 
-    getMeta: function() {
+    getMeta: function () {
         return (_.result(this, '_meta') || _.result(this.collection, '_meta'));
     },
 
-    setMeta: function(meta) {
+    setMeta: function (meta) {
         this._meta = meta;
     },
 

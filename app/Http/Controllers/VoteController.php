@@ -44,10 +44,10 @@ class VoteController extends ApiController
                 ->filterByLimit($this->limit)->get();
 
         }
-//
-//        $votes = $votes->filter(function ($vote) {
-//            return \Gate::allows('show', $vote);
-//        });
+
+        $votes = $votes->filter(function ($vote) {
+            return \Gate::allows('show', $vote);
+        })->values();
 
         $meta += $this->getMetaDataForCollection($votes);
         return $this->setStatusCode(200)->respond($votes, $meta);
@@ -84,6 +84,8 @@ class VoteController extends ApiController
 
     private function getMetaDataForModel(Vote $vote)
     {
+        $this->authorize('show', $vote);
+
         $data = [];
         $usersWhoSaw = [];
         foreach ($vote->voteUniqueViews()->get()->load('user') as $view) {
@@ -169,6 +171,7 @@ class VoteController extends ApiController
     public function show($id)
     {
         $vote = Vote::findOrFail($id);
+        $this->authorize('show', $vote);
         if (Auth::user()->id &&
             !$this->isUniqueViewExist($vote)
         ) {
@@ -192,6 +195,7 @@ class VoteController extends ApiController
     public function update(VotesRequest $request, $id)
     {
         $vote = Vote::findOrFail($id);
+
         $this->authorize('update', $vote);
 
         $vote->update($request->all());
@@ -239,6 +243,7 @@ class VoteController extends ApiController
     public function getUserVotes($userId, Request $request)
     {
         $user = User::findOrFail($userId);
+
         $votes = null;
         $this->setFiltersParameters($request);
         if ($request->with_draft && $request->with_draft == 1 && Auth::user()->id == $user->id) {
@@ -293,6 +298,9 @@ class VoteController extends ApiController
     public function getUserVoteResult(Vote $vote)
     {
         $user = Auth::user();
+
+        $this->authorize('show', $vote);
+
         $voteItems = $vote->voteItems()->get();
         if (!$voteItems) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
@@ -318,6 +326,9 @@ class VoteController extends ApiController
     {
         $model = null;
         $vote = Vote::findOrFail($request->vote_id);
+
+        $this->authorize('show', $vote);
+
         $user = Auth::user();
         $voteItem = VoteItem::findOrFail($request->vote_item_id);
         $response = ['checked' => true];
