@@ -15,7 +15,7 @@ var dateHelper = {
 
     getDateTimeDiff: function (date) {
         if(_.isEmpty(date)) return true;
-        return (moment.utc().diff(moment(date).utc(), 'minute'));
+        return (moment.utc().diff(moment.utc(date), 'minute'));
     },
 
     shortDate: function(date) {

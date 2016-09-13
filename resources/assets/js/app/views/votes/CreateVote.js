@@ -111,6 +111,9 @@ module.exports = Marionette.LayoutView.extend({
         var users = [];
         var tags = [];
 
+        if(view.model.get('finished_at') == '0000-00-00 00:00:00' || view.model.get('finished_at') == '')
+            view.model.set('finished_at', null);
+
         if (view.model.get('is_public') == '0') {
             view.getOption('accessedUsers').each(function (model, index) {
                 users.push(model.get('id'));
@@ -126,11 +129,13 @@ module.exports = Marionette.LayoutView.extend({
         view.model.save({
             users: JSON.stringify(users),
             tags: JSON.stringify(tags),
+            finished_at: DateHelper.dateToSave(view.ui.finished.val()),
             is_saved: 1
         }, {
             success: function (data) {
                 Backbone.history.navigate('votes/' + data.get('id'), {trigger: true});
-            }
+            },
+            validate:true
         });
     },
     saveModel: function (obj) {
