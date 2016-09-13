@@ -1,12 +1,22 @@
 var Marionette = require('backbone.marionette');
 var dateHelper = require('../../helpers/dateHelper');
 var currentUser = require('../../initializers/currentUser');
+var ConfirmDeleteView = require('./topicCategoryConfirmDeleteView');
+var app = require('../../instances/appInstance');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicCategoryItem',
     className: 'row post-item',
     tagName: 'div',
 
+    ui: {
+        deleteButton: '.delete-category-btn'
+    },
+
+    events: {
+        'click @ui.deleteButton': 'showDeleteConfirmation'
+    },
+    
     serializeData: function () {
         var tempmeta = this.model.getMeta();
         var id = this.model.get('id');
@@ -24,5 +34,11 @@ module.exports = Marionette.ItemView.extend({
             isAdmin: currentUser.isAdmin()
         }
 
+    },
+
+    showDeleteConfirmation: function () {
+        app.renderModal(new ConfirmDeleteView({
+            model: this.model
+        }));
     }
 });
