@@ -5,7 +5,7 @@ var dateHelper = require('../../helpers/dateHelper');
 var $ = require('jquery');
 var logger = require('../../instances/logger');
 var _ = require('underscore');
-var SubscribeBehavior = require('../subscribeBehavior');
+var SubscribeBehavior = require('../../behaviors/subscribeBehavior');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicItem',

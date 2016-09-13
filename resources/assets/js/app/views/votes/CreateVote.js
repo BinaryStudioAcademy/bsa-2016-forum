@@ -26,6 +26,7 @@ module.exports = Marionette.LayoutView.extend({
         start: '#start',
         delete: '#delete',
         title: '#question-title',
+        description: '#question-description',
         errors: '.js-errors',
         tags: '#tags',
         isPublic: 'input[name=access]',
@@ -66,6 +67,9 @@ module.exports = Marionette.LayoutView.extend({
         'change @ui.title': function () {
             this.model.save({title: this.ui.title.val()});
         },
+        'change @ui.description': function () {
+            this.saveModel({description: this.ui.description.val()});
+        },
         'click @ui.isPublic': function () {
             this.saveModel({is_public: this.ui.isPublic.filter(':checked').val()});
             if (this.ui.isPublic.prop('checked')) {
@@ -78,10 +82,14 @@ module.exports = Marionette.LayoutView.extend({
 
         },
         'change @ui.finished': function () {
-            this.saveModel({finished_at: DateHelper.dateWithoutTimezone(this.ui.finished.val())});
+            this.saveModel({finished_at: DateHelper.dateToSave(this.ui.finished.val())});
         },
         'click @ui.delete': function () {
-            this.model.destroy({success: function() {Backbone.history.navigate('votes', {trigger: true});}});
+            this.model.destroy({
+                success: function () {
+                    Backbone.history.navigate('votes', {trigger: true});
+                }
+            });
         }
     },
     onRender: function () {

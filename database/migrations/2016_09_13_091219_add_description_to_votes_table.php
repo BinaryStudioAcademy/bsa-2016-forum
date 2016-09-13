@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddGeneratedDescriptionToTopicsTable extends Migration
+class AddDescriptionToVotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class AddGeneratedDescriptionToTopicsTable extends Migration
      */
     public function up()
     {
-        Schema::table('topics', function (Blueprint $table) {
-            $table->text('generated_description')->nullable();
+        Schema::table('votes', function (Blueprint $table) {
+            $table->text('description')->nullable();
         });
     }
 
@@ -24,8 +24,8 @@ class AddGeneratedDescriptionToTopicsTable extends Migration
      */
     public function down()
     {
-        Schema::table('topics', function (Blueprint $table) {
-            $table->dropColumn('generated_description');
+        Schema::table('votes', function (Blueprint $table) {
+            $table->dropColumn('description');
         });
     }
 }
