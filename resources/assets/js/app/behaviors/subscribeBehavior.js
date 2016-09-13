@@ -18,9 +18,8 @@ module.exports = Marionette.Behavior.extend({
     },
 
     onRender: function () {
-        var meta = this.view.model.getMeta();
-        if(!_.isUndefined(meta)) {
-            if (!_.isNull(meta[this.view.model.get('id')].subscription))
+        if(!_.isUndefined(this.view.model.getMeta())) {
+            if (!_.isNull(this.view.model.getMetaById().subscription))
                 this.addOkIcon();
         }
     },
@@ -47,12 +46,12 @@ module.exports = Marionette.Behavior.extend({
 
     saveSubscribe: function(subscribe)
     {
-        this.view.model.getMeta()[this.view.model.get('id')].subscription = subscribe;
+        this.view.model.getMetaById().subscription = subscribe;
     },
 
     getSubscribe: function () {
         var model = this.view.model;
-        if (_.isUndefined(model.getMeta()[model.get('id')].subscription) || _.isNull(model.getMeta()[model.get('id')].subscription)) {
+        if (_.isUndefined(model.getMetaById().subscription) || _.isNull(model.getMetaById().subscription)) {
             return undefined;
         } else {
             return model.getMeta()[model.get('id')].subscription;
