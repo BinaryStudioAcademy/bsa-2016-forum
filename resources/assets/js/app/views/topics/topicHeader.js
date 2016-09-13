@@ -3,7 +3,7 @@ var _ = require('underscore');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
-var SubscribeBehavior = require('../subscribeBehavior');
+var SubscribeBehavior = require('../../behaviors/subscribeBehavior');
 var logger = require('../../instances/logger');
 
 module.exports = Marionette.ItemView.extend({
@@ -38,7 +38,7 @@ module.exports = Marionette.ItemView.extend({
     ui: {
         bookmarkTopic: '.bookmark-btn',
         icon: '.bookmarked',
-        subscribeNotification: '.subscribe-btn',
+        subscribeNotification: '.subscribe-btn'
     },
 
     events: {
