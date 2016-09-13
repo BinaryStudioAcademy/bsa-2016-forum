@@ -25,6 +25,7 @@ module.exports = Marionette.LayoutView.extend({
         start: '#start',
         delete: '#delete',
         title: '#question-title',
+        description: '#question-description',
         errors: '.js-errors',
         tags: '#tags',
         isPublic: 'input[name=access]',
@@ -63,6 +64,10 @@ module.exports = Marionette.LayoutView.extend({
         'click @ui.start': 'createVote',
         'change @ui.title': function () {
             this.model.save({title: this.ui.title.val()});
+        },
+        'change @ui.description': function () {
+            console.log(this.ui.description.val());
+            this.saveModel({description: this.ui.description.val()});
         },
         'click @ui.isPublic': function () {
             this.saveModel({is_public: this.ui.isPublic.filter(':checked').val()});
