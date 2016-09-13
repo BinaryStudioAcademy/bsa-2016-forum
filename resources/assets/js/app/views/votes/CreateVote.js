@@ -11,6 +11,7 @@ var currentUser = require('../../initializers/currentUser');
 var CreateVoteItemCollection = require('./CreateVoteItemCollection');
 var userCollectionView = require('../users/userCollection');
 
+require('bootstrap-tagsinput');
 
 module.exports = Marionette.LayoutView.extend({
     className: 'well',
@@ -31,7 +32,8 @@ module.exports = Marionette.LayoutView.extend({
         finished: '#finished',
         dateerrors: '.js-date-errors',
         isSingle: 'input[name=isSingle]',
-        selectAccessedUsersBlock: '.vote-new-access'
+        selectAccessedUsersBlock: '.vote-new-access',
+        tagsInput: '.tags'
     },
     modelEvents: {
         'invalid': function (model, errors) {
@@ -131,5 +133,9 @@ module.exports = Marionette.LayoutView.extend({
         } else {
             this.model.set(obj);
         }
+    },
+    initialize: function() {
+        this.bindUIElements();
+        this.ui.tagsInput.tagsinput();
     }
 });

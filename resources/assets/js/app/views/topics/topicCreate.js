@@ -1,21 +1,22 @@
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 var TopicModel = require('../../models/TopicModel');
-var bootstrapTags = require('bootstrap-tagsinput');
 var currentUser = require('../../initializers/currentUser');
 var topicCategoryCollectionForSelector = require('../../views/topics/topicCategoryCollectionForSelector');
 var topicCategoryItemForSelector = require('../../views/topics/topicCategoryItemForSelector');
-
+require('bootstrap-tagsinput');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'topicCreateNew',
 
     ui: {
-        createForm: '.topic-form'
+        createForm: '.topic-form',
+        tagsInput: '.tags'
     },
 
     initialize: function () {
-        this.$('.tags').tagsinput();
+        this.bindUIElements();
+        this.ui.tagsInput.tagsinput();
         this.model.set({user_id: currentUser.id});
     },
 

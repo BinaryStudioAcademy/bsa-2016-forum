@@ -132,7 +132,7 @@ class TopicController extends ApiController
     {
         $topic = Topic::create($request->all());
         if ($request->tags) {
-            TagService::TagsHandler($topic, $request->tags);
+            TagService::TagsHandler($topic, explode(',', $request->tags));
         }
         $topic->generated_description = MarkdownService::baseConvert($topic->description);
         $topic->save();
