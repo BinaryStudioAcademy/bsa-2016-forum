@@ -1,7 +1,11 @@
 /*
 VOTE DETAIL
 */
-
+.description {
+  height:200px;
+  width:100%;
+  resize: none;
+}
 .vote {
   padding: 25px 15px 15px 0;
   background-color: #fff;
