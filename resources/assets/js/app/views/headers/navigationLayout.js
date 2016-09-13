@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 var NavigationCollectionView = require('./navigationCollection');
+var currentUser = require('../../initializers/currentUser');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'navigationLayout',
@@ -10,6 +11,9 @@ module.exports = Marionette.LayoutView.extend({
 
     onRender: function () {
         //console.log('nav-menu layout render');
+        if(!currentUser.isAdmin()){
+            this.collection.pop()
+        }
         this.getRegion('menuContainer').show(new NavigationCollectionView({
             collection: this.collection
         }));
