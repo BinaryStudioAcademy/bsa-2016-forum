@@ -41,7 +41,10 @@ module.exports = Marionette.ItemView.extend({
         },
         'change @ui.finished': function () {
             this.saveModel({finished_at: DateHelper.dateWithoutTimezone(this.ui.finished.val())});
-        }
+        },
+        'change @ui.description': function () {
+            this.saveModel({description: this.ui.description.val()});
+        },
     },
     serializeData: function () {
         var meta = this.model.getMetaById() || {

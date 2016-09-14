@@ -130,7 +130,6 @@ class VoteController extends ApiController
         }
         $vote->description_generated = MarkdownService::baseConvert($vote->description);
         $vote->save();
-        return $this->setStatusCode(201)->respond($vote);
 
         return $this->setStatusCode(201)->respond($vote, $this->getMetaDataForModel($vote, true));
     }
@@ -208,7 +207,6 @@ class VoteController extends ApiController
         }
         $vote->description_generated = MarkdownService::baseConvert($vote->description);
         $vote->save();
-        return $this->setStatusCode(200)->respond($vote);
 
         return $this->setStatusCode(200)->respond($vote, $this->getMetaDataForModel($vote, true));
     }
