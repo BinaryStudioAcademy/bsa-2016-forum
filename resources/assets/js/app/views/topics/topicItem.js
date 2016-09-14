@@ -8,8 +8,7 @@ var BookmarkBehavior = require('../../behaviors/bookmarkBehavior');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicItem',
-    className: 'row post-item',
-    tagName: 'a',
+    tagName: 'li',
     attributes : function () {
         return {
             href: "#topics/"+this.model.get("slug")
