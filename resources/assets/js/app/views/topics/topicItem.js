@@ -1,4 +1,5 @@
 var Marionette = require('backbone.marionette');
+var Radio = require('backbone.radio');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
@@ -153,11 +154,7 @@ module.exports = Marionette.ItemView.extend({
         var parentUrl = '/topics/'+this.model.id;
         var topicAddLikeModel=new TopicAddLikeModel({parentUrl: parentUrl});
         topicAddLikeModel.save();
-        this.model.fetch({id:this.model.id});
-        this.model.set({
-            is_user:this.model.attributes.is_user,
-            countOfLikes:this.model.attributes.countOfLikes,
-        });
+        Radio.trigger('topicChannel', 'addLike',this.model);
     },
 
     removeLikeTopic: function(){
@@ -166,11 +163,6 @@ module.exports = Marionette.ItemView.extend({
         var topicRemoveLikeModel = new TopicRemoveLikeModel({parentUrl: parentUrl,id:this.model.attributes.like_id});
         topicRemoveLikeModel.destroy({success: function(model, response) {
         }});
-        console.log(this.model);
-        this.model.fetch({id:this.model.id});
-        this.model.set({
-            is_user:this.model.attributes.is_user,
-            countOfLikes:this.model.attributes.countOfLikes,
-        });
+        Radio.trigger('topicChannel', 'removeLike', this.model);
     }
 });

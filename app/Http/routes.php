@@ -64,7 +64,6 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         ],
     ]);
     Route::get('categories/{category}/topics', 'TopicController@indexInCategory')->name('topicsInCategory');
-    Route::get('categories/{category}/topics/{topic}', 'TopicController@showInCategory')->name('topicInCategory');
     Route::post('topics/{topic}/likes', 'TopicController@addLike')->name('addLikeToTopic');
     Route::delete('topics/{topic}/likes/{like}', 'TopicController@removeLike')->name('removeLikeFromTopic');
 
