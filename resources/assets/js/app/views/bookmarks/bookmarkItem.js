@@ -4,7 +4,7 @@ var ConfirmDeleteView = require('./bookmarkConfirmDeleteView');
 
 module.exports = Marionette.ItemView.extend({
     template: 'bookmarkItem',
-    tagName: 'div',
+    tagName: 'li',
 
     ui: {
         bookmarkDelete: '.delete-bookmark-button'
