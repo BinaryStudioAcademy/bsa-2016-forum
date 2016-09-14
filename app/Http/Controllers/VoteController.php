@@ -166,7 +166,7 @@ class VoteController extends ApiController
      */
     public function show($id)
     {
-        $vote = Vote::findOrFail($id);
+        $vote = Vote::getSluggableModel($id);
         if (Auth::user()->id &&
             !$this->isUniqueViewExist($vote)
         ) {
@@ -189,7 +189,7 @@ class VoteController extends ApiController
      */
     public function update(VotesRequest $request, $id)
     {
-        $vote = Vote::findOrFail($id);
+        $vote = Vote::getSluggableModel($id);
         $this->authorize('update', $vote);
 
         $vote->update($request->all());
@@ -216,7 +216,7 @@ class VoteController extends ApiController
      */
     public function destroy($id)
     {
-        $vote = Vote::findOrFail($id);
+        $vote = Vote::getSluggableModel($id);
 
         $this->authorize('delete', $vote);
 
@@ -316,7 +316,7 @@ class VoteController extends ApiController
     public function createUserVoteResult($id, VoteResultRequest $request)
     {
         $model = null;
-        $vote = Vote::findOrFail($request->vote_id);
+        $vote = Vote::getSluggableModel($request->vote_id);
         $user = Auth::user();
         $voteItem = VoteItem::findOrFail($request->vote_item_id);
         $response = ['checked' => true];

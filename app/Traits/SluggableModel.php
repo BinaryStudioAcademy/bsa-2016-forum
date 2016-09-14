@@ -27,7 +27,7 @@ trait SluggableModel
     {
         return [
             'slug' => [
-                'source' => 'name'
+                'source' => ['name', 'title']
             ]
         ];
     }

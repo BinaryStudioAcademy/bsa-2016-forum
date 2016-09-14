@@ -22,7 +22,7 @@ module.exports = Marionette.ItemView.extend({
                 break;
             case 'Vote':
                 title = this.options.target.title;
-                url = '#votes/'+this.options.target.id;
+                url = '#votes/'+this.options.target.slug;
                 break;
         }
 

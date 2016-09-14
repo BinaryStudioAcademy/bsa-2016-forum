@@ -11,7 +11,7 @@ module.exports = Marionette.ItemView.extend({
 
     attributes : function () {
         return {
-            href: "#/votes/" + this.model.get("id")
+            href: "#/votes/" + this.model.get("slug")
         }
     },
     

@@ -46,7 +46,7 @@ class SubscriptionController extends ApiController
                 Topic::findOrFail($request->subscription_id);
                 break;
             case Vote::$morphTag:
-                Vote::findOrFail($request->subscription_id);
+                Vote::getSluggableModel($request->subscription_id);
                 break;
             default:
                 return $this->setStatusCode(400)->respond();
