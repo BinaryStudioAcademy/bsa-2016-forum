@@ -5,7 +5,7 @@ module.exports = Marionette.Object.extend({
 
     index: function () {
         var Users = require('../collections/userCollection');
-        var UsersView = require('../views/users/userCollection');
+        var UsersView = require('../views/users/userLayout');
         var users = new Users();
 
         users.fetch();
