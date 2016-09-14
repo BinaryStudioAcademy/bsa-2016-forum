@@ -1,25 +1,43 @@
 <?php
 namespace App\Repositories;
+use Illuminate\Http\Request;
 use App\Repositories\Contracts\UserStoreInterface;
 use App\Facades\CurlService;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Status;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class UserStore implements UserStoreInterface
 {
+    protected $status = null;
+    protected $limit = null;
+    protected $searchStr = null;
+    protected $order = null;
+    protected $orderType = null;
+
     /**
      * @param null $user
+     * @param Request $request
      * @return mixed
      * @throws ServiceUnavailableHttpException
      */
-    public function all($user = null)
+    public function all($user = null, Request $request = null)
     {
+        if ($request) {
+            $this->setFiltersParameters($request);
+        }
+
         if ($user) {
             $usersInner[] = $user->toArray();
         } else {
-            $usersInner = User::all()->toArray();
+            $usersInner = User::filterByQuery($this->searchStr)
+                ->filterByStatus($this->status)
+                ->take($this->limit)
+                ->get()
+                ->toArray();
         }
+
         if (strtolower(env('APP_ENV')) <> 'local') {
             if ($user){
                 $response = CurlService::sendUsersRequest($user->global_id);
@@ -84,6 +102,7 @@ class UserStore implements UserStoreInterface
                 $usersInner);
         }
 
+        $usersNew = [];
         foreach ($users as $user){
             if ($user != null){
                 $usersNew[] = $user;
@@ -96,5 +115,14 @@ class UserStore implements UserStoreInterface
     {
         $user = $this->all($user);
         return array_shift($user);
+    }
+
+    protected function setFiltersParameters(Request $request)
+    {
+        $this->status = $request->get('status');
+        $this->limit = $request->get('limit');
+        $this->searchStr = $request->get('query');
+        $this->order = $request->get('order');
+        $this->orderType = $request->get('orderType');
     }
 }
