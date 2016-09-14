@@ -66,6 +66,7 @@ module.exports = function (grunt) {
                     loadPath: [
                         'node_modules/bootstrap-sass/assets/stylesheets',
                         'node_modules/dropzone/src',
+                        'node_modules/nprogress'
                     ]
                 },
                 files: {

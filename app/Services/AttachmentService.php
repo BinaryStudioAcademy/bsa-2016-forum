@@ -31,7 +31,7 @@ class AttachmentService
                 ]);
 
             $attachment_data['cloud_public_id'] = $cloud_answer['public_id'];
-            $attachment_data['type'] = mime_content_type($new_tmp_file);
+            $attachment_data['type'] = $request->file('f')->getClientMimeType();
             $attachment_data['url'] = $cloud_answer['url'];
             unlink($new_tmp_file);
 
