@@ -3,55 +3,55 @@ var navigCollection = require('../collections/navigationCollection');
 module.exports = new navigCollection([
     {
         href: '#dashboard',
-        icon: '',
+        icon: 'tachometer',
         name: 'dashboard',
         label: 'Dashboard',
     },
     {
         href: '#topicCategories',
-        icon: '',
+        icon: 'comments',
         name: 'topics',
         label: 'Topics',
     },
     {
         href: '#mytopics',
-        icon: '',
+        icon: 'flag',
         name: 'myTopics',
         label: 'My topics',
     },
     {
         href: '#bookmarks',
-        icon: '',
+        icon: 'bookmark',
         name: 'bookmarks',
         label: 'Bookmarks',
     },
     {
         href: '#votes',
-        icon: '',
+        icon: 'asl-interpreting',
         name: 'votes',
         label: 'Votes',
     },
     {
         href: '#userVotes',
-        icon: '',
+        icon: 'flag',
         name: 'myVotes',
         label: 'My votes'
     },
     {
         href: '#users',
-        icon: '',
+        icon: 'users',
         name: 'users',
         label: 'Users'
     },
     {
         href: '#messages',
-        icon: '',
+        icon: 'comments-o',
         name: 'messages',
         label: 'Messages'
     },
     {
         href: '#subscriptions',
-        icon: '',
+        icon: 'bell',
         name: 'subscriptions',
         label: 'Subscriptions'
     }
