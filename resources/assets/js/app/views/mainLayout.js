@@ -14,10 +14,6 @@ var mainLayoutView = Marionette.LayoutView.extend({
         modalWindow: '#modal-container'
     },
 
-    ui: {
-        spinner: '#spinner'
-    },
-
     showRegions: function () {
         this.getRegion('header').show(new headerView());
         this.getRegion('navigationMenu').show(new navigationLayoutView({
