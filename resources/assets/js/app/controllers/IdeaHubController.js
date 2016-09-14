@@ -91,6 +91,8 @@ module.exports = Marionette.Object.extend({
             accessedUsers: accessedUsers
         });
 
+        VoteAnswers.add(new VoteAImodel());
+        
         view.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {
             col.add(new VoteAImodel());
         });
