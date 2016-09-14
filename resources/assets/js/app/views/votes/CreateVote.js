@@ -57,6 +57,16 @@ module.exports = Marionette.LayoutView.extend({
             this.ui.errors.empty();
         }
     },
+    collectionEvents: {
+        'updateLengthCollection': function () {
+            var hideRemoveButton = true;
+            if (this.collection.size() > 2)
+                hideRemoveButton = false;
+
+            Radio.trigger('votesChannel', 'updateVoteItemDeleteButton', hideRemoveButton);
+        }
+    },
+
     events: {
         'click @ui.add': function () {
             Radio.trigger('votesChannel', 'createEmptyVoteItem', this.collection);
@@ -105,6 +115,8 @@ module.exports = Marionette.LayoutView.extend({
             collection: this.getOption('accessedUsers'),
             childView: require('./CreateVoteUserItemExtend')
         }));
+
+        this.collection.trigger('updateLengthCollection');
     },
     createVote: function () {
         var view = this;
