@@ -7,7 +7,8 @@ module.exports = Marionette.ItemView.extend({
     serializeData: function () {
         return {
             message: helper.formatText(this.model.get('message')),
-            user: this.options.user,
+            userTo: this.options.userTo,
+            userFrom: this.options.userFrom,
             updatedDate: dateHelper.relativeDate(dateHelper.dateWithTimezone(this.model.get('updated_at'))),
             updatedStaticDate: dateHelper.dateWithTimezone(this.model.get('updated_at'))
         }

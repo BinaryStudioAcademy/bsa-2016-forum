@@ -49,13 +49,21 @@ module.exports = Marionette.Object.extend({
 
     create: function (categoryId) {
         var topicCategoryCollection = new TopicCategoryCollection();
-        topicCategoryCollection.fetch();
 
-        var topicModel = new TopicModel({category_id: categoryId});
+        var topicModel = new TopicModel();
         app.render(new TopicCreate({
             model: topicModel,
             collection: topicCategoryCollection
         }));
+
+        topicCategoryCollection.fetch({
+            success: function(collection){
+                var category = collection.findWhere({slug: categoryId})
+
+                if (category != undefined) {
+                    topicModel.set("category_id", category.get("id"));
+                }
+        }});
     },
 
     createCategory: function () {

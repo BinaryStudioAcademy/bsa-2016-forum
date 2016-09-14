@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Builder;
 
 
 class User extends Authenticatable
@@ -160,5 +161,38 @@ class User extends Authenticatable
             return null;
         }
         return $user;
+    }
+
+    /**
+     * Scope a query to only include users which contain a searching text in the users's first_name,
+     *  last_name, email.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $searchStr
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilterByQuery(Builder $query, $searchStr)
+    {
+        if ($searchStr) {
+            $query = $query->where('first_name','LIKE','%'.$searchStr.'%')
+                ->orWhere('last_name','LIKE','%'.$searchStr.'%')
+                ->orWhere('email','LIKE','%'.$searchStr.'%');
+        }
+
+        return $query;
+    }
+
+    public function scopeFilterByStatus(Builder $query, $statusName)
+    {
+        if ($statusName) {
+            $status = Status::select('id')->where('name', $statusName)->first();
+            if (!$status) {
+                return $query;
+            }
+            $status_id = $status->id;
+            $query = $query->where('status_id', $status_id);
+        }
+
+        return $query;
     }
 }
