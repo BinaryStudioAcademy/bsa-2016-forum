@@ -234,3 +234,51 @@ input.hotkey-checkbox {
 .from-to-user {
   font-weight: bold;
 }
+
+.typeahead-container {
+  text-align: center;
+}
+
+.twitter-typeahead {
+  width: 80%;
+}
+
+.typeahead,
+.tt-query,
+.tt-hint {
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  height: 35px;
+  line-height: 35px;
+  outline: medium none;
+  padding: 8px 12px;
+  width: 100%;
+}
+
+.tt-menu {
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  margin-top: -10px;
+  padding: 5px 0;
+  text-align: left;
+  width: 100%;
+}
+
+.tt-menu__link {
+  display: block;
+  padding: 3px 10px;
+  color: #000;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.tt-menu__link:hover {
+  background-color: #fff4d2;
+}
+
+.tt-suggestion {
+  margin: 3px 0;
+}
