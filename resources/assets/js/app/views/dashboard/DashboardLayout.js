@@ -5,7 +5,6 @@ var UsersCollectionView = require('../users/userCollection');
 var BookmarksCollection = require('../bookmarks/bookmarkCollection');
 var MessagesCollection = require('../messages/messageCollection');
 var logger = require('../../instances/logger');
-var _ = require('underscore');
 var CountersCollectionView = require('./CountersCollection');
 
 module.exports = Marionette.LayoutView.extend({
