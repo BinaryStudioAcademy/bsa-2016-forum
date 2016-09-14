@@ -2,7 +2,6 @@ var Marionette = require('backbone.marionette');
 require('corejs-typeahead');
 var logger = require('../../instances/logger');
 var messageCollection = require('./messageCollection');
-var UserCollection = require('../../collections/userCollection');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'messageLayout',
@@ -19,7 +18,7 @@ module.exports = Marionette.LayoutView.extend({
                 minLength: 1
             },
             {
-                source: this.searchUsers,
+                source: this.searchUsers(this),
                 templates: {
                     suggestion: Marionette.TemplateCache.get('userSelect')
                 },
@@ -32,18 +31,20 @@ module.exports = Marionette.LayoutView.extend({
             collection: this.collection
         }));
     },
-    searchUsers: function (q, sync, async) {
-        // console.log(q);
-        var users = new UserCollection();
-        users.fetch({
-            data: {
-                query: q,
-                limit: 5
-            },
-            success: function (collection) {
-                async(collection.toJSON());
-            }
-        });
+    searchUsers: function(view) {
+        return function (q, sync, async) {
+            // console.log(view);
+            view.options.users.fetch({
+                data: {
+                    query: q,
+                    limit: 5
+                },
+                success: function (collection) {
+                    async(collection.toJSON());
+                }
+            });
+        }
     }
+
 });
 
