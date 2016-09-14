@@ -1,4 +1,4 @@
-<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
     <div class="category-title">
         <a href="#categories/{{ model.slug }}/topics"> {{ model.name }} </a>
         <span class="topic-count"> (Total : {{meta.topicCount}} topics)</span>
@@ -18,11 +18,11 @@
     </div>
     {{#if isAdmin}}
         <div class="edit-category pull-right">
-            <a href="#topicCategories/{{ model.slug }}/edit">
+            <a class="btn" href="#topicCategories/{{ model.slug }}/edit">
                 <span class="hidden-xs">Edit category</span>
                 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
             </a>
-            <a class="delete-category-btn">
+            <a class="btn delete-category-btn">
                 <span class="hidden-xs">Delete category</span>
                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
             </a>
