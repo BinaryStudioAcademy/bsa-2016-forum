@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\Topic;
 
 use App\Http\Requests\CategoryRequest;
 
@@ -76,7 +77,14 @@ class CategoryController extends ApiController
     public function destroy($id)
     {
         $category = Category::getSluggableModel($id);
+
         $this->authorize('destroyCategory', $category);
+
+        $topics = Topic::where('category_id', $category->id)->get();
+
+        foreach ($topics as $topic) {
+            $topic->delete();
+        }
 
         $category->delete();
         return $this->setStatusCode(204)->respond();

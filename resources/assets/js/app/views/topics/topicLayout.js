@@ -10,6 +10,7 @@ var TopicCategoryModel = require('../../models/TopicCategoryModel');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'topicLayout',
+
     regions: {
         container: '#posts',
         breadcrumbs: '#categoryForBreadcrumbs'
@@ -19,14 +20,10 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     serializeData: function () {
-        var shows = true;
+        var shows = !this.options.blockhide;
 
         if (this.options.categoryId) {
             var catId = this.options.categoryId;
-        }
-
-        if (this.options.blockhide) {
-            shows = false;
         }
 
         return {

@@ -1,7 +1,10 @@
 /*
 VOTE DETAIL
 */
-
+.description {
+  width:100%;
+  resize: none;
+}
 .vote {
   padding: 25px 15px 15px 0;
   background-color: #fff;
@@ -476,4 +479,13 @@ VOTE INDEX
 }
 .vote-attachments {
   padding-top: 15px;
+}
+
+.comment_reply
+{
+  color: #9c999f;
+  font-size:12px;
+  text-decoration: none;
+  cursor: pointer;
+  float:right;
 }

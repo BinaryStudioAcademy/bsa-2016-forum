@@ -24,23 +24,14 @@ class TopicController extends ApiController
      */
     private function getMetaDataForModel(Topic $topic)
     {
-        $data = [];
-        $bookmark = $topic->bookmarks()
-            ->where('user_id', Auth::user()->id)->first();
-
-        if ($bookmark !== null) {
-            $data['bookmark'][$topic->id] = $topic->bookmarks()
-                ->where('user_id', Auth::user()->id)->first();
-        }
-
-        // requires common standards in the future
-        $data[$topic->id] = [
+        return [$topic->id => [
             'subscription' => $topic->subscription(Auth::user()->id),
-            'category' => $topic->category
-        ];
-
-        return $data;
-
+            'category' => $topic->category,
+            'user' => $topic->user()->first(),
+            'likes' => $topic->likes()->count(),
+            'comments' => $topic->comments()->count(),
+            'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first()
+        ]];
     }
 
 

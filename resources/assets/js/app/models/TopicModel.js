@@ -13,6 +13,7 @@ module.exports = baseModel.extend({
             return errors;
         }
     },
+
     fetchBySlag: function () {
         var url = _.result(this, '_getRequestUrl') + '/' + this.get('slug');
         return this.fetch({url: url});

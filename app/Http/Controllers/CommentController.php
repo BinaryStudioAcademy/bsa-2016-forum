@@ -12,9 +12,34 @@ use App\Models\Topic;
 use App\Events\NewBroadcastCommentEvent;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Gate;
+use App\Facades\MarkdownService;
 
 class CommentController extends ApiController
 {
+
+    private function getItemMetaData($comment)
+    {
+        return [
+            'user' => $comment->user()->first(),
+            'likes' => $comment->likes()->count(),
+            'attachments' => $comment->attachments()->get(),
+            'comments' => $comment->comments()->count(),
+
+        ];
+    }
+
+    private function getCollectionMetaData($comments)
+    {
+        $data = [];
+        if ($comments) {
+            foreach ($comments as $comment) {
+                $data[$comment->id] = $this->getItemMetaData($comment);
+            }
+        }
+
+        return $data;
+    }
+
     /**
      * @param Comment $comment
      * @return bool
@@ -57,7 +82,8 @@ class CommentController extends ApiController
     public function getTopicComments(Topic $topic)
     {
         $comments = $topic->comments()->get();
-        return $this->setStatusCode(200)->respond($comments);
+        $meta = $this->getCollectionMetaData($comments);
+        return $this->setStatusCode(200)->respond($comments, $meta);
     }
 
     /**
@@ -68,7 +94,8 @@ class CommentController extends ApiController
     public function getTopicComment(Topic $topic, Comment $comment)
     {
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
-            return $this->setStatusCode(200)->respond($comment);
+            $meta[$comment->id] = $this->getItemMetaData($comment);
+            return $this->setStatusCode(200)->respond($comment, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -83,8 +110,11 @@ class CommentController extends ApiController
     {
         $comment = Comment::create($request->all());
         $comment = $topic->comments()->save($comment);
+        $comment->content_generated = MarkdownService::baseConvert($comment->content_origin);
+        $comment->save();
         event(new TopicNewCommentEvent($topic, $comment));
-        return $this->setStatusCode(201)->respond($comment);
+        $meta[$comment->id] = $this->getItemMetaData($comment);
+        return $this->setStatusCode(201)->respond($comment, $meta);
     }
 
     /**
@@ -99,7 +129,10 @@ class CommentController extends ApiController
 
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comment->update($request->all());
-            return $this->setStatusCode(200)->respond($comment);
+            $comment->content_generated = MarkdownService::baseConvert($comment->content_origin);
+            $comment->save();
+            $meta[$comment->id] = $this->getItemMetaData($comment);
+            return $this->setStatusCode(200)->respond($comment, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -134,7 +167,8 @@ class CommentController extends ApiController
     {
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comments = $comment->comments()->get();
-            return $this->setStatusCode(200)->respond($comments);
+            $meta = $this->getCollectionMetaData($comments);
+            return $this->setStatusCode(200)->respond($comments, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -152,8 +186,11 @@ class CommentController extends ApiController
             $childComment = Comment::create($childCommentInput->all());
             $topic->comments()->save($childComment);
             $childComment = $comment->comments()->save($childComment);
+            $childComment->content_generated = MarkdownService::baseConvert($childComment->content_origin);
+            $childComment->save();
             event(new TopicNewCommentEvent($topic, $childComment));
-            return $this->setStatusCode(201)->respond($childComment);
+            $meta[$childComment->id] = $this->getItemMetaData($childComment);
+            return $this->setStatusCode(201)->respond($childComment, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -170,7 +207,8 @@ class CommentController extends ApiController
         if ($this->isCommentBelongsToTopic($topic, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
-            return $this->setStatusCode(200)->respond($commentChild);
+            $meta[$comment->id] = $this->getItemMetaData($commentChild);
+            return $this->setStatusCode(200)->respond($commentChild, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -190,13 +228,16 @@ class CommentController extends ApiController
         CommentsRequest $request
     ) {
 
-        $this->authorize('updateTopicsComment', [$comment, $topic]);
-
+//        $this->authorize('updateTopicsComment', [$comment, $topic]);
+        $this->authorize('updateTopicsComment', [$commentChild, $topic]);
         if ($this->isCommentBelongsToTopic($topic, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
             $commentChild->update($request->all());
-            return $this->setStatusCode(200)->respond($commentChild);
+            $commentChild->content_generated = MarkdownService::baseConvert($commentChild->content_origin);
+            $commentChild->save();
+            $meta[$commentChild->id] = $this->getItemMetaData($commentChild);
+            return $this->setStatusCode(200)->respond($commentChild, $meta);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
@@ -211,8 +252,8 @@ class CommentController extends ApiController
      */
     public function destroyTopicCommentChild(Topic $topic, Comment $comment, Comment $commentChild)
     {
-        $this->authorize('deleteTopicsComment', [$comment, $topic]);
-
+//        $this->authorize('deleteTopicsComment', [$comment, $topic]);
+        $this->authorize('deleteTopicsComment', [$commentChild, $topic]);
         if ($this->isCommentBelongsToTopic($topic, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
@@ -289,7 +330,8 @@ class CommentController extends ApiController
     {
         $comment = Comment::create($request->all());
         $comment = $vote->comments()->save($comment);
-
+        $comment->content_generated = MarkdownService::baseConvert($comment->content_origin);
+        $comment->save();
         $user = $comment->user()->first();
 
         event(new NewBroadcastCommentEvent($comment, [
@@ -319,6 +361,8 @@ class CommentController extends ApiController
 
         if ($this->isCommentBelongsToVote($vote, $comment)) {
             $comment->update($request->all());
+            $comment->content_generated = MarkdownService::baseConvert($comment->content_origin);
+            $comment->save();
             return $this->setStatusCode(200)->respond($comment);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
@@ -371,6 +415,8 @@ class CommentController extends ApiController
         if ($this->isCommentBelongsToVote($vote, $comment)) {
             $childComment = Comment::create($childCommentInput->all());
             $childComment = $comment->comments()->save($childComment);
+            $childComment->content_generated = MarkdownService::baseConvert($childComment->content_origin);
+            $childComment->save();
             event(new VoteNewCommentEvent($vote, $childComment));
             return $this->setStatusCode(201)->respond($childComment);
         } else {
@@ -414,6 +460,8 @@ class CommentController extends ApiController
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
         ) {
             $commentChild->update($request->all());
+            $commentChild->content_generated = MarkdownService::baseConvert($commentChild->content_origin);
+            $commentChild->save();
             return $this->setStatusCode(200)->respond($commentChild);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
@@ -490,6 +538,8 @@ class CommentController extends ApiController
     {
         $comment = Comment::create($request->all());
         $comment = $voteItem->comments()->save($comment);
+        $comment->content_generated = MarkdownService::baseConvert($comment->content_origin);
+        $comment->save();
         event(new VoteNewCommentEvent($voteItem->vote, $comment));
         return $this->setStatusCode(201)->respond($comment);
     }
@@ -507,6 +557,8 @@ class CommentController extends ApiController
 
         if ($this->isCommentBelongsToVoteItem($voteItem, $comment)) {
             $comment->update($request->all());
+            $comment->content_generated = MarkdownService::baseConvert($comment->content_origin);
+            $comment->save();
             return $this->setStatusCode(200)->respond($comment);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);

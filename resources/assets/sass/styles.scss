@@ -15,6 +15,7 @@ body {
 
 .menu-container nav {
   margin-bottom: 0;
+  border: 0;
 }
 
 .menu-container li a {
@@ -25,6 +26,7 @@ body {
 
 .menu-container li a:hover {
   border-color: #ffa500;
+  background: transparent;
 }
 
 .menu-container li.active a {
@@ -72,12 +74,24 @@ body {
   margin: 15px auto;
 }
 
-.spinner {
-  background: rgba(227, 227, 237, 0.4) url("/images/spinner.gif") no-repeat center center fixed;
-  background-size: 200px;
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  left: 0;
+.dropzone {
+  border: 2px dashed #0087F7;
+  border-radius: 5px;
+  background: white;
+}
+.attachments-container {
+  padding: 15px;
+}
+.attachments-container img {
+  max-height: 50px;
+}
+.nav > li > a:hover, .nav > li > a:focus {
+  background-color: transparent;
+}
+#nprogress .bar {
+  height: 3px;
+  background: #ffa500;
+}
+#nprogress .peg {
+  box-shadow: 0 0 10px #ffa500, 0 0 5px #ffa500;
 }

@@ -24,6 +24,8 @@ class AddGeneratedDescriptionToTopicsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('topics', function (Blueprint $table) {
+            $table->dropColumn('generated_description');
+        });
     }
 }

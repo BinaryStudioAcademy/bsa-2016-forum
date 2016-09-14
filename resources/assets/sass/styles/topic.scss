@@ -115,10 +115,13 @@ TOPIC DETAILS
 
 .topic-comment-main, .topic-comment {
   background: #FFF;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.23);
 }
 
 .topic-comment-included {
   padding-left: 60px;
+  padding-right: 15px;
 }
 
 .topic-comment-flex {
@@ -258,7 +261,7 @@ TOPIC DETAILS
 }
 
 .topic-control-add {
-  padding: 15px;
+  padding: 15px 0;
 }
 
 .topic-more {
@@ -290,6 +293,18 @@ TOPIC DETAILS
   margin-bottom: 20px;
 }
 
+
+.topic-head {
+  margin-bottom: 20px;
+}
+
+.topic-comment-main .close-btn {
+  padding: 10px;
+}
+
+.new-comment-container .loader img {
+  height: 30px;
+}
 .topic-count {
   text-decoration: none;
   text-transform: lowercase;
@@ -325,8 +340,20 @@ TOPIC DETAILS
 }
 
 .errors {
-  color: red;
+  color:red;
 }
 .edit-category {
   margin-right: 20px;
+}
+.attachments-container .file-name {
+  overflow: hidden;
+}
+.topic-control .childs-btn {
+  padding: 10px;
+}
+.btn-childs {
+  border-radius: 0;
+}
+.newcomment .comment-modal textarea {
+  resize: vertical;
 }
