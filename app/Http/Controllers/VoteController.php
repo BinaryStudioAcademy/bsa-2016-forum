@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Carbon\Carbon;
 use App\Facades\TagService;
+use App\Facades\MarkdownService;
 use Illuminate\Support\Facades\Auth;
 
 class VoteController extends ApiController
@@ -127,6 +128,9 @@ class VoteController extends ApiController
         } elseif ($request->users) {
             $this->VotePermissionsHandler($vote, $request->users);
         }
+        $vote->description_generated = MarkdownService::baseConvert($vote->description);
+        $vote->save();
+        return $this->setStatusCode(201)->respond($vote);
 
         return $this->setStatusCode(201)->respond($vote, $this->getMetaDataForModel($vote, true));
     }
@@ -202,6 +206,9 @@ class VoteController extends ApiController
         } elseif ($request->users) {
             $this->VotePermissionsHandler($vote, $request->users);
         }
+        $vote->description_generated = MarkdownService::baseConvert($vote->description);
+        $vote->save();
+        return $this->setStatusCode(200)->respond($vote);
 
         return $this->setStatusCode(200)->respond($vote, $this->getMetaDataForModel($vote, true));
     }

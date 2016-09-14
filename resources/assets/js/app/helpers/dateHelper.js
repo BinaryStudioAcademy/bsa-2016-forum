@@ -7,10 +7,10 @@ var dateHelper = {
         if (_.isEmpty(date)) return '';
         return moment.utc(date).tz(config.timeZone).format('YYYY-MM-DD HH:mm:ss')
     },
-
-    dateWithoutTimezone: function(date) {
+    
+    dateToSave: function (date) {
         if (_.isEmpty(date)) return '';
-        return moment(date).format('YYYY-MM-DD HH:mm:ss')
+        return moment(date).tz(config.timeZone).utc().format('YYYY-MM-DD HH:mm:ss')
     },
 
     dateWithTimezoneInFormat: function (date) {
@@ -18,8 +18,10 @@ var dateHelper = {
         return moment(date).format('YYYY-MM-DDTHH:mm:ss')
     },
     
+
     getDateTimeDiff: function (date) {
-        return moment().diff(this.dateWithoutTimezone(date), 'minute');
+        if(_.isEmpty(date)) return true;
+        return (moment.utc().diff(moment(date).utc(), 'minute'));
     },
 
     shortDate: function(date) {

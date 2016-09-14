@@ -23,12 +23,15 @@ var appInstance = require('../instances/appInstance');
 
 var logger = require('../instances/logger');
 
+var nProgress = require('nprogress');
+nProgress.configure({ showSpinner: false });
+
 $( document ).ajaxStart(function() {
-    Radio.channel('spinnerChannel').trigger('show');
+    nProgress.start();
 });
 
 $( document ).ajaxStop(function() {
-    Radio.channel('spinnerChannel').trigger('hide');
+    nProgress.done();
 });
 
 var Handlebars = require('handlebars');
