@@ -1,4 +1,5 @@
 var Marionette = require('backbone.marionette');
+var Radio = require('backbone.radio');
 var headerView = require('../views/headers/Header');
 var navigationLayoutView = require('./headers/navigationLayout');
 
@@ -9,15 +10,8 @@ var mainLayoutView = Marionette.LayoutView.extend({
         header: '#header',
         navigationMenu: '#navigationMenu',
         content: '#main-content',
-        breadCrumbs: '#breadcrumbs'
-    },
-
-    initialize: function () {
-
-    },
-
-    onRender: function () {
-        //console.log('main layout render');
+        breadCrumbs: '#breadcrumbs',
+        modalWindow: '#modal-container'
     },
 
     showRegions: function () {

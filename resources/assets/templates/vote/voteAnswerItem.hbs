@@ -1,7 +1,7 @@
 {{#if meta.vote.is_single}}
     <div class="radio" >
         <label class="js-item-click">
-            <input type="radio" class="js-select" name="optionsRadios" id="optionsRadios1" value="{{model.id}}" {{#if model.checked}} checked {{/if}}>
+            <input type="radio" class="js-select" name="optionsRadios" value="{{model.id}}" {{#if model.checked}} checked {{/if}}>
             {{ model.name }}
         </label>
 
@@ -10,7 +10,7 @@
 {{else}}
     <div class="checkbox">
         <label class="js-item-click">
-            <input type="checkbox" class="js-select" value="{{model.id}}" {{#if model.checked}} checked {{/if}}>
+            <input type="checkbox" class="js-select" name="optionsCheckboxes" value="{{model.id}}" {{#if model.checked}} checked {{/if}}>
             {{ model.name }}
         </label><br>
     </div>

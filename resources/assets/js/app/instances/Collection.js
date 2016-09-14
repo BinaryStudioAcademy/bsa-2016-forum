@@ -12,7 +12,11 @@ module.exports = Backbone.Collection.extend({
     _getRequestUrl: function () {
         return App.getBaseUrl() + this.getEntityUrl();
     },
-    
+
+    getIdBySlug: function(slug) {
+        return this.findWhere({ slug: slug });
+    },
+
     getMeta: function () {
         return (_.result(this, '_meta'));
     },

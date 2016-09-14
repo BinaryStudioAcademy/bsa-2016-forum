@@ -15,8 +15,20 @@ class UserController extends ApiController
     public function index(UserStore $userStore, Request $request)
     {
         $users = $userStore->all(null, $request);
+        $this->setFiltersParameters($request);
+        $users = collect($userStore->all());
+
+        if ($this->status) {
+            $users = $this->getUsersByStatus($users, $this->status);
+        }
+
         return $this->setStatusCode(200)->respond($users);
     }
+
+    public function getUsersByStatus($users, $status) {
+        return $users->where('status', $status)->values();
+    }
+
     /**
      * Display the specified resource.
      *
@@ -67,5 +79,13 @@ class UserController extends ApiController
         }
         $userProfile = $userStore->get($user);
         return $this->setStatusCode(200)->respond($userProfile);
+    }
+
+    protected function setFiltersParameters(Request $request)
+    {
+        $this->status = $request->get('status');
+        $this->limit = $request->get('limit');
+        $this->order = $request->get('order');
+        $this->orderType = $request->get('orderType');
     }
 }

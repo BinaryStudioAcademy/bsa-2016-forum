@@ -2,26 +2,37 @@ body {
   background: #f7f7f7;
 }
 
+.green-text {
+  color: green !important;
+}
+
 .menu-container {
   background: #fff;
   margin-bottom: 20px;
   color: #000;
   border-bottom: 1px solid #EEEEEE;
 }
+
 .menu-container nav {
   margin-bottom: 0;
+  border: 0;
 }
+
 .menu-container li a {
   border-bottom: 4px solid transparent;
   color: #545861;
   transition: all .25s ease;
 }
+
 .menu-container li a:hover {
   border-color: #ffa500;
+  background: transparent;
 }
+
 .menu-container li.active a {
   border-color: #ffa500;
 }
+
 .post-head {
   padding: 15px;
   background: #545861;
@@ -29,11 +40,13 @@ body {
   color: #fff;
   text-transform: uppercase;
 }
+
 .post-title {
   text-align: left;
   color: #ffa500;
   font-weight: bold;
 }
+
 .category-title {
   padding-top: 5px;
   margin-left: 25px;
@@ -59,4 +72,26 @@ body {
 .dashboard-container {
   padding: 0;
   margin: 15px auto;
+}
+
+.dropzone {
+  border: 2px dashed #0087F7;
+  border-radius: 5px;
+  background: white;
+}
+.attachments-container {
+  padding: 15px;
+}
+.attachments-container img {
+  max-height: 50px;
+}
+.nav > li > a:hover, .nav > li > a:focus {
+  background-color: transparent;
+}
+#nprogress .bar {
+  height: 3px;
+  background: #ffa500;
+}
+#nprogress .peg {
+  box-shadow: 0 0 10px #ffa500, 0 0 5px #ffa500;
 }

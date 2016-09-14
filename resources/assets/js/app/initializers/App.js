@@ -23,6 +23,17 @@ var appInstance = require('../instances/appInstance');
 
 var logger = require('../instances/logger');
 
+var nProgress = require('nprogress');
+nProgress.configure({ showSpinner: false });
+
+$( document ).ajaxStart(function() {
+    nProgress.start();
+});
+
+$( document ).ajaxStop(function() {
+    nProgress.done();
+});
+
 var Handlebars = require('handlebars');
 var Templates = require('../templates')(Handlebars);
 

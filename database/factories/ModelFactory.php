@@ -54,6 +54,8 @@ $factory->define(App\Models\Message::class, function (Faker\Generator $faker) {
 $factory->define(App\Models\Vote::class, function (Faker\Generator $faker) {
     return [
         'title' => $faker->word,
+        'description' => $faker->paragraph,
+        'description_generated' => $faker->paragraph,
         'is_public' => $faker->numberBetween(0, 1),
         'is_saved' => $faker->numberBetween(0, 1),
         'finished_at' => date('Y:m:d H:m:s', strtotime('+' . $faker->numberBetween(5, 15) . ' days'))
@@ -73,7 +75,11 @@ $factory->define(App\Models\Tag::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Models\Category::class, function (Faker\Generator $faker) {
+    $name = $faker->unique()->word . ' ' . $faker->unique()->word;
+    $slug = str_slug($name, '-');
+
     return [
-        'name' => $faker->unique()->word
+        'name' => $name,
+        'slug' => $slug
     ];
 });
