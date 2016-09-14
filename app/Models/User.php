@@ -181,4 +181,13 @@ class User extends Authenticatable
 
         return $query;
     }
+
+    public function scopeFilterByStatus(Builder $query, $status)
+    {
+        if ($status) {
+            $query = $query->where('status', $status);
+        }
+
+        return $query;
+    }
 }
