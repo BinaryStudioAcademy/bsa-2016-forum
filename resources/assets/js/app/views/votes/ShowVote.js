@@ -23,19 +23,16 @@ module.exports = Marionette.LayoutView.extend({
         c_count: '.count',
         newCommentButton: '.new-comment-notification',
         moreButton: '.vote-comments-more',
-        lessButton: '.vote-comments-less',
         voteCommit: '.commit-vote'
     },
 
     events: {
         'click @ui.newCommentButton': 'showNewComments',
         'click @ui.moreButton': 'onClickVoteCommentsMore',
-        'click @ui.lessButton': 'onClickVoteCommentsLess',
         'click @ui.voteCommit': 'saveVotingOption'
     },
 
     _pageMore: 2,
-    _pageLess: 1,
     _allItemsUploaded:false,
     
     onClickVoteCommentsMore: function(e) {
@@ -44,15 +41,8 @@ module.exports = Marionette.LayoutView.extend({
         if (this._allItemsUploaded) {
             return;
         }
-
-        var currentPage = this.collection.getMeta().currentPage;
-        var lastPage = this.collection.getMeta().lastPage;
-
-        if (currentPage == lastPage){
-            return;
-        }
         this.collection.fetch({
-            remove: true,
+            remove: false,
             data: {page: this._pageMore},
             error: function (collection, response) {
                 console.log('error');
@@ -60,35 +50,9 @@ module.exports = Marionette.LayoutView.extend({
                 console.error(response.responseText);
             },
             success: function (collection, xhr) {
-                this._pageLess = this._pageMore - 1;
+                var meta = this.collection.getMeta();
+                self._allItemsUploaded = !meta.hasMorePages;
                 this._pageMore++;
-            }.bind(this)
-        });
-    },
-
-    onClickVoteCommentsLess: function(e) {
-
-        if (this._allItemsUploaded) {
-            return;
-        }
-
-        var currentPage = this.collection.getMeta().currentPage;
-
-        if (currentPage == 1){
-            return;
-        }
-
-        this.collection.fetch({
-            remove: true,
-            data: {page: this._pageLess},
-            error: function (collection, response) {
-                self._allItemsUploaded = true;
-                console.log('error');
-                console.error(response.responseText);
-            },
-            success: function (collection, xhr) {
-                this._pageMore = this._pageLess + 1;
-                this._pageLess--;
             }.bind(this)
         });
     },
