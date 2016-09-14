@@ -94,6 +94,7 @@ class UserStore implements UserStoreInterface
                 $usersInner);
         }
 
+        $usersNew = [];
         foreach ($users as $user){
             if ($user != null){
                 $usersNew[] = $user;
