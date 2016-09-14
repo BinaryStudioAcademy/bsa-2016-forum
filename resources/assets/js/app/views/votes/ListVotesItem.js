@@ -1,6 +1,6 @@
 var Marionette = require('backbone.marionette');
 var Backbone = require('backbone');
-var SubscribeBehavior = require('../subscribeBehavior');
+var SubscribeBehavior = require('../../behaviors/subscribeBehavior');
 var _ = require('underscore');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');

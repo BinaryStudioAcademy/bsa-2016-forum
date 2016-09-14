@@ -23,6 +23,7 @@ module.exports = Backbone.Model.extend({
         }
 
         if (!options.statusCode) options.statusCode = {};
+
         options.statusCode['400'] = function (xhr, textStatus, errorThrown) {
             if (xhr.responseJSON) {
                 model.validationError = xhr.responseJSON;
@@ -32,6 +33,10 @@ module.exports = Backbone.Model.extend({
 
         options.statusCode['403'] = function (xhr, textStatus, errorThrown) {
             Backbone.history.navigate('/', {trigger: true});
+        };
+
+        options.statusCode['404'] = function (xhr, textStatus, errorThrown) {
+            model.trigger('notFound', model, xhr.responseText);
         };
 
         return Backbone.sync(method, model, options);
