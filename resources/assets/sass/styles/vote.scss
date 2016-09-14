@@ -1,7 +1,10 @@
 /*
 VOTE DETAIL
 */
-
+.description {
+  width:100%;
+  resize: none;
+}
 .vote {
   padding: 25px 15px 15px 0;
   background-color: #fff;
@@ -27,6 +30,7 @@ VOTE DETAIL
 .vote-body {
   /* width: calc(100% - 80px); */
   display: inline-block;
+  width: 100%;
 }
 
 .vote-header h3 {
@@ -37,7 +41,11 @@ VOTE DETAIL
   color: #999999;
 }
 
-.vote-tags span {
+.vote-tags a {
+  color: #333;
+}
+
+.vote-tags a span {
   background: #ffec96;
   border: #ffc761 1px solid;
   font-size: 12px;
@@ -45,6 +53,14 @@ VOTE DETAIL
   border-radius: 4px;
   margin-right: 10px;
   display: inline-block;
+}
+
+.vote-header select {
+  border:none;
+}
+
+.vote-tags {
+  color: #333;
 }
 
 .vote-control {
@@ -117,7 +133,12 @@ VOTE INDEX
 
 }
 
-.votes-item-add a{
+.votes a:hover {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.votes-item-add a {
   text-transform: capitalize;
   display: block;
   width: 100%;
@@ -130,7 +151,7 @@ VOTE INDEX
   color: #999999;
 }
 
-.votes-item-add a:hover{
+.votes-item-add a:hover {
   text-decoration: none;
   background-color: #ffd992;
   color: #777777;
@@ -142,6 +163,7 @@ VOTE INDEX
   border-bottom: #dddddd 1px solid;
   padding: 10px;
   display: flex;
+  width: 100%;
 }
 
 .votes-item:hover {
@@ -186,8 +208,18 @@ VOTE INDEX
   margin-top: 10px;
   display: inline-block;
 }
+.votes-item-tags {
+  color: #333;
+}
 
-.votes-item-details a{
+.votes-item-details a {
+  color: #999999;
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 20px;
+}
+
+.votes-item-details span{
   color: #999999;
   font-size: 14px;
   font-weight: 500;
@@ -204,6 +236,18 @@ VOTE INDEX
   float: right;
   font-size: 12px;
   color: #999999;
+}
+
+.votes-item .subscribe-btn {
+  float: right;
+  background: transparent;
+  color: #337ab7;
+  border: none;
+  font-weight: 600;
+}
+
+.votes-item .subscribed {
+  margin-right: 7px;
 }
 
 /*
@@ -229,7 +273,7 @@ VOTE INDEX
   overflow: hidden;
 }
 
-.vote-new-head h4{
+.vote-new-head h4 {
   margin: 0 0 15px;
   font-weight: 400;
   font-size: 18px;
@@ -266,7 +310,7 @@ VOTE INDEX
   color: #777777;
 }
 
-.vote-new-users span{
+.vote-new-users span {
   margin: 0 10px 5px 0;
   padding: 5px 15px;
   border-radius: 0;
@@ -287,7 +331,7 @@ VOTE INDEX
   display: flex;
 }
 
-.vote-new-addUsers input{
+.vote-new-addUsers input {
   width: 100%;
   padding: 10px 15px;
   background-color: #E9E9E9;
@@ -354,4 +398,75 @@ VOTE INDEX
 
 .vote-new-submit input:hover {
   background-color: #f9c172;
-} 
+}
+
+.vote-new-access {
+  display: none;
+}
+
+.js-errors {
+  color: indianred;
+}
+
+.create-vote-users-item-msg span {
+  display: none;
+}
+
+.create-vote-users-item:hover > .create-vote-users-item-msg span {
+  display: inline-block;
+  float: right;
+  margin: 15px 15px;
+}
+
+.create-vote-users-item > *:hover {
+  cursor: pointer;
+}
+
+.create-vote-email {
+  color: rgba(255, 136, 40, 0.7);
+}
+
+#finished {
+  max-width: 220px;
+}
+
+.tag-links {
+  color: #333;
+}
+
+.bordered-success {
+  border:1px solid green;
+}
+
+.underscored {
+  text-decoration: underline;
+}
+
+.delete-button {
+  position: absolute;
+  //float:right;
+  top:0;
+  right:0;
+}
+
+.limited-block-for-delete-button {
+  width: calc(100% - 50px);
+  display: block;
+}
+
+.relative {
+  position: relative;
+}
+
+.vote-attachments {
+  padding-top: 15px;
+}
+
+.comment_reply
+{
+  color: #9c999f;
+  font-size:12px;
+  text-decoration: none;
+  cursor: pointer;
+  float:right;
+}

@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\Tag;
+use Illuminate\Database\Eloquent\Collection;
 
 class VoteTableSeeder extends Seeder
 {
@@ -12,19 +15,22 @@ class VoteTableSeeder extends Seeder
     public function run()
     {
       
-        $count_votes = 20;
+        $votesCount = 60;
+        $users = User::all();
+        $tags = Tag::all();
 
-        factory(App\Models\Vote::class, $count_votes)->create()->each(function($vote) {
-            $comment = factory(App\Models\Comment::class)->make();
-            $comment = $vote->comments()->save($comment);
-            
-                $tag = factory(App\Models\Tag::class)->make();
-                $comment = $vote->tags()->save($tag);
-
-                $like = factory(App\Models\Like::class)->make();
-                $vote = $vote->likes()->save($like);
-
-        });
-
+        factory(App\Models\Vote::class, $votesCount)
+            ->make()
+            ->each(function($vote) use ($users, $tags) {
+                $randomUser = $users->random();
+                $vote->user()->associate($randomUser);
+                $vote->save();
+                $tagCount = rand(1, 3);
+                $randomTags = $tags->random($tagCount);
+                if (!$randomTags instanceof Collection) {
+                    $randomTags =  new Collection([$randomTags]);
+                }
+                $vote->tags()->saveMany($randomTags);
+            });
     }
 }

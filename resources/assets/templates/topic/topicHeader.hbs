@@ -12,13 +12,16 @@
             <h4>{{ model.name }}</h4>
         </div>
         <div class="topic-msg">
-            <p> {{ model.description }}</p>
+            <p> {{{ model.generated_description }}}</p>
         </div>
-        {{#each meta.tags}}
-            <div class="tag">
-                {{ name }}
-            </div>
-        {{/each}}
+        <span>
+            Category: <a href="#categories/{{model.category.slug}}/topics">{{ model.category.name }}</a>
+        </span>
+        <div class="topic-tags">
+            {{#each model.tags}}
+                <span>#{{ name }}</span>
+            {{/each}}
+        </div>
     </div>
 </div>
 <div class="topic-control">
@@ -26,11 +29,11 @@
     <div class="topic-history">{{ model.created_at }} {{ meta.user.display_name }}</div>
     <div class="topic-control-btn">
         <a class="topic-edit-btn">Edit</a>
-        <a class="topic-bookmark-btn">Bookmark</a>
-        <a class="topic-share-btn">Share</a>
         <a class="topic-answer-btn">Reply</a>
-        <a class="topic-notification-btn">Notification</a>
         <a class="topic-btn" data-toggle="modal" data-target="#delete-topic-form">Delete</a>
+        <a class="topic-answer-btn">Answer</a>
+        <button class="bookmark-btn text-info">Bookmark</button>
+        <button class="subscribe-btn text-info">Subscribe</button>
     </div>
 </div>
 

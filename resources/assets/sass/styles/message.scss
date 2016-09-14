@@ -59,6 +59,11 @@ MESSAGES LIST
   font-size: 16px;
 }
 
+.messages-msg i {
+  color: #777777;
+  margin-left: 5px;
+}
+
 /*
 MESSAGE DIALOG
 */
@@ -67,6 +72,7 @@ MESSAGE DIALOG
   border-bottom: #DDDDDD 1px solid;
   height: calc(100vh - 400px);
   overflow-y: auto;
+  min-height: 320px;
 }
 
 .message-dialog {
@@ -76,7 +82,11 @@ MESSAGE DIALOG
 
 .message-msg-item {
   overflow: hidden;
-  padding: 5px 0 15px;
+  padding: 5px 0 5px;
+}
+
+.message-msg-date {
+  color: #9d9d9d;
 }
 
 .message-msg-item .to {
@@ -91,8 +101,9 @@ MESSAGE DIALOG
   text-align: left;
 }
 
-.message-msg-item .to span{
-  float: right;
+.to .message-msg-body div{
+  float: left;
+  clear: left;
 }
 
 
@@ -109,6 +120,10 @@ MESSAGE DIALOG
   text-align: right;
 }
 
+.from .message-msg-body div{
+  float: right;
+  clear: right;
+}
 
 .message-msg-item a {
   float: left;
@@ -117,6 +132,10 @@ MESSAGE DIALOG
 .message-item-container {
   width: 80%;
   display: flex;
+}
+
+.message-item-container .deleted a {
+  display: none;
 }
 
 .message-msg-avatar {
@@ -131,6 +150,7 @@ MESSAGE DIALOG
 
 .message-msg-body {
   padding: 0 5px;
+  overflow: hidden;
 }
 
 .message-msg-body a {
@@ -141,6 +161,7 @@ MESSAGE DIALOG
 
 .message-msg-body p {
   margin-bottom: 2px;
+  word-wrap: break-word;
 }
 
 .message-msg-body span {
@@ -149,12 +170,21 @@ MESSAGE DIALOG
   font-size: 14px;
 }
 
+.message-msg-body > div {
+  display: block;
+}
+
+.message-msg-body a:hover {
+  cursor: pointer;
+  text-decoration: none;
+}
+
 .message-new {
   width: 100%;
   padding: 10px 0;
 }
 
-.message-new textarea {
+.message-new textarea, .message-edit textarea {
   resize: vertical;
   width: 100%;
   margin: 5px 0 5px;
@@ -165,6 +195,7 @@ MESSAGE DIALOG
   color: #555;
   font-size: 14px;
   font-weight: 400;
+  min-height: 90px;
 }
 
 .message-new-control {
@@ -181,8 +212,28 @@ MESSAGE DIALOG
   font-size: 14px;
   font-weight: 800;
   background-color: #ffd992;
+  margin-left: 10px;
 }
 
 .message-new-control button:hover {
   background-color: #f9c172;
+}
+
+.message-new-control button:disabled {
+  background-color: #DDDDDD
+}
+
+.message-edit {
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 0;
+}
+
+.hotkey-checkbox-label {
+  font-weight: normal;
+  font-size: 12px;
+}
+
+input.hotkey-checkbox {
+  margin-left: 20px;
 }

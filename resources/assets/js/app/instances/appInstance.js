@@ -16,6 +16,10 @@ var appInstance = {
 
     render: function (view) {
         return this._instance.getRootLayout().getRegion('content').show(view);
+    },
+    
+    renderModal: function (view) {
+        return this._instance.getRootLayout().getRegion('modalWindow').show(view);
     }
 
 };

@@ -15,10 +15,7 @@ class CreateRolesTable extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('slug')->unique();
             $table->string('description')->nullable();
-            $table->integer('parent_id')->unsigned()->nullable();
-            $table->foreign('parent_id')->references('id')->on('roles');
             $table->timestamps();
         });
     }
@@ -30,10 +27,6 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
-        Schema::table('roles', function(Blueprint $table) {
-            $table->dropForeign('roles_parent_id_foreign');
-        });
-        
         Schema::drop('roles');
     }
 }

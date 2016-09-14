@@ -4,14 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use DCN\RBAC\Traits\HasRoleAndPermission;
-use DCN\RBAC\Contracts\HasRoleAndPermission as HasRoleAndPermissionContract;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
-
-class User extends Authenticatable implements HasRoleAndPermissionContract
+class User extends Authenticatable
 {
-    use HasRoleAndPermission, SoftDeletes;
+    use SoftDeletes;
 
     protected $table = 'users';
 
@@ -42,9 +40,19 @@ class User extends Authenticatable implements HasRoleAndPermissionContract
         return $this->hasMany(Comment::class);
     }
 
-    public function notifications()
+    public function subscriptions()
     {
-        return $this->hasMany(Notification::class);
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function topicSubscriptions()
+    {
+        return $this->morphedByMany(Topic::class, 'subscription');
+    }
+
+    public function voteSubscriptions()
+    {
+        return $this->morphedByMany(Vote::class, 'subscription');
     }
 
     public function topics()
@@ -71,6 +79,11 @@ class User extends Authenticatable implements HasRoleAndPermissionContract
     {
         return $this->hasMany(VoteItem::class);
     }
+    
+    public function voteUniqueViews()
+    {
+        return $this->hasMany(VoteUniqueView::class);
+    }
 
     public function votePermissions()
     {
@@ -87,7 +100,65 @@ class User extends Authenticatable implements HasRoleAndPermissionContract
         return $this->hasMany(Like::class);
     }
 
-    public function getVote($voteId){
+    public function getVote($voteId)
+    {
         return $this->votes()->where('id',$voteId)->first();
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    /**
+     * Does user have admin rights
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        $role = $this->role()->first();
+
+        if ($role && $role->name === 'Admin') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Is the user the owner of the related model
+     *
+     * @param $related
+     * @return bool
+     */
+    public function owns($related)
+    {
+        return $this->id == $related->user_id;
+    }
+
+    public static function findUserByGlobalId($globalId)
+    {
+        $_this = new self;
+        try {
+            $user = $_this->withTrashed()->where('global_id',$globalId)->firstOrFail();
+        }
+        catch  (ModelNotFoundException $e){
+            return null;
+        }
+
+        return $user;
+    }
+
+    public static function findUserByEmail($email)
+    {
+        $_this = new self;
+        try {
+            $user = $_this->withTrashed()->where('email',$email)->firstOrFail();
+        }
+        catch  (ModelNotFoundException $e){
+            return null;
+        }
+        return $user;
     }
 }

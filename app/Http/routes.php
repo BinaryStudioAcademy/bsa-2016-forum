@@ -19,12 +19,23 @@ Route::group(['middleware' =>'api', 'prefix' => 'api/v1'], function () {
     });
 });
 
+Route::bind('topic', function ($value) {
+    return App\Models\Topic::getSluggableModel($value);
+});
+
 Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], function () {
 
     /*Routes for Users*/
     Route::get('user','UserController@getUser')->name('user');
 
     Route::resource('users', 'UserController', [
+        'except' => ['edit', 'create', 'store', 'update', 'destroy'],
+        'names' => [
+            'index' => 'users.index',
+            'show' => 'users.show',
+        ],
+    ]);
+    Route::resource('categories', 'CategoryController', [
         'except' => ['edit', 'create'],
         'names' => [
             'index' => 'users.index',
@@ -52,6 +63,7 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
             'destroy' => 'topics.destroy',
         ],
     ]);
+    Route::get('categories/{category}/topics', 'TopicController@indexInCategory')->name('topicsInCategory');
     /*Routes for Votes*/
     Route::resource('votes', 'VoteController', [
         'except' => ['edit', 'create'],
@@ -85,6 +97,23 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
             'destroy' => 'voteItems.destroy'
         ]
     ]);
+    /*Routes for Subscription */
+    Route::resource('users/{user}/subscriptions', 'SubscriptionController', [
+        'except' => ['edit', 'create', 'show', 'update'],
+        'names' => [
+            'index' => 'subscriptions.index',
+            'store' => 'subscriptions.store',
+            'destroy' => 'subscriptions.destroy'
+        ]
+    ]);
+
+    /*Routes for bookmarks*/
+    Route::group(['prefix' => 'bookmarks'], function () {
+        Route::get('', 'BookmarkController@index')->name('bookmarks.index');
+        Route::post('', 'BookmarkController@store')->name('bookmarks.store');
+        Route::delete('{id}', 'BookmarkController@destroy')->name('bookmarks.destroy');
+    });
+
     /*Routes for users topics*/
     Route::group(['prefix' => 'users/{user}/topics'], function () {
         Route::get('', 'TopicController@getUserTopics')->name('userTopics');
@@ -95,20 +124,22 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::get('', 'VoteController@getUserVotes')->name('userVotes');
         Route::get('{vote}', 'VoteController@getUserVote')->name('userVote');
     });
-    /*Routes for Topic tags*/
-    Route::group(['prefix' => 'topics/{topic}/tags'], function () {
-        Route::get('', 'TagController@getAllTopicTags')->name('topicTags');
-        Route::post('', 'TagController@storeTopicTag')->name('storeTopicTag');
-        Route::get('{tag}', 'TagController@getTopicTag')->name('topicTag');
-        Route::delete('{tag}', 'TagController@destroyTopicTag')->name('deleteTopicTag');
+    /*Routes for users results vote*/
+    Route::group(['prefix' => 'votes/{vote}/voteresult'], function () {
+        Route::get('', 'VoteController@getUserVoteResult')->name('userVoteResult');
+        Route::post('', 'VoteController@createUserVoteResult')->name('userVoteResult');
     });
-    /*Routes for Vote tags*/
-    Route::group(['prefix' => 'votes/{vote}/tags'], function () {
-        Route::get('', 'TagController@getAllVoteTags')->name('voteTags');
-        Route::post('', 'TagController@storeVoteTag')->name('storeVoteTag');
-        Route::get('{tag}', 'TagController@getVoteTag')->name('voteTag');
-        Route::delete('{tag}', 'TagController@destroyVoteTag')->name('deleteVoteTag');
-    });
+
+    /*Routes Tags*/
+    Route::resource('tags', 'TagController', [
+        'except' => ['edit', 'create', 'store', 'show'],
+        'names' => [
+            'index' => 'tags.index',
+            'update' => 'tags.update',
+            'destroy' => 'tags.destroy',
+        ],
+    ]);
+
     /*Routes for Topic comments*/
     Route::group(['prefix' => 'topics/{topic}/comments'], function () {
         Route::get('', 'CommentController@getTopicComments')->name('topicComments');
@@ -138,13 +169,19 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::delete('{comment}/comments/{commentChild}', 'CommentController@destroyVoteCommentChild')->name('deleteVoteCommentChild');
     });
     /*Routes for VoteItem comments*/
-    Route::group(['prefix' => 'votes/{vote}/voteitems/{voteitem}/comments'], function () {
+    Route::group(['prefix' => 'votes/{vote}/voteitems/{voteItem}/comments'], function () {
         Route::get('', 'CommentController@getVoteItemComments')->name('voteItemComments');
         Route::post('', 'CommentController@storeVoteItemComment')->name('storeVoteItemComment');
-        Route::get('{comment}', 'CommentController@getVoteItemComment')->name('voteItemComment');
-        Route::put('{comment}', 'CommentController@updateVoteItemComment')->name('updateVoteItemComment');
-        Route::delete('{comment}', 'CommentController@destroyVoteItemComment')->name('deleteVoteItemComment');
+        Route::get('/{comment}', 'CommentController@getVoteItemComment')->name('voteItemComment');
+        Route::put('/{comment}', 'CommentController@updateVoteItemComment')->name('updateVoteItemComment');
+        Route::delete('/{comment}', 'CommentController@destroyVoteItemComment')->name('deleteVoteItemComment');
     });
+
+    /*Routes for private Vote users*/
+    Route::group(['prefix' => 'votes/{vote}/users'], function () {
+        Route::get('', 'VoteController@getAllVoteAccessedUsers');
+    });
+
     /*Routes for Topic attachments*/
     Route::group(['prefix' => 'topics/{topic}/attachments'], function () {
         Route::get('', 'AttachmentController@getAllTopicAttachments')->name('allTopicAttachments');
@@ -158,6 +195,13 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::get('{attachment}', 'AttachmentController@getVoteAttachment')->name('voteAttachment');
         Route::post('', 'AttachmentController@storeVoteAttachment')->name('storeVoteAttachment');
         Route::delete('{attachment}', 'AttachmentController@destroyVoteAttachment')->name('deleteVoteAttachment');
+    });
+    /*Routes for VoteItem attachments*/
+    Route::group(['prefix' => 'voteItems/{voteItem}/attachments'], function () {
+        Route::get('', 'AttachmentController@getAllVoteItemAttachments')->name('allVoteItemAttachments');
+        Route::get('{attachment}', 'AttachmentController@getVoteItemAttachment')->name('voteItemAttachment');
+        Route::post('', 'AttachmentController@storeVoteItemAttachment')->name('storeVoteItemAttachment');
+        Route::delete('{attachment}', 'AttachmentController@destroyVoteItemAttachment')->name('deleteVoteItemAttachment');
     });
     /*Routes for Comment attachments*/
     Route::group(['prefix' => 'comments/{comment}/attachments'], function () {
@@ -173,6 +217,8 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::post('', 'AttachmentController@storeMessageAttachment')->name('storeMessageAttachment');
         Route::delete('{attachment}', 'AttachmentController@destroyMessageAttachment')->name('deleteMessageAttachment');
     });
+    
+    
     Route::get('rss', 'rssController@index')->name('rss');
     Route::post('rss', 'rssController@subscribe')->name('rssSubscribe');
 });

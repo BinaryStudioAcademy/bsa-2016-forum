@@ -1,21 +1,29 @@
 /*
 NEW TOPIC VIEW STYLES
 */
+#categoryForBreadcrumbs {
+  float: left;
+  text-transform: uppercase;
+  color: #eb8764;
+}
 
 .topic-form {
   width: 100%;
   padding: 20px;
   background: #fff;
 }
+
 .topic-form > div {
   width: 100%;
   margin: 5px 0 15px;
 }
-.topic-new-head h4{
+
+.topic-new-head h4 {
   margin: 0 0 15px;
   font-weight: 400;
   font-size: 18px;
 }
+
 .topic-new-title input {
   width: 100%;
   padding: 10px 15px;
@@ -25,6 +33,17 @@ NEW TOPIC VIEW STYLES
   font-size: 16px;
   font-weight: 400;
 }
+
+.topic-new-slug input {
+  width: 100%;
+  padding: 10px 15px;
+  background-color: #E9E9E9;
+  border: none;
+  color: #555;
+  font-size: 16px;
+  font-weight: 400;
+}
+
 .topic-new-body textarea {
   resize: vertical;
   width: 100%;
@@ -36,30 +55,37 @@ NEW TOPIC VIEW STYLES
   font-size: 14px;
   font-weight: 400;
 }
+
 .topic-new-body a {
   float: right;
 }
+
 .topic-new-attachment {
   width: 100%;
   overflow: hidden;
 }
+
 .topic-new-control {
   border-top: #ddd 1px solid;
   padding: 15px 0 15px;
 }
+
 .topic-new-notification {
   display: inline-block;
   float: left;
 }
+
 .topic-new-notification label {
   color: #555;
   font-size: 14px;
   font-weight: 400;
 }
+
 .topic-new-submit {
   display: inline-block;
   float: right;
 }
+
 .topic-new-submit input {
   padding: 5px 35px;
   border-radius: 0;
@@ -69,6 +95,7 @@ NEW TOPIC VIEW STYLES
   font-weight: 800;
   background-color: #ffd992;
 }
+
 .topic-new-submit input:hover {
   background-color: #f9c172;
 }
@@ -79,22 +106,22 @@ TOPIC DETAILS
 
 .topic {
   width: 100%;
-  //padding: 0 15px;
+  padding: 0 15px;
 }
 
 .topic-comment-item {
-  background: #fff;
-  border: 1px solid #EEEEEE;
-  box-shadow: 0 2px 2px rgba(0,0,0,0.1);
   margin: 20px 0;
 }
 
-.topic-comment-main {
+.topic-comment-main, .topic-comment {
   background: #FFF;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.23);
 }
 
 .topic-comment-included {
   padding-left: 60px;
+  padding-right: 15px;
 }
 
 .topic-comment-flex {
@@ -132,7 +159,8 @@ TOPIC DETAILS
   display: inline-block;
 }
 
-.topic-body textarea{
+.topic-body textarea {
+  resize: vertical;
   width: 100%;
 }
 
@@ -154,7 +182,6 @@ TOPIC DETAILS
   color: #777;
   margin-top: 10px;
 }
-
 
 .topic-msg .topic-comment {
   border: #DDD 1px solid;
@@ -214,14 +241,20 @@ TOPIC DETAILS
   float: right;
 }
 
-.topic-control-btn a {
+.topic-control-btn button {
+  border: 0;
+  background: transparent;
+  //  color: #337ab7;
+}
+
+.topic-control-btn a, .topic-control-btn button {
   padding: 10px;
   vertical-align: middle;
   display: inline-block;
   height: 100%;
 }
 
-.topic-control-btn a:hover {
+.topic-control-btn a:hover, .topic-control-btn button:hover {
   cursor: pointer;
   text-decoration: none;
   background: #ddd;
@@ -232,6 +265,7 @@ TOPIC DETAILS
 }
 
 .topic-more {
+  margin-top: 15px;
   background: #fff;
   font-weight: 600;
   font-size: 16px;
@@ -253,39 +287,72 @@ TOPIC DETAILS
 }
 
 .topic-item {
+  width: 100%;
   height: 80px;
+  display: flex;
   margin-bottom: 20px;
-  border: 1px solid #EEEEEE;
-  padding-top: 15px;
-  overflow: hidden;
-  background: #fff;
 }
 
+
 .topic-head {
-  border: 1px solid #EEEEEE;
-  background: #fff;
+  margin-bottom: 20px;
 }
 
 .topic-comment-main .close-btn {
   padding: 10px;
 }
 
-.topic-control-add .loader img {
-  height: 38px;
+.new-comment-container .loader img {
+  height: 30px;
+}
+.topic-count {
+  text-decoration: none;
+  text-transform: lowercase;
+  color: #54dea0;
+}
+
+.category-topic-time {
+  font-size: 12px;
+  color: #999999;
+}
+
+.posts a:hover {
+  text-decoration: none;
+  cursor: pointer;
+  background-color: papayawhip;
 }
 
 .post-item {
   width: 100%;
-  height: 80px;
+  height: auto;
   display: flex;
-  margin-bottom: 5px;
   border-bottom: 1px solid #EEEEEE;
   overflow: hidden;
   text-decoration: none;
   cursor: pointer;
+  padding-top: 10px;
+  margin-left: 0 !important;
+  margin-bottom: 10px;
+}
+
+.post-item:nth-child(even) {
+  background: #fff;
 }
 
 .errors {
   color:red;
+}
+
+.edit-category {
+  margin-right: 20px;
+}
+.attachments-container .file-name {
+  overflow: hidden;
+}
+.topic-control .childs-btn {
+  padding: 10px;
+}
+.btn-childs {
+  border-radius: 0;
 }
 

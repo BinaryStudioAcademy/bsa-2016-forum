@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\Status;
+use App\Models\Role;
 
 class UsersTableSeeder extends Seeder
 {
@@ -11,21 +13,49 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        $globalIds = [
+            '56780606215c82267c1a3cc0',
+            '567920fc215c82267c1a3cc3',
+            '567a4f0f215c82267c1a3cc7',
+            '567a5638b296f43825501236',
+            '56782adb215c82267c1a3cc2',
+            '567a6d5de07428ab2cc0b666',
+            '567a6ebde07428ab2cc0b667',
+            '567aa528af36a06513d96db2',
+            '567aafcb4a25306f4ebeb0c9',
+            '567ab1b24a25306f4ebeb0cd',
+        ];
         $count_users = 10;
+        $statuses = Status::all();
 
-        factory(App\Models\User::class, $count_users)->create();
+        factory(App\Models\User::class, $count_users)
+            ->make()
+            ->each(function ($user) use ($statuses) {
+                $randomStatus = $statuses->random();
+                $user->status()->associate($randomStatus);
+                $user->save();
+            });
         
         $users = App\Models\User::all();
-        $roleUser = \DB::table('roles')->where('name', 'User')->value('id');
+        reset($globalIds);
+        $roleUser = Role::where('name', 'User')->first();
         foreach ($users as $user){
-            $user->attachRole($roleUser); 
+            $user->role()->associate($roleUser);
+            $user->global_id = current($globalIds);
+            next($globalIds);
+            $user->save();
         }
         /**
          * Set right role for required users
          */
         $user = \App\Models\User::first();
-        $roleAdmin = \DB::table('roles')->where('name', 'Admin')->value('id');
-        $user->detachRole($roleUser);
-        $user->attachRole($roleAdmin);
+        $roleAdmin = Role::where('name', 'Admin')->first();
+        $user->role()->associate($roleAdmin);
+        $user->save();
+
+        $user = \App\Models\User::all()->last();
+        $user->global_id = '577a16659829fe050adb3f5c';
+        $user->email = 'tester_a@example.com';
+        $user->save();
     }
 }

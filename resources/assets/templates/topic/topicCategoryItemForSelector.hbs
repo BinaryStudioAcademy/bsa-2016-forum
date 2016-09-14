@@ -1,0 +1,8 @@
+<select class="form-control" name="category_id">
+    <option disable>Choose Topic category</option>
+    {{#each selectOptions}}
+        <option value="{{ id }}" {{ selectedItem }}>{{ name }}</option>
+    {{/each}}
+
+</select>
+<div class="errors"> </div>
