@@ -5,7 +5,7 @@
     "backbone.marionette": "^2.4.7",
     "backbone.radio": "^1.0.5",
     "bootstrap-sass": "^3.3.7",
-    "bootstrap-3-typeahead": "^4.0.1",
+    "corejs-typeahead": "^0.11.1",
     "express": "^4.14.0",
     "font-awesome": "^4.6.3",
     "grunt": "^1.0.1",
