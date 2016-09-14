@@ -38,7 +38,6 @@ module.exports = Marionette.LayoutView.extend({
         }
     },
     onRender: function () {
-        debugger;
         this.$('#collapse-'+this.model.id).on('show.bs.collapse', function () {
             if(!this.collection)
                 Radio.trigger('votesChannel', 'loadVoteItemsComments', this);

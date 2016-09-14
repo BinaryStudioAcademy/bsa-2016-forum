@@ -54,7 +54,6 @@ module.exports = Marionette.LayoutView.extend({
             });
         },
         'sync': function (data) {
-            debugger;
             this.ui.errors.empty();
         }
     },

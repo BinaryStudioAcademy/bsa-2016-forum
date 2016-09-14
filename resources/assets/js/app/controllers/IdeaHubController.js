@@ -90,7 +90,6 @@ module.exports = Marionette.Object.extend({
 
         view.listenTo(Radio.channel('votesChannel'), 'loadVoteItemsComments', function (parentView) {
             var myCommentsCollection = new CommentsCollection([], {parentUrl: parentView.model.commentsUrl});
-            debugger;
             parentView.collection = myCommentsCollection;
             myCommentsCollection.fetch();
             parentView.getRegion('comments').show(new CommentsCollectionView({
