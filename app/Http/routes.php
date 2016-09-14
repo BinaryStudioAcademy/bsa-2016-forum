@@ -175,6 +175,12 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::get('/{comment}', 'CommentController@getVoteItemComment')->name('voteItemComment');
         Route::put('/{comment}', 'CommentController@updateVoteItemComment')->name('updateVoteItemComment');
         Route::delete('/{comment}', 'CommentController@destroyVoteItemComment')->name('deleteVoteItemComment');
+
+        Route::get('{comment}/comments', 'CommentController@getVoteItemCommentChildren')->name('getVoteItemCommentChildren');
+        Route::post('{comment}/comments', 'CommentController@storeVoteItemCommentChild')->name('storeVoteItemCommentChild');
+        Route::get('{comment}/comments/{commentChild}', 'CommentController@getVoteItemCommentChild')->name('getVoteItemCommentChild');
+        Route::put('{comment}/comments/{commentChild}', 'CommentController@updateVoteItemCommentChild')->name('updateVoteItemCommentChild');
+        Route::delete('{comment}/comments/{commentChild}', 'CommentController@destroyVoteItemCommentChild')->name('destroyVoteItemCommentChild');
     });
 
     /*Routes for private Vote users*/

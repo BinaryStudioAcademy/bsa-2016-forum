@@ -470,3 +470,14 @@ VOTE INDEX
   cursor: pointer;
   float:right;
 }
+
+.js-vote-item-comments {
+  max-height: 1000px;
+  overflow-x: scroll;
+}
+
+.widthbutton {
+  width: calc(100% - 10px);
+  margin: 5px;
+  //display: block;
+}
