@@ -16,6 +16,7 @@ use App\Facades\MarkdownService;
 
 class CommentController extends ApiController
 {
+    const PAGINATE_COUNT = 15;
 
     private function getItemMetaData($comment)
     {
@@ -301,7 +302,7 @@ class CommentController extends ApiController
      */
     public function getVoteComments(Vote $vote)
     {
-        $comments = $vote->comments()->orderBy('created_at', 'desc')->paginate(15);
+        $comments = $vote->comments()->orderBy('created_at', 'desc')->paginate(self::PAGINATE_COUNT);
         $meta = $this->makeCommentsMeta($comments);
         $meta['hasMorePages'] = $comments->hasMorePages();
 

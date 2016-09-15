@@ -34,13 +34,18 @@ module.exports = Marionette.LayoutView.extend({
 
     _pageMore: 2,
     _allItemsUploaded:false,
-    
+
+    muteMoreButton: function () {
+        this.ui.moreButton.addClass('invisible');
+    },
+
     onClickVoteCommentsMore: function(e) {
         self = this;
 
         if (this._allItemsUploaded) {
             return;
         }
+
         this.collection.fetch({
             remove: false,
             data: {page: this._pageMore},
@@ -51,8 +56,12 @@ module.exports = Marionette.LayoutView.extend({
             },
             success: function (collection, xhr) {
                 var meta = this.collection.getMeta();
-                self._allItemsUploaded = !meta.hasMorePages;
-                this._pageMore++;
+                if (meta.hasMorePages){
+                    this._pageMore++;
+                } else {
+                    this.muteMoreButton(this.ui.moreButton);
+                    return;
+                }
             }.bind(this)
         });
     },
