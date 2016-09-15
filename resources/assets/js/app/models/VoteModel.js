@@ -24,5 +24,9 @@ module.exports = BaseModel.extend({
         is_public: true,
         is_single: true,
         finished_at: ''
+    },
+    
+    isFinished: function () {
+        return DateHelper.isTimePassed(this.finished_at); 
     }
 });

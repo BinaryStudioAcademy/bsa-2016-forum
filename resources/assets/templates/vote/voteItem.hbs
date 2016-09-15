@@ -14,9 +14,14 @@
             <span>{{ meta.likes }} likes</span>
             <span>{{ meta.numberOfUniqueViews }} unique views</span>
             {{#if model.finished_at}}
-            <span>Finished at {{model.finished_at}}</span>
+                {{#if model.isFinished}}
+                    <span>Finished at {{model.finished_at}}</span>
+                {{else}}
+                    <span>in process <span class="dark-grey"> till {{model.finished_at}}</span></span>
+                {{/if}}
+
             {{else}}
-            <span class="green-text">Currently in process</span>
+                <span class="green-text">in process</span>
             {{/if}}
             <span>{{model.views}} Views</span>
         </div>

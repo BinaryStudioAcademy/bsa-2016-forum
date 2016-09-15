@@ -6,6 +6,10 @@ body {
   color: green !important;
 }
 
+.dark-grey {
+  color: darkgrey !important;
+}
+
 .menu-container {
   background: #fff;
   margin-bottom: 20px;
@@ -79,19 +83,24 @@ body {
   border-radius: 5px;
   background: white;
 }
+
 .attachments-container {
   padding: 15px;
 }
+
 .attachments-container img {
   max-height: 50px;
 }
+
 .nav > li > a:hover, .nav > li > a:focus {
   background-color: transparent;
 }
+
 #nprogress .bar {
   height: 3px;
   background: #ffa500;
 }
+
 #nprogress .peg {
   box-shadow: 0 0 10px #ffa500, 0 0 5px #ffa500;
 }
