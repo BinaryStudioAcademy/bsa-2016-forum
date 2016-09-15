@@ -8,7 +8,6 @@ var TopicCollection = require('../collections/topicCollection');
 var UserTopicCollection = require('../collections/userTopicCollection');
 var TopicCreate = require('../views/topics/topicCreate');
 var TopicModel = require('../models/TopicModel');
-var TopicCategoryModel = require('../models/TopicCategoryModel');
 var TopicDetailView = require('../views/topics/topicDetail');
 var Radio = require('backbone.radio');
 var NewTopicCommentView = require('../views/comments/TopicCommentNew');
@@ -106,16 +105,16 @@ module.exports = Marionette.Object.extend({
             view.getRegion('newComment').show(new NewTopicCommentView({
                 model: model,
                 commentCollection: commentCollection,
-                parentCommentView: parentView
+                parentCommentView: parentView._isTopicView ? null : parentView
             }));
         });
 
         view.listenTo(Radio.channel('comment'), 'showChildComments', function (commentItemView) {
-            var childs = new CommentsCollection();
+            var childs = commentItemView._childCommentsCollection;
             childs.parentUrl = _.result(commentItemView.model, 'getEntityUrl');
             childs.fetch();
             commentItemView._childUpload = true;
-            commentItemView._childCommentsCollection = childs;
+            //commentItemView._childCommentsCollection = childs;
             commentItemView.getRegion('childComments').show(new CommentsCollectionView({
                 collection: childs,
                 parentCommentView: commentItemView

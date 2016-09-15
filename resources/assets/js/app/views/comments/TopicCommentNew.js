@@ -80,6 +80,18 @@ module.exports = Marionette.ItemView.extend({
 
         this.model.save(data, {
             success: function (model) {
+                // add comment to comment collection
+                if (view.getOption('commentCollection')) {
+                    view.getOption('commentCollection').add(model, { merge: true });
+                    if (view.getOption('parentCommentView') && !view._isEditComment) {
+                        view.getOption('parentCommentView').showChildCommentsButton(true);
+                        // hide edit/delete btns
+                        view.getOption('parentCommentView').showEditDeleteBtn(false);
+                        if (!view.getOption('parentCommentView').isChildsOpened()) {
+                            view.getOption('parentCommentView').ui.showChilds.trigger('click');
+                        }
+                    }
+                }
                 if (view._dropZone && view._dropZone.files.length) {
                     // start upload to server
                     view._dropZone.processQueue();
@@ -87,17 +99,6 @@ module.exports = Marionette.ItemView.extend({
 
                 if (view._deletedFiles.length) {
                     view.removeFilesFromServer();
-                }
-
-                // add comment to comment collection
-                if (view.getOption('commentCollection')) {
-                    view.getOption('commentCollection').add(model, { merge: true });
-                } else if (view.getOption('parentCommentView') && !view._isEditComment) {
-                    // if view hasnt child comments collection yet show childs btn
-                    view.getOption('parentCommentView').showChildCommentsButton(true);
-                    // hide edit/delete btns
-                    view.getOption('parentCommentView').showEditDeleteBtn(false);
-                    view.getOption('parentCommentView').ui.showChilds.trigger('click');
                 }
 
                 view.ui.commentDlg.modal('hide');

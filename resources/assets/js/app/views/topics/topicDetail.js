@@ -10,6 +10,7 @@ module.exports = Marionette.LayoutView.extend({
 
     initialize: function () {
         this.childCommentsCollection = this.getOption('collection');
+        this._isTopicView = true;
     },
 
     regions: {
