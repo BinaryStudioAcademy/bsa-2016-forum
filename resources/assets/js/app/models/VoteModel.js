@@ -24,5 +24,8 @@ module.exports = BaseModel.extend({
         is_public: true,
         is_single: true,
         finished_at: ''
+    },
+    vote_slug : function () {
+        return (this.get("slug") && this.get("slug") !== undefined) ? this.get("slug") : this.get("id");
     }
 });
