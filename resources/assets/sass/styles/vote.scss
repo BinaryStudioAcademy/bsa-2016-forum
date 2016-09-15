@@ -475,3 +475,10 @@ VOTE INDEX
   color: #333;
   font-style: italic;
 }
+
+.corner-button {
+  position: absolute;
+  //float:right;
+  top:0;
+  right:-50px;
+}

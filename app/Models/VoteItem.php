@@ -65,12 +65,12 @@ class VoteItem extends Model
 
     public function canBeDeleted()
     {
-        return Auth::user()->isAdmin() || Auth::user()->owns($this);
+        return Auth::user()->isAdmin() || (Auth::user()->owns($this)  && !$this->comments()->exists() && $this->voteResults()->exists());
     }
 
     public function canBeEdited()
     {
-        return Auth::user()->isAdmin() || Auth::user()->owns($this);
+        return Auth::user()->isAdmin() || (Auth::user()->owns($this)  && !$this->comments()->exists() && $this->voteResults()->exists());
     }
 
 }

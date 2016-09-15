@@ -5,6 +5,12 @@
 </div>
 
 <div class="form-group">
+    <label>Description:</label><br>
+    <textarea rows="5" class ="form-control description" id="question-description" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>{{model.description}}</textarea>
+    <div class="js-errors js-error-description"></div>
+</div>
+
+<div class="form-group">
     <label for="usr">Tags(Split them using spaces, no #):</label>
     <input type="text" id="tags" class="form-control" value="{{meta.tags}}" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>
     <div class=" js-errors js-error-tags"></div>

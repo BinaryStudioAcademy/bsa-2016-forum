@@ -3,6 +3,8 @@ var Marionette = require('backbone.marionette');
 var DateHelper = require('../../helpers/dateHelper');
 var _ = require('underscore');
 
+var currentUser = require('../../initializers/currentUser');
+
 module.exports = Marionette.ItemView.extend({
     template: 'create-vote-header',
     ui: {
@@ -11,7 +13,8 @@ module.exports = Marionette.ItemView.extend({
         tags: '#tags',
         isPublic: 'input[name=access]',
         finished: '#finished',
-        isSingle: 'input[name=isSingle]'
+        isSingle: 'input[name=isSingle]',
+        description: '#question-description',
     },
     modelEvents: {
         'change:title':'render',
@@ -40,7 +43,7 @@ module.exports = Marionette.ItemView.extend({
             this.saveModel({is_single: this.ui.isSingle.filter(':checked').val()});
         },
         'change @ui.finished': function () {
-            this.saveModel({finished_at: DateHelper.dateWithoutTimezone(this.ui.finished.val())});
+            this.saveModel({finished_at: DateHelper.dateToSave(this.ui.finished.val())});
         },
         'change @ui.description': function () {
             this.saveModel({description: this.ui.description.val()});
@@ -75,6 +78,7 @@ module.exports = Marionette.ItemView.extend({
             view.getOption('parent').getOption('accessedUsers').each(function (model, index) {
                 users.push(model.get('id'));
             });
+            users.push(currentUser.id);
         }
 
         if (view.ui.tags.val().trim().length > 0) {

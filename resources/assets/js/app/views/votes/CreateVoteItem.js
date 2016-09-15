@@ -3,10 +3,10 @@ var currentUser = require('../../initializers/currentUser');
 
 module.exports = Marionette.ItemView.extend({
     template: 'vote-create-input-voteitem',
-    className: 'form-group relative',
+    className: 'form-group relative limited-block-for-corner-button',
     ui: {
         name: '.js-item-name',
-        deleteButton: '.corner-button',
+        deleteButton: '.voteitem-delete',
         error_name: '.js-error-field'
     },
     events: {
@@ -41,8 +41,8 @@ module.exports = Marionette.ItemView.extend({
     },
     serializeData: function () {
         var meta = this.model.getMetaById() || {
-                deletable: true,
-                editable: true
+                deletable: false,
+                editable: false
             };
 
         return {

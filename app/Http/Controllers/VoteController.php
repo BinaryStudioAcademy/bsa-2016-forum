@@ -201,7 +201,7 @@ class VoteController extends ApiController
         TagService::TagsHandler($vote, $request->tags);
         
         if ($vote->is_public) {
-            //$vote->votePermissions()->forceDelete();
+            $vote->votePermissions()->delete();
         } elseif ($request->users) {
             $this->VotePermissionsHandler($vote, $request->users);
         }

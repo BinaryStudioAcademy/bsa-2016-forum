@@ -10,18 +10,18 @@ var dateHelper = {
     
     dateToSave: function (date) {
         if (_.isEmpty(date)) return '';
-        return moment(date).tz(config.timeZone).utc().format('YYYY-MM-DD HH:mm:ss')
+        return moment(date).tz(config.timeZone).utc().format('YYYY-MM-DD HH:mm:ss');
     },
 
     dateWithTimezoneInFormat: function (date) {
         if (_.isEmpty(date) || date == '0000-00-00 00:00:00') return '';
-        return moment(date).format('YYYY-MM-DDTHH:mm:ss')
+        return moment.utc(date).tz(config.timeZone).format('YYYY-MM-DDTHH:mm:ss')
     },
     
 
     getDateTimeDiff: function (date) {
         if(_.isEmpty(date)) return true;
-        return (moment.utc().diff(moment(date).utc(), 'minute'));
+        return (moment.utc().diff(moment.utc(date), 'minute'));
     },
 
     shortDate: function(date) {

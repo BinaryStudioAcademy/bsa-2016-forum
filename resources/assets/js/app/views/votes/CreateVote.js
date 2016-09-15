@@ -25,14 +25,9 @@ module.exports = Marionette.LayoutView.extend({
         add: '#addAnswer',
         start: '#start',
         delete: '#delete',
-        title: '#question-title',
-        description: '#question-description',
         errors: '.js-errors',
-        tags: '#tags',
-        isPublic: 'input[name=access]',
-        finished: '#finished',
-        dateerrors: '.js-date-errors',
-        isSingle: 'input[name=isSingle]',
+        toAccessed: '.js-to-accessed',
+        toNotAccessed: '.js-to-not-accessed',
         selectAccessedUsersBlock: '.vote-new-access'
     },
     modelEvents: {

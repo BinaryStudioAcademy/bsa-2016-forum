@@ -5,11 +5,6 @@
             <input type="text" class="form-control" id="question-title">
             <div class="js-errors js-error-title"></div>
         </div>
-        <div class="form-group">
-            <label>Description:</label><br>
-            <textarea rows="5" class ="form-control description" id="question-description"></textarea>
-            <div class="js-errors js-error-title"></div>
-        </div>
     </div>
     <div class="vote-new-answers">
         <div class="form-group">
@@ -25,43 +20,6 @@
             </button>
         </div>
     </div>
-    <div class="form-group">
-        <label for="usr">Tags(Split them using spaces, no #):</label>
-        <input type="text"  id="tags" class="form-control">
-        <div class=" js-errors js-error-tags"></div>
-    </div>
-    <div class="form-group">
-        <label>Select <span class="underscored">full time</span> when the vote will be finished or leave this field untouched.  </label>
-        <input type="datetime-local" class="form-control" id="finished">
-    </div>
-    <div class="js-errors js-error-finished_at"></div>
-    <!--</div>-->
-    <div class="form-group">
-        <label>Count of answers:</label>
-        <div class="radio">
-            <label><input type="radio" name="isSingle" value="1" checked>Single</label>
-        </div>
-        <div class="radio">
-            <label><input type="radio" name="isSingle" value="0">Multiple</label>
-        </div>
-    </div>
-    <div class="form-group">
-        <label>Access:</label>
-        <div class="radio">
-            <label><input type="radio" name="access" value="1" checked>Public</label>
-        </div>
-        <div class="radio">
-            <label><input type="radio" name="access" value="0">Private</label>
-        </div>
-    </div>
-    <div class="vote-new-attachment">
-        <div id="vote-attachments">
-
-            <!-- Attachments -->
-
-        </div>
-        <a>Attach</a>
-    </div>
     <div class="vote-new-control">
         <!--<div class="vote-new-notification checkbox">-->
             <!--<label><input type="checkbox">Report me when someone leave a comment</label>-->
@@ -74,11 +32,13 @@
     <div class="vote-new-access">
         <div class="form-group well">
             <label for="usr">Accessed:</label>
+            <button type="button" class="btn btn-default btn-info js-to-accessed" style="float: right;">Move all users to accessed</button>
             <div id="vote-access-users">
             </div>
         </div>
         <div class="form-group well">
             <label for="usr">Not accessed:</label>
+            <button type="button" class="btn btn-default btn-info js-to-not-accessed" style="float: right;">Move all users to not accessed</button>
             <div id="vote-new-addUsers">
             </div>
         </div>

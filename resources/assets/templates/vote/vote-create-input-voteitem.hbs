@@ -1,5 +1,5 @@
-<input type="text" class="form-control js-item-name limited-block-for-corner-button" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}} value="{{model.name}}">
+<input type="text" class="form-control js-item-name" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}} value="{{model.name}}">
 {{#ifCond meta.deletable '==' true}}
-    <button class="btn btn-md btn-danger corner-button"><span class="glyphicon glyphicon-remove-sign"></span></button>
+    <button class="btn btn-md btn-danger corner-button voteitem-delete"><span class="glyphicon glyphicon-remove-sign"></span></button>
 {{/ifCond}}
 <div class="js-errors js-error-field"></div>
