@@ -15,7 +15,8 @@ module.exports = Marionette.LayoutView.extend({
         messages: '.messages',
         topics: '.topics',
         votes: '.votes',
-        users: '.users'
+        users: '.users',
+        subscriptions: '.subscriptions'
     },
 
     onRender: function () {
@@ -38,6 +39,9 @@ module.exports = Marionette.LayoutView.extend({
         }));
         this.getRegion('bookmarks').show(new BookmarksCollection({
             collection: this.options.bookmarks
+        }));
+        this.getRegion('subscriptions').show(new SubscriptionsCollections({
+            collection: subscriptions: this.options.subscriptions
         }));
     }
 });
