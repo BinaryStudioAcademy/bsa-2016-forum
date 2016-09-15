@@ -3,6 +3,7 @@ var TopicsCollectionView = require('../topics/topicCollection');
 var VotesCollectionView = require('../votes/ListVotesCollection');
 var UsersCollectionView = require('../users/userCollection');
 var BookmarksCollection = require('../bookmarks/bookmarkCollection');
+var SubscriptionsCollections = require('../subscriptions/subscriptionsCollection');
 var MessagesCollection = require('../messages/messageCollection');
 var logger = require('../../instances/logger');
 var CountersCollectionView = require('./CountersCollection');
@@ -41,7 +42,7 @@ module.exports = Marionette.LayoutView.extend({
             collection: this.options.bookmarks
         }));
         this.getRegion('subscriptions').show(new SubscriptionsCollections({
-            collection: subscriptions: this.options.subscriptions
+            collection: this.options.subscriptions
         }));
     }
 });

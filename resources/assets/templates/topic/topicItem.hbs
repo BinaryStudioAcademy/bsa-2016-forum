@@ -1,18 +1,16 @@
 <div class="news-item-date">
-    <span class="news-item-day">0</span>
-    <span class="news-item-month">{{ createdDate }}</span>
+    <span class="news-item-day">{{ date.day }}</span>
+    <span class="news-item-month">{{ date.month }}</span>
 </div>
 <div class="news-item-detail">
     <a href="#topics/{{ model.slug }}" class="news-item-title">{{ model.name }}</a>
-    <p>
-        {{ model.rating }} <i class="fa fa-star"></i>&nbsp;
-        {{ model.answersCount }} <i class="fa fa-commenting"></i>&nbsp;
-        {{ model.reviewed_number }} <i class="fa fa-eye"></i>&nbsp;
-        {{ model.usersCount }} <i class="fa fa-user"></i>&nbsp;
-    </p>
-    <p>
+    <div class="topic-item-icons">
+        <span><i class="fa fa-star"></i>&nbsp;{{ model.rating }}</span>
+        <span><i class="fa fa-commenting"></i>&nbsp;{{ model.answersCount }}</span>
+        <span><i class="fa fa-eye"></i>&nbsp;{{ model.reviewed_number }}</span>
+        <span><i class="fa fa-user"></i>&nbsp;{{ model.usersCount }}</span>
         <button class="btn-link text-info bookmark-btn">Bookmark</button>
         <button class="btn-link text-info subscribe-btn">Subscribe</button>
-    </p>
+    </div>
     <p class="news-item-preview">{{ model.generated_description }}</p>
 </div>

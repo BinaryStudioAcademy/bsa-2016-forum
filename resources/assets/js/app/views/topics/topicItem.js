@@ -9,11 +9,6 @@ var BookmarkBehavior = require('../../behaviors/bookmarkBehavior');
 module.exports = Marionette.ItemView.extend({
     template: 'topicItem',
     tagName: 'li',
-    attributes : function () {
-        return {
-            href: "#topics/"+this.model.get("slug")
-        }
-    },
 
     ui: {
         bookmarkButton: '.bookmark-btn',
@@ -36,7 +31,11 @@ module.exports = Marionette.ItemView.extend({
     serializeData: function () {
         return {
             model: this.model.toJSON(),
-            createdDate: dateHelper.shortDate(this.model.get('created_at'))
+            createdDate: dateHelper.shortDate(this.model.get('created_at')),
+            date : {
+                day: dateHelper.getDateDay(this.model.get('created_at')),
+                month: dateHelper.getDateMonth(this.model.get('created_at'))
+            }
         };
     }
 });
