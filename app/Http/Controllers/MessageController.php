@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\MessageRequest;
 use Auth;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Database\Eloquent\Collection;
 
 
 class MessageController extends ApiController
@@ -34,27 +35,25 @@ class MessageController extends ApiController
     public function index($userId)
     {
         $user = User::findOrFail($userId);
-        $userFrom = Auth::authenticate();
+        $userCurrent = Auth::authenticate();
         $this->authorize('viewAll', [new Message(), $user]);
 
         if (Input::has('with_user')) {
             $withUserId = Input::get('with_user');
             $userTo = User::findOrFail($withUserId);
-            $messages = Message::getConversation($userFrom->id, $userTo->id)->get();
+            $messages = Message::getConversation($userCurrent->id, $userTo->id)->get();
             return $this->setStatusCode(200)->respond($messages, ['with_user' => $userTo]);
         }
 
-        $messages = Message::getLastIncoming($userFrom->id);
+        $messages = Message::getLast($userCurrent->id);
 
         if (!$messages) {
             return $this->setStatusCode(200)->respond();
         }
-        $usersToIds = $messages->pluck('user_from_id');
-        $usersTo = User::whereIn('id', $usersToIds)->get();
 
         return $this->setStatusCode(200)->respond(
             $messages,
-            ['users_from' => $usersTo]
+            ['users' => $this->getMetaDataForCollection($messages)]
         );
     }
 
@@ -147,5 +146,30 @@ class MessageController extends ApiController
         $message->delete();
         event(new UpdatedMessageEvent($message));
         return $this->setStatusCode(204)->respond();
+    }
+
+    protected function getMetaDataForCollection(Collection $messages)
+    {
+        $userCurrent = Auth::authenticate();
+        $usersFromIds = $messages->pluck('user_from_id');
+        $usersToIds = $messages->pluck('user_to_id');
+        $usersIds = $usersFromIds->merge($usersToIds)->unique();
+
+        $users = User::whereIn('id', $usersIds)->get();
+        $usersArray = [];
+        foreach ($users as $user) {
+            $usersArray[$user->id] = $user;
+        }
+
+        $meta = [];
+        $currentUserId = $userCurrent->id;
+        foreach ($messages as $message) {
+            $index = ($currentUserId == $message->user_to_id) ? $message->user_from_id : $message->user_to_id;
+            if (!key_exists($index, $meta)) {
+                $meta[$index] = $usersArray[$index];
+            }
+        }
+
+        return $meta;
     }
 }

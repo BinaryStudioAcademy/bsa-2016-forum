@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bookmark;
 use App\Http\Requests\BookmarksRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -27,9 +28,15 @@ class BookmarkController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $bookmarks = Bookmark::where('user_id', Auth::user()->id)->get();
+
+        if ($request->limit) {
+            $bookmarks = Bookmark::where('user_id', Auth::user()->id)
+                ->limit($request->limit)->orderBy('updated_at', 'DESC')->get();
+        } else {
+            $bookmarks = Bookmark::where('user_id', Auth::user()->id)->get();
+        }
 
         $meta = $this->getMetaData($bookmarks);
 
