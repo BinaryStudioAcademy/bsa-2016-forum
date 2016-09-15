@@ -4,7 +4,7 @@ var TopicModel = require('../../models/TopicModel');
 var currentUser = require('../../initializers/currentUser');
 var topicCategoryCollectionForSelector = require('../../views/topics/topicCategoryCollectionForSelector');
 var topicCategoryItemForSelector = require('../../views/topics/topicCategoryItemForSelector');
-require('bootstrap-tagsinput');
+var TagBehavior = require('../../behaviors/tagBehavior');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'topicCreateNew',
@@ -14,7 +14,8 @@ module.exports = Marionette.LayoutView.extend({
         tagsInput: '.tags'
     },
 
-    initialize: function () {
+    initialize: function (options) {
+        this.tags = options.tags;
         this.model.set({user_id: currentUser.id});
     },
 
@@ -26,7 +27,7 @@ module.exports = Marionette.LayoutView.extend({
         this.categories.show(new topicCategoryItemForSelector({
             collection: this.collection,
             topicModel: this.model
-        }))
+        }));
     },
     
     modelEvents: {
@@ -56,12 +57,12 @@ module.exports = Marionette.LayoutView.extend({
         }
     },
 
-    onRender: function() {
-        this.ui.tagsInput.tagsinput();
-    },
+    behaviors: [{
+        behaviorClass: TagBehavior
+    }],
 
     onBeforeDestroy: function() {
-        this.ui.tagsInput.tagsinput('destroy');
+        this.ui.tagsInput.tokenfield('destroy');
     }
 
 });

@@ -5,29 +5,29 @@
     <div id="categories">
         <div class="errors"></div>
     </div>
-    <div class="topic-new-title">
+    <div class="topic-new-title form-group">
         <input type="text" placeholder="Enter Topic Title" name="name">
         <div class="errors"></div>
     </div>
 
-    <div class="topic-new-slug">
+    <div class="topic-new-slug form-group">
         <input type="text" placeholder="Enter your Sluggable Url or leave it empty for autogeneration" name="slug">
         <div class="errors"></div>
     </div>
-    <div class="topic-new-body">
+    <div class="topic-new-body form-group" >
         <textarea rows="10" name="description"></textarea>
         <div class="errors"></div>
-        <label>
-            Tags:
-            <input class="tags" type="text" data-role="tagsinput" name="tags">
-        </label>
+
+        <div class="form-group">
+            <label for="tags">Tags:</label>
+            <input type="text" class="tags" name="tags">
+        </div>
 
         <div class="topic-new-attachment">
             <a>Attach</a>
         </div>
     </div>
     <div class="topic-new-control">
-
         <!--
         <div class="topic-new-notification checkbox">
             <label><input type="checkbox" name="report_me">Report me when someone post a reply</label>

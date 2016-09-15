@@ -20,6 +20,7 @@ var CreateVote = require('../views/votes/CreateVote');
 var Votes = require('../instances/Votes');
 
 var voteCollection = require('../collections/voteCollection');
+var TagCollection = require('../collections/tagCollection');
 
 module.exports = Marionette.Object.extend({
     index: function () {
@@ -74,9 +75,11 @@ module.exports = Marionette.Object.extend({
     createVote: function () {
         var VoteAnswers = new VoteAICollection([{name: ''}], {parentUrl: ''});
         var UsersCollection = new usersCollection();
+        var tagCollection = new TagCollection();
         var accessedUsers = new usersCollection();
 
         UsersCollection.fetch();
+        tagCollection.fetch();
 
         UsersCollection.opposite = accessedUsers;
         UsersCollection.glyph = 'plus';
@@ -88,7 +91,8 @@ module.exports = Marionette.Object.extend({
             model: model,
             collection: VoteAnswers,
             users: UsersCollection,
-            accessedUsers: accessedUsers
+            accessedUsers: accessedUsers,
+            tags: tagCollection
         });
 
         view.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {

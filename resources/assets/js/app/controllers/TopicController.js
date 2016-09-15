@@ -17,7 +17,7 @@ var CommentsCollection = require('../collections/TopicCommentsCollection');
 var CommentsCollectionView = require('../views/comments/TopicCommentsCollection');
 var currentUser = require('../initializers/currentUser');
 var TopicCategoryCreate = require('../views/topics/topicCategoryCreate');
-var TopicCategoryModel = require('../models/TopicCategoryModel');
+var TagCollection = require('../collections/tagCollection');
 
 module.exports = Marionette.Object.extend({
 
@@ -49,12 +49,16 @@ module.exports = Marionette.Object.extend({
 
     create: function (categoryId) {
         var topicCategoryCollection = new TopicCategoryCollection();
-
+        var tagCollection = new TagCollection();
         var topicModel = new TopicModel();
+
         app.render(new TopicCreate({
             model: topicModel,
-            collection: topicCategoryCollection
+            collection: topicCategoryCollection,
+            tags: tagCollection
         }));
+
+        tagCollection.fetch();
 
         topicCategoryCollection.fetch({
             success: function(collection){
@@ -64,6 +68,7 @@ module.exports = Marionette.Object.extend({
                     topicModel.set("category_id", category.get("id"));
                 }
         }});
+
     },
 
     createCategory: function () {

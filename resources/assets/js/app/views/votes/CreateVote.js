@@ -10,8 +10,8 @@ var currentUser = require('../../initializers/currentUser');
 
 var CreateVoteItemCollection = require('./CreateVoteItemCollection');
 var userCollectionView = require('../users/userCollection');
+var TagBehavior = require('../../behaviors/tagBehavior');
 
-require('bootstrap-tagsinput');
 
 module.exports = Marionette.LayoutView.extend({
     className: 'well',
@@ -92,8 +92,17 @@ module.exports = Marionette.LayoutView.extend({
             });
         }
     },
+
+    behaviors: [{
+        behaviorClass: TagBehavior
+    }],
+
+    initialize: function (options) {
+        this.tags = options.tags;
+    }
+    ,
     onRender: function () {
-        this.ui.tagsInput.tagsinput();//
+
         this.getRegion('answers').show(new CreateVoteItemCollection({
             collection: this.collection,
             parent: this.model
@@ -108,7 +117,8 @@ module.exports = Marionette.LayoutView.extend({
             collection: this.getOption('accessedUsers'),
             childView: require('./CreateVoteUserItemExtend')
         }));
-    },
+    }
+    ,
     createVote: function () {
         var view = this;
         var users = [];
@@ -129,15 +139,18 @@ module.exports = Marionette.LayoutView.extend({
                 Backbone.history.navigate('votes/' + data.get('id'), {trigger: true});
             }
         });
-    },
+    }
+    ,
     saveModel: function (obj) {
         if (this.model.get('id')) {
             this.model.save(obj);
         } else {
             this.model.set(obj);
         }
-    },
-    onBeforeDestroy: function() {
-        this.ui.tagsInput.tagsinput('destroy');
     }
-});
+    ,
+    onBeforeDestroy: function () {
+        this.ui.tagsInput.tokenfield('destroy');
+    }
+})
+;
