@@ -15,10 +15,8 @@ class TagController extends ApiController
      */
     public function index()
     {
-        $tag = new Tag();
-
         $tags = Tag::lists('name');
-
+        
         return $this->setStatusCode(200)->respond($tags);
     }
 
