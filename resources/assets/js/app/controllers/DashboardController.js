@@ -3,6 +3,7 @@ var app = require('../instances/appInstance');
 var DashBoardLayout = require('../views/dashboard/DashboardLayout');
 var CounterCollection = require('../collections/dashboardCounters');
 var BookmarkCollection = require('../collections/bookmarkCollection');
+var SubscriptionCollection = require('../collections/subscriptionCollection');
 var MessageCollection = require('../collections/messageCollection');
 var TopicCollection = require('../collections/topicCollection');
 var VotesCollection = require('../collections/voteCollection');
@@ -17,6 +18,10 @@ module.exports = Marionette.Object.extend({
 
         var bookmarks = new BookmarkCollection();
         bookmarks.fetch({ data: { limit: 5 } });
+        
+        var subscriptions = new SubscriptionCollection();
+        subscriptions.parentUrl = _.result(currentUser, 'url');
+        subscriptions.fetch({ data: { limit: 5 } });
 
         var messages = new MessageCollection();
         messages.parentUrl = _.result(currentUser, 'url');
@@ -34,8 +39,6 @@ module.exports = Marionette.Object.extend({
             data: { limit: 5 }
         });
 
-        //console.log(votes);
-
         var users = new UserCollection();
         users.fetch({
             data: { status: 'online' }
@@ -44,6 +47,7 @@ module.exports = Marionette.Object.extend({
         var view = new DashBoardLayout({
             countersCollection: counters,
             bookmarks: bookmarks,
+            subscriptions: subscriptions,
             messages: messages,
             votes: votes,
             users: users,
