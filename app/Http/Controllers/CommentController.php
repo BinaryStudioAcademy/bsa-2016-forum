@@ -629,7 +629,7 @@ class CommentController extends ApiController
         Comment $commentChild,
         CommentsRequest $request
     ) {
-        $this->authorize('updateVoteItemsComment', [$commentChild, $voteItem]);
+        $this->authorize('updateVoteItemsCommentChild', [$comment, $commentChild]);
 
         if ($this->isCommentBelongsToVoteItem($voteItem, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
@@ -652,7 +652,7 @@ class CommentController extends ApiController
      */
     public function destroyVoteItemCommentChild($vote, VoteItem $voteItem, Comment $comment, Comment $commentChild)
     {
-        $this->authorize('deleteVoteItemsCommentChild', [$commentChild, $voteItem]);
+        $this->authorize('deleteVoteItemsCommentChild', [$comment, $commentChild]);
 
         if ($this->isCommentBelongsToVoteItem($voteItem, $comment)
             && $this->isCommentChildBelongsToComment($comment, $commentChild)
