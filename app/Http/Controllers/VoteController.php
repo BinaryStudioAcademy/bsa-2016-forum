@@ -122,13 +122,32 @@ class VoteController extends ApiController
             TagService::TagsHandler($vote, $request->tags);
         }
         if ($vote->is_public) {
+            $this->subscribeUsers(User::all(), $vote);
             $vote->votePermissions()->delete();
         } elseif ($request->users) {
+            $this->subscribeUsers(collect(json_decode($request->users)), $vote);
             $this->VotePermissionsHandler($vote, $request->users);
         }
         $vote->description_generated = MarkdownService::baseConvert($vote->description);
         $vote->save();
         return $this->setStatusCode(201)->respond($vote);
+    }
+
+    /**
+     * Subscribe selected users to new vote
+     * @param $vote
+     * @param $users
+     * @return boolean
+     */
+    protected function subscribeUsers($users, $vote)
+    {
+        if ($vote && $users) {
+            $users->each(function ($user) use ($vote) {
+                $user->VoteSubscriptions()->save($vote);
+            });
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -167,6 +186,7 @@ class VoteController extends ApiController
     public function show($id)
     {
         $vote = Vote::findOrFail($id);
+
         if (Auth::user()->id &&
             !$this->isUniqueViewExist($vote)
         ) {
