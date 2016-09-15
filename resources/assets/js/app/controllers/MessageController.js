@@ -7,6 +7,7 @@ var MessageLayout = require('../views/messages/messageLayout');
 var MessageCollection = require('../collections/messageCollection');
 var MessageModel = require('../models/MessageModel');
 var MessageDialogLayout = require('../views/messages/messageDialogLayout');
+var UserCollection = require('../collections/userCollection');
 
 
 
@@ -16,7 +17,8 @@ module.exports = Marionette.Object.extend({
         messageCollection.parentUrl = _.result(currentUser, 'url');
         messageCollection.fetch();
         app.render(new MessageLayout({
-            collection: messageCollection
+            collection: messageCollection,
+            users: new UserCollection()
         }));
     },
     show: function (id) {
