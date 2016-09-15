@@ -142,10 +142,7 @@ class VoteController extends ApiController
     protected function subscribeUsers($users, $vote)
     {
         if ($vote && $users) {
-            $users->each(function ($user) use ($vote) {
-                $user->VoteSubscriptions()->save($vote);
-            });
-            return true;
+            return $vote->subscribers()->sync($users->values('id'));
         }
         return false;
     }
