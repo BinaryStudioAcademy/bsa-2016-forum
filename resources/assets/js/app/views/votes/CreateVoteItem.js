@@ -21,7 +21,7 @@ module.exports = Marionette.ItemView.extend({
         'click @ui.deleteButton': function () {
             var collection = this.model.collection;
             this.model.destroy();
-            collection.trigger('updateLengthCollection');
+            collection.trigger('checkLengthCollection');
         }
     },
     modelEvents: {
