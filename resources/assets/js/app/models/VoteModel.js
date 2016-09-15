@@ -23,6 +23,6 @@ module.exports = BaseModel.extend({
         is_saved: 0,
         is_public: true,
         is_single: true,
-        finished_at: ''
+        finished_at: null
     }
 });

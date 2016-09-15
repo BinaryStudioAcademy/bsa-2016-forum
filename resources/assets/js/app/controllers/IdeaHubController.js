@@ -2,20 +2,23 @@ var app = require('../instances/appInstance');
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var currentUser = require('../initializers/currentUser');
+var _ = require('underscore');
 
 var VoteAImodel = require('../models/VoteAIModel');
 var VoteModel = require('../models/VoteModel');
-var CommentModel = require('../models/CommentModel');
+var TopicCommentModel = require('../models/TopicCommentModel');
 var UserModel = require('../models/UserModel');
 
 var usersCollection = require('../collections/userCollection');
-var CommentsCollection = require('../collections/commentCollection');
+var CommentsCollection = require('../collections/TopicCommentsCollection');
 var VoteAICollection = require('../collections/voteAICollection');
 var VoteRICollection = require('../collections/voteRICollection');
 
 var ListVotes = require('../views/votes/ListVotes');
 var ShowVote = require('../views/votes/ShowVote');
 var CreateVote = require('../views/votes/CreateVote');
+var NewVoteCommentView = require('../views/comments/TopicCommentNew');
+var CommentsCollectionView = require('../views/comments/TopicCommentsCollection');
 
 var Votes = require('../instances/Votes');
 
@@ -31,7 +34,6 @@ module.exports = Marionette.Object.extend({
     },
 
     showVote: function (id) {
-        var AddCommentView = require('../views/votes/VoteCommentItemAdd');
         var view;
         var model;
         var parentUrl = '/votes/' + id;
@@ -51,22 +53,49 @@ module.exports = Marionette.Object.extend({
             model.fetch();
         }
         view = new ShowVote({
-            voteModel: model,
+            model: model,
             collection: myCommentsCollection,
             answers: VoteAnswers
         });
 
-        view.listenTo(Radio.channel('votesChannel'), 'showAddCommentView', function (view) {
+        view.listenTo(Radio.channel('comment'), 'addComment', function (parentView, commentModel, commentCollection) {
+                var model = {}, childComments = {};
+                if (commentModel) {
+                    model = new TopicCommentModel(commentModel.toJSON());
+                    model.setMeta(commentModel.getMeta());
+                    model.parentUrl = _.result(commentModel, 'getParentUrl');
+                } else {
+                    model = new TopicCommentModel();
+                    model.parentUrl = _.result(parentView.model, 'getEntityUrl');
+                }
 
-            view.getRegion('addcomment').show(
-                new AddCommentView({
-                    parent: view,
-                    model: new CommentModel({user_id: currentUser.get('id')}, {parentUrl: view.collection.parentUrl})
-                })
-            );
+                view.getRegion('newComment').show(new NewVoteCommentView({
+                    model: model,
+                    commentCollection: commentCollection,
+                    parentCommentView: parentView
+                }));
         });
 
+        view.listenTo(Radio.channel('comment'), 'showChildComments', function (commentItemView) {
+            var childs = new CommentsCollection();
+            childs.parentUrl = _.result(commentItemView.model, 'getEntityUrl');
+            childs.fetch();
+            commentItemView._childUpload = true;
+            commentItemView._childCommentsCollection = childs;
+            commentItemView.getRegion('childComments').show(new CommentsCollectionView({
+                collection: childs,
+                parentCommentView: commentItemView
+            }));
+        });
 
+        view.listenTo(Radio.channel('votesChannel'), 'loadVoteItemsComments', function (parentView) {
+            var myCommentsCollection = new CommentsCollection([], {parentUrl: parentView.model.commentsUrl});
+            parentView.collection = myCommentsCollection;
+            myCommentsCollection.fetch();
+            parentView.getRegion('comments').show(new CommentsCollectionView({
+                collection: myCommentsCollection
+            }));
+        });
 
         app.render(view);
 
