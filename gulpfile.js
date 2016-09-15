@@ -46,7 +46,8 @@ gulp.task('sass', function () {
         .pipe(cfg.prod ? util.noop() : sourcemaps.init())
         .pipe(sass({includePaths: [
             'node_modules/bootstrap-sass/assets/stylesheets',
-            'node_modules/dropzone/src'
+            'node_modules/dropzone/src',
+            'node_modules/nprogress'
         ]}))
         .pipe(cfg.prod ? cleanCSS() : util.noop())
         .pipe(rename('styles.css'))

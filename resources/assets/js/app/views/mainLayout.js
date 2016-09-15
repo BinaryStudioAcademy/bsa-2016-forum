@@ -13,23 +13,6 @@ var mainLayoutView = Marionette.LayoutView.extend({
         breadCrumbs: '#breadcrumbs',
         modalWindow: '#modal-container'
     },
-    ui: {
-        spinner: '#spinner'
-    },
-
-    initialize: function () {
-        this.listenTo(Radio.channel('spinnerChannel'), 'show', function () {
-            this.ui.spinner.fadeIn(100);
-        });
-
-        this.listenTo(Radio.channel('spinnerChannel'), 'hide', function () {
-            this.ui.spinner.fadeOut(100);
-        });
-    },
-
-    onRender: function () {
-        //console.log('main layout render');
-    },
 
     showRegions: function () {
         this.getRegion('header').show(new headerView());

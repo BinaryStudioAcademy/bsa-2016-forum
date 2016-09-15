@@ -12,7 +12,7 @@ var defaults = {
     maxFileSize: 8,
     maxFiles: 5,
     acceptedFiles: 'image/*,.pdf,.docx,.doc,.xlsx,.xls',
-    maxFilesMessage: 'Max files is 5. File types are ' + this.acceptedFiles
+    maxFilesMessage: 'Max count of files is 5. Allowed file types are image/*,.pdf,.docx,.doc,.xlsx,.xls'
 };
 
 

@@ -58,7 +58,11 @@ module.exports = Marionette.Object.extend({
 
         topicCategoryCollection.fetch({
             success: function(collection){
-                topicModel.set("category_id", collection.findWhere({slug: categoryId}).get("id"));
+                var category = collection.findWhere({slug: categoryId})
+
+                if (category != undefined) {
+                    topicModel.set("category_id", category.get("id"));
+                }
         }});
     },
 
