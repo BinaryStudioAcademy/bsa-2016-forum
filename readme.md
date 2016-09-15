@@ -53,6 +53,7 @@ http://localhost:8000/
 
 1) install all javascript packages
 ```
+npm install bower -g
 npm install
 ```
 
