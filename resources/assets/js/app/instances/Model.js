@@ -32,13 +32,13 @@ module.exports = Backbone.Model.extend({
         };
 
         options.statusCode['403'] = function (xhr, textStatus, errorThrown) {
-            Backbone.history.navigate('/', {trigger: true});
+            model.trigger('notFound')
         };
 
         options.statusCode['404'] = function (xhr, textStatus, errorThrown) {
-            model.trigger('notFound', model, xhr.responseText);
+            model.trigger('notFound')
         };
-
+        
         return Backbone.sync(method, model, options);
     },
 
