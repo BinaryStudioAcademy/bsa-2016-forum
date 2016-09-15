@@ -16,18 +16,20 @@
                 <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
             {{/each}}
         </div>
-        <div class="vote-users">
-            <span>{{ meta.numberOfUniqueViews }} users have seen this voting</span>
-            <button class="btn btn-default" data-toggle="collapse" data-target=".users-list">Show users</button>
-            <ul class="nav collapse users-list">
-                {{#each meta.usersWhoSaw}}
-                    <li class="">
-                        <img src="/images/user.png" alt="">
-                        <span>{{ first_name }} {{ last_name }}</span>
-                    </li>
-                {{/each}}
-            </ul>
-        </div>
+        {{#if meta.showUsers}}
+            <div class="vote-users">
+                <span>{{ meta.numberOfUniqueViews }} users have seen this voting</span>
+                <button class="btn btn-default" data-toggle="collapse" data-target=".users-list">Show users</button>
+                <ul class="nav collapse users-list">
+                    {{#each meta.usersWhoSaw}}
+                        <li class="">
+                            <img src="/images/user.png" alt="">
+                            <span>{{ first_name }} {{ last_name }}</span>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
     </div>
 
 <!--</div>-->
