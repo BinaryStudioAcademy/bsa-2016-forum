@@ -6,6 +6,7 @@ var currentUser = require('../../initializers/currentUser');
 var AttachmentModel = require('../../models/AttachmentModel');
 var App = require('../../instances/appInstance');
 var config = require('config');
+var markdownHelp = require('../../views/modalWindows/markdownHelp');
 
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentNew',
@@ -20,6 +21,7 @@ module.exports = Marionette.ItemView.extend({
     },
 
     ui: {
+        openMarkdownHelp: '.openMarkdownHelp',
         'submit': '#submit',
         'close': '.close',
         'errors': '.errors',
@@ -49,6 +51,9 @@ module.exports = Marionette.ItemView.extend({
 
     events: {
         'click @ui.submit': 'submitComment',
+        'click @ui.openMarkdownHelp': function () {
+            App.renderModal(new markdownHelp());
+        },
     },
 
     showLoader: function (show) {

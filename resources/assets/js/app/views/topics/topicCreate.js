@@ -50,7 +50,7 @@ module.exports = Marionette.LayoutView.extend({
             this.model.set(updateModel);
         },
         'click @ui.openMarkdownHelp': function () {
-            app.render(new markdownHelp());
+            app.renderModal(new markdownHelp());
         },
         'submit @ui.createForm': function (e) {
             e.preventDefault();

@@ -4,18 +4,12 @@ var app = require('../../instances/appInstance');
 
 module.exports = Marionette.ItemView.extend({
     template: 'markdownHelp',
-   
-    ui: {
-        closeButton: '#closeWindow'
+    
+    show: function () {
+        this.$('.modal').modal('show');
     },
-
-    events: {
-        'click @ui.closeButton': 'closeWindow'
-    },
-
-
-
-    closeWindow: function () {
-        this.destroy();
-    }
+    onRender: function() {
+        this.$('.modal').modal('show');
+}
+    
 });
