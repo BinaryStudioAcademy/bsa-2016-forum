@@ -5,9 +5,19 @@ var _ = require('underscore');
 module.exports = Marionette.CollectionView.extend({
     childView: messageItem,
     childViewOptions : function (model) {
+        var user, isUserFrom;
+        var userFrom = _.findWhere(this.collection.getMeta().users, {id: parseInt(model.get('user_from_id'))});
+        var userTo = _.findWhere(this.collection.getMeta().users, {id: parseInt(model.get('user_to_id'))});
+        if (userFrom) {
+            user = userFrom;
+            isUserFrom = true;
+        } else {
+            user = userTo;
+            isUserFrom = false;
+        }
         return {
-            userFrom: _.findWhere(this.collection.getMeta().users, {id: parseInt(model.get('user_from_id'))}),
-            userTo: _.findWhere(this.collection.getMeta().users, {id: parseInt(model.get('user_to_id'))})
+            user: user,
+            isUserFrom: isUserFrom
         };
     }
 });
