@@ -46,4 +46,12 @@ class VotePolicy
     {
         return $user->owns($vote);
     }
+
+    public function show(User $user, Vote $vote)
+    {
+        if (!$vote->is_public) {
+            return $user->votesWithPermission()->wherePivot('vote_id', $vote->id)->exists() || $user->owns($vote) || $user->isAdmin();
+        }
+        return true;
+    }
 }
