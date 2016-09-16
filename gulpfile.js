@@ -121,7 +121,7 @@ gulp.task('css-concat', ['sass'], function () {
 });
 
 
-var tasks = ['clean', 'tmpl', 'js', 'sass', 'copy', 'css-concat'];
+var tasks = ['clean', 'js:firstrun', 'sass', 'copy', 'css-concat'];
     if (!cfg.prod) {
     tasks.push('watch');
 }
