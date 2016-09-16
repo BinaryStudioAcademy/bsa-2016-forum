@@ -33,14 +33,20 @@ module.exports = Marionette.LayoutView.extend({
     },
     searchUsers: function(view) {
         return function (q, sync, async) {
-            // console.log(view);
+            var currentUserId = view.options.currentUser.get('id');
             view.options.users.fetch({
                 data: {
                     query: q,
                     limit: 5
                 },
                 success: function (collection) {
-                    async(collection.toJSON());
+                    var usersList = [];
+                    collection.each(function (model) {
+                        if (model.get('id') != currentUserId) {
+                            usersList.push(model.toJSON());
+                        }
+                    });
+                    async(usersList);
                 }
             });
         }
