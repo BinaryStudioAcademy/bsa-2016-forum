@@ -162,11 +162,17 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::put('{comment}', 'CommentController@updateVoteComment')->name('updateVoteComment');
         Route::delete('{comment}', 'CommentController@destroyVoteComment')->name('deleteVoteComment');
 
-        Route::get('{comment}/comments', 'CommentController@getVoteCommentChildren')->name('voteCommentChildren');
-        Route::post('{comment}/comments', 'CommentController@storeVoteCommentChild')->name('storeVoteCommentChild');
-        Route::get('{comment}/comments/{commentChild}', 'CommentController@getVoteCommentChild')->name('getVoteCommentChild');
-        Route::put('{comment}/comments/{commentChild}', 'CommentController@updateVoteCommentChild')->name('updateVoteCommentChild');
-        Route::delete('{comment}/comments/{commentChild}', 'CommentController@destroyVoteCommentChild')->name('deleteVoteCommentChild');
+        Route::resource('{comment}/comments', 'VoteCommentChildsController', [
+            'except' => ['edit', 'create'],
+            'names' => [
+                'index' => 'VoteCommentChilds.index',
+                'store' => 'VoteCommentChilds.store',
+                'show' => 'VoteCommentChilds.show',
+                'update' => 'VoteCommentChilds.update',
+                'destroy' => 'VoteCommentChilds.destroy'
+            ]
+        ]);
+
     });
     /*Routes for VoteItem comments*/
     Route::group(['prefix' => 'votes/{vote}/voteitems/{voteItem}/comments'], function () {
@@ -176,11 +182,17 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::put('/{comment}', 'CommentController@updateVoteItemComment')->name('updateVoteItemComment');
         Route::delete('/{comment}', 'CommentController@destroyVoteItemComment')->name('deleteVoteItemComment');
 
-        Route::get('{comment}/comments', 'CommentController@getVoteItemCommentChildren')->name('getVoteItemCommentChildren');
-        Route::post('{comment}/comments', 'CommentController@storeVoteItemCommentChild')->name('storeVoteItemCommentChild');
-        Route::get('{comment}/comments/{commentChild}', 'CommentController@getVoteItemCommentChild')->name('getVoteItemCommentChild');
-        Route::put('{comment}/comments/{commentChild}', 'CommentController@updateVoteItemCommentChild')->name('updateVoteItemCommentChild');
-        Route::delete('{comment}/comments/{commentChild}', 'CommentController@destroyVoteItemCommentChild')->name('destroyVoteItemCommentChild');
+
+        Route::resource('{comment}/comments', 'VoteItemCommentChildsController', [
+            'except' => ['edit', 'create'],
+            'names' => [
+                'index' => 'VoteItemCommentChilds.index',
+                'store' => 'VoteItemCommentChilds.store',
+                'show' => 'VoteItemCommentChilds.show',
+                'update' => 'VoteItemCommentChilds.update',
+                'destroy' => 'VoteItemCommentChilds.destroy'
+            ]
+        ]);
     });
 
     /*Routes for private Vote users*/
