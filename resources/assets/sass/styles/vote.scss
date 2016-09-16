@@ -17,16 +17,6 @@ VOTE DETAIL
   float: left;
 }
 
-.vote-avatar {
-  margin: 0 auto;
-}
-
-.vote-avatar img {
-  width: 70px;
-  height: 70px;
-  border-radius: 35px;
-}
-
 .vote-body {
   /* width: calc(100% - 80px); */
   display: inline-block;
@@ -469,4 +459,26 @@ VOTE INDEX
   text-decoration: none;
   cursor: pointer;
   float:right;
+}
+
+/* -- new styles -- */
+
+.vote-avatar {
+  margin: 0 auto;
+  padding: 0;
+}
+
+.vote-avatar img {
+  margin-right: 5px;
+  width: 60px;
+  height: 60px;
+  border-radius: 3px;
+}
+
+.vote-item-icons span {
+  margin-right: 15px;
+}
+
+.votes li {
+  padding: 0.5em;
 }
