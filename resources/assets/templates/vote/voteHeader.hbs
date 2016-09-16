@@ -10,7 +10,7 @@
             {{/if}}
         </span>
         <button class="btn btn-info text-info subscribe-btn">Subscribe</button>
-        <span>{{{ model.description_generated }}}</span><br>
+        <div>{{{ model.description_generated }}}</div>
         <div class="vote-tags">
             {{#each meta.tags}}
                 <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
