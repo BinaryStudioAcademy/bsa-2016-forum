@@ -1,4 +1,4 @@
 module.exports = {
     debug: false,
-    baseUrl: 'forum/api/v1'
+    baseUrl: '/forum/api/v1'
 };
