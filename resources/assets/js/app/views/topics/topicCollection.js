@@ -9,13 +9,5 @@ module.exports = paginateableCollectionView.extend({
         return {
             meta: meta
         }
-    },
-    initialize: function(){
-        this.listenTo(Radio.channel('topicChannel'), 'removeLike', function (model) {
-            model.fetch({url:'api/v1/topics/'+model.get('id')});
-        });
-        this.listenTo(Radio.channel('topicChannel'), 'addLike', function (model) {
-            model.fetch({url:'api/v1/topics/'+model.get('id')});
-        });
     }
 });

@@ -14,7 +14,6 @@ use App\Facades\TagService;
 use App\Facades\MarkdownService;
 use App\Models\Like;
 
-
 class TopicController extends ApiController
 {
     protected $searchStr = null;
@@ -26,39 +25,28 @@ class TopicController extends ApiController
      */
     private function getMetaDataForModel(Topic $topic)
     {
+        if (!empty($topic->likes()->where('user_id', Auth::user()->id)->get()->first())) {
+            $is_user = true;
+            $like_id = $topic->likes()->where('user_id', Auth::user()->id)->get()->first()->id;
+        } else {
+            $is_user = false;
+            $like_id = null;
+        }
+
         return [$topic->id => [
             'subscription' => $topic->subscription(Auth::user()->id),
             'category' => $topic->category,
             'user' => $topic->user()->first(),
             'likes' => $topic->likes()->count(),
             'comments' => $topic->comments()->count(),
-            'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first()
+            'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
+            'countOfLikes' => $topic->likes()->count(),
+            'is_user' => $is_user,
+            'like_id' => $like_id
         ]];
-        
 
         return $data;
     }
-    
-    /**
-     * @param Topic $topic
-     * @return array
-     */
-    private function getLikesOfTopic(Topic $topic)
-    {
-        $topic->countOfLikes = $topic->likes()->count();
-
-        $like = $topic->likes()->where('user_id', Auth::user()->id)->first();
-        if (!empty($topic->likes()->where('user_id', Auth::user()->id)->get()->first())) {
-            $topic->is_user = true;
-            $topic->like_id = $topic->likes()->where('user_id', Auth::user()->id)->get()->first()->id;
-        } else {
-            $topic->is_user = false;
-            $topic->like_id = null;
-        }
-
-        return $topic;
-    }
-
 
     /**
      * @param Collection $topics
@@ -89,7 +77,6 @@ class TopicController extends ApiController
             ->filterByLimit($this->limit)->get();
 
         foreach ($topics as $topic) {
-            $topic=$this->getLikesOfTopic($topic);
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
         }
@@ -131,7 +118,6 @@ class TopicController extends ApiController
         }
 
         foreach ($topics as $topic) {
-            $topic=$this->getLikesOfTopic($topic);
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
             $topic->currentUser = $user->id;
@@ -167,7 +153,6 @@ class TopicController extends ApiController
     {
         $topic = Topic::getSluggableModel($id);
         $topic->tags = $topic->tags()->get();
-        $topic=$this->getLikesOfTopic($topic);
 
         $meta = $this->getMetaDataForModel($topic);
 
@@ -296,7 +281,6 @@ class TopicController extends ApiController
         }
 
         foreach ($topics as $topic) {
-            $topic=$this->getLikesOfTopic($topic);
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
         }
