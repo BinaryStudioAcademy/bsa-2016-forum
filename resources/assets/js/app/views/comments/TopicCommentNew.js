@@ -25,7 +25,8 @@ module.exports = Marionette.ItemView.extend({
         'errors': '.errors',
         'loader': '.loader',
         'commentDlg': '#commentdlg',
-        'textField': '.text-field'
+        'textField': '.text-field',
+        'dropzone': '.dropzone'
     },
 
     serializeData: function () {
@@ -117,14 +118,14 @@ module.exports = Marionette.ItemView.extend({
     initDropZone: function () {
         var view = this;
         var attachModel = new AttachmentModel();
-        this._dropZone = new Dropzone(this.$('#drop')[0], {
+        this._dropZone = new Dropzone(this.ui.dropzone[0], {
             url: function(file) {
                 return App.getBaseUrl() + _.result(view.model, 'url') + _.result(attachModel, 'url');
             },
             method: 'post',
             // input file name, registered on server
             paramName: "f",
-            hiddenInputContainer: '#drop',
+            hiddenInputContainer: '.dropzone-container',
             autoProcessQueue : false,
             parallelUploads : config.parallelFileUploads,
             maxFilesize: config.maxFileSize,
@@ -146,6 +147,10 @@ module.exports = Marionette.ItemView.extend({
                 if (xhr.data) {
                     view._files.push(xhr.data);
                 }
+            },
+            complete: function (file) {
+                view.$('.dz-progress', file.previewElement).hide();
+                view.$('.dz-size', file.previewElement).hide();
             },
             removedfile: function (file) {
                 view.$(file.previewElement).remove();
@@ -239,6 +244,7 @@ module.exports = Marionette.ItemView.extend({
                 };
                 drop.emit("addedfile", mockFile);
                 drop.emit("thumbnail", mockFile, file.thumb);
+                drop.emit("complete", mockFile);
             });
         }
         this._dropZone.options.maxFiles = config.maxFiles - attachs.length;
