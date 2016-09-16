@@ -81,7 +81,7 @@ gulp.task('copy', function () {
         .pipe(gulp.dest('./public/fonts/'));
 });
 
-gulp.task('js', function () {
+function js() {
     var browserifyOpt = {
         entries: './resources/assets/js/app/app.js',
         debug: true
@@ -102,14 +102,17 @@ gulp.task('js', function () {
         .pipe(cfg.prod ? uglify() : util.noop())
         // .pipe(cfg.prod ? util.noop() : sourcemaps.write('.'))
         .pipe(gulp.dest('./public/js'));
-});
+}
 
-gulp.task('watch', function () {
+gulp.task('js:firstrun', ['tmpl'], js);
+
+gulp.task('js', js);
+
+gulp.task('watch', ['js:firstrun'], function() {
     gulp.watch('resources/assets/sass/**/*.scss', ['sass', 'css-concat']);
     gulp.watch('resources/assets/templates/**/*.hbs', ['tmpl']);
     gulp.watch('resources/assets/js/**/*.js', ['js']);
 });
-
 
 gulp.task('css-concat', ['sass'], function () {
     return gulp.src(['public/css/styles.css', 'node_modules/bootstrap-tokenfield/dist/css/bootstrap-typeahead.css', 'node_modules/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css', 'node_modules/jquery-ui-browserify/themes/base/*.css'])
@@ -119,7 +122,7 @@ gulp.task('css-concat', ['sass'], function () {
 
 
 var tasks = ['clean', 'tmpl', 'js', 'sass', 'copy', 'css-concat'];
-if (!cfg.prod) {
+    if (!cfg.prod) {
     tasks.push('watch');
 }
 

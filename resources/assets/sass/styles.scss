@@ -104,3 +104,9 @@ body {
 .topic-body {
   overflow: hidden;
 }
+
+.ui-autocomplete {
+  height: 150px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}

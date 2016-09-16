@@ -4,9 +4,9 @@ require('jquery-ui-browserify');
 require('bootstrap-tokenfield');
 
 module.exports = Marionette.Behavior.extend({
-    onRender: function() {
+    onRender: function () {
         var view = this.view;
-        view.tags.on('sync', function(response, data) {
+        view.tags.on('sync', function (response, data) {
             view.ui.tagsInput.tokenfield({
                 autocomplete: {
                     source: data.data,
@@ -16,7 +16,7 @@ module.exports = Marionette.Behavior.extend({
             });
             view.ui.tagsInput.on('tokenfield:createtoken', function (event) {
                 var existingTokens = $(this).tokenfield('getTokens');
-                _.each(existingTokens, function(index, token) {
+                _.each(existingTokens, function (token) {
                     if (token.value === event.attrs.value)
                         event.preventDefault();
                 });

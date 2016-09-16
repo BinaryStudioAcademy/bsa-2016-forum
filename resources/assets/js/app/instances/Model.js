@@ -21,7 +21,7 @@ module.exports = Backbone.Model.extend({
         if (!options.url) {
             options.url = this._getRequestUrl(model);
         }
-        
+
         if (!options.statusCode) options.statusCode = {};
 
         options.statusCode['400'] = function (xhr, textStatus, errorThrown) {
@@ -32,18 +32,22 @@ module.exports = Backbone.Model.extend({
             }
         };
 
-        options.statusCode['404'] = function (xhr, textStatus, errorThrown) {
-            model.trigger('notFound', model, xhr.responseText);
+        options.statusCode['403'] = function (xhr, textStatus, errorThrown) {
+            model.trigger('notFound')
         };
 
+        options.statusCode['404'] = function (xhr, textStatus, errorThrown) {
+            model.trigger('notFound')
+        };
+        
         return Backbone.sync(method, model, options);
     },
 
-    getMeta: function() {
+    getMeta: function () {
         return (_.result(this, '_meta') || _.result(this.collection, '_meta'));
     },
 
-    setMeta: function(meta) {
+    setMeta: function (meta) {
         this._meta = meta;
     },
 
