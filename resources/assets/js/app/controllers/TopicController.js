@@ -17,7 +17,6 @@ var CommentsCollection = require('../collections/TopicCommentsCollection');
 var CommentsCollectionView = require('../views/comments/TopicCommentsCollection');
 var currentUser = require('../initializers/currentUser');
 var TopicCategoryCreate = require('../views/topics/topicCategoryCreate');
-var TopicCategoryModel = require('../models/TopicCategoryModel');
 
 module.exports = Marionette.Object.extend({
 
