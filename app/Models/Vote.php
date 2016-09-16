@@ -187,4 +187,9 @@ class Vote extends Model
         }
         return $value;
     }
+
+    public function usersWithPermission()
+    {
+        return $this->belongsTo(User::class, 'vote_permissions', 'vote_id')->withTimestamps();
+    }
 }

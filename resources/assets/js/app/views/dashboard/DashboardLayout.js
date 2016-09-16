@@ -24,6 +24,7 @@ module.exports = Marionette.LayoutView.extend({
         }));
         this.getRegion('sidebar').show(new DashBoardProfileView({
             bookmarks: this.options.bookmarks,
+            subscriptions: this.options.subscriptions,
             messages: this.options.messages
         }));
     }

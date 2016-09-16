@@ -53,32 +53,12 @@ http://localhost:8000/
 
 1) install all javascript packages
 ```
+npm install bower -g
 npm install
 ```
 
-2) install Ruby (for sass dependency) _ONLY if you plan to use Grunt_
+2) install Gulp globally
 
-*Ubuntu*
-```
-sudo apt-get install ruby-full
-```
-
-*Windows*
-Go to http://rubyinstaller.org/downloads/ and download stable version
-
-3) install sass package from rubygems.org _ONLY if you plan to use Grunt_
-
-*Ubuntu*
-```
-sudo gem install sass
-```
-
-*Windows*
-```
-gem install sass
-```
-
-4) install Gulp globally if you plan use it
 *Ubuntu*
 ```
 sudo npm i -g gulp
@@ -89,24 +69,20 @@ sudo npm i -g gulp
 npm i -g gulp
 ```
 
-5) you can set your own config's values in the /resources/assets/js/app/config/config.custom.js like that
+3) you can set your own config's values in the /resources/assets/js/app/config/config.custom.js like that
 ```
 module.exports = {
     socketUrl: 'you.own.value:3000'
 };
 ```
 
-6) compile all resources
-*Grunt*
-```
-grunt dev
-```
+4) compile all resources
 
-*Gulp* (development)
+*Development:*
 ```
 gulp
 ```
-*Gulp* (production)
+*Production:*
 ```
 gulp --prod
 ```

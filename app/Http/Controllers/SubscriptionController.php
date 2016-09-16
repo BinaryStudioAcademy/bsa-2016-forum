@@ -7,6 +7,7 @@ use App\Models\Subscription;
 use App\Models\Topic;
 use App\Models\Vote;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SubscriptionController extends ApiController
@@ -16,16 +17,23 @@ class SubscriptionController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($userId)
+    public function index($userId, Request $request)
     {
-        if ($userId != Auth::user()->id)
+        if ($userId != Auth::user()->id) {
             return $this->setStatusCode(403)->respond();
+        }
 
         $user = Auth::user();
 
+        if ($request->limit) {
+            $subscriptions = $user->subscriptions()->limit($request->limit)->orderBy('updated_at', 'DESC')->get();
+        } else {
+            $subscriptions = $user->subscriptions;
+        }
+
         return $this->setStatusCode(200)->respond(
-            $user->subscriptions, [
-            Topic::$morphTag=> $user->topicSubscriptions,
+            $subscriptions, [
+            Topic::$morphTag => $user->topicSubscriptions,
             Vote::$morphTag => $user->voteSubscriptions
         ]);
     }
@@ -33,13 +41,14 @@ class SubscriptionController extends ApiController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store($userId, SubscriptionRequest $request)
     {
-        if($userId != Auth::user()->id)
+        if ($userId != Auth::user()->id) {
             return $this->setStatusCode(403)->respond();
+        }
 
         switch ($request->subscription_type) {
             case Topic::$morphTag:
@@ -62,13 +71,14 @@ class SubscriptionController extends ApiController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($userId, $id)
     {
-        if($userId != Auth::user()->id)
+        if ($userId != Auth::user()->id) {
             return $this->setStatusCode(403)->respond();
+        }
         $user = Auth::user();
         $subscribe = $user->subscriptions()->find($id);
         if (!$subscribe) {

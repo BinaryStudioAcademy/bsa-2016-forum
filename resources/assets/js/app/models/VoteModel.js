@@ -27,5 +27,13 @@ module.exports = BaseModel.extend({
     },
     vote_slug : function () {
         return (this.get("slug") && this.get("slug") !== undefined) ? this.get("slug") : this.get("id");
+    },
+    
+    initialize: function() {
+        this.bind('notFound', this.notFound)
+    },
+    
+    notFound: function () {
+        Backbone.history.navigate('votes', {trigger: true});
     }
 });
