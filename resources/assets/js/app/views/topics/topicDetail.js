@@ -7,10 +7,10 @@ var TopicHeaderView = require('./topicHeader');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'topicDetail',
+    _isTopicView: true,
 
     initialize: function () {
         this.childCommentsCollection = this.getOption('collection');
-        this._isTopicView = true;
     },
 
     regions: {
@@ -35,7 +35,8 @@ module.exports = Marionette.LayoutView.extend({
         }));
 
         this.getRegion('comments').show(new CommentsCollectionView({
-          collection: this.collection,
+            collection: this.collection,
+            reorderOnSort: true
         }));
     }
 
