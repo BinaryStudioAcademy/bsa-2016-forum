@@ -162,7 +162,12 @@ class User extends Authenticatable
         }
         return $user;
     }
-
+    
+    public function votesWithPermission()
+    {
+        return $this->belongsToMany(User::class, 'vote_permissions', 'user_id')->withTimestamps();
+    }
+    
     /**
      * Scope a query to only include users which contain a searching text in the users's first_name,
      *  last_name, email.

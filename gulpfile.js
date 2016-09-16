@@ -79,7 +79,7 @@ gulp.task('copy', function() {
         .pipe(gulp.dest('./public/fonts/'));
 });
 
-gulp.task('js', function () {
+function js() {
     var browserifyOpt = {
         entries: './resources/assets/js/app/app.js',
         debug: true
@@ -100,15 +100,19 @@ gulp.task('js', function () {
         .pipe(cfg.prod ? uglify() : util.noop())
         // .pipe(cfg.prod ? util.noop() : sourcemaps.write('.'))
         .pipe(gulp.dest('./public/js'));
-});
+}
 
-gulp.task('watch', function() {
+gulp.task('js:firstrun', ['tmpl'], js);
+
+gulp.task('js', js);
+
+gulp.task('watch', ['js:firstrun'], function() {
     gulp.watch('resources/assets/sass/**/*.scss', ['sass']);
     gulp.watch('resources/assets/templates/**/*.hbs', ['tmpl']);
     gulp.watch('resources/assets/js/**/*.js', ['js']);
 });
 
-var tasks = ['clean', 'tmpl', 'js', 'sass', 'copy'];
+var tasks = ['clean', 'js:firstrun', 'sass', 'copy'];
 if (!cfg.prod) {
     tasks.push('watch');
 }
