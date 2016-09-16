@@ -24,5 +24,13 @@ module.exports = BaseModel.extend({
         is_public: true,
         is_single: true,
         finished_at: ''
+    },
+    
+    initialize: function() {
+        this.bind('notFound', this.notFound)
+    },
+    
+    notFound: function () {
+        Backbone.history.navigate('votes', {trigger: true});
     }
 });
