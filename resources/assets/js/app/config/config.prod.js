@@ -1,3 +1,4 @@
 module.exports = {
-    debug: false
+    debug: false,
+    baseUrl: '/forum/api/v1'
 };
