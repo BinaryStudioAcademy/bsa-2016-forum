@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 var BookmarksCollection = require('../bookmarks/bookmarkCollection');
+var SubscriptionsCollection = require('../subscriptions/subscriptionsCollection');
 var MessagesCollection = require('../messages/messageCollection');
 
 module.exports = Marionette.LayoutView.extend({
@@ -7,6 +8,7 @@ module.exports = Marionette.LayoutView.extend({
 
     regions: {
         'bookmarks': '.bookmarks',
+        'subscriptions': '.subscriptions',
         'messages': '.messages'
     },
 
@@ -16,6 +18,9 @@ module.exports = Marionette.LayoutView.extend({
         }));
         this.getRegion('bookmarks').show(new BookmarksCollection({
             collection: this.options.bookmarks,
+        }));
+        this.getRegion('subscriptions').show(new SubscriptionsCollection({
+            collection: this.options.subscriptions,
         }));
     }
 });

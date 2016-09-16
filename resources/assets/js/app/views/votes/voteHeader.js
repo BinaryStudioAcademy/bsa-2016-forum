@@ -1,8 +1,8 @@
 var Marionette = require('backbone.marionette');
-var SubscribeBehavior = require('../subscribeBehavior');
+var SubscribeBehavior = require('../../behaviors/subscribeBehavior');
 var _ = require('underscore');
 var currentUser = require('../../initializers/currentUser');
-
+var dateHelper = require('../../helpers/dateHelper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteHeader',
@@ -41,7 +41,10 @@ module.exports = Marionette.ItemView.extend({
                 status: tempmeta[id].status,
                 tags: tempmeta[id].tags,
                 numberOfUniqueViews: tempmeta[id].numberOfUniqueViews,
-                usersWhoSaw: tempmeta[id].usersWhoSaw
+                usersWhoSaw: tempmeta[id].usersWhoSaw,
+                isFinished: dateHelper.getDateTimeDiff(this.model.get('finished_at')) > 0,
+                finishedDate: dateHelper.middleDate(this.model.get('finished_at')),
+                showUsers: currentUser.isAdmin() || (currentUser.get('id') === this.model.get('user_id'))
             }
         }
 

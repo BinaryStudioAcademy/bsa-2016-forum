@@ -24,7 +24,8 @@ module.exports = Marionette.ItemView.extend({
         'close': '.close',
         'errors': '.errors',
         'loader': '.loader',
-        'commentDlg': '#commentdlg'
+        'commentDlg': '#commentdlg',
+        'textField': '.text-field'
     },
 
     serializeData: function () {
@@ -135,9 +136,10 @@ module.exports = Marionette.ItemView.extend({
             uploadMultiple: false,
             addRemoveLinks: true,
             acceptedFiles: config.acceptedFiles,
-            error: function (xhr) {
+            error: function (file, msg, xhr) {
                 view.showErrors(true);
-                view.ui.errors.append(xhr.responseText);
+                view.ui.errors.text(msg);
+                this.removeFile(file);
             },
             success: function (file, xhr) {
                 if (xhr.data) {
@@ -145,12 +147,16 @@ module.exports = Marionette.ItemView.extend({
                 }
             },
             removedfile: function (file) {
+                view.$(file.previewElement).remove();
                 if (file.id) {
-                    view.$(file.previewElement).remove();
-                    view.$('.dz-message').hide();
                     view._deletedFiles.push(file);
-                } else {
-                    view.$(file.previewElement).remove();
+                    view.$('.dz-message').hide();
+                    var attachs = view.model.getMeta()[view.model.get('id')].attachments;
+                    // show drop msg only when delete all files from dropzone
+                    if ((view._deletedFiles.length === attachs.length) && !this.files.length) {
+                        view.$('.dz-message').show();
+                    }
+                    this.options.maxFiles++;
                 }
             },
             // event triggers when all files has been uploaded
@@ -231,17 +237,26 @@ module.exports = Marionette.ItemView.extend({
                     id: file.id
                 };
                 drop.emit("addedfile", mockFile);
-                drop.emit("thumbnail", mockFile, file.url);
+                drop.emit("thumbnail", mockFile, file.thumb);
             });
         }
-        this._dropZone.options.maxFiles = this._dropZone.options.maxFiles - attachs.length;
+        this._dropZone.options.maxFiles = config.maxFiles - attachs.length;
     },
 
     onShow: function() {
         this.initDropZone();
-        this.ui.commentDlg.modal('show');
+
+        this.ui.commentDlg.on('shown.bs.modal', function () {
+            // show caret at the end oj textarea
+            var text = this.ui.textField.val();
+            this.ui.textField.focus().val('').val(text);
+        }.bind(this));
+
         this.ui.commentDlg.on('hidden.bs.modal', function (e) {
             this.remove();
         }.bind(this));
+
+        this.ui.commentDlg.modal('show');
+
     }
 });

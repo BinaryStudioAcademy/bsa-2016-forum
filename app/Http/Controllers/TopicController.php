@@ -18,14 +18,7 @@ use App\Models\Like;
 class TopicController extends ApiController
 {
     protected $searchStr = null;
-
-    private function getTopicModel($id) {
-        if (is_numeric($id) === false) {
-            return  Topic::where('slug', '=', $id)->firstOrFail();
-        }
-
-        return Topic::findOrFail($id);
-    }
+    protected $tagIds = [];
 
     /**
      * @param Topic $topic
@@ -33,23 +26,15 @@ class TopicController extends ApiController
      */
     private function getMetaDataForModel(Topic $topic)
     {
-        $data = [];
-        $bookmark = $topic->bookmarks()
-            ->where('user_id', Auth::user()->id)->first();
-
-        if ($bookmark !== null) {
-            $data['bookmark'][$topic->id] = $topic->bookmarks()
-                ->where('user_id', Auth::user()->id)->first();
-        }
-
-        // requires common standards in the future
-        $data[$topic->id] = [
+        return [$topic->id => [
             'subscription' => $topic->subscription(Auth::user()->id),
             'category' => $topic->category,
             'user' => $topic->user()->first(),
             'likes' => $topic->likes()->count(),
             'comments' => $topic->comments()->count(),
-        ];
+            'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first()
+        ]];
+        
 
         return $data;
     }
@@ -187,12 +172,6 @@ class TopicController extends ApiController
         $meta = $this->getMetaDataForModel($topic);
 
         return $this->setStatusCode(200)->respond($topic, $meta);
-    }
-
-    public function showInCategory($categoryId,$topicId)
-    {
-        $topic = $this->getTopicModel($topicId);
-        return $this->setStatusCode(200)->respond($topic);
     }
 
     /**

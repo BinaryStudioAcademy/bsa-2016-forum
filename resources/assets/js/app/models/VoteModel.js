@@ -12,13 +12,14 @@ module.exports = BaseModel.extend({
         if (!attrs.title || attrs.title.trim().length == 0)
             errors['title'] = 'Title field is required';
         if (!_.isEmpty(attrs.finished_at) && DateHelper.getDateTimeDiff(attrs.finished_at) > -this.minTime) {
-            errors['dateInPast'] = 'Perhabs, you typed date in the past. Also, minimum time for vote: ' + this.minTime + ' minutes.';
+            errors['finished_at'] = 'Perhaps, you typed date in the past. Also, minimum time for vote: ' + this.minTime + ' minutes.';
         }
 
         if (!_.isEmpty(errors))
             return errors;
     },
     defaults: {
+        description: '',
         is_saved: 0,
         is_public: true,
         is_single: true,

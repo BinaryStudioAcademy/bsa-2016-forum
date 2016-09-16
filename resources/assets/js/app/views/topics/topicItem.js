@@ -3,10 +3,10 @@ var Radio = require('backbone.radio');
 var Bookmark = require('../../models/BookmarkModel');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
-var $ = require('jquery');
 var logger = require('../../instances/logger');
 var _ = require('underscore');
-var SubscribeBehavior = require('../subscribeBehavior');
+var SubscribeBehavior = require('../../behaviors/subscribeBehavior');
+var BookmarkBehavior = require('../../behaviors/bookmarkBehavior');
 
 var TopicAddLikeModel = require('../../models/TopicAddLikeModel');
 var TopicRemoveLikeModel = require('../../models/TopicRemoveLikeModel');
@@ -22,10 +22,10 @@ module.exports = Marionette.ItemView.extend({
     },
 
     ui: {
-        bookmarkTopic: '.bookmark-btn',
-        subscribeNotification: '.subscribe-btn',
         addLikeTopic: '.fa-star-o',
-        removeLikeTopic: '.fa-star'
+        removeLikeTopic: '.fa-star',
+        bookmarkButton: '.bookmark-btn',
+        subscribeNotification: '.subscribe-btn'
     },
 
     events: {
@@ -36,28 +36,18 @@ module.exports = Marionette.ItemView.extend({
 
     modelEvents: { change: 'render' },
 
+
     behaviors: {
         SubscribeBehavior: {
             behaviorClass: SubscribeBehavior,
             parent_url: _.result(currentUser, 'url'),
             target_type: 'Topic'
+        },
+
+        BookmarkBehavior: {
+            behaviorClass: BookmarkBehavior,
+            target_type: 'Topic'
         }
-    },
-
-    unlockButton: function () {
-        this.ui.bookmarkTopic.removeAttr('disabled');
-        this.ui.bookmarkTopic.addClass('text-info');
-        this.ui.bookmarkTopic.removeClass('text-muted');
-    },
-
-    lockButton: function () {
-        this.ui.bookmarkTopic.attr('disabled', 'disabled');
-        this.ui.bookmarkTopic.removeClass('text-info');
-        this.ui.bookmarkTopic.addClass('text-muted');
-    },
-
-    addOkIcon: function () {
-        this.ui.bookmarkTopic.append(' <i class="glyphicon glyphicon-ok bookmarked"></i>');
     },
 
     serializeData: function () {

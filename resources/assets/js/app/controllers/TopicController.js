@@ -8,7 +8,6 @@ var TopicCollection = require('../collections/topicCollection');
 var UserTopicCollection = require('../collections/userTopicCollection');
 var TopicCreate = require('../views/topics/topicCreate');
 var TopicModel = require('../models/TopicModel');
-var TopicCategoryModel = require('../models/TopicCategoryModel');
 var TopicDetailView = require('../views/topics/topicDetail');
 var Radio = require('backbone.radio');
 var NewTopicCommentView = require('../views/comments/TopicCommentNew');
@@ -49,13 +48,21 @@ module.exports = Marionette.Object.extend({
 
     create: function (categoryId) {
         var topicCategoryCollection = new TopicCategoryCollection();
-        topicCategoryCollection.fetch();
 
-        var topicModel = new TopicModel({category_id: categoryId});
+        var topicModel = new TopicModel();
         app.render(new TopicCreate({
             model: topicModel,
             collection: topicCategoryCollection
         }));
+
+        topicCategoryCollection.fetch({
+            success: function(collection){
+                var category = collection.findWhere({slug: categoryId})
+
+                if (category != undefined) {
+                    topicModel.set("category_id", category.get("id"));
+                }
+        }});
     },
 
     createCategory: function () {
