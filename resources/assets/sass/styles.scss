@@ -95,3 +95,14 @@ body {
 #nprogress .peg {
   box-shadow: 0 0 10px #ffa500, 0 0 5px #ffa500;
 }
+
+/* modal windows fix */
+.modal {
+  bottom: inherit;
+  padding-right: 0 !important;
+}
+
+body.modal-open {
+  overflow: inherit;
+  padding-right: 0 !important;
+}
