@@ -18,7 +18,8 @@ module.exports = Marionette.Object.extend({
         messageCollection.fetch();
         app.render(new MessageLayout({
             collection: messageCollection,
-            users: new UserCollection()
+            users: new UserCollection(),
+            currentUser: currentUser
         }));
     },
     show: function (id) {

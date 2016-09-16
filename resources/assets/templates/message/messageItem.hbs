@@ -1,20 +1,13 @@
 <div class="messages-user-item">
-    {{#if userFrom}}
-        <a href="#messages/user/{{userFrom.id}}">
+    <a href="#messages/user/{{user.id}}">
+    {{#if isUserFrom}}
         <div class="messages-msg-avatar hidden-xs">
             <!-- from msg avatar -->
             <img src="/images/user.png">
         </div>
-    {{else}}
-        <a href="#messages/user/{{userTo.id}}">
     {{/if}}
         <div class="messages-msg">
-            {{#if userFrom}}
-                <span class="from-to-user">{{userFrom.first_name}} {{userFrom.last_name}}</span>
-            {{else}}
-                <span class="from-to-user">{{userTo.first_name}} {{userTo.last_name}}</span>
-            {{/if}}
-
+            <span class="from-to-user">{{user.first_name}} {{user.last_name}}</span>
             <!-- if unread add class .unread -->
             <div class="messages-msg-body">
                 <div>
@@ -23,11 +16,11 @@
             </div>
             <i><span class="messageDate" realdate="{{updatedStaticDate}}">{{updatedDate}}</span></i>
         </div>
-    {{#if userTo}}
+    {{#unless isUserFrom}}
         <div class="messages-msg-avatar hidden-xs">
             <!-- to msg avatar -->
             <img src="/images/user.png">
         </div>
-    {{/if}}
+    {{/unless}}
     </a>
 </div>
