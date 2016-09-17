@@ -81,6 +81,10 @@ module.exports = Marionette.ItemView.extend({
 
     },
 
+    isChildsOpened: function () {
+        return this.getOption('commentLayout').childsVisible();
+    },
+
     showEditDeleteBtn: function (show) {
         this.ui.edit.toggle(show);
         this.ui.remove.toggle(show);
