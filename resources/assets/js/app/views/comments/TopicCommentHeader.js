@@ -3,6 +3,7 @@ var _ = require('underscore');
 var currentUser = require('../../initializers/currentUser');
 var logger = require('../../instances/logger');
 var Radio = require('backbone.radio');
+var dateHelper = require('../../helpers/dateHelper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentHeader',
@@ -81,6 +82,10 @@ module.exports = Marionette.ItemView.extend({
 
     },
 
+    isChildsOpened: function () {
+        return this.getOption('commentLayout').childsVisible();
+    },
+
     showEditDeleteBtn: function (show) {
         this.ui.edit.toggle(show);
         this.ui.remove.toggle(show);
@@ -114,8 +119,9 @@ module.exports = Marionette.ItemView.extend({
                 attachments: meta[id].attachments,
                 comments: meta[id].comments,
                 canReply: !this.model.isChildComment(),
-                canEditDelete: (currentUser.get('id') === meta[id].user.id) && !meta[id].comments,
-            }
+                canEditDelete: (currentUser.get('id') === meta[id].user.id) && !meta[id].comments
+            },
+            createdAt: dateHelper.fullDate(this.model.get('created_at'))
         };
     }
 });

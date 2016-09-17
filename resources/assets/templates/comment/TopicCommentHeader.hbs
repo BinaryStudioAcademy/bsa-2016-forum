@@ -9,7 +9,7 @@
     </div>
     <div class="topic-body">
         <div class="topic-msg">
-            <p>{{{ model.content_generated }}}</p>
+            {{{ model.content_generated }}}
         </div>
         <div class="attachments-container">
             {{#each meta.attachments}}
@@ -26,7 +26,7 @@
 </div>
 <div class="topic-control">
     <div class="topic-bar hidden-xs"></div>
-    <div class="topic-history">{{ model.created_at }}</div>
+    <div class="topic-history">{{ createdAt }}</div>
     <div class="topic-history">{{ meta.user.display_name }}</div>
     <div class="topic-history">Rating {{ model.rating }}</div>
     <div class="topic-control-btn">

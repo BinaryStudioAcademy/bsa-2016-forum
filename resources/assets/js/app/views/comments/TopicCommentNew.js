@@ -6,6 +6,7 @@ var currentUser = require('../../initializers/currentUser');
 var AttachmentModel = require('../../models/AttachmentModel');
 var App = require('../../instances/appInstance');
 var config = require('config');
+var markdownHelp = require('../../views/modalWindows/markdownHelp');
 
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentNew',
@@ -20,11 +21,14 @@ module.exports = Marionette.ItemView.extend({
     },
 
     ui: {
+        openMarkdownHelp: '.openMarkdownHelp',
         'submit': '#submit',
         'close': '.close',
         'errors': '.errors',
         'loader': '.loader',
-        'commentDlg': '#commentdlg'
+        'commentDlg': '#commentdlg',
+        'textField': '.text-field',
+        'dropzone': '.dropzone'
     },
 
     serializeData: function () {
@@ -49,6 +53,9 @@ module.exports = Marionette.ItemView.extend({
 
     events: {
         'click @ui.submit': 'submitComment',
+        'click @ui.openMarkdownHelp': function () {
+            App.renderModal(new markdownHelp());
+        },
     },
 
     showLoader: function (show) {
@@ -79,6 +86,18 @@ module.exports = Marionette.ItemView.extend({
 
         this.model.save(data, {
             success: function (model) {
+                // add comment to comment collection
+                if (view.getOption('commentCollection')) {
+                    view.getOption('commentCollection').add(model, { merge: true });
+                    if (view.getOption('parentCommentView') && !view._isEditComment) {
+                        view.getOption('parentCommentView').showChildCommentsButton(true);
+                        // hide edit/delete btns
+                        view.getOption('parentCommentView').showEditDeleteBtn(false);
+                        if (!view.getOption('parentCommentView').isChildsOpened()) {
+                            view.getOption('parentCommentView').ui.showChilds.trigger('click');
+                        }
+                    }
+                }
                 if (view._dropZone && view._dropZone.files.length) {
                     // start upload to server
                     view._dropZone.processQueue();
@@ -86,17 +105,6 @@ module.exports = Marionette.ItemView.extend({
 
                 if (view._deletedFiles.length) {
                     view.removeFilesFromServer();
-                }
-
-                // add comment to comment collection
-                if (view.getOption('commentCollection')) {
-                    view.getOption('commentCollection').add(model, { merge: true });
-                } else if (view.getOption('parentCommentView') && !view._isEditComment) {
-                    // if view hasnt child comments collection yet show childs btn
-                    view.getOption('parentCommentView').showChildCommentsButton(true);
-                    // hide edit/delete btns
-                    view.getOption('parentCommentView').showEditDeleteBtn(false);
-                    view.getOption('parentCommentView').ui.showChilds.trigger('click');
                 }
 
                 view.ui.commentDlg.modal('hide');
@@ -115,14 +123,14 @@ module.exports = Marionette.ItemView.extend({
     initDropZone: function () {
         var view = this;
         var attachModel = new AttachmentModel();
-        this._dropZone = new Dropzone(this.$('#drop')[0], {
+        this._dropZone = new Dropzone(this.ui.dropzone[0], {
             url: function(file) {
                 return App.getBaseUrl() + _.result(view.model, 'url') + _.result(attachModel, 'url');
             },
             method: 'post',
             // input file name, registered on server
             paramName: "f",
-            hiddenInputContainer: '#drop',
+            hiddenInputContainer: '.dropzone-container',
             autoProcessQueue : false,
             parallelUploads : config.parallelFileUploads,
             maxFilesize: config.maxFileSize,
@@ -144,6 +152,10 @@ module.exports = Marionette.ItemView.extend({
                 if (xhr.data) {
                     view._files.push(xhr.data);
                 }
+            },
+            complete: function (file) {
+                view.$('.dz-progress', file.previewElement).hide();
+                view.$('.dz-size', file.previewElement).hide();
             },
             removedfile: function (file) {
                 view.$(file.previewElement).remove();
@@ -237,6 +249,7 @@ module.exports = Marionette.ItemView.extend({
                 };
                 drop.emit("addedfile", mockFile);
                 drop.emit("thumbnail", mockFile, file.thumb);
+                drop.emit("complete", mockFile);
             });
         }
         this._dropZone.options.maxFiles = config.maxFiles - attachs.length;
@@ -244,9 +257,18 @@ module.exports = Marionette.ItemView.extend({
 
     onShow: function() {
         this.initDropZone();
-        this.ui.commentDlg.modal('show');
+
+        this.ui.commentDlg.on('shown.bs.modal', function () {
+            // show caret at the end oj textarea
+            var text = this.ui.textField.val();
+            this.ui.textField.focus().val('').val(text);
+        }.bind(this));
+
         this.ui.commentDlg.on('hidden.bs.modal', function (e) {
             this.remove();
         }.bind(this));
+
+        this.ui.commentDlg.modal('show');
+
     }
 });
