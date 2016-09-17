@@ -30,7 +30,7 @@ module.exports = Marionette.Object.extend({
     indexInCategory: function (catId) {
         var topicCollection = new TopicCollection();
         topicCollection.parentUrl = '/categories/' + catId;
-        topicCollection.fetch();
+        topicCollection.fetch({data: {page: 1}});
         var topicCategoryModel = new TopicCategoryModel({id:catId});
         topicCategoryModel.fetch();
         app.render(new topicLayout({
