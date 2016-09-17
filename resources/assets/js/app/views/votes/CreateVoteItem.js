@@ -54,6 +54,7 @@ module.exports = Marionette.ItemView.extend({
     },
 
     onRender: function() {
+        this.model.collection.trigger('checkLengthCollection');
         this.listenTo(Radio.channel('votesChannel'), 'updateVoteItemDeleteButton', function (hideRemoveButton) {
             this.ui.deleteButton.prop('disabled', hideRemoveButton);
         });

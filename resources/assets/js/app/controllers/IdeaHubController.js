@@ -93,7 +93,6 @@ module.exports = Marionette.Object.extend({
         
         view.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {
             col.add(new VoteAImodel());
-            col.trigger('checkLengthCollection');
         });
 
         app.render(view);
