@@ -158,7 +158,6 @@ class HTopicsTableSeeder extends Seeder
             $topic->description = $topicItem['desc'];
             $topic->generated_description = $topicItem['desc'];
             $tagsIds = [];
-            echo "test1\n";
             foreach ($topicItem['tags'] as $topicTag) {
                 if ($tag = Tag::where('name', $topicTag)->first()) {
                     $tagsIds[] = $tag;
@@ -167,7 +166,6 @@ class HTopicsTableSeeder extends Seeder
                     $tagsIds[] = $tag;
                 }
             }
-            echo "test2\n";
             $slug = str_slug($topicItem['name'], '-');
             $topic->slug = $slug;
             $topic->save();
