@@ -31,8 +31,6 @@ module.exports = Marionette.ItemView.extend({
     serializeData: function () {
         var tempmeta = this.model.getMeta();
         var id = this.model.get('id');
-        console.log(tempmeta[id].user);
-        console.log(tempmeta[id]);
         return {
             model: this.model.toJSON(),
             createdDate: dateHelper.fullDate(this.model.get('created_at')),

@@ -21,6 +21,7 @@ module.exports = Marionette.LayoutView.extend({
     },
     ui: {
         c_count: '.count',
+        t_count: '.count-total',
         newCommentButton: '.new-comment-notification',
         moreButton: '.vote-comments-more',
         voteCommit: '.commit-vote'
@@ -69,7 +70,13 @@ module.exports = Marionette.LayoutView.extend({
     initialize: function () {
         this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.options.voteModel.id, function (n) {
             this.ui.c_count.text(n);
-            console.log(n);
+        });
+
+        this.listenTo(Radio.channel('votesChannel'), 'setCommentsCountTotal' + this.options.voteModel.id, function (n) {
+            this.ui.t_count.text(n);
+        });
+        this.listenTo(Radio.channel('votesChannel'), 'setButton' + this.options.voteModel.id, function (n) {
+            if (!n) this.muteMoreButton(this.ui.moreButton);
         });
 
         socketCommentClient.bind('VoteComments', this.options.voteModel.id);
@@ -179,20 +186,13 @@ module.exports = Marionette.LayoutView.extend({
         this.ui.newCommentButton.hide();
     },
 
-
-    serializeData: function () {
-        return {
-            model: this.options.collection.toJSON(),
-            createdDate: dateHelper.fullDate(this.model.get('created_at')),
-        };
-    },
-
     onRender: function () {
         Radio.trigger('votesChannel', 'showAddCommentView', this);
 
         this.getRegion('comments').show(
             new CommentsCollectionView({
-                collection: this.options.collection
+                collection: this.options.collection,
+
             }));
 
         this.getRegion('voteheader').show(
