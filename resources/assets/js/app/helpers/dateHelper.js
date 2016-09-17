@@ -5,7 +5,7 @@ var _ = require('underscore');
 var dateHelper = {
     dateWithTimezone: function(date) {
         if (_.isEmpty(date)) return '';
-        return moment.utc(date).tz(config.timeZone).format('YYYY-MM-DD HH:mm:ss')
+        return moment.tz(config.timeZone).utc(date).format('YYYY-MM-DD HH:mm:ss')
     },
     
     dateToSave: function (date) {
