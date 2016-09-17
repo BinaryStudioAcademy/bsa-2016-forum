@@ -592,7 +592,7 @@ class CommentController extends ApiController
             $childComment->content_generated = MarkdownService::baseConvert($childComment->content_origin);
             $childComment->save();
             event(new VoteNewCommentEvent($vote, $childComment));
-            return $this->setStatusCode(201)->respond($childComment, ['1234', $childComment->id => $this->getItemMetaData($childComment)]);
+            return $this->setStatusCode(201)->respond($childComment, [$childComment->id => $this->getItemMetaData($childComment)]);
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
