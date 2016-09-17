@@ -49,7 +49,7 @@ class VotesRequest extends ApiRequest
                     'is_saved' => 'integer|between:0,1',
                     'users' => 'json',
                     'tags' => 'json|tags_validator',
-                    'slug' => 'regex:/(?!^\d+$)^.+$/|unique:categories,slug,' . $id,
+                    'slug' => 'regex:/(?!^\d+$)^.+$/|unique:votes,slug,' . $id,
                 ];
 
                 break;
