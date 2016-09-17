@@ -44,7 +44,7 @@ module.exports = Marionette.ItemView.extend({
                 numberOfUniqueViews: tempmeta[id].numberOfUniqueViews,
                 usersWhoSaw: tempmeta[id].usersWhoSaw,
                 isFinished: dateHelper.getDateTimeDiff(this.model.get('finished_at')) > 0,
-                finishedDate: dateHelper.middleDate(this.model.get('finished_at'))
+                finishedDate: dateHelper.dateToSave(this.model.get('finished_at'))
             }
         };
     }
