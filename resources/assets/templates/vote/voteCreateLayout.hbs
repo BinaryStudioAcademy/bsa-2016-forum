@@ -6,99 +6,92 @@
             </div>
             <!-- /widget-header -->
             <div class="widget-content">
-
-                <div class="vote-new-head">
-                    <div class="form-group">
-                        <label for="usr">Question:</label>
-                        <input type="text" class="form-control" id="question-title">
-                        <div class="js-errors js-error-title"></div>
+                <div class="form-padding">
+                    <div class="vote-new-head">
+                        <div class="form-group">
+                            <label for="question-title">Question:</label>
+                            <input type="text" class="form-control" id="question-title">
+                            <div class="js-errors js-error-title"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="question-slug">Sluggable Url:</label>
+                            <input type="text" class="form-control" id="question-slug">
+                            <div class="js-errors js-error-title"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="question-description">Description:</label>
+                            <textarea rows="5" class ="form-control description" id="question-description"></textarea>
+                            <a class="btn-link openMarkdownHelp">Open Markdown Help</a>&nbsp;
+                            <a class="btn-link">Attach</a>
+                            <div class="js-errors js-error-title"></div>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label>Sluggable Url:</label>
-                        <input type="text" class="form-control" id="question-slug">
-                        <div class="js-errors js-error-title"></div>
-                    </div>
-                    <div class="form-group">
-                        <label>Description:</label><br>
-                        <textarea rows="5" class ="form-control description" id="question-description"></textarea>
-                        <a class="openMarkdownHelp">Open Markdown Help </a>
-                        <div class="js-errors js-error-title"></div>
-                    </div>
-                </div>
-                <div class="vote-new-answers">
-                    <div class="form-group">
-                        <label for="usr">Answers:</label>
-                        <div id="vote-answers">
-
+                        <div id="vote-attachments">
+                            <!-- Attachments -->
                         </div>
 
                     </div>
-                    <div class="vote-new-addAnswer">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label for="vote-answers">Answers:</label>
+                            <div id="vote-answers"></div>
+                        </div>
+
                         <button type="button" class="btn btn-default" id="addAnswer">
-                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Answer
+                            <i class="fa fa-plus" aria-hidden="true"></i> Add Answer
                         </button>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="usr">Tags(Split them using spaces, no #):</label>
-                    <input type="text"  id="tags" class="form-control">
-                    <div class=" js-errors js-error-tags"></div>
-                </div>
-                <div class="form-group">
-                    <label>Select <span class="underscored">full time</span> when the vote will be finished or leave this field untouched.  </label>
-                    <input type="datetime-local" class="form-control" id="finished">
-                </div>
-                <div class="js-errors js-error-finished_at"></div>
-                <!--</div>-->
-                <div class="form-group">
-                    <label>Count of answers:</label>
-                    <div class="radio">
-                        <label><input type="radio" name="isSingle" value="1" checked>Single</label>
+                    <div class="form-group">
+                        <label for="usr">Tags(Split them using spaces, no #):</label>
+                        <input type="text"  id="tags" class="form-control">
+                        <div class=" js-errors js-error-tags"></div>
                     </div>
-                    <div class="radio">
-                        <label><input type="radio" name="isSingle" value="0">Multiple</label>
+                    <div class="form-group form-inline">
+                        <input type="datetime-local" class="form-control" id="finished">
+                        <label>Select <span class="underscored">full time</span> when the vote will be finished or leave this field untouched.  </label>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label>Access:</label>
-                    <div class="radio">
-                        <label><input type="radio" name="access" value="1" checked>Public</label>
-                    </div>
-                    <div class="radio">
-                        <label><input type="radio" name="access" value="0">Private</label>
-                    </div>
-                </div>
-                <div class="vote-new-attachment">
-                    <div id="vote-attachments">
-
-                        <!-- Attachments -->
-
-                    </div>
-                    <a>Attach</a>
-                </div>
-                <div class="vote-new-control">
-                    <!--<div class="vote-new-notification checkbox">-->
-                    <!--<label><input type="checkbox">Report me when someone leave a comment</label>-->
+                    <div class="js-errors js-error-finished_at"></div>
                     <!--</div>-->
-                    <div class="vote-new-submit">
-                        <button id="delete" type="button" class="btn btn-md btn-danger">Delete Vote</button>
-                        <button id="start" type="button" class="btn btn-md btn-success">Start Vote</button>
-                    </div>
-                </div>
-                <div class="vote-new-access">
-                    <div class="form-group well">
-                        <label for="usr">Accessed:</label>
-                        <div id="vote-access-users">
+                    <div class="form-group">
+                        <label>Count of answers:</label>
+                        <div class="radio">
+                            <label><input type="radio" name="isSingle" value="1" checked>Single</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="isSingle" value="0">Multiple</label>
                         </div>
                     </div>
-                    <div class="form-group well">
-                        <label for="usr">Not accessed:</label>
-                        <div id="vote-new-addUsers">
+                    <div class="form-group">
+                        <label>Access:</label>
+                        <div class="radio">
+                            <label><input type="radio" name="access" value="1" checked>Public</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="access" value="0">Private</label>
+                        </div>
+                    </div>
+                    <div class="form-group vote-new-access overflow-hidden">
+                        <div class="col-lg-6 col-md-6 col-xs-12">
+                            <label for="vote-access-users">Accessed:</label>
+                            <ul id="vote-access-users"></ul>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-xs-12">
+                            <label for="vote-new-addUsers">Not accessed:</label>
+                            <ul id="vote-new-addUsers"></ul>
+                        </div>
+                    </div>
+                    <div class="overflow-hidden">
+                        <!--<div class="vote-new-notification checkbox">-->
+                        <!--<label><input type="checkbox">Report me when someone leave a comment</label>-->
+                        <!--</div>-->
+                        <div class="pull-right">
+                            <button id="delete" type="button" class="btn btn-danger">Delete Vote</button>
+                            <button id="start" type="button" class="btn btn-success">Start Vote</button>
                         </div>
                     </div>
                 </div>
             </div>
-
             <!-- /widget-content -->
         </div>
     </div>
