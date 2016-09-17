@@ -22,14 +22,49 @@ module.exports = Marionette.LayoutView.extend({
     ui: {
         c_count: '.count',
         newCommentButton: '.new-comment-notification',
+        moreButton: '.vote-comments-more',
         voteCommit: '.commit-vote'
     },
 
     events: {
         'click @ui.newCommentButton': 'showNewComments',
+        'click @ui.moreButton': 'onClickVoteCommentsMore',
         'click @ui.voteCommit': 'saveVotingOption'
     },
 
+    _pageMore: 2,
+    _allItemsUploaded:false,
+
+    muteMoreButton: function () {
+        this.ui.moreButton.addClass('invisible');
+    },
+
+    onClickVoteCommentsMore: function(e) {
+        self = this;
+
+        if (this._allItemsUploaded) {
+            return;
+        }
+
+        this.collection.fetch({
+            remove: false,
+            data: {page: this._pageMore},
+            error: function (collection, response) {
+                console.log('error');
+                self._allItemsUploaded = true;
+                console.error(response.responseText);
+            },
+            success: function (collection, xhr) {
+                var meta = this.collection.getMeta();
+                if (meta.hasMorePages){
+                    this._pageMore++;
+                } else {
+                    this.muteMoreButton(this.ui.moreButton);
+                    return;
+                }
+            }.bind(this)
+        });
+    },
 
     initialize: function () {
         this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.options.voteModel.id, function (n) {
