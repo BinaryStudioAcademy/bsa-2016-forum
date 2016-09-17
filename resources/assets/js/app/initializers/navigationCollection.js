@@ -44,12 +44,11 @@ module.exports = new navigCollection([
         name: 'users',
         label: 'Users'
     },
-    // {
-    //     href: '#messages',
-    //     icon: '',
-    //     name: 'messages',
-    //     label: 'Messages'
-    // },
+    {href: '#messages',
+        icon: 'comments-o',
+        name: 'messages',
+        label: 'Messages'
+    },
     // {
     //     href: '#subscriptions',
     //     icon: '',
