@@ -26,12 +26,29 @@ module.exports = Marionette.LayoutView.extend({
         start: '#start',
         delete: '#delete',
         title: '#question-title',
-        slug: '#question-slug',
         description: '#question-description',
         errors: '.js-errors',
         toAccessed: '.js-to-accessed',
         toNotAccessed: '.js-to-not-accessed',
-        selectAccessedUsersBlock: '.vote-new-access'
+        selectAccessedUsersBlock: '.vote-new-access',
+        modal: '#noAnswersModal',
+        modalErrorField: '#modalErrorField'
+    },
+    initialize:function() {
+        this.collection.on('update', function (collection) {
+            if(collection.length < 3)
+            {
+                collection.each(function (model) {
+                    model.trigger('deletable', false);
+                });
+            } else {
+                collection.each(function (model) {
+                    model.trigger('deletable', true);
+                });
+            }
+        });
+
+        this.collection.trigger('update', this.collection);
     },
     modelEvents: {
         'change:id': function () {
@@ -45,6 +62,8 @@ module.exports = Marionette.LayoutView.extend({
                         vote_id: id
                     });
             });
+
+            this.ui.delete.toggleClass( 'hidden', !(this.model.get('user_id') == currentUser.id || currentUser.isAdmin()));
         },
         'change:is_public': function (model) {
             if (model.get('is_public') == '0' && (!model.get('user_id') || model.get('user_id') == currentUser.get('id')) || currentUser.get('role') == 'Admin') {
@@ -64,10 +83,6 @@ module.exports = Marionette.LayoutView.extend({
                 this.ui.selectAccessedUsersBlock.show();
             } else
                 this.ui.selectAccessedUsersBlock.hide();
-        },
-        'sync': function (model) {
-            var meta = model.getMetaById() || {deletable: false};
-            meta.deletable ? this.ui.delete.show() : this.ui.delete.hide();
         }
     },
     events: {
@@ -79,17 +94,28 @@ module.exports = Marionette.LayoutView.extend({
         },
         'click @ui.toNotAccessed': function () {
             this.moveUsers(this.getOption('accessedUsers'), this.getOption('users'));
-        'change @ui.slug': function () {
-            this.model.save({slug: this.ui.slug.val()});
-        },
-        'change @ui.description': function () {
-            this.saveModel({description: this.ui.description.val()});
         },
         'click @ui.start': function() {
-            if(this.model.get('user_id') == currentUser.id || currentUser.get('role') == 'Admin')
-                this.model.trigger('save');
+
+            var validAnswers = true;
+            this.collection.each(function (model) {
+                if (!model.isValid())
+                    validAnswers = false;
+            });
+
+            if (this.model.get('user_id') == currentUser.id || currentUser.isAdmin()) {
+
+                if (this.collection.length < 2) {
+                    this.model.save({is_saved: 0});
+                    this.ui.modal.modal('show');
+                } else if(validAnswers)
+                    this.model.trigger('save');
+                else
+                    this.model.isValid();
+            }
             else
-                Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
+                if(validAnswers)
+                    Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
         },
         'click @ui.delete': function () {
             this.model.destroy({
@@ -126,21 +152,7 @@ module.exports = Marionette.LayoutView.extend({
 
         from.remove(from.models);
 
-        if (view.ui.tags.val().trim().length > 0) {
-            var splitted = view.ui.tags.val().split(' ');
-            _.each(splitted, function (value, index) {
-                tags.push({name: value});
-            });
-        }
-        view.model.save({
-            users: JSON.stringify(users),
-            tags: JSON.stringify(tags),
-            is_saved: 1
-        }, {
-            success: function (data) {
-                Backbone.history.navigate('votes/' + data.get('slug'), {trigger: true});
-            }
-        });
+        to.add(models);
     },
     saveModel: function (obj) {
         if (this.model.get('id')) {

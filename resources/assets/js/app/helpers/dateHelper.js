@@ -8,8 +8,8 @@ var dateHelper = {
         return moment.utc(date).tz(config.timeZone).format('YYYY-MM-DD HH:mm:ss')
     },
     
-    dateToSave: function (date) {
-        if (_.isEmpty(date)) return '';
+    voteDateToSave: function (date) {
+        if (_.isEmpty(date) || date == '0000-00-00 00:00:00' || date == '') return null;
         return moment(date).tz(config.timeZone).utc().format('YYYY-MM-DD HH:mm:ss');
     },
 
@@ -20,7 +20,7 @@ var dateHelper = {
     
 
     getDateTimeDiff: function (date) {
-        if(_.isEmpty(date)) return true;
+        if(_.isEmpty(date)) return false;
         return (moment.utc().diff(moment.utc(date), 'minute'));
     },
 

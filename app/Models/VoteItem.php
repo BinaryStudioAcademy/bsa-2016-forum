@@ -63,14 +63,5 @@ class VoteItem extends Model
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    public function canBeDeleted()
-    {
-        return Auth::user()->isAdmin() || (Auth::user()->owns($this)  && !$this->comments()->exists() && $this->voteResults()->exists());
-    }
-
-    public function canBeEdited()
-    {
-        return Auth::user()->isAdmin() || (Auth::user()->owns($this)  && !$this->comments()->exists() && $this->voteResults()->exists());
-    }
 
 }

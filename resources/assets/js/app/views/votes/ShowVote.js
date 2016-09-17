@@ -32,16 +32,16 @@ module.exports = Marionette.LayoutView.extend({
 
 
     initialize: function () {
-        this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.options.voteModel.id, function (n) {
+        this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.model.id, function (n) {
             this.ui.c_count.text(n);
         });
 
-        socketCommentClient.bind('VoteComments', this.options.voteModel.id);
+        socketCommentClient.bind('VoteComments', this.model.id);
     },
 
     onBeforeDestroy: function () {
         this.stopListening();
-        socketCommentClient.unbind('VoteComments', this.options.voteModel.id);
+        socketCommentClient.unbind('VoteComments', this.model.id);
     },
 
     onShow: function () {
@@ -51,7 +51,7 @@ module.exports = Marionette.LayoutView.extend({
         this.collection.listenTo(Radio.channel('VoteComments'), 'newComment', function (comment) {
             self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
             var count = self.addedCommentsCollection.length + self.collection.length;
-            Radio.trigger('votesChannel', 'setCommentsCount' + self.options.voteModel.id, count);
+            Radio.trigger('votesChannel', 'setCommentsCount' + self.model.id, count);
 
             if (comment.user_id != currentUser.id) {
                 self.ui.newCommentButton.show(300);
@@ -71,7 +71,7 @@ module.exports = Marionette.LayoutView.extend({
         var self = this;
 
         if (!self.ui.voteCommit.hasClass('disabled')) {
-            if (this.options.voteModel.get('is_single') == 1) {
+            if (this.model.get('is_single') == 1) {
                 var voteOption = this.$('input[name=optionsRadios]:checked').val();
 
                 var voteOptionModel = this.createVoteOptionModel(voteOption, 1);
@@ -117,7 +117,7 @@ module.exports = Marionette.LayoutView.extend({
     createVoteOptionModel: function (voteOption, voteValue) {
         return new VoteRImodel({
             user_id: currentUser.get('id'),
-            vote_id: this.options.voteModel.get('id'),
+            vote_id: this.model.get('id'),
             vote_item_id: voteOption,
             vote_item_value: voteValue
         }, {parentUrl: this.options.collection.parentUrl});
@@ -150,11 +150,16 @@ module.exports = Marionette.LayoutView.extend({
             }));
 
         this.getRegion('voteheader').show(
-            new VoteHeader({model: this.options.voteModel})
+            new VoteHeader({model: this.model})
         );
 
         this.getRegion('answers').show(
             new VoteAnswersCollectionView({collection: this.options.answers})
         );
+    },
+    serializeData: function () {
+        return {
+            id: this.model.get('id')
+        }
     }
 });

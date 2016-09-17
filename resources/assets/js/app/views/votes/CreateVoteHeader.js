@@ -15,6 +15,7 @@ module.exports = Marionette.ItemView.extend({
         finished: '#finished',
         isSingle: 'input[name=isSingle]',
         description: '#question-description',
+        slug: '#question-slug'
     },
     modelEvents: {
         'change:title':'render',
@@ -43,11 +44,14 @@ module.exports = Marionette.ItemView.extend({
             this.saveModel({is_single: this.ui.isSingle.filter(':checked').val()});
         },
         'change @ui.finished': function () {
-            this.saveModel({finished_at: DateHelper.dateToSave(this.ui.finished.val())});
+            this.model.set({finished_at: DateHelper.voteDateToSave(this.ui.finished.val())}, {validate: true});
         },
         'change @ui.description': function () {
             this.saveModel({description: this.ui.description.val()});
         },
+        'change @ui.slug': function () {
+            this.saveModel({slug: this.ui.slug.val()});
+        }
     },
     serializeData: function () {
         var meta = this.model.getMetaById() || {
@@ -87,17 +91,18 @@ module.exports = Marionette.ItemView.extend({
                 tags.push({name: value});
             });
         }
-        if(view.model.get('finished_at') == '0000-00-00 00:00:00' || view.model.get('finished_at') == '')
-            view.model.set('finished_at', null);
 
         view.model.save({
             users: JSON.stringify(users),
             tags: JSON.stringify(tags),
-            is_saved: 1
+            is_saved: 1,
+            finished_at: DateHelper.voteDateToSave(this.ui.finished.val())
         }, {
             success: function (data) {
-                Backbone.history.navigate('votes/' + data.get('id'), {trigger: true});
+                Backbone.history.navigate('votes/' + data.get('slug'), {trigger: true});
             }
         });
+
+        console.log(view.model.validationError);
     }
 });

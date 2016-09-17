@@ -136,19 +136,6 @@ class Vote extends Model
         return $query->where('is_saved', 1);
     }
 
-    public function canBeEdited()
-    {
-        $user = Auth::user();
-
-        return $user->isAdmin() || $user->owns($this);
-    }
-    
-    public function canBeDeleted() {
-        $user = Auth::user();
-        
-        return $user->isAdmin() || $user->owns($this);
-    }
-
     public function subscribers()
     {
         return $this->morphToMany(User::class, Subscription::$name)->withTimestamps();

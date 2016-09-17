@@ -36,8 +36,10 @@ class VoteItemController extends ApiController
     private function getMetaDataForModel(VoteItem $item)
     {
         $data = [];
-        $data[$item->id]['deletable'] = $item->canBeDeleted();
-        $data[$item->id]['editable'] = $item->canBeEdited();
+        $data[$item->id] = [
+            'comments' => $item->comments()->count(),
+            'results' => $item->voteResults()->count()
+        ];
         return $data;
     }
 
@@ -46,9 +48,8 @@ class VoteItemController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($voteId)
+    public function index($vote)
     {
-        $vote = Vote::getSluggableModel($voteId);
         $voteItems = $vote->voteItems()->get();
         if (!$voteItems) {
             $this->setStatusCode(200)->respond();
@@ -65,9 +66,8 @@ class VoteItemController extends ApiController
      * @param VoteItemRequest|\Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store($voteId, VoteItemRequest $request)
+    public function store($vote, VoteItemRequest $request)
     {
-        $vote = Vote::getSluggableModel($voteId);
         $voteItem = new VoteItem($request->all());
         $user = User::findOrFail($request->user_id);
 
@@ -85,9 +85,8 @@ class VoteItemController extends ApiController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($voteId, $id)
+    public function show($vote, $id)
     {
-        $vote = Vote::getSluggableModel($voteId);
         $voteItem = $vote->voteItems()->where('id', $id)->first();
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
@@ -106,10 +105,8 @@ class VoteItemController extends ApiController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update($voteId, VoteItemRequest $request, $id)
+    public function update($vote, VoteItemRequest $request, $id)
     {
-
-        $vote = Vote::getSluggableModel($voteId);
         $voteItem = $vote->voteItems()->where('id', $id)->first();
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
@@ -129,9 +126,8 @@ class VoteItemController extends ApiController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($voteId, $id)
-    {
-        $vote = Vote::getSluggableModel($voteId);
+    public function destroy($vote, $id)
+    {;
         $voteItem = $vote->voteItems()->where('id', $id)->first();
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);

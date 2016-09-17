@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 var currentUser = require('../../initializers/currentUser');
+var Radio = require('backbone.radio');
 
 module.exports = Marionette.ItemView.extend({
     template: 'vote-create-input-voteitem',
@@ -13,7 +14,7 @@ module.exports = Marionette.ItemView.extend({
         'change @ui.name': function () {
             var name = this.ui.name.val();
             if (name.trim().length > 0)
-                this.model.set({name: name});
+                this.model.set({name: name}, {validate: true});
             if (this.model.get('vote_id') && this.model.hasChanged('name'))
                 this.model.save();
         },
@@ -27,11 +28,28 @@ module.exports = Marionette.ItemView.extend({
         'invalid': function (model, errors) {
             this.ui.error_name.html('<span>' + errors['name'] + '</span>');
         },
-        'sync': 'render'
+        'sync': 'render',
+        'valid': function () {
+            this.ui.error_name.empty();
+        },
+        'enter': function () {
+            var collection = this.model.collection;
+            var index = collection.indexOf(this.model);
+            if(collection.at(index + 1))
+                collection.at(index + 1).trigger('setFocus');
+            else
+                Radio.trigger('votesChannel', 'createEmptyVoteItem', this.model.collection);
+        },
+        'setFocus': 'setFocus',
+        'deletable': function (data) {
+            this._deletable = data;
+            this.render();
+        }
     },
     initialize: function () {
         var self = this;
         this.model.view = this;
+        this._deletable = this.model.collection.length > 2;
         this.model.set({user_id: currentUser.get('id')});
         if(this.getOption('parent').get('id'))
             this.model.set({vote_id: this.getOption('parent').get('id')});
@@ -40,17 +58,32 @@ module.exports = Marionette.ItemView.extend({
         });
     },
     serializeData: function () {
-        var meta = this.model.getMetaById() || {
-                deletable: false,
-                editable: false
-            };
+        
+        var meta = this.model.getMetaById() || {};
+        meta.deletable =
+                this._deletable && !this.model.get('id')
+                    ? this._deletable
+                    : this._deletable && meta.comments == 0 && meta.results == 0 && (currentUser.id == this.model.get('user_id') || currentUser.isAdmin());
+
+
+        meta.editable = !this.model.get('id')
+            ? true
+            : meta.comments == 0 && meta.results == 0 && (currentUser.id == this.model.get('user_id') || currentUser.isAdmin());
 
         return {
             model: this.model.toJSON(),
             meta: meta
         };
+    },
+    onRender: function () {
+        this.ui.name.keypress(function(e){
+            if(e.keyCode == 13){
+                this.model.trigger('enter', e);
+            }
+        }.bind(this));
+        this.setFocus();
+    },
+    setFocus: function () {
+        this.ui.name.focus();
     }
-    // remove: function () {
-    //     this.$el.fadeOut();
-    // }
 });

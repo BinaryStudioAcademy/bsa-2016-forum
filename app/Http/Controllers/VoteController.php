@@ -110,12 +110,6 @@ class VoteController extends ApiController
                 'numberOfUniqueViews' => $vote->voteUniqueViews()->count(),
                 'usersWhoSaw' => $usersWhoSaw
             ];
-
-        if ($access) {
-            $data[$vote->id]['deletable'] = $vote->canBeDeleted();
-            $data[$vote->id]['editable'] = $vote->canBeEdited();
-            $data[$vote->id]['accessedUsers'] = $vote->votePermissions()->get(['user_id']);
-        }
         return $data;
     }
 
@@ -137,7 +131,7 @@ class VoteController extends ApiController
         $vote->description_generated = MarkdownService::baseConvert($vote->description);
         $vote->save();
 
-        return $this->setStatusCode(201)->respond($vote, $this->getMetaDataForModel($vote, true));
+        return $this->setStatusCode(201)->respond($vote, $this->getMetaDataForModel($vote));
     }
 
     /**
@@ -184,7 +178,7 @@ class VoteController extends ApiController
             $voteUniqueView->save();
         }
 
-        $meta = $this->getMetaDataForModel($vote, true);
+        $meta = $this->getMetaDataForModel($vote);
 
         return $this->setStatusCode(200)->respond($vote, $meta);
     }
@@ -216,7 +210,7 @@ class VoteController extends ApiController
         $vote->description_generated = MarkdownService::baseConvert($vote->description);
         $vote->save();
 
-        return $this->setStatusCode(200)->respond($vote, $this->getMetaDataForModel($vote, true));
+        return $this->setStatusCode(200)->respond($vote, $this->getMetaDataForModel($vote));
     }
 
     /**
