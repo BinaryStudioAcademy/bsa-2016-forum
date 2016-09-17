@@ -42,7 +42,7 @@ module.exports = Marionette.ItemView.extend({
                 days_ago:tempmeta[id].days_ago,
                 hasMorePages:tempmeta.hasMorePages,
                 numberOfUniqueViews: tempmeta[id].numberOfUniqueViews,
-                usersWhoSaw: tempmeta[id].usersWhoSaw
+                usersWhoSaw: tempmeta[id].usersWhoSaw,
             }
         };
     }

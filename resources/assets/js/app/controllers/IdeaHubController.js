@@ -41,6 +41,8 @@ module.exports = Marionette.Object.extend({
         myCommentsCollection.fetch({
             success: function (data) {
                 Radio.trigger('votesChannel', 'setCommentsCount' + id, data.length);
+                Radio.trigger('votesChannel', 'setCommentsCountTotal' + id, data.getMeta().total);
+                Radio.trigger('votesChannel', 'setButton' + id, data.getMeta().hasMorePages);
             }
         });
 
@@ -50,6 +52,7 @@ module.exports = Marionette.Object.extend({
             model = new VoteModel({id: id});
             model.fetch();
         }
+
         view = new ShowVote({
             voteModel: model,
             collection: myCommentsCollection,
