@@ -6,9 +6,11 @@ VOTE DETAIL
   resize: none;
 }
 .vote {
-  padding: 25px 15px 15px 0;
+  padding: 25px 15px 15px 5px;
   background-color: #fff;
   display: flex;
+  overflow: auto;
+  word-wrap: break-word;
 }
 
 .vote-bar {
@@ -21,6 +23,7 @@ VOTE DETAIL
   /* width: calc(100% - 80px); */
   display: inline-block;
   width: 100%;
+  overflow: inherit;
 }
 
 .vote-header h3 {
@@ -126,7 +129,9 @@ VOTE INDEX
 */
 
 .votes {
-
+  width: 100%;
+  word-wrap: break-word;
+  overflow: auto;
 }
 
 .votes a:hover {
@@ -182,6 +187,7 @@ VOTE INDEX
 .votes-item-body {
   width: 100%;
   display: inline-block;
+  overflow: auto;
 }
 
 .votes-item-title {
