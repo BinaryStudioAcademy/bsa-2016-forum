@@ -95,6 +95,7 @@ module.exports = Marionette.LayoutView.extend({
         this.collection.listenTo(Radio.channel('VoteComments'), 'newComment', function (comment) {
 
             self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
+            self.collection.pop();
 
             var count = self.addedCommentsCollection.length + self.collection.length;
             var countTotal = self.addedCommentsCollection.length + self.collection.getMeta().total;
