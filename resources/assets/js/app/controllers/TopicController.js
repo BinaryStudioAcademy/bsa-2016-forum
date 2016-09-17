@@ -4,6 +4,7 @@ var app = require('../instances/appInstance');
 var topicLayout = require('../views/topics/topicLayout');
 var topicCategoryLayout = require('../views/topics/topicCategoryLayout');
 var TopicCategoryCollection = require('../collections/topicCategoryCollection');
+var TopicCategoryModel = require('../models/TopicCategoryModel');
 var TopicCollection = require('../collections/topicCollection');
 var UserTopicCollection = require('../collections/userTopicCollection');
 var TopicCreate = require('../views/topics/topicCreate');
