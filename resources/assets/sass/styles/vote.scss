@@ -410,14 +410,14 @@ VOTE INDEX
   color: indianred;
 }
 
-.create-vote-users-item-msg span {
+.create-vote-users-item-msg button {
   display: none;
 }
 
-.create-vote-users-item:hover > .create-vote-users-item-msg span {
+.create-vote-users-item:hover > .create-vote-users-item-msg button {
   display: inline-block;
   float: right;
-  margin: 15px 15px;
+  margin: 10px 10px;
 }
 
 .create-vote-users-item > *:hover {
@@ -446,6 +446,7 @@ VOTE INDEX
 
 .delete-button {
   position: absolute;
+  height: 34px;
   //float:right;
   top:0;
   right:0;
