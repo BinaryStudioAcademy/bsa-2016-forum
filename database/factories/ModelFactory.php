@@ -23,16 +23,16 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Models\Topic::class, function (Faker\Generator $faker) {
-    $name = $faker->unique()->sentence;
-    $slug = str_slug($name, '-');
+//    $name = $faker->unique()->sentence;
+//    $slug = str_slug($name, '-');
 
     return [
-        'reviewed_number' => $faker->numberBetween(0, 1000),
-        'name' => $name,
-        'description' => $faker->sentence,
-        'generated_description' => $faker->text,
-        'rating' => $faker->numberBetween(0, 1000),
-        'slug' => $slug,
+        'reviewed_number' => $faker->numberBetween(0, 50),
+//        'name' => $name,
+//        'description' => $faker->sentence,
+//        'generated_description' => $faker->text,
+        'rating' => $faker->numberBetween(0, 100),
+//        'slug' => $slug,
     ];
 });
 
