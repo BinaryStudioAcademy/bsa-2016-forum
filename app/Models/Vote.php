@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\SluggableModel;
 
 
 class Vote extends Model
@@ -14,8 +15,9 @@ class Vote extends Model
     public static $morphTag = 'Vote';
     protected $morphClass = 'Vote';
     use SoftDeletes;
+    use SluggableModel;
 
-    protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at', 'is_saved', 'description', 'description_generated'];
+    protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at', 'is_saved', 'description', 'description_generated', 'slug'];
 
     protected $dates = ['deleted_at'];
 

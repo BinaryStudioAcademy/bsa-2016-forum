@@ -25,6 +25,9 @@ module.exports = BaseModel.extend({
         is_single: true,
         finished_at: null
     },
+    vote_slug : function () {
+        return (this.get("slug") && this.get("slug") !== undefined) ? this.get("slug") : this.get("id");
+    },
     
     initialize: function() {
         this.bind('notFound', this.notFound)
