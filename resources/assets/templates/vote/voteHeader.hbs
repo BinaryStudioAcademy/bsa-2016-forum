@@ -1,35 +1,39 @@
 <!--<div class="vote-head">-->
-    <div class="vote-header">
-        <h3>{{ model.title }}  {{meta.status}}</h3>
-        <h5>Opened by: {{ meta.user.first_name }} {{ meta.user.last_name }}</h5>
-        <span>
-            {{#if meta.isFinished}}
-                Vote finished {{ meta.finishedDate }}
-            {{else}}
-                Due date {{ meta.finishedDate }}
-            {{/if}}
-        </span>
-        <button class="btn btn-info text-info subscribe-btn">Subscribe</button>
-        <div>{{{ model.description_generated }}}</div>
-        <div class="vote-tags">
-            {{#each meta.tags}}
-                <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
-            {{/each}}
-        </div>
-        {{#if meta.showUsers}}
-            <div class="vote-users">
-                <span>{{ meta.numberOfUniqueViews }} users have seen this voting</span>
-                <button class="btn btn-default" data-toggle="collapse" data-target=".users-list">Show users</button>
-                <ul class="nav collapse users-list">
-                    {{#each meta.usersWhoSaw}}
-                        <li class="">
-                            <img src="/images/user.png" alt="">
-                            <span>{{ first_name }} {{ last_name }}</span>
-                        </li>
-                    {{/each}}
-                </ul>
-            </div>
-        {{/if}}
+<div class="vote-header">
+    <h3>{{ model.title }}  {{meta.status}}</h3>
+    <h5>Opened by: {{ meta.user.first_name }} {{ meta.user.last_name }}</h5>
+       <span>
+           {{#if model.finished_at}}
+               {{#if meta.isFinished}}
+                   <span>Finished at {{ meta.finishedDate}}</span>
+               {{else}}
+                   <span>in process <span class="dark-grey"> till {{meta.finishedDate}}</span></span>
+               {{/if}}
+           {{ else }}
+               <span class="green-text">in process</span>
+           {{/if}}
+       </span>
+    <button class="btn btn-info text-info subscribe-btn">Subscribe</button>
+    <div>{{{ model.description_generated }}}</div>
+    <div class="vote-tags">
+        {{#each meta.tags}}
+            <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
+        {{/each}}
     </div>
+    {{#if meta.showUsers}}
+        <div class="vote-users">
+            <span>{{ meta.numberOfUniqueViews }} users have seen this voting</span>
+            <button class="btn btn-default" data-toggle="collapse" data-target=".users-list">Show users</button>
+            <ul class="nav collapse users-list">
+                {{#each meta.usersWhoSaw}}
+                    <li class="">
+                        <img src="/images/user.png" alt="">
+                        <span>{{ first_name }} {{ last_name }}</span>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    {{/if}}
+</div>
 
 <!--</div>-->
