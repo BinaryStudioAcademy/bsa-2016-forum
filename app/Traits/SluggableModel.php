@@ -27,9 +27,25 @@ trait SluggableModel
     {
         return [
             'slug' => [
-                'source' => 'name'
+                'source' => 'sluggableurl'
             ]
         ];
+    }
+
+    public function getSluggableUrlAttribute() {
+        $id = (!empty($this->id)) ? $this->id : static::orderBy('id', 'desc')->first()->id + 1;
+
+        if (!empty($this->name)) {
+            $slugFrom = $this->name;
+        } else if (!empty($this->title)) {
+            $slugFrom = $this->title;
+        }
+
+        if (is_numeric($slugFrom) === false) {
+            return  $slugFrom;
+        }
+
+        return $slugFrom . ' ' . $id;
     }
 
     /**

@@ -22,7 +22,7 @@ class VoteItemController extends ApiController
      */
     public function index($voteId)
     {
-        $vote = Vote::findOrFail($voteId);
+        $vote = Vote::getSluggableModel($voteId);
         $voteItems = $vote->voteItems()->get();
         if (!$voteItems) {
             $this->setStatusCode(200)->respond();
@@ -41,7 +41,7 @@ class VoteItemController extends ApiController
      */
     public function store($voteId, VoteItemRequest $request)
     {
-        $vote = Vote::findOrFail($voteId);
+        $vote = Vote::getSluggableModel($voteId);
         $voteItem = new VoteItem($request->all());
         $user = User::findOrFail($request->user_id);
 
@@ -61,7 +61,7 @@ class VoteItemController extends ApiController
      */
     public function show($voteId, $id)
     {
-        $vote = Vote::findOrFail($voteId);
+        $vote = Vote::getSluggableModel($voteId);
         $voteItem = $vote->voteItems()->where('id', $id)->first();
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
@@ -83,7 +83,7 @@ class VoteItemController extends ApiController
     public function update($voteId, VoteItemRequest $request, $id)
     {
 
-        $vote = Vote::findOrFail($voteId);
+        $vote = Vote::getSluggableModel($voteId);
         $voteItem = $vote->voteItems()->where('id', $id)->first();
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
@@ -105,7 +105,7 @@ class VoteItemController extends ApiController
      */
     public function destroy($voteId, $id)
     {
-        $vote = Vote::findOrFail($voteId);
+        $vote = Vote::getSluggableModel($voteId);
         $voteItem = $vote->voteItems()->where('id', $id)->first();
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
