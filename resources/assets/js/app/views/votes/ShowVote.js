@@ -69,9 +69,11 @@ module.exports = Marionette.LayoutView.extend({
     initialize: function () {
         this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.options.voteModel.id, function (n) {
             this.ui.c_count.text(n);
+            console.log(n);
         });
 
         socketCommentClient.bind('VoteComments', this.options.voteModel.id);
+
     },
 
     onBeforeDestroy: function () {
@@ -86,6 +88,7 @@ module.exports = Marionette.LayoutView.extend({
         this.collection.listenTo(Radio.channel('VoteComments'), 'newComment', function (comment) {
             self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
             var count = self.addedCommentsCollection.length + self.collection.length;
+
             Radio.trigger('votesChannel', 'setCommentsCount' + self.options.voteModel.id, count);
 
             if (comment.user_id != currentUser.id) {
@@ -176,6 +179,14 @@ module.exports = Marionette.LayoutView.extend({
         this.ui.newCommentButton.hide();
     },
 
+
+    serializeData: function () {
+        return {
+            model: this.options.collection.toJSON(),
+            createdDate: dateHelper.fullDate(this.model.get('created_at')),
+        };
+    },
+
     onRender: function () {
         Radio.trigger('votesChannel', 'showAddCommentView', this);
 
@@ -191,5 +202,6 @@ module.exports = Marionette.LayoutView.extend({
         this.getRegion('answers').show(
             new VoteAnswersCollectionView({collection: this.options.answers})
         );
-    }
+    },
+
 });
