@@ -25,10 +25,6 @@ module.exports = BaseModel.extend({
         is_single: true,
         finished_at: ''
     },
-
-    isFinished: function () {
-        return DateHelper.isTimePassed(this.finished_at);
-    },
     
     initialize: function() {
         this.bind('notFound', this.notFound)

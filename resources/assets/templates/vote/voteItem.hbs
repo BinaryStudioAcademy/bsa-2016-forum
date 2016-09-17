@@ -13,16 +13,17 @@
             <span>{{ meta.comments}} Comments</span>
             <span>{{ meta.likes }} likes</span>
             <span>{{ meta.numberOfUniqueViews }} unique views</span>
-            {{#if model.finished_at}}
-                {{#if model.isFinished}}
-                    <span>Finished at {{model.finished_at}}</span>
-                {{else}}
-                    <span>in process <span class="dark-grey"> till {{model.finished_at}}</span></span>
+            <span>
+                {{#if model.finished_at}}
+                    {{#if meta.isFinished}}
+                        <span>Finished at {{ meta.finishedDate}}</span>
+                    {{else}}
+                        <span>in process <span class="dark-grey"> till {{meta.finishedDate}}</span></span>
+                    {{/if}}
+                {{ else }}
+                    <span class="green-text">in process</span>
                 {{/if}}
-
-            {{else}}
-                <span class="green-text">in process</span>
-            {{/if}}
+            </span>
             <span>{{model.views}} Views</span>
         </div>
         <div class="votes-item-tags">

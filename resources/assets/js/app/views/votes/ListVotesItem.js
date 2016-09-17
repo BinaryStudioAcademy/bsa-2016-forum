@@ -42,7 +42,9 @@ module.exports = Marionette.ItemView.extend({
                 days_ago:tempmeta[id].days_ago,
                 hasMorePages:tempmeta.hasMorePages,
                 numberOfUniqueViews: tempmeta[id].numberOfUniqueViews,
-                usersWhoSaw: tempmeta[id].usersWhoSaw
+                usersWhoSaw: tempmeta[id].usersWhoSaw,
+                isFinished: dateHelper.getDateTimeDiff(this.model.get('finished_at')) > 0,
+                finishedDate: dateHelper.middleDate(this.model.get('finished_at'))
             }
         };
     }
