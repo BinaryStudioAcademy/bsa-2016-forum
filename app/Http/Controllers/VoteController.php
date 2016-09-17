@@ -82,7 +82,7 @@ class VoteController extends ApiController
         return $data;
     }
 
-    private function getMetaDataForModel(Vote $vote, $access = false)
+    private function getMetaDataForModel(Vote $vote)
     {
         $this->authorize('show', $vote);
 
