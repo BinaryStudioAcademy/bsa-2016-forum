@@ -44,7 +44,6 @@ class VoteController extends ApiController
             $votes = Vote::filterByQuery($this->searchStr)
                 ->filterByTags($this->tagIds)
                 ->filterByLimit($this->limit)->get();
-
         }
 
         $votes = $votes->filter(function ($vote) {
@@ -125,9 +124,11 @@ class VoteController extends ApiController
     public function store(VotesRequest $request)
     {
         $vote = Vote::create($request->all());
+
         if ($request->tags) {
             TagService::TagsHandler($vote, explode(',', $request->tags));
         }
+
         if ($vote->is_public) {
             $vote->votePermissions()->delete();
         } elseif ($request->users) {
@@ -136,6 +137,20 @@ class VoteController extends ApiController
         $vote->description_generated = MarkdownService::baseConvert($vote->description);
         $vote->save();
         return $this->setStatusCode(201)->respond($vote);
+    }
+
+    /**
+     * Subscribe selected users to new vote
+     * @param $vote
+     * @param $users
+     * @return boolean
+     */
+    protected function subscribeUsers($users, $vote)
+    {
+        if ($vote && $users) {
+            return $vote->subscribers()->sync($users);
+        }
+        return false;
     }
 
     /**
@@ -173,7 +188,7 @@ class VoteController extends ApiController
      */
     public function show($id)
     {
-        $vote = Vote::findOrFail($id);
+        $vote = Vote::getSluggableModel($id);
         $this->authorize('show', $vote);
         if (Auth::user()->id &&
             !$this->isUniqueViewExist($vote)
@@ -197,7 +212,7 @@ class VoteController extends ApiController
      */
     public function update(VotesRequest $request, $id)
     {
-        $vote = Vote::findOrFail($id);
+        $vote = Vote::getSluggableModel($id);
 
         $this->authorize('update', $vote);
         $vote->update($request->all());
@@ -207,6 +222,14 @@ class VoteController extends ApiController
             $vote->votePermissions()->forceDelete();
         } elseif ($request->users) {
             $this->VotePermissionsHandler($vote, $request->users);
+        }
+        if ($request->is_saved) {
+            $users = json_decode($request->users);
+            if ($users && count($users)) {
+                $this->subscribeUsers($users, $vote);
+            } else {
+                $this->subscribeUsers(User::all()->values('id'), $vote);
+            }
         }
         $vote->description_generated = MarkdownService::baseConvert($vote->description);
         $vote->save();
@@ -222,7 +245,7 @@ class VoteController extends ApiController
      */
     public function destroy($id)
     {
-        $vote = Vote::findOrFail($id);
+        $vote = Vote::getSluggableModel($id);
 
         $this->authorize('delete', $vote);
 
@@ -326,7 +349,7 @@ class VoteController extends ApiController
     public function createUserVoteResult($id, VoteResultRequest $request)
     {
         $model = null;
-        $vote = Vote::findOrFail($request->vote_id);
+        $vote = Vote::getSluggableModel($request->vote_id);
 
         $this->authorize('show', $vote);
 

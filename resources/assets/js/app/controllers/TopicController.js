@@ -8,6 +8,7 @@ var TopicCollection = require('../collections/topicCollection');
 var UserTopicCollection = require('../collections/userTopicCollection');
 var TopicCreate = require('../views/topics/topicCreate');
 var TopicModel = require('../models/TopicModel');
+var TopicCategoryModel = require('../models/TopicCategoryModel');
 var TopicDetailView = require('../views/topics/topicDetail');
 var Radio = require('backbone.radio');
 var NewTopicCommentView = require('../views/comments/TopicCommentNew');
@@ -17,7 +18,6 @@ var CommentsCollectionView = require('../views/comments/TopicCommentsCollection'
 var currentUser = require('../initializers/currentUser');
 var TopicCategoryCreate = require('../views/topics/topicCategoryCreate');
 var TagCollection = require('../collections/tagCollection');
-var TopicCategoryModel = require('../models/TopicCategoryModel');
 
 module.exports = Marionette.Object.extend({
 
@@ -31,7 +31,7 @@ module.exports = Marionette.Object.extend({
     indexInCategory: function (catId) {
         var topicCollection = new TopicCollection();
         topicCollection.parentUrl = '/categories/' + catId;
-        topicCollection.fetch();
+        topicCollection.fetch({data: {page: 1}});
         var topicCategoryModel = new TopicCategoryModel({id:catId});
         topicCategoryModel.fetch();
         app.render(new topicLayout({
@@ -111,16 +111,16 @@ module.exports = Marionette.Object.extend({
             view.getRegion('newComment').show(new NewTopicCommentView({
                 model: model,
                 commentCollection: commentCollection,
-                parentCommentView: parentView
+                parentCommentView: parentView._isTopicView ? null : parentView
             }));
         });
 
         view.listenTo(Radio.channel('comment'), 'showChildComments', function (commentItemView) {
-            var childs = new CommentsCollection();
+            var childs = commentItemView._childCommentsCollection;
             childs.parentUrl = _.result(commentItemView.model, 'getEntityUrl');
             childs.fetch();
             commentItemView._childUpload = true;
-            commentItemView._childCommentsCollection = childs;
+            //commentItemView._childCommentsCollection = childs;
             commentItemView.getRegion('childComments').show(new CommentsCollectionView({
                 collection: childs,
                 parentCommentView: commentItemView

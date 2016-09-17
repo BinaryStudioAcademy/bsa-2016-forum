@@ -7,6 +7,7 @@ var TopicHeaderView = require('./topicHeader');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'topicDetail',
+    _isTopicView: true,
 
 
     initialize: function () {
@@ -35,7 +36,8 @@ module.exports = Marionette.LayoutView.extend({
         }));
 
         this.getRegion('comments').show(new CommentsCollectionView({
-          collection: this.collection
+            collection: this.collection,
+            reorderOnSort: true
         }));
     }
 

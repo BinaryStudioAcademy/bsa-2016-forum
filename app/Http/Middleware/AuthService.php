@@ -17,6 +17,8 @@ class AuthService
     {
         $this->cookieName = config('authserver.cookieName');
         $this->secretKey = config('authserver.secretKey');
+        $this->urlAuth = config('authserver.urlAuthBase');
+
     }
     /**
      * Login User if APP_ENV = local for developing

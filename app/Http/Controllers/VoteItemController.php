@@ -20,9 +20,8 @@ class VoteItemController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($voteId)
+    public function index(Vote $vote)
     {
-        $vote = Vote::findOrFail($voteId);
         $voteItems = $vote->voteItems()->get();
         if (!$voteItems) {
             $this->setStatusCode(200)->respond();
@@ -39,9 +38,8 @@ class VoteItemController extends ApiController
      * @param VoteItemRequest|\Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store($voteId, VoteItemRequest $request)
+    public function store(Vote $vote, VoteItemRequest $request)
     {
-        $vote = Vote::findOrFail($voteId);
         $voteItem = new VoteItem($request->all());
         $user = User::findOrFail($request->user_id);
 
@@ -59,9 +57,8 @@ class VoteItemController extends ApiController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($voteId, $id)
+    public function show(Vote $vote, $id)
     {
-        $vote = Vote::findOrFail($voteId);
         $voteItem = $vote->voteItems()->where('id', $id)->first();
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
@@ -80,10 +77,8 @@ class VoteItemController extends ApiController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update($voteId, VoteItemRequest $request, $id)
+    public function update(Vote $vote, VoteItemRequest $request, $id)
     {
-
-        $vote = Vote::findOrFail($voteId);
         $voteItem = $vote->voteItems()->where('id', $id)->first();
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
@@ -103,9 +98,8 @@ class VoteItemController extends ApiController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($voteId, $id)
+    public function destroy(Vote $vote, $id)
     {
-        $vote = Vote::findOrFail($voteId);
         $voteItem = $vote->voteItems()->where('id', $id)->first();
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);

@@ -3,7 +3,8 @@ var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var moment = require('moment');
 var _ = require('underscore');
-
+var markdownHelp = require('../../views/modalWindows/markdownHelp');
+var app = require('../../instances/appInstance');
 var DateHelper = require('../../helpers/dateHelper.js');
 
 var currentUser = require('../../initializers/currentUser');
@@ -26,6 +27,7 @@ module.exports = Marionette.LayoutView.extend({
         start: '#start',
         delete: '#delete',
         title: '#question-title',
+        slug: '#question-slug',
         description: '#question-description',
         errors: '.js-errors',
         tags: '#tags',
@@ -34,7 +36,8 @@ module.exports = Marionette.LayoutView.extend({
         dateerrors: '.js-date-errors',
         isSingle: 'input[name=isSingle]',
         selectAccessedUsersBlock: '.vote-new-access',
-        tagsInput: '.tags'
+        tagsInput: '.tags',
+        openMarkdownHelp: '.openMarkdownHelp'
     },
     modelEvents: {
         'invalid': function (model, errors) {
@@ -60,12 +63,18 @@ module.exports = Marionette.LayoutView.extend({
         }
     },
     events: {
+        'click @ui.openMarkdownHelp': function () {
+            app.renderModal(new markdownHelp());
+        },
         'click @ui.add': function () {
             Radio.trigger('votesChannel', 'createEmptyVoteItem', this.collection);
         },
         'click @ui.start': 'createVote',
         'change @ui.title': function () {
             this.model.save({title: this.ui.title.val()});
+        },
+        'change @ui.slug': function () {
+            this.model.save({slug: this.ui.slug.val()});
         },
         'change @ui.description': function () {
             this.saveModel({description: this.ui.description.val()});
@@ -136,7 +145,7 @@ module.exports = Marionette.LayoutView.extend({
             is_saved: 1
         }, {
             success: function (data) {
-                Backbone.history.navigate('votes/' + data.get('id'), {trigger: true});
+                Backbone.history.navigate('votes/' + data.get('slug'), {trigger: true});
             }
         });
     }
