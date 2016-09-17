@@ -1,36 +1,49 @@
-<form class="topic-form">
-    <div class="topic-new-head">
-        <h4>Create New Thread</h4>
-    </div>
-    <div id="categories">
-        <div class="errors"></div>
-    </div>
-    <div class="topic-new-title">
-        <input type="text" placeholder="Enter Topic Title" name="name">
-        <div class="errors"></div>
-    </div>
-    <div class="topic-new-slug">
-        <input type="text" placeholder="Enter your Sluggable Url or leave it empty for autogeneration" name="slug">
-        <div class="errors"></div>
-    </div>
-    <div class="topic-new-body">
-        <textarea rows="10" name="description"></textarea>
-        <div class="errors"></div>
-        <div class="topic-new-attachment">
-            <a class="openMarkdownHelp">Open Markdown Help </a>
+<div class="row new-category">
+    <div class="span12">
+        <div class="widget widget-nopad">
+            <div class="widget-header"> <i class="fa fa-file"></i>
+                <h3>Create New Vote</h3>
+            </div>
+            <!-- /widget-header -->
+
+            <form class="topic-form">
+                <div class="topic-new-head">
+                    <h4>Create New Thread</h4>
+                </div>
+                <div id="categories">
+                    <div class="errors"></div>
+                </div>
+                <div class="topic-new-title">
+                    <input type="text" placeholder="Enter Topic Title" name="name">
+                    <div class="errors"></div>
+                </div>
+                <div class="topic-new-slug">
+                    <input type="text" placeholder="Enter your Sluggable Url or leave it empty for autogeneration" name="slug">
+                    <div class="errors"></div>
+                </div>
+                <div class="topic-new-body">
+                    <textarea rows="10" name="description"></textarea>
+                    <div class="errors"></div>
+                    <div class="topic-new-attachment">
+                        <a class="openMarkdownHelp">Open Markdown Help </a>
+                    </div>
+                    <div class="topic-new-attachment">
+                        <a> Attach</a>
+                    </div>
+                </div>
+                <div class="topic-new-control">
+                    <!--
+                    <div class="topic-new-notification checkbox">
+                        <label><input type="checkbox" name="report_me">Report me when someone post a reply</label>
+                    </div>
+                    -->
+                    <div class="topic-new-submit">
+                        <input type="submit" value="Start Thread">
+                    </div>
+                </div>
+            </form>
+
+            <!-- /widget-content -->
         </div>
-        <div class="topic-new-attachment">
-            <a> Attach</a>
-        </div>
     </div>
-    <div class="topic-new-control">
-        <!--
-        <div class="topic-new-notification checkbox">
-            <label><input type="checkbox" name="report_me">Report me when someone post a reply</label>
-        </div>
-        -->
-        <div class="topic-new-submit">
-            <input type="submit" value="Start Thread">
-        </div>
-    </div>
-</form>
+</div>
