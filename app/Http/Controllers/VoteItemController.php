@@ -20,7 +20,7 @@ class VoteItemController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($vote)
+    public function index(Vote $vote)
     {
         $voteItems = $vote->voteItems()->get();
         if (!$voteItems) {
@@ -38,7 +38,7 @@ class VoteItemController extends ApiController
      * @param VoteItemRequest|\Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store($vote, VoteItemRequest $request)
+    public function store(Vote $vote, VoteItemRequest $request)
     {
         $voteItem = new VoteItem($request->all());
         $user = User::findOrFail($request->user_id);
@@ -57,7 +57,7 @@ class VoteItemController extends ApiController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($vote, $id)
+    public function show(Vote $vote, $id)
     {
         $voteItem = $vote->voteItems()->where('id', $id)->first();
         if (!$voteItem) {
@@ -77,9 +77,8 @@ class VoteItemController extends ApiController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update($vote, VoteItemRequest $request, $id)
+    public function update(Vote $vote, VoteItemRequest $request, $id)
     {
-
         $voteItem = $vote->voteItems()->where('id', $id)->first();
         if (!$voteItem) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
@@ -99,7 +98,7 @@ class VoteItemController extends ApiController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($vote, $id)
+    public function destroy(Vote $vote, $id)
     {
         $voteItem = $vote->voteItems()->where('id', $id)->first();
         if (!$voteItem) {
