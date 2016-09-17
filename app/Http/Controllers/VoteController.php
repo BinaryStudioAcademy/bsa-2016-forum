@@ -130,10 +130,8 @@ class VoteController extends ApiController
 
         if ($vote->is_public) {
             $vote->votePermissions()->delete();
-            $this->subscribeUsers(User::all()->values('id'), $vote);
         } elseif ($request->users) {
             $this->VotePermissionsHandler($vote, $request->users);
-            $this->subscribeUsers(json_decode($request->users), $vote);
         }
         $vote->description_generated = MarkdownService::baseConvert($vote->description);
         $vote->save();
@@ -226,6 +224,14 @@ class VoteController extends ApiController
             $vote->votePermissions()->forceDelete();
         } elseif ($request->users) {
             $this->VotePermissionsHandler($vote, $request->users);
+        }
+        if ($request->is_saved) {
+            $users = json_decode($request->users);
+            if ($users && count($users)) {
+                $this->subscribeUsers($users, $vote);
+            } else {
+                $this->subscribeUsers(User::all()->values('id'), $vote);
+            }
         }
         $vote->description_generated = MarkdownService::baseConvert($vote->description);
         $vote->save();
