@@ -37,8 +37,11 @@ module.exports = Marionette.ItemView.extend({
             var index = collection.indexOf(this.model);
             if(collection.at(index + 1))
                 collection.at(index + 1).trigger('setFocus');
-            else
+            else {
                 Radio.trigger('votesChannel', 'createEmptyVoteItem', this.model.collection);
+                collection.at(collection.length - 1).trigger('setFocus');
+            }
+
         },
         'setFocus': 'setFocus',
         'deletable': function (data) {
@@ -63,12 +66,12 @@ module.exports = Marionette.ItemView.extend({
         meta.deletable =
                 this._deletable && !this.model.get('id')
                     ? this._deletable
-                    : this._deletable && meta.comments == 0 && meta.results == 0 && (currentUser.id == this.model.get('user_id') || currentUser.isAdmin());
+                    : (meta.comments == 0 && meta.results == 0 && (currentUser.id == this.model.get('user_id') || currentUser.isAdmin()));
 
 
         meta.editable = !this.model.get('id')
             ? true
-            : meta.comments == 0 && meta.results == 0 && (currentUser.id == this.model.get('user_id') || currentUser.isAdmin());
+            : (meta.comments == 0 && meta.results == 0 && (currentUser.id == this.model.get('user_id') || currentUser.isAdmin()));
 
         return {
             model: this.model.toJSON(),
@@ -81,7 +84,6 @@ module.exports = Marionette.ItemView.extend({
                 this.model.trigger('enter', e);
             }
         }.bind(this));
-        this.setFocus();
     },
     setFocus: function () {
         this.ui.name.focus();

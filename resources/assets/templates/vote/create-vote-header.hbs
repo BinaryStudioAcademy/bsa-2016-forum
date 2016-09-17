@@ -7,6 +7,7 @@
 <div class="form-group">
     <label>Description:</label><br>
     <textarea rows="5" class ="form-control description" id="question-description" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>{{model.description}}</textarea>
+    <a class="openMarkdownHelp">Open Markdown Help </a>
     <div class="js-errors js-error-description"></div>
 </div>
 

@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
+var app = require('../../instances/appInstance');
 var DateHelper = require('../../helpers/dateHelper');
 var _ = require('underscore');
 
@@ -15,7 +16,8 @@ module.exports = Marionette.ItemView.extend({
         finished: '#finished',
         isSingle: 'input[name=isSingle]',
         description: '#question-description',
-        slug: '#question-slug'
+        slug: '#question-slug',
+        openMarkdownHelp: '.openMarkdownHelp'
     },
     modelEvents: {
         'change:title':'render',
@@ -51,6 +53,9 @@ module.exports = Marionette.ItemView.extend({
         },
         'change @ui.slug': function () {
             this.saveModel({slug: this.ui.slug.val()});
+        },
+        'click @ui.openMarkdownHelp': function () {
+            app.renderModal(new markdownHelp());
         }
     },
     serializeData: function () {

@@ -19,11 +19,11 @@ class VoteItemPolicy
 
     public function delete(User $user, VoteItem $voteItem)
     {
-        return $user->owns($this)  && !$voteItem->comments()->exists() && !$voteItem->voteResults()->exists();
+        return $user->owns($voteItem)  && !$voteItem->comments()->exists() && !$voteItem->voteResults()->exists();
     }
 
     public function update(User $user, VoteItem $voteItem)
     {
-        return $user->owns($this)  && !$voteItem->comments()->exists() && !$voteItem->voteResults()->exists();
+        return $user->owns($voteItem)  && !$voteItem->comments()->exists() && !$voteItem->voteResults()->exists();
     }
 }

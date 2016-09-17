@@ -159,7 +159,7 @@ module.exports = Marionette.LayoutView.extend({
     },
     serializeData: function () {
         return {
-            id: this.model.get('id')
+            slug: this.model.vote_slug()
         }
     }
 });
