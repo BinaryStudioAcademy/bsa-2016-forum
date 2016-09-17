@@ -4,7 +4,6 @@ var SubscribeBehavior = require('../../behaviors/subscribeBehavior');
 var _ = require('underscore');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
-var userAvatarView = require('../users/userAvatar');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteItem',
@@ -46,12 +45,5 @@ module.exports = Marionette.ItemView.extend({
                 usersWhoSaw: tempmeta[id].usersWhoSaw,
             }
         };
-    },
-    onRender: function () {
-            new userAvatarView({
-                collection: this.options.vc
-            }
-        );
-
     }
 });

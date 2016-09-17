@@ -93,10 +93,14 @@ module.exports = Marionette.LayoutView.extend({
 
         var self = this;
         this.collection.listenTo(Radio.channel('VoteComments'), 'newComment', function (comment) {
+
             self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
+
             var count = self.addedCommentsCollection.length + self.collection.length;
+            var countTotal = self.addedCommentsCollection.length + self.collection.getMeta().total;
 
             Radio.trigger('votesChannel', 'setCommentsCount' + self.options.voteModel.id, count);
+            Radio.trigger('votesChannel', 'setCommentsCountTotal' + self.options.voteModel.id, countTotal);
 
             if (comment.user_id != currentUser.id) {
                 self.ui.newCommentButton.show(300);
