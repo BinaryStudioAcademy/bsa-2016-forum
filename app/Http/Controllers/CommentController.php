@@ -16,7 +16,7 @@ use App\Facades\MarkdownService;
 
 class CommentController extends ApiController
 {
-    const PAGINATE_COUNT = 3;
+    const PAGINATE_COUNT = 15;
 
     private function getItemMetaData($comment)
     {
