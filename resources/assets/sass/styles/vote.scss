@@ -37,6 +37,7 @@ VOTE DETAIL
 
 .vote-tags a {
   color: #333;
+  margin: 5px;
 }
 
 .vote-tags a span {
@@ -45,7 +46,7 @@ VOTE DETAIL
   font-size: 12px;
   padding: 2px;
   border-radius: 4px;
-  margin-right: 10px;
+  margin-right: 3px;
   display: inline-block;
 }
 
@@ -199,20 +200,6 @@ VOTE INDEX
 .votes-item-title span {
   font-weight: 600;
   font-size: 16px;
-}
-
-.votes-item-tags span {
-  background: #ffec96;
-  border: #ffc761 1px solid;
-  font-size: 12px;
-  padding: 2px;
-  border-radius: 4px;
-  margin-right: 10px;
-  margin-top: 10px;
-  display: inline-block;
-}
-.votes-item-tags {
-  color: #333;
 }
 
 .votes-item-details a {
