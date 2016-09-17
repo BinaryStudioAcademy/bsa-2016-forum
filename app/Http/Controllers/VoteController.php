@@ -29,9 +29,6 @@ class VoteController extends ApiController
      */
     public function index(Request $request)
     {
-        $users = collect(json_decode("[1,2]"));
-        dd($users->values('id'));
-
         $this->setFiltersParameters($request);
         $meta = [];
         if ($request->page) {
