@@ -9,6 +9,7 @@ var TopicCollection = require('../collections/topicCollection');
 var UserTopicCollection = require('../collections/userTopicCollection');
 var TopicCreate = require('../views/topics/topicCreate');
 var TopicModel = require('../models/TopicModel');
+var TopicCategoryModel = require('../models/TopicCategoryModel');
 var TopicDetailView = require('../views/topics/topicDetail');
 var Radio = require('backbone.radio');
 var NewTopicCommentView = require('../views/comments/TopicCommentNew');
