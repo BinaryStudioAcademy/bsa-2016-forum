@@ -104,16 +104,16 @@ module.exports = Marionette.Object.extend({
             view.getRegion('newComment').show(new NewTopicCommentView({
                 model: model,
                 commentCollection: commentCollection,
-                parentCommentView: parentView
+                parentCommentView: parentView._isTopicView ? null : parentView
             }));
         });
 
         view.listenTo(Radio.channel('comment'), 'showChildComments', function (commentItemView) {
-            var childs = new CommentsCollection();
+            var childs = commentItemView._childCommentsCollection;
             childs.parentUrl = _.result(commentItemView.model, 'getEntityUrl');
             childs.fetch();
             commentItemView._childUpload = true;
-            commentItemView._childCommentsCollection = childs;
+            //commentItemView._childCommentsCollection = childs;
             commentItemView.getRegion('childComments').show(new CommentsCollectionView({
                 collection: childs,
                 parentCommentView: commentItemView
