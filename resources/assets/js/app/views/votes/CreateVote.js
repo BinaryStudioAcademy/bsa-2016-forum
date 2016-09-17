@@ -25,6 +25,9 @@ module.exports = Marionette.LayoutView.extend({
         add: '#addAnswer',
         start: '#start',
         delete: '#delete',
+        title: '#question-title',
+        slug: '#question-slug',
+        description: '#question-description',
         errors: '.js-errors',
         toAccessed: '.js-to-accessed',
         toNotAccessed: '.js-to-not-accessed',
@@ -76,6 +79,11 @@ module.exports = Marionette.LayoutView.extend({
         },
         'click @ui.toNotAccessed': function () {
             this.moveUsers(this.getOption('accessedUsers'), this.getOption('users'));
+        'change @ui.slug': function () {
+            this.model.save({slug: this.ui.slug.val()});
+        },
+        'change @ui.description': function () {
+            this.saveModel({description: this.ui.description.val()});
         },
         'click @ui.start': function() {
             if(this.model.get('user_id') == currentUser.id || currentUser.get('role') == 'Admin')
@@ -118,6 +126,28 @@ module.exports = Marionette.LayoutView.extend({
 
         from.remove(from.models);
 
+        if (view.ui.tags.val().trim().length > 0) {
+            var splitted = view.ui.tags.val().split(' ');
+            _.each(splitted, function (value, index) {
+                tags.push({name: value});
+            });
+        }
+        view.model.save({
+            users: JSON.stringify(users),
+            tags: JSON.stringify(tags),
+            is_saved: 1
+        }, {
+            success: function (data) {
+                Backbone.history.navigate('votes/' + data.get('slug'), {trigger: true});
+            }
+        });
+    },
+    saveModel: function (obj) {
+        if (this.model.get('id')) {
+            this.model.save(obj);
+        } else {
+            this.model.set(obj);
+        }
         to.add(models);
     }
 });
