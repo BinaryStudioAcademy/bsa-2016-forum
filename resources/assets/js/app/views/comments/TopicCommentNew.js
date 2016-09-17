@@ -24,7 +24,8 @@ module.exports = Marionette.ItemView.extend({
         'close': '.close',
         'errors': '.errors',
         'loader': '.loader',
-        'commentDlg': '#commentdlg'
+        'commentDlg': '#commentdlg',
+        'textField': '.text-field'
     },
 
     serializeData: function () {
@@ -244,9 +245,18 @@ module.exports = Marionette.ItemView.extend({
 
     onShow: function() {
         this.initDropZone();
-        this.ui.commentDlg.modal('show');
+
+        this.ui.commentDlg.on('shown.bs.modal', function () {
+            // show caret at the end oj textarea
+            var text = this.ui.textField.val();
+            this.ui.textField.focus().val('').val(text);
+        }.bind(this));
+
         this.ui.commentDlg.on('hidden.bs.modal', function (e) {
             this.remove();
         }.bind(this));
+
+        this.ui.commentDlg.modal('show');
+
     }
 });
