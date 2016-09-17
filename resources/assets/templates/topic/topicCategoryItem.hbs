@@ -7,12 +7,17 @@
         (Total : {{meta.topicCount}} topics)
     </span>
     </a>
+    <div class="create-topic pull-right">
+        <a class="btn btn-warning btn-lg" href="#topic/create/{{ model.slug }}">
+            <i class="fa fa-file-o"></i>&nbsp;<span class="hidden-xs">Create topic</span>
+        </a>
+    </div>
     {{#if isAdmin}}
         <div class="edit-category pull-right">
             <a class="btn-link" href="#topicCategories/{{ model.slug }}/edit">
                 <i class="fa fa-edit" aria-hidden="true"></i>
                 <span class="hidden-xs">Edit category</span>
-            </a>
+            </a>&nbsp;
             <a class="btn-link delete-category-btn">
                 <i class="fa fa-trash" aria-hidden="true"></i>
                 <span class="hidden-xs">Delete category</span>
