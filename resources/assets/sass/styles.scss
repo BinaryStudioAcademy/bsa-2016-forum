@@ -1,7 +1,15 @@
 body {
   background: #f7f7f7;
 }
+.markdownHelp {
+  margin-left: auto;
+  margin-right: auto;
+  width: 500px;
+}
 
+.markdownHelp-z-index{
+  z-index: 9999;
+}
 .green-text {
   color: green !important;
 }
@@ -94,4 +102,8 @@ body {
 }
 #nprogress .peg {
   box-shadow: 0 0 10px #ffa500, 0 0 5px #ffa500;
+}
+.dz-image img {
+  max-height: 120px;
+  max-width: 120px;
 }

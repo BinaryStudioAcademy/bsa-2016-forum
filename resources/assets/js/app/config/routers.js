@@ -13,14 +13,13 @@ module.exports = {
             controller: new DashboardController(),
             appRoutes: {
                 '': 'index',
-                'dashboard': 'index',
+                'dashboard': 'index'
             },
             navigItemName: 'dashboard'
         },
         {
             controller: new TopicController(),
             appRoutes: {
-                '': 'indexCategories',
                 'topics': 'index',
                 'topics/:id': 'show',
                 'topic/create/:categoryId': 'create',

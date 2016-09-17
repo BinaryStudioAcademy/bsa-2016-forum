@@ -3,7 +3,8 @@ var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var moment = require('moment');
 var _ = require('underscore');
-
+var markdownHelp = require('../../views/modalWindows/markdownHelp');
+var app = require('../../instances/appInstance');
 var DateHelper = require('../../helpers/dateHelper.js');
 
 var currentUser = require('../../initializers/currentUser');
@@ -86,6 +87,9 @@ module.exports = Marionette.LayoutView.extend({
         }
     },
     events: {
+        'click @ui.openMarkdownHelp': function () {
+            app.renderModal(new markdownHelp());
+        },
         'click @ui.add': function () {
             Radio.trigger('votesChannel', 'createEmptyVoteItem', this.collection);
         },
