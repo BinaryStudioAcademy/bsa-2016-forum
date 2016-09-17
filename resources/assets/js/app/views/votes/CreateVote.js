@@ -13,7 +13,6 @@ var userCollectionView = require('../users/userCollection');
 
 
 module.exports = Marionette.LayoutView.extend({
-    className: 'well',
     template: 'voteCreateLayout',
     regions: {
         answers: '#vote-answers',
