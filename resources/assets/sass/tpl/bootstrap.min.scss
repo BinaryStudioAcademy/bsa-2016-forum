@@ -1713,10 +1713,10 @@ background-repeat:no-repeat;
 	-moz-transition: height 0.35s ease;
 	-ms-transition: height 0.35s ease;
 	-o-transition: height 0.35s ease;
-	transition: height 0.35s ease;
+	transition: display 0.35s ease;
 	position: relative;
 	overflow: hidden;
-	height: 0;
+	display: none;
 }
 .collapse.in {
 	height: auto;
