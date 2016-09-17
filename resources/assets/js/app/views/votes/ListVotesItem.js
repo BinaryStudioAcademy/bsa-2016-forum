@@ -8,7 +8,13 @@ var dateHelper = require('../../helpers/dateHelper');
 module.exports = Marionette.ItemView.extend({
     template: 'voteItem',
     tagName: 'li',
-
+    
+    attributes : function () {
+        return {
+            href: "#/votes/" + this.model.vote_slug()
+        }
+    },
+    
     ui: {
         subscribeNotification: '.subscribe-btn'
     },
