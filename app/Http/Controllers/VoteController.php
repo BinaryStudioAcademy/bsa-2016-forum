@@ -29,6 +29,9 @@ class VoteController extends ApiController
      */
     public function index(Request $request)
     {
+        $users = collect(json_decode("[1,2]"));
+        dd($users->values('id'));
+
         $this->setFiltersParameters($request);
         $meta = [];
         if ($request->page) {
@@ -123,15 +126,17 @@ class VoteController extends ApiController
     public function store(VotesRequest $request)
     {
         $vote = Vote::create($request->all());
+
         if ($request->tags) {
             TagService::TagsHandler($vote, $request->tags);
         }
+
         if ($vote->is_public) {
-            $this->subscribeUsers(User::all(), $vote);
             $vote->votePermissions()->delete();
+            $this->subscribeUsers(User::all()->values('id'), $vote);
         } elseif ($request->users) {
-            $this->subscribeUsers(collect(json_decode($request->users)), $vote);
             $this->VotePermissionsHandler($vote, $request->users);
+            $this->subscribeUsers(json_decode($request->users), $vote);
         }
         $vote->description_generated = MarkdownService::baseConvert($vote->description);
         $vote->save();
@@ -147,7 +152,7 @@ class VoteController extends ApiController
     protected function subscribeUsers($users, $vote)
     {
         if ($vote && $users) {
-            return $vote->subscribers()->sync($users->values('id'));
+            return $vote->subscribers()->sync($users);
         }
         return false;
     }
