@@ -60,6 +60,16 @@ module.exports = Marionette.LayoutView.extend({
             this.ui.errors.empty();
         }
     },
+    collectionEvents: {
+        'checkLengthCollection': function () {
+            var hideRemoveButton = true;
+            if (this.collection.size() > 2) {
+                hideRemoveButton = false;
+            }
+            Radio.trigger('votesChannel', 'updateVoteItemDeleteButton', hideRemoveButton);
+        }
+    },
+
     events: {
         'click @ui.openMarkdownHelp': function () {
             app.renderModal(new markdownHelp());
@@ -114,6 +124,8 @@ module.exports = Marionette.LayoutView.extend({
             collection: this.getOption('accessedUsers'),
             childView: require('./CreateVoteUserItemExtend')
         }));
+
+        this.collection.trigger('checkLengthCollection');
     },
     createVote: function () {
         var view = this;

@@ -1,5 +1,6 @@
 var Marionette = require('backbone.marionette');
 var currentUser = require('../../initializers/currentUser');
+var Radio = require('backbone.radio');
 
 module.exports = Marionette.ItemView.extend({
     template: 'vote-create-input-voteitem',
@@ -18,7 +19,9 @@ module.exports = Marionette.ItemView.extend({
                 this.model.save();
         },
         'click @ui.deleteButton': function () {
+            var collection = this.model.collection;
             this.model.destroy();
+            collection.trigger('checkLengthCollection');
         }
     },
     modelEvents: {
@@ -48,5 +51,16 @@ module.exports = Marionette.ItemView.extend({
     },
     remove: function () {
         this.$el.fadeOut();
+    },
+
+    onRender: function() {
+        this.model.collection.trigger('checkLengthCollection');
+        this.listenTo(Radio.channel('votesChannel'), 'updateVoteItemDeleteButton', function (hideRemoveButton) {
+            this.ui.deleteButton.prop('disabled', hideRemoveButton);
+        });
+    },
+
+    onBeforeDestroy: function() {
+        this.stopListening();
     }
 });
