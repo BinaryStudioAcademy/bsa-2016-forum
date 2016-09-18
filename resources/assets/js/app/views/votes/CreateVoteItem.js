@@ -66,7 +66,7 @@ module.exports = Marionette.ItemView.extend({
         meta.deletable =
                 this._deletable && !this.model.get('id')
                     ? this._deletable
-                    : (meta.comments == 0 && meta.results == 0 && (currentUser.id == this.model.get('user_id') || currentUser.isAdmin()));
+                    : (this._deletable && meta.comments == 0 && meta.results == 0 && (currentUser.id == this.model.get('user_id') || currentUser.isAdmin()));
 
 
         meta.editable = !this.model.get('id')

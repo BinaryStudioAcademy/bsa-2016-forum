@@ -56,7 +56,7 @@ module.exports = Marionette.LayoutView.extend({
             this.collection.parentUrl = '/votes/' + id;
 
             this.collection.each(function (model, index) {
-                if (!model.get('vote_id') || !model.get('id'))
+                if (!model.get('id') && model.get('name').trim().length > 0)
                     model.save({
                         vote_id: id
                     });
