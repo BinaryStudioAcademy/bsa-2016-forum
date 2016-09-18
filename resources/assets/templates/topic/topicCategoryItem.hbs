@@ -1,11 +1,8 @@
 <div class="widget-header">
+    <i class="fa fa-list"></i>&nbsp;
     <a href="#categories/{{ model.slug }}/topics">
-        <i class="fa fa-list"></i>&nbsp;
-        <h3>{{ model.name }}</h3>
-
-        <span class="topic-count">
-        (Total : {{meta.topicCount}} topics)
-    </span>
+        <h3>{{ model.name }}</h3>&nbsp;
+        <span class="topic-count">(Total : {{meta.topicCount}} topics)</span>
     </a>
     <div class="create-topic pull-right">
         <a class="btn btn-warning btn-lg" href="#topic/create/{{ model.slug }}">

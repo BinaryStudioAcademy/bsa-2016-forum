@@ -351,7 +351,7 @@ textarea {
 	position: relative;
 
 	height: 40px;
-	line-height: 40px;
+	line-height: 36px;
 
 	background: #f9f6f1;
 	background:-moz-linear-gradient(top, #f9f6f1 0%, #f2efea 100%); /* FF3.6+ */
@@ -374,11 +374,9 @@ textarea {
 .widget-header h3 {
 
 	position: relative;
-	top: 2px;
-	left: 10px;
 
 	display: inline-block;
-	margin-right: 3em;
+	margin-right: 1em;
 
 	font-size: 14px;
 	font-weight: 800;
