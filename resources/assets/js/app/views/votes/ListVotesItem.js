@@ -4,8 +4,10 @@ var SubscribeBehavior = require('../../behaviors/subscribeBehavior');
 var _ = require('underscore');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
+var UserAvatarView = require('../users/userAvatar');
 
-module.exports = Marionette.ItemView.extend({
+//module.exports = Marionette.ItemView.extend({
+module.exports = Marionette.LayoutView.extend({
     template: 'voteItem',
     tagName: 'a',
 
@@ -16,7 +18,12 @@ module.exports = Marionette.ItemView.extend({
     },
     
     ui: {
-        subscribeNotification: '.subscribe-btn'
+        subscribeNotification: '.subscribe-btn',
+        avatar : '.avatar'
+    },
+
+    regions: {
+        avatar: '@ui.avatar'
     },
 
     behaviors: {
@@ -45,5 +52,12 @@ module.exports = Marionette.ItemView.extend({
                 usersWhoSaw: tempmeta[id].usersWhoSaw
             }
         };
+    },
+
+    onRender: function(){
+        this.getRegion('avatar').show(new UserAvatarView({
+            model: this.model
+        }));
     }
+
 });
