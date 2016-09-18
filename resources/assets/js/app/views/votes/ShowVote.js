@@ -10,7 +10,6 @@ var socketCommentClient = require('../../initializers/socketCommentClient');
 var CommentsCollection = require('../../collections/commentCollection');
 var currentUser = require('../../initializers/currentUser');
 var VoteRImodel = require('../../models/VoteRImodel');
-var dateHelper = require('../../helpers/dateHelper');
 var VoteResultsCollectionView = require('./VoteResultsCollection');
 
 module.exports = Marionette.LayoutView.extend({
@@ -46,12 +45,10 @@ module.exports = Marionette.LayoutView.extend({
             self.getRegion('answers').show(
                 new VoteResultsCollectionView({
                     collection: this.options.answers,
-                    isPublic: this.options.voteModel.get('is_public')
+                    isPublic: self.model.get('is_public')
                 })
             );
         });
-
-        socketCommentClient.bind('VoteComments', this.options.voteModel.id);
     },
 
     onBeforeDestroy: function () {
