@@ -1,6 +1,5 @@
 <input type="text" class="form-control js-item-name"
        {{#ifCond meta.editable '==' false}}disabled{{/ifCond}} value="{{model.name}}">
-    <button class="btn btn-md btn-danger corner-button voteitem-delete
-    {{#ifCond meta.deletable '==' false}}hidden{{/ifCond}}"><span class="glyphicon glyphicon-remove-sign"></span></button>
+{{#ifCond meta.deletable '==' true}}<button class="btn btn-md btn-danger corner-button voteitem-delete"><span class="glyphicon glyphicon-remove-sign"></span></button>{{/ifCond}}
 
 <div class="js-errors js-error-field"></div>

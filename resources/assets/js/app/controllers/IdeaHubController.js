@@ -2,6 +2,7 @@ var app = require('../instances/appInstance');
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var currentUser = require('../initializers/currentUser');
+var _ = require('underscore');
 
 var VoteAImodel = require('../models/VoteAIModel');
 var VoteModel = require('../models/VoteModel');
@@ -130,6 +131,22 @@ module.exports = Marionette.Object.extend({
         view.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {
             var t = (new VoteAImodel());
             col.add(t);
+        });
+        
+        view.listenTo(Radio.channel('votesChannel'), 'loadAccessedUsers', function (parentView) {
+            var naUsers =  parentView.getOption('users');
+            var aUsers = parentView.getOption('accessedUsers');
+            naUsers.remove(naUsers.models);
+            aUsers.remove(aUsers.models);
+            if (model.get('id')) {
+                naUsers.fetch({
+                    success: function (response) {
+                        aUsers.add(response.remove(_.pluck(model._meta[model.get('id')].accessedUsers, 'user_id')));
+                    }
+                });
+            } else {
+                naUsers.fetch();
+            }
         });
 
         app.render(view);

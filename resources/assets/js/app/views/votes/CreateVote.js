@@ -2,7 +2,7 @@ var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var moment = require('moment');
-var _ = require('underscore');
+
 var markdownHelp = require('../../views/modalWindows/markdownHelp');
 
 var currentUser = require('../../initializers/currentUser');
@@ -34,19 +34,6 @@ module.exports = Marionette.LayoutView.extend({
         modalErrorField: '#modalErrorField'
     },
     initialize:function() {
-        this.collection.on('update', function (collection) {
-            if(collection.length < 3)
-            {
-                collection.each(function (model) {
-                    model.trigger('deletable', false);
-                });
-            } else {
-                collection.each(function (model) {
-                    model.trigger('deletable', true);
-                });
-            }
-        });
-
         this.collection.trigger('update', this.collection);
     },
     modelEvents: {
@@ -66,22 +53,18 @@ module.exports = Marionette.LayoutView.extend({
         },
         'change:is_public': function (model) {
             if (model.get('is_public') == 0 && (!model.get('user_id') || model.get('user_id') == currentUser.id) || currentUser.isAdmin()) {
-                var naUsers =  this.getOption('users');
-                var aUsers = this.getOption('accessedUsers');
-                naUsers.remove(naUsers.models);
-                aUsers.remove(aUsers.models);
-                if (model.get('id')) {
-                    naUsers.fetch({
-                        success: function (response) {
-                            aUsers.add(response.remove(_.pluck(model._meta[model.get('id')].accessedUsers, 'user_id')));
-                        }
-                    });
-                } else {
-                    naUsers.fetch();
-                }
+                Radio.trigger('votesChannel', 'loadAccessedUsers', this);
                 this.ui.selectAccessedUsersBlock.show();
-            } else
+            } else {
                 this.ui.selectAccessedUsersBlock.hide();
+            }
+        }
+    },
+    collectionEvents: {
+        'update': function (collection) {
+            collection.each(function (model) {
+                model.trigger('collectionUpdated', collection.size() > 2);
+            });
         }
     },
     events: {
@@ -98,8 +81,9 @@ module.exports = Marionette.LayoutView.extend({
 
             var validAnswers = true;
             this.collection.each(function (model) {
-                if (!model.isValid())
+                if (!model.isValid()) {
                     validAnswers = false;
+                }
             });
 
             if (this.model.get('user_id') == currentUser.id || currentUser.isAdmin()) {
@@ -109,12 +93,14 @@ module.exports = Marionette.LayoutView.extend({
                     this.ui.modal.modal('show');
                 } else if(validAnswers)
                     this.model.trigger('save');
-                else
+                else {
                     this.model.isValid();
+                }
+
             }
-            else
-                if(validAnswers)
-                    Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
+            else if(validAnswers) {
+                Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
+            }
         },
         'click @ui.delete': function () {
             this.model.destroy({

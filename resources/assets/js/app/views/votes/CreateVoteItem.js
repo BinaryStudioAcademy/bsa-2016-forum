@@ -22,7 +22,7 @@ module.exports = Marionette.ItemView.extend({
             e.stopPropagation();
             e.preventDefault();
             this.model.destroy();
-        },
+        }
     },
     modelEvents: {
         'invalid': function (model, errors) {
@@ -44,9 +44,12 @@ module.exports = Marionette.ItemView.extend({
 
         },
         'setFocus': 'setFocus',
-        'deletable': function (data) {
-            this._deletable = data;
-            this.render();
+        'collectionUpdated': function (moreThanTwoAnswers) {
+            if(this._deletable != moreThanTwoAnswers)
+            {
+                this._deletable = moreThanTwoAnswers;
+                this.render();
+            }
         }
     },
     initialize: function () {
@@ -63,10 +66,9 @@ module.exports = Marionette.ItemView.extend({
     serializeData: function () {
         
         var meta = this.model.getMetaById() || {};
-        meta.deletable =
-                this._deletable && !this.model.get('id')
-                    ? this._deletable
-                    : (this._deletable && meta.comments == 0 && meta.results == 0 && (currentUser.id == this.model.get('user_id') || currentUser.isAdmin()));
+        meta.deletable = this._deletable && !this.model.get('id')
+            ? this._deletable
+            : (this._deletable && meta.comments == 0 && meta.results == 0 && (currentUser.id == this.model.get('user_id') || currentUser.isAdmin()));
 
 
         meta.editable = !this.model.get('id')
