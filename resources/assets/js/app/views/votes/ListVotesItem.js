@@ -28,24 +28,11 @@ module.exports = Marionette.ItemView.extend({
     },
 
     serializeData: function () {
-        var tempmeta = this.model.getMeta();
-        var id = this.model.get('id');
+        var meta = this.model.getMetaById() || {};
         return {
             model: this.model.toJSON(),
             createdDate: dateHelper.fullDate(this.model.get('created_at')),
-            meta: {
-                user: tempmeta[id].user,
-                likes: tempmeta[id].likes,
-                comments: tempmeta[id].comments,
-                tags: tempmeta[id].tags,
-                status: tempmeta[id].status,
-                days_ago:tempmeta[id].days_ago,
-                hasMorePages:tempmeta.hasMorePages,
-                numberOfUniqueViews: tempmeta[id].numberOfUniqueViews,
-                usersWhoSaw: tempmeta[id].usersWhoSaw,
-                isFinished: dateHelper.getDateTimeDiff(this.model.get('finished_at')) > 0,
-                finishedDate: dateHelper.dateToSave(this.model.get('finished_at'))
-            }
+            meta: meta
         };
     }
 });

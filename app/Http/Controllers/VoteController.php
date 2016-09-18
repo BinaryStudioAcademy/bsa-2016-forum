@@ -43,7 +43,6 @@ class VoteController extends ApiController
             $votes = Vote::filterByQuery($this->searchStr)
                 ->filterByTags($this->tagIds)
                 ->filterByLimit($this->limit)->get();
-
         }
 
         $votes = $votes->filter(function ($vote) {
@@ -83,7 +82,7 @@ class VoteController extends ApiController
         return $data;
     }
 
-    private function getMetaDataForModel(Vote $vote)
+    private function getMetaDataForModel(Vote $vote, $access = false)
     {
         $this->authorize('show', $vote);
 
@@ -111,9 +110,10 @@ class VoteController extends ApiController
                 'usersWhoSaw' => $usersWhoSaw
             ];
 
-        if (!$vote->is_saved && $vote->canBeEdited()) {
-            $data[$vote->id]['status'] = ' (Not saved)';
+        if ($access) {
+            $data[$vote->id]['accessedUsers'] = $vote->votePermissions()->get(['user_id']);
         }
+
         return $data;
     }
 
@@ -124,9 +124,11 @@ class VoteController extends ApiController
     public function store(VotesRequest $request)
     {
         $vote = Vote::create($request->all());
+
         if ($request->tags) {
             TagService::TagsHandler($vote, $request->tags);
         }
+
         if ($vote->is_public) {
             $vote->votePermissions()->delete();
         } elseif ($request->users) {
@@ -134,7 +136,22 @@ class VoteController extends ApiController
         }
         $vote->description_generated = MarkdownService::baseConvert($vote->description);
         $vote->save();
-        return $this->setStatusCode(201)->respond($vote);
+
+        return $this->setStatusCode(201)->respond($vote, $this->getMetaDataForModel($vote, true));
+    }
+
+    /**
+     * Subscribe selected users to new vote
+     * @param $vote
+     * @param $users
+     * @return boolean
+     */
+    protected function subscribeUsers($users, $vote)
+    {
+        if ($vote && $users) {
+            return $vote->subscribers()->sync($users);
+        }
+        return false;
     }
 
     /**
@@ -181,7 +198,7 @@ class VoteController extends ApiController
             $voteUniqueView->save();
         }
 
-        $meta = $this->getMetaDataForModel($vote);
+        $meta = $this->getMetaDataForModel($vote, true);
 
         return $this->setStatusCode(200)->respond($vote, $meta);
     }
@@ -206,13 +223,22 @@ class VoteController extends ApiController
         TagService::TagsHandler($vote, $request->tags);
 
         if ($vote->is_public) {
-            $vote->votePermissions()->forceDelete();
+            $vote->votePermissions()->delete();
         } elseif ($request->users) {
             $this->VotePermissionsHandler($vote, $request->users);
         }
+        if ($request->is_saved) {
+            $users = json_decode($request->users);
+            if ($users && count($users)) {
+                $this->subscribeUsers($users, $vote);
+            } else {
+                $this->subscribeUsers(User::all()->values('id'), $vote);
+            }
+        }
         $vote->description_generated = MarkdownService::baseConvert($vote->description);
         $vote->save();
-        return $this->setStatusCode(200)->respond($vote);
+
+        return $this->setStatusCode(200)->respond($vote, $this->getMetaDataForModel($vote, true));
     }
 
     /**
