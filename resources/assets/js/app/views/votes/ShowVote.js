@@ -15,7 +15,7 @@ var VoteResultsCollectionView = require('./VoteResultsCollection');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'voteDetail',
-    _isFinished: false,
+
     regions: {
         comments: '#comments',
         addcomment: '#add-comment',
@@ -45,12 +45,19 @@ module.exports = Marionette.LayoutView.extend({
             this.ui.c_count.text(n);
         });
 
+        var self = this;
+        // triggered after vote model fetched and if vote is finished
+        this.listenTo(Radio.channel('votesChannel'), 'showVoteResult', function () {
+            self.ui.voteCommit.hide();
+            self.getRegion('answers').show(
+                new VoteResultsCollectionView({
+                    collection: this.options.answers,
+                    isPublic: this.options.voteModel.get('is_public')
+                })
+            );
+        });
+
         socketCommentClient.bind('VoteComments', this.options.voteModel.id);
-
-        if (this.options.voteModel.get('finished_at')) {
-            this._isFinished = dateHelper.getDateTimeDiff(this.options.voteModel.get('finished_at')) > 0;
-        }
-
     },
 
     onBeforeDestroy: function () {
@@ -167,18 +174,8 @@ module.exports = Marionette.LayoutView.extend({
             new VoteHeader({model: this.options.voteModel})
         );
 
-        console.log(this.options.voteModel, this._isFinished);
-
-        if (this._isFinished) {
-            this.getRegion('answers').show(
-                new VoteResultsCollectionView({
-                    collection: this.options.answers,
-                })
-            );
-        } else {
-            this.getRegion('answers').show(
-                new VoteAnswersCollectionView({collection: this.options.answers})
-            );
-        }
+        this.getRegion('answers').show(
+            new VoteAnswersCollectionView({collection: this.options.answers})
+        );
     }
 });

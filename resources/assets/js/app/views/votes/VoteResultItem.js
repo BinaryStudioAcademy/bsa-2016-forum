@@ -15,8 +15,12 @@ module.exports = Marionette.ItemView.extend({
             model: this.model.toJSON(),
             meta: {
                 checked: tempmeta.checked[this.model.get('id')],
-                vote: tempmeta.vote
-            }
+                vote: tempmeta.vote,
+                users: tempmeta.users[this.model.get('id')]
+            },
+            isPublic: this.options.isPublic,
+            // percentage
+            votePercent: Math.floor(100 * tempmeta.users[this.model.get('id')].length / tempmeta.users.count)
         };
     },
 });
