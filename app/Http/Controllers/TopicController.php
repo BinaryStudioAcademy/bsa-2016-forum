@@ -207,6 +207,8 @@ class TopicController extends ApiController
             $topic->likes()->save($like);
         }
 
+        $like= $topic->likes()->where('user_id', Auth::user()->id)->where('likeable_id', $topic->id)->get()->first();
+
         return $this->setStatusCode(200)->respond($like);
     }
 
