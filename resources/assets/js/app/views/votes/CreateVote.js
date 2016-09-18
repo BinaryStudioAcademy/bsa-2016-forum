@@ -113,16 +113,6 @@ module.exports = Marionette.LayoutView.extend({
         }
     },
     onRender: function () {
-
-        this.ui.finished.datetimepicker({
-            startDate: new Date(),
-            todayBtn: true,
-            minuteStep: 5,
-            autoclose: true,
-            clearBtn: true,
-            todayHighlight:true
-        });
-
         var model = this.model;
         this.getRegion('voteHeader').show(new CreateVoteHeader({
             model: model,

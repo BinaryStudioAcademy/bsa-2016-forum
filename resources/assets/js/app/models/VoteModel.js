@@ -18,6 +18,8 @@ module.exports = BaseModel.extend({
         if (!_.isEmpty(errors))
         {
             return errors;
+        } else {
+            this.trigger('valid');
         }
 
     },

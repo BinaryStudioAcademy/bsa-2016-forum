@@ -13,7 +13,7 @@
 
 <div class="form-group">
     <label>Sluggable Url:</label>
-    <input type="text" class="form-control" id="question-slug" value="{{model.slug}}">
+    <input type="text" class="form-control" id="question-slug" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}} value="{{model.slug}}">
     <div class="js-errors js-error-slug"></div>
 </div>
 
@@ -25,7 +25,7 @@
 
 <div class="form-group">
     <label>Select <span class="underscored">full time</span> when the vote will be finished or leave this field untouched.  </label>
-    <input type="datetime-local" class="form-control" value="{{meta.finished_at}}" id="finished" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>
+    <input type="datetime" class="form-control" value="{{meta.finished_at}}" id="finished" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>
     <div class="js-errors js-error-finished_at"></div>
 </div>
 

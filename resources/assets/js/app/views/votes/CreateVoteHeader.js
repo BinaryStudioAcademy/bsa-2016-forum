@@ -33,6 +33,9 @@ module.exports = Marionette.ItemView.extend({
             this.$('.public-' + this.model.get('is_public')).prop('checked', true);
             this.$('.single-' + this.model.get('is_single')).prop('checked', true);
             this.ui.errors.empty();
+        },
+        'valid': function () {
+            this.ui.errors.empty();
         }
     },
     events: {
@@ -46,7 +49,7 @@ module.exports = Marionette.ItemView.extend({
             this.saveModel({is_single: this.ui.isSingle.filter(':checked').val()});
         },
         'change @ui.finished': function () {
-            this.model.set({finished_at: DateHelper.voteDateToSave(this.ui.finished.val())}, {validate: true});
+            this.saveModel({finished_at: DateHelper.voteDateToSave(this.ui.finished.val())}, {validate: true});
         },
         'change @ui.description': function () {
             this.saveModel({description: this.ui.description.val()});
@@ -60,16 +63,30 @@ module.exports = Marionette.ItemView.extend({
     },
     serializeData: function () {
         var meta = this.model.getMetaById() || {
-                editable: true,
-                deletable: true,
                 tags:''
             };
+
+        meta.deletable = !this.model.get('id') ? true :  this.model.get('user_id') == currentUser.id || currentUser.isAdmin();
+
+        meta.editable = !this.model.get('id') ? true :  this.model.get('user_id') == currentUser.id || currentUser.isAdmin();
+
         meta.tags = (_.pluck(meta.tags, 'name')).join(' ');
-        meta.finished_at = DateHelper.dateWithTimezoneInFormat(this.model.get('finished_at'));
+        meta.finished_at = DateHelper.dateWithTimezone(this.model.get('finished_at'));
         return {
             model: this.model.toJSON(),
             meta: meta
         };
+    },
+    onRender: function () {
+        this.ui.finished.datetimepicker({
+            startDate: new Date(),
+            todayBtn: true,
+            minuteStep: 5,
+            autoclose: true,
+            clearBtn: true,
+            todayHighlight:true
+        });
+
     },
     saveModel: function (obj) {
         if (this.model.get('id')) {
