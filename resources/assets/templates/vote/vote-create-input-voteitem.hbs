@@ -1,3 +1,5 @@
-<input type="text" class="form-control js-item-name limited-block-for-delete-button" value="{{model.name}}">
-<button class="btn btn-md btn-danger delete-button"><i class="fa fa-trash"></i></button>
+<input type="text" class="form-control js-item-name"
+       {{#ifCond meta.editable '==' false}}disabled{{/ifCond}} value="{{model.name}}">
+{{#ifCond meta.deletable '==' true}}<button class="btn btn-md btn-danger corner-button voteitem-delete"><i class="fa fa-trash"></i></button>{{/ifCond}}
+
 <div class="js-errors js-error-field"></div>

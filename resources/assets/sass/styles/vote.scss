@@ -432,15 +432,15 @@ VOTE INDEX
   text-decoration: underline;
 }
 
-.delete-button {
+.corner-button {
   position: absolute;
   height: 34px;
   //float:right;
   top:0;
-  right:0;
+  right:-40px;
 }
 
-.limited-block-for-delete-button {
+.limited-block-for-corner-button {
   width: calc(100% - 50px);
   display: block;
 }
@@ -460,6 +460,18 @@ VOTE INDEX
   text-decoration: none;
   cursor: pointer;
   float:right;
+}
+
+.not-saved {
+  color: #333;
+  font-style: italic;
+}
+
+.corner-button {
+  position: absolute;
+  //float:right;
+  top:0;
+  right:-50px;
 }
 
 /* -- new styles -- */

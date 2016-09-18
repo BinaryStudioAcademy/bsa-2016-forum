@@ -3,7 +3,10 @@
 </div>
 <div class="news-item-detail">
     <span>{{ meta.user.first_name}} {{ meta.user.last_name }}:</span>
-    <a href="#votes/{{ model.slug }}" class="news-item-title">{{ model.title }} {{meta.status}}</a>
+    <a href="#votes/{{ model.slug }}" class="news-item-title">
+        {{ model.title }}
+        {{#ifCond model.is_saved '==' 0}}<span class="not-saved">(not saved)</span>{{/ifCond}}
+    </a>
     <div class="vote-item-icons">
         <span><i class="fa fa-star"></i>&nbsp;{{ meta.likes }}</span>
         <span><i class="fa fa-commenting"></i>&nbsp;{{ meta.comments }}</span>
