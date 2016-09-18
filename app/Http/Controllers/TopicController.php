@@ -205,7 +205,7 @@ class TopicController extends ApiController
             $topic->likes()->save($like);
         }
 
-        return $this->setStatusCode(200)->respond($topic);
+        return $this->setStatusCode(200)->respond($like);
     }
 
     /**
@@ -226,7 +226,7 @@ class TopicController extends ApiController
 
         $like->delete();
 
-        return $this->setStatusCode(200)->respond($topic);
+        return $this->setStatusCode(204)->respond();
     }
 
     /**
