@@ -3,6 +3,7 @@ var Radio = require('backbone.radio');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'voteAnswerItem',
+    _isVoteItemView: true,
     initialize: function (options) {
         this.vote = this.model.getMeta().vote;
     },
@@ -21,7 +22,8 @@ module.exports = Marionette.LayoutView.extend({
         item: '.js-item-click',
         select: '.js-select',
         comments: '.js-show-answer-comments',
-        addComment: '.js-comment-vote-item'
+        addComment: '.js-comment-vote-item',
+        commentsCount: '.js-vote-item-comments-count'
     },
     regions: {
         comments: '.js-vote-item-comments'
@@ -44,6 +46,7 @@ module.exports = Marionette.LayoutView.extend({
         }.bind(this));
 
         this.model.url = '/voteitems/' + this.model.id;
-        this.model.commentsUrl = this.getOption('parent').model.getEntityUrl() + '/voteitems/' + this.model.id;
+        this.model.commentsUrl = '/votes/' + this.getOption('parent').model.vote_slug() + '/voteitems/' + this.model.id;
     }
+    
 });

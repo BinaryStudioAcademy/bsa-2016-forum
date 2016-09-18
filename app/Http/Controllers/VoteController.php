@@ -343,6 +343,11 @@ class VoteController extends ApiController
                 $item->checked = 1;
             }
         }
+
+        foreach($voteItems as $item) {
+            $meta[$item->id] = ['comments' => $item->comments()->count()];
+        }
+
         $meta['vote'] = $vote;
         return $this->setStatusCode(200)->respond($voteItems, $meta);
 

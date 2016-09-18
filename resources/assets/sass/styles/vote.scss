@@ -454,18 +454,6 @@ VOTE INDEX
   text-decoration: underline;
 }
 
-.corner-button {
-  position: absolute;
-  //float:right;
-  top:0;
-  right:-40px;
-}
-
-.limited-block-for-corner-button {
-  width: calc(100% - 50px);
-  display: block;
-}
-
 .relative {
   position: relative;
 }
@@ -488,9 +476,16 @@ VOTE INDEX
   font-style: italic;
 }
 
-.corner-button {
-  position: absolute;
-  //float:right;
-  top:0;
-  right:-50px;
+.js-item-click {
+  margin-bottom:10px;
+}
+
+.vote-item-comments-collapse {
+  max-height: 1000px;
+  overflow-x: scroll;
+}
+
+.widthbutton {
+  margin: 0 7px;
+  width: 100%;
 }

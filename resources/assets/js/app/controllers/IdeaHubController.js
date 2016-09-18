@@ -34,7 +34,6 @@ module.exports = Marionette.Object.extend({
     },
 
     showVote: function (slug) {
-        var AddCommentView = require('../views/votes/VoteCommentItemAdd');
         var view;
         var model;
         var parentUrl = '/votes/' + slug;
@@ -70,7 +69,7 @@ module.exports = Marionette.Object.extend({
                 view.getRegion('newComment').show(new NewVoteCommentView({
                     model: model,
                     commentCollection: commentCollection,
-                    parentCommentView: parentView
+                    parentCommentView: parentView._isVoteView || parentView._isVoteItemView ? null : parentView
                 }));
         });
 
@@ -79,7 +78,7 @@ module.exports = Marionette.Object.extend({
             childs.parentUrl = _.result(commentItemView.model, 'getEntityUrl');
             childs.fetch();
             commentItemView._childUpload = true;
-            commentItemView._childCommentsCollection = childs;
+            //commentItemView._childCommentsCollection = childs;
             commentItemView.getRegion('childComments').show(new CommentsCollectionView({
                 collection: childs,
                 parentCommentView: commentItemView
@@ -90,8 +89,12 @@ module.exports = Marionette.Object.extend({
             var myCommentsCollection = new CommentsCollection([], {parentUrl: parentView.model.commentsUrl});
             parentView.collection = myCommentsCollection;
             myCommentsCollection.fetch();
+            myCommentsCollection.on('update', function (collection) {
+                parentView.ui.commentsCount.text(collection.size());
+            });
             parentView.getRegion('comments').show(new CommentsCollectionView({
-                collection: myCommentsCollection
+                collection: myCommentsCollection,
+                parentCommentView: parentView
             }));
         });
 

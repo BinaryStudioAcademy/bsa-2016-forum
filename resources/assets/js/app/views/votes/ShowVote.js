@@ -13,6 +13,7 @@ var VoteRImodel = require('../../models/VoteRImodel');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'voteDetail',
+    _isVoteView: true,
     regions: {
         comments: '#comments',
         newComment: '#add-comment',
@@ -173,5 +174,9 @@ module.exports = Marionette.LayoutView.extend({
     
     showLoadCommentsButton: function (state) {
         this.ui.load.toggleClass('hidden', !state);
+    },
+
+    showChildCommentsButton: function (asd) {
+
     }
 });

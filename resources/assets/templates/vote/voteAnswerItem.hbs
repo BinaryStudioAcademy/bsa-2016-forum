@@ -11,18 +11,10 @@
                 {{ model.name }}
             </label>
 {{/if}}
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#collapse-{{model.id}}"><span class="glyphicon glyphicon-comment"></span>  Show me this Item's comments</a>
-                    </h4>
-                </div>
-                <div id="collapse-{{model.id}}" class="panel-collapse collapse">
+<a class="btn btn-sm btn-default" data-toggle="collapse" href="#collapse-{{model.id}}"><span class="glyphicon glyphicon-comment"></span>   (<span class="js-vote-item-comments-count">{{meta.comments}}</span>)</a>
+                <div id="collapse-{{model.id}}" class="panel-collapse collapse well vote-item-comments-collapse">
                     <button type="button" class="btn btn-success widthbutton js-comment-vote-item">Comment Vote Item</button>
                     <div class="js-vote-item-comments"></div>
                 </div>
-            </div>
-        </div>
 
     </div>
