@@ -38,9 +38,9 @@ $factory->define(App\Models\Topic::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\Comment::class, function (Faker\Generator $faker) {
     return [
-        'content_origin' => $faker->text,
-        'rating' => $faker->numberBetween(0, 1000),
-        'content_generated' => $faker->text,
+//        'content_origin' => $faker->text,
+        'rating' => $faker->numberBetween(0, 100),
+//        'content_generated' => $faker->text,
     ];
 });
 

@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(VoteTableSeeder::class);
         $this->call(VoteItemSeeder::class);
         //$this->call(VoteResultsSeeder::class);
-        $this->call(CommentsSeeder::class);
+        $this->call(HCommentsSeeder::class);
 
         $this->call(SubscriptionsSeeder::class);
         $this->call(LikesSeeder::class);
