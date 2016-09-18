@@ -165,6 +165,11 @@ module.exports = Marionette.LayoutView.extend({
             })
         );
     },
+    serializeData: function () {
+        return {
+            slug: this.model.vote_slug()
+        }
+    },
     
     showLoadCommentsButton: function (state) {
         this.ui.load.toggleClass('hidden', !state);
