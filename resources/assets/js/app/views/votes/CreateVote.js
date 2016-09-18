@@ -11,6 +11,8 @@ var CreateVoteItemCollection = require('./CreateVoteItemCollection');
 var userCollectionView = require('../users/userCollection');
 var CreateVoteHeader = require('./CreateVoteHeader');
 
+require('bootstrap-datetime-picker');
+
 module.exports = Marionette.LayoutView.extend({
     className: 'well',
     template: 'voteCreateLayout',
@@ -111,6 +113,16 @@ module.exports = Marionette.LayoutView.extend({
         }
     },
     onRender: function () {
+
+        this.ui.finished.datetimepicker({
+            startDate: new Date(),
+            todayBtn: true,
+            minuteStep: 5,
+            autoclose: true,
+            clearBtn: true,
+            todayHighlight:true
+        });
+
         var model = this.model;
         this.getRegion('voteHeader').show(new CreateVoteHeader({
             model: model,
