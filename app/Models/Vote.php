@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -133,13 +134,6 @@ class Vote extends Model
     public function scopeOnlySaved(Builder $query)
     {
         return $query->where('is_saved', 1);
-    }
-
-    public function canBeEdited()
-    {
-        $user = Auth::user();
-
-        return $user->isAdmin() || $user->owns($this);
     }
 
     public function subscribers()
