@@ -24,7 +24,7 @@
 </div>
 
 <div class="form-group">
-    <label>Select <span class="underscored">full time</span> when the vote will be finished or leave this field untouched.  </label>
+    <label>Select the date when the vote is over.</label>
     <input type="datetime" class="form-control" value="{{meta.finished_at}}" id="finished" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>
     <div class="js-errors js-error-finished_at"></div>
 </div>
