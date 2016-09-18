@@ -74,7 +74,7 @@ module.exports = Marionette.ItemView.extend({
         meta.editable = !this.model.get('id')
             ? true
             : (meta.comments == 0 && meta.results == 0 && (currentUser.id == this.model.get('user_id') || currentUser.isAdmin()));
-        console.log(this.model);
+
         return {
             model: this.model.toJSON(),
             meta: meta
