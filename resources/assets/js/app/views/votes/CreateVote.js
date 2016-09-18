@@ -12,6 +12,7 @@ var currentUser = require('../../initializers/currentUser');
 var CreateVoteItemCollection = require('./CreateVoteItemCollection');
 var userCollectionView = require('../users/userCollection');
 
+require('bootstrap-datetime-picker');
 
 module.exports = Marionette.LayoutView.extend({
     className: 'well',
@@ -100,6 +101,16 @@ module.exports = Marionette.LayoutView.extend({
         }
     },
     onRender: function () {
+
+        this.ui.finished.datetimepicker({
+            startDate: new Date(),
+            todayBtn: true,
+            minuteStep: 5,
+            autoclose: true,
+            clearBtn: true,
+            todayHighlight:true
+        });
+
         this.getRegion('answers').show(new CreateVoteItemCollection({
             collection: this.collection,
             parent: this.model
