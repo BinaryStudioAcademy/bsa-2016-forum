@@ -28,9 +28,11 @@ class TopicController extends ApiController
         if (!empty($topic->likes()->where('user_id', Auth::user()->id)->get()->first())) {
             $is_user = true;
             $like_id = $topic->likes()->where('user_id', Auth::user()->id)->get()->first()->id;
+            $countOfLikes=$topic->likes()->count();
         } else {
             $is_user = false;
             $like_id = null;
+            $countOfLikes=0;
         }
 
         return [$topic->id => [
@@ -40,7 +42,7 @@ class TopicController extends ApiController
             'likes' => $topic->likes()->count(),
             'comments' => $topic->comments()->count(),
             'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
-            'countOfLikes' => $topic->likes()->count(),
+            'countOfLikes' => $countOfLikes,
             'is_user' => $is_user,
             'like_id' => $like_id
         ]];
