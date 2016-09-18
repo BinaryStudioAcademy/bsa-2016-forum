@@ -65,7 +65,7 @@ module.exports = Marionette.LayoutView.extend({
             this.ui.delete.toggleClass( 'hidden', !(this.model.get('user_id') == currentUser.id || currentUser.isAdmin()));
         },
         'change:is_public': function (model) {
-            if (model.get('is_public') == '0' && (!model.get('user_id') || model.get('user_id') == currentUser.get('id')) || currentUser.get('role') == 'Admin') {
+            if (model.get('is_public') == 0 && (!model.get('user_id') || model.get('user_id') == currentUser.id) || currentUser.isAdmin()) {
                 var naUsers =  this.getOption('users');
                 var aUsers = this.getOption('accessedUsers');
                 naUsers.remove(naUsers.models);

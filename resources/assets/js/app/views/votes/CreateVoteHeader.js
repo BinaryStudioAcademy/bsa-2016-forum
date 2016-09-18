@@ -40,7 +40,7 @@ module.exports = Marionette.ItemView.extend({
             this.model.save({title: this.ui.title.val()});
         },
         'click @ui.isPublic': function () {
-            this.saveModel({is_public: this.ui.isPublic.filter(':checked').val()});
+            this.saveModel({is_public: parseInt(this.ui.isPublic.filter(':checked').val(), 10)});
         },
         'click @ui.isSingle': function () {
             this.saveModel({is_single: this.ui.isSingle.filter(':checked').val()});
@@ -82,12 +82,12 @@ module.exports = Marionette.ItemView.extend({
         var view = this;
         var users = [];
         var tags = [];
-
-        if (view.model.get('is_public') == '0') {
+        if (view.model.get('is_public') == 0) {
             view.getOption('parent').getOption('accessedUsers').each(function (model, index) {
                 users.push(model.get('id'));
             });
-            users.push(currentUser.id);
+            if(_.indexOf(users, currentUser.id) == -1)
+                users.push(currentUser.id);
         }
 
         if (view.ui.tags.val().trim().length > 0) {
@@ -107,7 +107,5 @@ module.exports = Marionette.ItemView.extend({
                 Backbone.history.navigate('votes/' + data.get('slug'), {trigger: true});
             }
         });
-
-        console.log(view.model.validationError);
     }
 });
