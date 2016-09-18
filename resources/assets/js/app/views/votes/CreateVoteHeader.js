@@ -3,7 +3,7 @@ var Marionette = require('backbone.marionette');
 var app = require('../../instances/appInstance');
 var DateHelper = require('../../helpers/dateHelper');
 var _ = require('underscore');
-
+var markdownHelp = require('../../views/modalWindows/markdownHelp');
 var currentUser = require('../../initializers/currentUser');
 
 module.exports = Marionette.ItemView.extend({
