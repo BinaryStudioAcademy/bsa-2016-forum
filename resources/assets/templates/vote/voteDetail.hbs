@@ -9,11 +9,12 @@
     </div>
     <div class="vote-body">
         <div id="vote-header"></div>
-        <div id="answers">
-
+        <div class="container-fluid">
+            <div id="answers" class="row"></div>
         </div>
-        <button class="btn btn-default disabled commit-vote">Vote</button>
-
+        {{#if isProcess}}
+            <button class="btn btn-default disabled commit-vote">Vote</button>
+        {{/if}}
         <div class="vote-attachments">
             Attachments
         </div>

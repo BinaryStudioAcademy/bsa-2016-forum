@@ -10,9 +10,12 @@ var socketCommentClient = require('../../initializers/socketCommentClient');
 var CommentsCollection = require('../../collections/commentCollection');
 var currentUser = require('../../initializers/currentUser');
 var VoteRImodel = require('../../models/VoteRImodel');
+var dateHelper = require('../../helpers/dateHelper');
+var VoteResultsCollectionView = require('./VoteResultsCollection');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'voteDetail',
+    _isFinished: false,
     regions: {
         comments: '#comments',
         addcomment: '#add-comment',
@@ -23,6 +26,12 @@ module.exports = Marionette.LayoutView.extend({
         c_count: '.count',
         newCommentButton: '.new-comment-notification',
         voteCommit: '.commit-vote'
+    },
+
+    serializeData: function () {
+        return {
+            isProcess: !this._isFinished
+        }
     },
 
     events: {
@@ -37,6 +46,11 @@ module.exports = Marionette.LayoutView.extend({
         });
 
         socketCommentClient.bind('VoteComments', this.options.voteModel.id);
+
+        if (this.options.voteModel.get('finished_at')) {
+            this._isFinished = dateHelper.getDateTimeDiff(this.options.voteModel.get('finished_at')) > 0;
+        }
+
     },
 
     onBeforeDestroy: function () {
@@ -153,8 +167,18 @@ module.exports = Marionette.LayoutView.extend({
             new VoteHeader({model: this.options.voteModel})
         );
 
-        this.getRegion('answers').show(
-            new VoteAnswersCollectionView({collection: this.options.answers})
-        );
+        console.log(this.options.voteModel, this._isFinished);
+
+        if (this._isFinished) {
+            this.getRegion('answers').show(
+                new VoteResultsCollectionView({
+                    collection: this.options.answers,
+                })
+            );
+        } else {
+            this.getRegion('answers').show(
+                new VoteAnswersCollectionView({collection: this.options.answers})
+            );
+        }
     }
 });

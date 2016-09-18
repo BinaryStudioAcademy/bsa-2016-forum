@@ -1,0 +1,14 @@
+<div>
+    <div>{{ model.name }}</div>
+    <div class="progress">
+        <div class="progress-bar progress-bar-warning" role="progressbar"
+             aria-valuenow="{{ model.checked }}" aria-valuemin="0" aria-valuemax="100"
+             style="width: {{#if model.checked}} {{ model.checked }}% {{/if}};">
+            <span>
+                {{#if model.checked}}
+                    {{ model.checked }}%
+                {{/if}}
+            </span>
+        </div>
+    </div>
+</div>
