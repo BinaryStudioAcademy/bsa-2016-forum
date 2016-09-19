@@ -45,8 +45,10 @@ module.exports = {
             appRoutes: {
                 'votes': 'index',
                 'votes/create': 'createVote',
-                'votes/createPrivateVoteBasedOnTopicSubscribers/:id': 'createPrivateVoteBasedOnTopicSubscribers',
-                'votes/:id': 'showVote'
+                'votes/createPrivateVoteBasedOnTopicSubscribers/:id': 'createPrivateVoteBasedOnTopicSubscribers',                
+                'votes/:id': 'showVote',
+                'votes/:id/edit': 'editVote'
+
             },
             navigItemName: 'votes'
         },
