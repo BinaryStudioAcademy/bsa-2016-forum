@@ -3,7 +3,7 @@ var Radio = require('backbone.radio');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'voteAnswerItem',
-    _isVoteItemView: true,
+    _isVoteView: true,
     initialize: function (options) {
         this.vote = this.model.getMeta().vote;
     },

@@ -69,7 +69,7 @@ module.exports = Marionette.Object.extend({
                 view.getRegion('newComment').show(new NewVoteCommentView({
                     model: model,
                     commentCollection: commentCollection,
-                    parentCommentView: parentView._isVoteView || parentView._isVoteItemView ? null : parentView
+                    parentCommentView: parentView._isVoteView/* || parentView._isVoteItemView*/ ? null : parentView
                 }));
         });
 
