@@ -16,7 +16,7 @@
     </div>
     <div class="vote-deadline">
         {{#if model.finished_at}}
-            <span><i class="fa fa-clock-o"></i> Deadline {{model.finished_at}}</span>
+            <span><i class="fa fa-clock-o"></i> Deadline {{ finishedDate }}</span>
         {{else}}
             <span class="green-text"><i class="fa fa-spinner"></i> Currently in process</span>
         {{/if}}
