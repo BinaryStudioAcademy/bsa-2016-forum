@@ -20,7 +20,6 @@ class HVoteTableSeeder extends Seeder
         $exceptedUser = $users->except(2)->random();
         $exceptedUserName = $exceptedUser->first_name . ' ' . $exceptedUser->last_name;
 
-// что подарить, поход (допустим в горы), поход в кино, поход в кафешку
         $votesList = [
             [
                 'title' => 'Campaign to the mountains',
@@ -76,13 +75,6 @@ class HVoteTableSeeder extends Seeder
                     'Logitech Webcam HD'
                 ]
             ],
-//            [
-//                'title' => '',
-//                'desc' => "",
-//                'is_public' => 1,
-//                'is_single' => 1,
-//                'items' => []
-//            ],
 //            [
 //                'title' => '',
 //                'desc' => "",
