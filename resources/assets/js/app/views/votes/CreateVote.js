@@ -31,8 +31,7 @@ module.exports = Marionette.LayoutView.extend({
         toAccessed: '.js-to-accessed',
         toNotAccessed: '.js-to-not-accessed',
         selectAccessedUsersBlock: '.vote-new-access',
-        modal: '#noAnswersModal',
-        modalErrorField: '#modalErrorField'
+        modal: '#noAnswersModal'
     },
     initialize:function() {
         this.collection.trigger('update', this.collection);
@@ -79,7 +78,6 @@ module.exports = Marionette.LayoutView.extend({
             this.moveUsers(this.getOption('accessedUsers'), this.getOption('users'));
         },
         'click @ui.start': function() {
-
             var validAnswers = true;
             this.collection.each(function (model) {
                 if (!model.isValid()) {
@@ -99,8 +97,15 @@ module.exports = Marionette.LayoutView.extend({
                 }
 
             }
-            else if(validAnswers) {
-                Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
+            else if (validAnswers) {
+                if ($.active > 0) {
+                    $(document).ajaxComplete(function () {
+                        alert(123);
+                        Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
+                    }.bind(this));
+                } else {
+                    Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
+                }
             }
         },
         'click @ui.delete': function () {
@@ -146,6 +151,5 @@ module.exports = Marionette.LayoutView.extend({
         } else {
             this.model.set(obj);
         }
-        to.add(models);
     }
 });
