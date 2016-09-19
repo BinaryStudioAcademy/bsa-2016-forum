@@ -2,9 +2,12 @@
     <div class="post-title"><a href="#topics/{{ model.slug }}"> {{ model.name }} </a><br>
         <button class="btn btn-info btn-xs text-info bookmark-btn">Bookmark</button>
         <button class="btn btn-info btn-xs text-info subscribe-btn">Subscribe</button>
-        <a>
-            <span class="{{ style }}" aria-hidden="true"></span>
-        </a>{{ countOfLikes }}
+        <button class="btn btn-info btn-xs text-info like-btn">
+            <span class=" {{ style }}" aria-hidden="true">{{ countOfLikes }}</span>
+        </button>
+        <!--<a>-->
+            <!--<span class="{{ style }}" aria-hidden="true"></span>-->
+        <!--</a>{{ countOfLikes }}-->
     </div>
 </div>
 <div class="col-sm-1 col-md-1 col-lg-1 hidden-xs">
