@@ -16,10 +16,10 @@
     </div>
     <div class="vote-deadline">
         {{#if model.finished_at}}
-            {{#if meta.isFinished}}
-                <span>Finished at {{ meta.finishedDate}}</span>
+            {{#if isFinished}}
+                <span>Finished at {{ finishedDate}}</span>
             {{else}}
-                <span>in process <span class="dark-grey"> till {{meta.finishedDate}}</span></span>
+                <span class="green-text">in process</span> <span class="dark-grey"> till {{finishedDate}}</span>
             {{/if}}
         {{ else }}
             <span class="green-text">in process</span>

@@ -33,6 +33,7 @@ module.exports = Marionette.ItemView.extend({
             model: this.model.toJSON(),
             createdDate: dateHelper.fullDate(this.model.get('created_at')),
             finishedDate: dateHelper.middleDate(this.model.get('finished_at')),
+            isFinished: dateHelper.getDateTimeDiff(this.model.get('finished_at')) >= 0,
             meta: meta
         };
     }
