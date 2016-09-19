@@ -508,3 +508,8 @@ VOTE INDEX
 .votes li {
   padding: 0.5em;
 }
+
+.vote-item-comments-collapse {
+  max-height: 1000px !important;
+  overflow-y: scroll !important;
+}
