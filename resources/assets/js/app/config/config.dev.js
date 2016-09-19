@@ -1,3 +1,4 @@
 module.exports = {
-    debug: true
+    debug: true,
+    externalHeader: false
 };

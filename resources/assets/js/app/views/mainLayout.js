@@ -15,7 +15,7 @@ var mainLayoutView = Marionette.LayoutView.extend({
         modalWindow: '#modal-container'
     },
     onRender: function () {
-        if(config.debug === false){
+        if(config.externalHeader){
             var getHeader = function() {
                 var request = new XMLHttpRequest();
                 request.open('GET', 'http://team.binary-studio.com/app/header', true);
@@ -37,7 +37,7 @@ var mainLayoutView = Marionette.LayoutView.extend({
 
     },
     showRegions: function () {
-        if(config.debug === true){
+        if(!config.externalHeader){
             this.getRegion('header').show(new headerView());
         }
 
