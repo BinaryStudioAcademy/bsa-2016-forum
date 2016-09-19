@@ -154,7 +154,7 @@ Mel Gibson said a lot of things I don't like, and so have a lot of other people 
         $vote->created_at = $time-> subHours(3);
 
 
-        $usersIds = ($vote->votePermissions)->pluck('user_id')->all();
+        $usersIds = $vote->votePermissions->pluck('user_id')->all();
         $users = User::whereIn('id', $usersIds)->get();
 
         foreach ($voteComments as $voteComment) {
