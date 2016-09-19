@@ -74,7 +74,8 @@ gulp.task('copy', function() {
     return gulp.src([
         'node_modules/bootstrap-sass/assets/fonts/**/*.woff2',
         'node_modules/bootstrap-sass/assets/fonts/**/*.woff',
-        'node_modules/bootstrap-sass/assets/fonts/**/*.ttf'
+        'node_modules/bootstrap-sass/assets/fonts/**/*.ttf',
+        'node_modules/font-awesome/fonts/**/*'
     ])
         .pipe(gulp.dest('./public/fonts/'));
 });

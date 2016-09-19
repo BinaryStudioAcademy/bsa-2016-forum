@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    @if (env('APP_EXTERNAL_HEADER'))
+    <link type="text/css" rel="stylesheet" href="http://team.binary-studio.com/app/styles/css/style.css">
+    @endif
     @if (env('APP_DEBUG'))
         <link type="text/css" rel="stylesheet" href="css/styles.css?v={{ time() }}">
     @else
@@ -10,6 +13,9 @@
     <title>BSA16: Forum</title>
 </head>
 <body>
+@if (env('APP_EXTERNAL_HEADER'))
+    <script src="http://team.binary-studio.com/app/javascripts/header.js"></script>
+@endif
 
 @if (env('APP_DEBUG'))
     <script src="js/bundle.js?v={{ time() }}"></script>

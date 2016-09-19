@@ -7,11 +7,11 @@ var dateHelper = require('../../helpers/dateHelper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteItem',
-    tagName: 'a',
-
+    tagName: 'li',
+    
     attributes : function () {
         return {
-            href: "#/votes/" + this.model.vote_slug()
+            href: "#/votes/" + this.model.id
         }
     },
     
@@ -27,11 +27,12 @@ module.exports = Marionette.ItemView.extend({
         }
     },
 
-    serializeData: function () {
+    serializeData: function () {    
         var meta = this.model.getMetaById() || {};
         return {
             model: this.model.toJSON(),
             createdDate: dateHelper.fullDate(this.model.get('created_at')),
+            finishedDate: dateHelper.middleDate(this.model.get('finished_at')),
             meta: meta
         };
     }
