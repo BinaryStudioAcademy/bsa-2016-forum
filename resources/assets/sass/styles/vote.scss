@@ -489,3 +489,14 @@ VOTE INDEX
   margin: 0 7px;
   width: 100%;
 }
+
+.corner-button {
+  position: absolute;
+  top:0;
+  right:-50px;
+}
+
+.limited-block-for-corner-button {
+  width: calc(100% - 50px);
+  display: block;
+}
