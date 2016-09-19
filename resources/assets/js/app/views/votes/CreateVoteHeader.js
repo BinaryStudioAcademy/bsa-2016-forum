@@ -77,7 +77,8 @@ module.exports = Marionette.ItemView.extend({
 
         meta.editable = !this.model.get('id') ? true : this.model.get('user_id') == currentUser.id || currentUser.isAdmin();
 
-        meta.tags = (_.pluck(meta.tags, 'name')).join(' ');
+        meta.tags = (_.pluck(meta.tags, 'name')).join(',');
+        
         meta.finished_at = DateHelper.dateWithTimezone(this.model.get('finished_at'));
         return {
             model: this.model.toJSON(),

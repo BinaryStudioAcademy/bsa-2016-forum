@@ -157,11 +157,12 @@ module.exports = Marionette.Object.extend({
 
     editVote: function (slug) {
         var VoteAnswers = new VoteAICollection([], {parentUrl: '/votes/' + slug});
+        var tagCollection = new TagCollection();
 
         VoteAnswers.fetch();
         var UsersCollection = new usersCollection();
         var accessedUsers = new usersCollection();
-
+        tagCollection.fetch();
         UsersCollection.opposite = accessedUsers;
         UsersCollection.glyph = 'plus';
         accessedUsers.opposite = UsersCollection;
@@ -173,7 +174,8 @@ module.exports = Marionette.Object.extend({
             model: model,
             collection: VoteAnswers,
             users: UsersCollection,
-            accessedUsers: accessedUsers
+            accessedUsers: accessedUsers,
+            tags: tagCollection
         });
 
         view.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {
