@@ -107,7 +107,8 @@ class VoteController extends ApiController
                 'subscription' => $vote->subscription(Auth::user()->id),
                 'days_ago' => $difference,
                 'numberOfUniqueViews' => $vote->voteUniqueViews()->count(),
-                'usersWhoSaw' => $usersWhoSaw
+                'usersWhoSaw' => $usersWhoSaw,
+                'attachments' => $vote->attachments()->get()
             ];
 
         if ($access) {
@@ -334,7 +335,7 @@ class VoteController extends ApiController
         if (!$voteItems) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
-        $meta['checked'] = [];
+        $meta = [];
         $userVoteResults = $vote->voteResults()->where('user_id', $user->id)->get();
         foreach ($userVoteResults as $res) {
             $temp = $voteItems->where('id', $res->vote_item_id);
@@ -342,6 +343,11 @@ class VoteController extends ApiController
                 $item->checked = 1;
             }
         }
+
+        foreach($voteItems as $item) {
+            $meta[$item->id] = ['comments' => $item->comments()->count()];
+        }
+
         $meta['vote'] = $vote;
         return $this->setStatusCode(200)->respond($voteItems, $meta);
 
