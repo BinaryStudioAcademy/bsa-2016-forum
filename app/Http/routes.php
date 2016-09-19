@@ -68,6 +68,9 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         ],
     ]);
     Route::get('categories/{category}/topics', 'TopicController@indexInCategory')->name('topicsInCategory');
+    Route::post('topics/{topic}/likes', 'TopicController@addLike')->name('addLikeToTopic');
+    Route::delete('topics/{topic}/likes/{like}', 'TopicController@removeLike')->name('removeLikeFromTopic');
+
     /*Routes for Votes*/
     Route::resource('votes', 'VoteController', [
         'except' => ['edit', 'create'],

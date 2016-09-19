@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Collection;
 use App\Facades\TagService;
 use App\Facades\MarkdownService;
+use App\Models\Like;
 
 class TopicController extends ApiController
 {
@@ -24,16 +25,30 @@ class TopicController extends ApiController
      */
     private function getMetaDataForModel(Topic $topic)
     {
+        if (!empty($topic->likes()->where('user_id', Auth::user()->id)->get()->first())) {
+            $isUser = true;
+            $likeId = $topic->likes()->where('user_id', Auth::user()->id)->get()->first()->id;
+            $countOfLikes=$topic->likes()->count();
+        } else {
+            $isUser = false;
+            $likeId = null;
+            $countOfLikes=0;
+        }
+
         return [$topic->id => [
             'subscription' => $topic->subscription(Auth::user()->id),
             'category' => $topic->category,
             'user' => $topic->user()->first(),
             'likes' => $topic->likes()->count(),
             'comments' => $topic->comments()->count(),
-            'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first()
+            'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
+            'countOfLikes' => $countOfLikes,
+            'isUser' => $isUser,
+            'likeId' => $likeId
         ]];
-    }
 
+        return $data;
+    }
 
     /**
      * @param Collection $topics
@@ -48,7 +63,6 @@ class TopicController extends ApiController
         }
 
         return $data;
-
     }
 
     /**
@@ -82,6 +96,8 @@ class TopicController extends ApiController
      */
     public function indexInCategory($catId, TopicRequest $request)
     {
+        $user = Auth::user();
+
         $this->setFiltersData($request);
 
         if (is_numeric($catId) === false) {
@@ -106,6 +122,7 @@ class TopicController extends ApiController
         foreach ($topics as $topic) {
             $topic->usersCount = $topic->activeUsersCount();
             $topic->answersCount = $topic->comments()->count();
+            $topic->currentUser = $user->id;
         }
         return $this->setStatusCode(200)->respond($topics, $meta);
     }
@@ -138,6 +155,7 @@ class TopicController extends ApiController
     {
         $topic = Topic::getSluggableModel($id);
         $topic->tags = $topic->tags()->get();
+
         $meta = $this->getMetaDataForModel($topic);
 
         return $this->setStatusCode(200)->respond($topic, $meta);
@@ -165,6 +183,50 @@ class TopicController extends ApiController
         $topic->save();
         $topic->tags = $topic->tags()->get();
         return $this->setStatusCode(200)->respond($topic);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $idTopic
+     * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
+     */
+    public function addLike(Topic $topic)
+    {
+        $user=Auth::user();
+
+        $like = new Like();
+        $like->user()->associate($user);
+
+        //User can't add like to his own topic
+        if($user->id!=$topic->user_id)
+        {
+            $topic->likes()->save($like);
+        }
+
+        $like= $topic->likes()->where('user_id', Auth::user()->id)->where('likeable_id', $topic->id)->get()->first();
+
+        return $this->setStatusCode(200)->respond($like);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $idTopic
+     * @param  int $idLike
+     * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
+     */
+    public function removeLike($topic,$idLike)
+    {
+        $like = Like::findOrFail($idLike);
+
+        $user=Auth::user();
+
+        $like->delete();
+
+        return $this->setStatusCode(204)->respond();
     }
 
     /**
@@ -244,7 +306,6 @@ class TopicController extends ApiController
         }
 
         return $this->setStatusCode(200)->respond($topic, ['user' => $user]);
-
     }
 
     /**
@@ -259,5 +320,4 @@ class TopicController extends ApiController
         $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
         $this->limit = $request->get('limit');
     }
-
 }
