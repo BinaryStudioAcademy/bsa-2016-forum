@@ -117,11 +117,10 @@ module.exports = Marionette.ItemView.extend({
         view.model.save({
             users: JSON.stringify(users),
             tags: JSON.stringify(tags),
-            is_saved: 1,
             finished_at: DateHelper.voteDateToSave(this.ui.finished.val())
         }, {
             success: function (data) {
-                Backbone.history.navigate('votes/' + data.get('slug'), {trigger: true});
+                Backbone.history.navigate('votes/' + view.model.id, {trigger: true});
             }
         });
     }

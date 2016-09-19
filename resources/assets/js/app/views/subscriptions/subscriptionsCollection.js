@@ -3,8 +3,8 @@ var _ = require('underscore');
 
 module.exports = Marionette.CollectionView.extend({
     childView: require('./subscriptionsItem'),
-    childViewContainer: 'div',
-    tagName: 'div',
+    tagName: 'ul',
+    className: 'news-items',
     childViewOptions : function (model) {
         var target = _.findWhere(
             this.collection.getMeta()[model.get('subscription_type')],

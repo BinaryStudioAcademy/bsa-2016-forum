@@ -6,7 +6,7 @@ var app = require('../../instances/appInstance');
 
 module.exports = Marionette.ItemView.extend({
     template: 'topicCategoryItem',
-    className: 'row post-item',
+    className: 'widget widget-nopad',
     tagName: 'div',
 
     ui: {

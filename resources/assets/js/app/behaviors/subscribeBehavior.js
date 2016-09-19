@@ -37,7 +37,7 @@ module.exports = Marionette.Behavior.extend({
     },
 
     addOkIcon: function () {
-        this.ui.subscribeNotification.html('<i class="glyphicon glyphicon-ok subscribed"></i> Unsubscribe');
+        this.ui.subscribeNotification.html('<i class="fa fa-check subscribed"></i> Unsubscribe');
     },
 
     removeOkIcon: function () {
