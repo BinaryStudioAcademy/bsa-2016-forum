@@ -39,14 +39,6 @@ module.exports = Marionette.LayoutView.extend({
         }
     },
 
-    initialize: function () {
-        //this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.model.id, function (n) {
-        //    this.ui.c_count.text(n);
-        //});
-        //
-        //socketCommentClient.bind('VoteComments', this.model.id);
-    },
-
     onBeforeDestroy: function () {
         this.stopListening();
         socketCommentClient.unbind('VoteComments', this.model.id);
