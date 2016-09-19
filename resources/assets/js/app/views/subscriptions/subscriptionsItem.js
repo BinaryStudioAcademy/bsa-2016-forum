@@ -6,7 +6,7 @@ var app = require('../../instances/appInstance');
 
 module.exports = Marionette.ItemView.extend({
     template: 'subscriptionItem',
-    tagName: 'div',
+    tagName: 'li',
     ui: {
         delete: '.delete-subscription-button'
     },
