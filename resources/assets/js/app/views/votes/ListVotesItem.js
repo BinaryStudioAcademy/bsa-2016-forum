@@ -31,8 +31,9 @@ module.exports = Marionette.ItemView.extend({
         var meta = this.model.getMetaById() || {};
         return {
             model: this.model.toJSON(),
+            isFinished: ((this.model.get('finished_at') == null) || (dateHelper.getDateTimeDiff(this.model.get('finished_at')) < 0)),
             createdDate: dateHelper.fullDate(this.model.get('created_at')),
-            finishedDate: dateHelper.middleDate(this.model.get('finished_at')),
+            finishedDate: (this.model.get('finished_at') != null) ? dateHelper.middleDate(this.model.get('finished_at')) : '',
             meta: meta
         };
     }
