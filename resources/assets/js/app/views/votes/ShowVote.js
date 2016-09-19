@@ -38,16 +38,20 @@ module.exports = Marionette.LayoutView.extend({
         });
 
         socketCommentClient.bind('VoteComments', this.model.id);
+
         var self = this;
         // triggered after vote model fetched and if vote is finished
         this.listenTo(Radio.channel('votesChannel'), 'showVoteResult', function () {
-            self.ui.voteCommit.hide();
-            self.getRegion('answers').show(
-                new VoteResultsCollectionView({
-                    collection: this.options.answers,
-                    isPublic: self.model.get('is_public')
-                })
-            );
+            // if user has permissions to see vote results
+            if (currentUser.isAdmin() || self.model.get('user_id') === currentUser.get('id')) {
+                self.ui.voteCommit.hide();
+                self.getRegion('answers').show(
+                    new VoteResultsCollectionView({
+                        collection: this.options.answers,
+                        isPublic: self.model.get('is_public')
+                    })
+                );
+            }
         });
     },
 
