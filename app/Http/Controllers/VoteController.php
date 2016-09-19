@@ -337,6 +337,15 @@ class VoteController extends ApiController
         }
         $meta = [];
         $userVoteResults = $vote->voteResults()->where('user_id', $user->id)->get();
+
+        $meta['users'] = [];
+        $usersAll = 0;
+        foreach ($vote->voteResults()->get() as $res) {
+            $meta['users'][$res->vote_item_id][] = $res->user;
+            $usersAll++;
+        }
+        $meta['users']['count'] = $usersAll;
+
         foreach ($userVoteResults as $res) {
             $temp = $voteItems->where('id', $res->vote_item_id);
             foreach ($temp as $item) {
