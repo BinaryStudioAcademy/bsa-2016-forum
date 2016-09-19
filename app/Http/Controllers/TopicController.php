@@ -25,9 +25,9 @@ class TopicController extends ApiController
      */
     private function getMetaDataForModel(Topic $topic)
     {
-        if (!empty($topic->likes()->where('user_id', Auth::user()->id)->get()->first())) {
+        if (!empty($currentUser=$topic->likes()->where('user_id', Auth::user()->id)->get()->first())) {
             $isUser = true;
-            $likeId = $topic->likes()->where('user_id', Auth::user()->id)->get()->first()->id;
+            $likeId = $currentUser->id;
             $countOfLikes=$topic->likes()->count();
         } else {
             $isUser = false;
