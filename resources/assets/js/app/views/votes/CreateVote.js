@@ -30,9 +30,7 @@ module.exports = Marionette.LayoutView.extend({
         errors: '.js-errors',
         toAccessed: '.js-to-accessed',
         toNotAccessed: '.js-to-not-accessed',
-        selectAccessedUsersBlock: '.vote-new-access',
-        modal: '#noAnswersModal',
-        modalErrorField: '#modalErrorField'
+        selectAccessedUsersBlock: '.vote-new-access'
     },
     initialize:function() {
         this.collection.trigger('update', this.collection);
@@ -79,7 +77,6 @@ module.exports = Marionette.LayoutView.extend({
             this.moveUsers(this.getOption('accessedUsers'), this.getOption('users'));
         },
         'click @ui.start': function() {
-
             var validAnswers = true;
             this.collection.each(function (model) {
                 if (!model.isValid()) {
@@ -91,7 +88,6 @@ module.exports = Marionette.LayoutView.extend({
 
                 if (this.collection.length < 2) {
                     this.model.save({is_saved: 0});
-                    this.ui.modal.modal('show');
                 } else if(validAnswers)
                     this.model.trigger('save');
                 else {
@@ -99,7 +95,7 @@ module.exports = Marionette.LayoutView.extend({
                 }
 
             }
-            else if(validAnswers) {
+            else if (validAnswers) {
                 Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
             }
         },
@@ -146,6 +142,5 @@ module.exports = Marionette.LayoutView.extend({
         } else {
             this.model.set(obj);
         }
-        to.add(models);
     }
 });

@@ -131,7 +131,6 @@ VOTE INDEX
 */
 
 .votes {
-  width: 100%;
   word-wrap: break-word;
   overflow: auto;
 }
@@ -495,4 +494,8 @@ VOTE INDEX
 
 .votes li {
   padding: 0.5em;
+}
+
+.vote-results {
+  margin: 10px 0;
 }
