@@ -13,7 +13,7 @@
 
 $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     return [
-        'first_name' => $faker->firstName,
+        'first_name' => $faker->firstNameMale,
         'last_name' => $faker->lastName,
         'display_name' => $faker->unique()->userName,
         'email' => $faker->safeEmail,
@@ -52,17 +52,32 @@ $factory->define(App\Models\Message::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Models\Vote::class, function (Faker\Generator $faker) {
-    $title = $faker->unique()->word;
-    $slug = str_slug($title, '-');
+//    $title = $faker->unique()->word;
+//    $slug = str_slug($title, '-');
+
+//    return [
+//        'title' => $title,
+//        'description' => $faker->paragraph,
+//        'description_generated' => $faker->paragraph,
+//        'is_public' => $faker->numberBetween(0, 1),
+//        'is_saved' => $faker->numberBetween(0, 1),
+//        'finished_at' => date('Y:m:d H:m:s', strtotime('+' . $faker->numberBetween(5, 15) . ' days')),
+//        'slug' => $slug
+//    ];
 
     return [
-        'title' => $title,
-        'description' => $faker->paragraph,
-        'description_generated' => $faker->paragraph,
-        'is_public' => $faker->numberBetween(0, 1),
-        'is_saved' => $faker->numberBetween(0, 1),
-        'finished_at' => date('Y:m:d H:m:s', strtotime('+' . $faker->numberBetween(5, 15) . ' days')),
-        'slug' => $slug
+//        'is_public' => $faker->numberBetween(0, 1),
+//        'is_single' => rand(0, 1),
+        'is_saved' => 1,
+        'finished_at' => date('Y:m:d H:i:s', strtotime(
+                '+' .
+                rand(-10, 10) . ' days ' .
+                rand(1, 23) . ' hours ' .
+                rand(0, 59) . ' minutes ' .
+                rand(1, 59) . ' seconds'
+            )
+        ),
+//        'slug' => $slug
     ];
 });
 

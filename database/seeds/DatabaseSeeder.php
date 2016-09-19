@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(HCategoriesTableSeeder::class);
         $this->call(HTopicsTableSeeder::class);
         $this->call(MessagesTableSeeder::class);
-        $this->call(VoteTableSeeder::class);
+        $this->call(HVoteTableSeeder::class);
         $this->call(VoteItemSeeder::class);
         //$this->call(VoteResultsSeeder::class);
         $this->call(HCommentsSeeder::class);
