@@ -1,9 +1,3 @@
-<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-    <div class="post-title"><a href="#topics/{{ model.slug }}"> {{ model.name }} </a><br>
-        <button class="btn btn-info btn-xs text-info bookmark-btn">Bookmark</button>
-        <button class="btn btn-info btn-xs text-info subscribe-btn">Subscribe</button>
-        <span class="btn btn-info btn-xs text-info {{ style }}" aria-hidden="true">{{ countOfLikes }}</span>
-    </div>
 <div class="news-item-date">
     <span class="news-item-day">{{ date.day }}</span>
     <span class="news-item-month">{{ date.month }}</span>
@@ -17,8 +11,8 @@
         <span><i class="fa fa-user"></i>&nbsp;{{ model.usersCount }}</span>
         <button class="btn-link text-info bookmark-btn">Bookmark</button>
         <button class="btn-link text-info subscribe-btn">Subscribe</button>
+        <span class="btn-link text-info {{ style }}" aria-hidden="true">{{ countOfLikes }}</span>
     </div>
     <div class="tags"></div>
     <div class="news-item-preview fixed-font-13">{{{ model.generated_description }}}</div>
-</div>
 </div>
