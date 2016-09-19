@@ -1,30 +1,33 @@
 <div class="form-group">
-    <label for="usr">Question:</label>
+    <label for="question-title">Question:</label>
     <input type="text" class="form-control" id="question-title" value="{{model.title}}" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>
     <div class="js-errors js-error-title"></div>
 </div>
 
 <div class="form-group">
-    <label>Description:</label><br>
+    <label for="question-description">Description:</label><br>
     <textarea rows="5" class ="form-control description" id="question-description" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>{{model.description}}</textarea>
-    <a class="openMarkdownHelp">Open Markdown Help </a>
+    <div class="overflow-hidden">
+        <a class="pull-left openMarkdownHelp">Open Markdown Help </a>
+        <a class="pull-right">Attach</a>
+    </div>
     <div class="js-errors js-error-description"></div>
 </div>
 
 <div class="form-group">
-    <label>Sluggable Url:</label>
+    <label for="question-slug">Sluggable Url:</label>
     <input type="text" class="form-control" id="question-slug" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}} value="{{model.slug}}">
     <div class="js-errors js-error-slug"></div>
 </div>
 
 <div class="form-group">
-    <label for="usr">Tags(Split them using spaces, no #):</label>
+    <label for="tags">Tags(Split them using spaces, no #):</label>
     <input type="text" id="tags" class="form-control" value="{{meta.tags}}" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>
     <div class=" js-errors js-error-tags"></div>
 </div>
 
 <div class="form-group">
-    <label>Select the date when the vote is over.</label>
+    <label for="finished">Select the date when the vote is over.</label>
     <input type="datetime" class="form-control" value="{{meta.finished_at}}" id="finished" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>
     <div class="js-errors js-error-finished_at"></div>
 </div>
@@ -76,5 +79,4 @@
         <!-- Attachments -->
 
     </div>
-    <a>Attach</a>
 </div>

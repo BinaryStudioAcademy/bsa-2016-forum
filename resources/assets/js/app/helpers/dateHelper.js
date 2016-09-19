@@ -29,6 +29,16 @@ var dateHelper = {
         return moment.utc(date).tz(config.timeZone).format('DD.MM.YYYY')
     },
 
+    getDateDay: function(date) {
+        if (_.isEmpty(date)) return '';
+        return moment.utc(date).tz(config.timeZone).format('DD')
+    },
+
+    getDateMonth: function(date) {
+        if (_.isEmpty(date)) return '';
+        return moment.utc(date).tz(config.timeZone).format('MMM YYYY')
+    },
+
     middleDate: function(date) {
         if (_.isEmpty(date)) return '';
         return moment.utc(date).tz(config.timeZone).format('DD.MM.YYYY HH:mm')

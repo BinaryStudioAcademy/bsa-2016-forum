@@ -2,7 +2,7 @@ var Marionette = require('backbone.marionette');
 var VotesCollectionView = require('./ListVotesCollection');
 
 module.exports = Marionette.LayoutView.extend({
-    template: 'voteCollection',
+    template: 'voteLayout',
     regions: {
         items: '#vote-items'
     },
