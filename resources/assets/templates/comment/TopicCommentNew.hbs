@@ -1,5 +1,4 @@
 <div class="modal collapse comment-modal" id="commentdlg">
-    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
@@ -10,6 +9,7 @@
                 <form action="">
                     <div class="form-group">
                         <textarea class="form-control text-field" rows="3" placeholder="Comment..." name="content_origin">{{ model.content_origin }}</textarea>
+                        <a class="openMarkdownHelp">Open Markdown Help </a>
                     </div>
                     <div class="text-right form-group">
                         <button type="button" class="btn btn-default" data-toggle="collapse"
@@ -18,14 +18,14 @@
                     <div class="collapse dropzone-container">
                         <div id="drop" class="dropzone"></div>
                     </div>
+
                 </form>
             </div>
             <div class="modal-footer">
-                <span class="loader hidden"><img src="/images/comment-loader.gif" alt=""></span>
+                <span class="loader hidden"><img src="images/comment-loader.gif" alt=""></span>
                 <button class="btn btn-primary" id="submit">Save comment</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             </div>
         </div>
-    </div>
 </div>
 

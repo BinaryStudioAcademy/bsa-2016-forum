@@ -3,7 +3,7 @@ var VotesCollectionView = require('./ListVotesCollection');
 var UserAvatarView = require('../users/userAvatar');
 
 module.exports = Marionette.LayoutView.extend({
-    template: 'voteCollection',
+    template: 'voteLayout',
     regions: {
         items: '#vote-items'
     },

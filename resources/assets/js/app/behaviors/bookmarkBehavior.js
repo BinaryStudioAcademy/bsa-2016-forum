@@ -37,7 +37,7 @@ module.exports = Marionette.Behavior.extend({
     },
 
     addOkIcon: function () {
-        this.ui.bookmarkButton.html('<i class="glyphicon glyphicon-ok bookmarked"></i> Bookmarked');
+        this.ui.bookmarkButton.html('<i class="fa fa-check bookmarked"></i> Bookmarked');
     },
 
     removeOkIcon: function () {

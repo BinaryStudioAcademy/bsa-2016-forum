@@ -13,14 +13,13 @@ module.exports = {
             controller: new DashboardController(),
             appRoutes: {
                 '': 'index',
-                'dashboard': 'index',
+                'dashboard': 'index'
             },
             navigItemName: 'dashboard'
         },
         {
             controller: new TopicController(),
             appRoutes: {
-                '': 'indexCategories',
                 'topics': 'index',
                 'topics/:id': 'show',
                 'topic/create/:categoryId': 'create',
@@ -46,8 +45,10 @@ module.exports = {
             appRoutes: {
                 'votes': 'index',
                 'votes/create': 'createVote',
-                
-                'votes/:id': 'showVote'
+                'votes/createPrivateVoteBasedOnTopicSubscribers/:id': 'createPrivateVoteBasedOnTopicSubscribers',                
+                'votes/:id': 'showVote',
+                'votes/:id/edit': 'editVote'
+
             },
             navigItemName: 'votes'
         },

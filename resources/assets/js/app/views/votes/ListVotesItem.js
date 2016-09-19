@@ -9,11 +9,11 @@ var UserAvatarView = require('../users/userAvatar');
 //module.exports = Marionette.ItemView.extend({
 module.exports = Marionette.LayoutView.extend({
     template: 'voteItem',
-    tagName: 'a',
-
+    tagName: 'li',
+    
     attributes : function () {
         return {
-            href: "#/votes/" + this.model.vote_slug()
+            href: "#/votes/" + this.model.id
         }
     },
     
@@ -34,23 +34,14 @@ module.exports = Marionette.LayoutView.extend({
         }
     },
 
-    serializeData: function () {
-        var tempmeta = this.model.getMeta();
-        var id = this.model.get('id');
+    serializeData: function () {    
+        var meta = this.model.getMetaById() || {};
         return {
             model: this.model.toJSON(),
+            isFinished: ((this.model.get('finished_at') == null) || (dateHelper.getDateTimeDiff(this.model.get('finished_at')) < 0)),
             createdDate: dateHelper.fullDate(this.model.get('created_at')),
-            meta: {
-                user: tempmeta[id].user,
-                likes: tempmeta[id].likes,
-                comments: tempmeta[id].comments,
-                tags: tempmeta[id].tags,
-                status: tempmeta[id].status,
-                days_ago:tempmeta[id].days_ago,
-                hasMorePages:tempmeta.hasMorePages,
-                numberOfUniqueViews: tempmeta[id].numberOfUniqueViews,
-                usersWhoSaw: tempmeta[id].usersWhoSaw
-            }
+            finishedDate: (this.model.get('finished_at') != null) ? dateHelper.middleDate(this.model.get('finished_at')) : '',
+            meta: meta
         };
     },
 
