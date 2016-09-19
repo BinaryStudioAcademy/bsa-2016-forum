@@ -44,12 +44,12 @@ $factory->define(App\Models\Comment::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Models\Message::class, function (Faker\Generator $faker) {
-    return [
-        'message' => $faker->text,
-        'is_read' => $faker->numberBetween(0, 1)
-    ];
-});
+//$factory->define(App\Models\Message::class, function (Faker\Generator $faker) {
+//    return [
+//        'message' => $faker->text,
+//        'is_read' => $faker->numberBetween(0, 1)
+//    ];
+//});
 
 $factory->define(App\Models\Vote::class, function (Faker\Generator $faker) {
 //    $title = $faker->unique()->word;
