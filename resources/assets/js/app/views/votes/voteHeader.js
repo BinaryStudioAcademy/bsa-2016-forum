@@ -43,7 +43,7 @@ module.exports = Marionette.ItemView.extend({
                 tags: tempmeta[id].tags,
                 numberOfUniqueViews: tempmeta[id].numberOfUniqueViews,
                 usersWhoSaw: tempmeta[id].usersWhoSaw,
-                isFinished: dateHelper.getDateTimeDiff(dateHelper.dateWithTimezone(this.model.get('finished_at'))) >= 0,
+                isFinished: dateHelper.getDateTimeDiff(this.model.get('finished_at')) >= 0,
                 finishedDate: dateHelper.middleDate(this.model.get('finished_at')),
                 showUsers: currentUser.isAdmin() || (currentUser.get('id') === this.model.get('user_id'))
             }
@@ -57,8 +57,8 @@ module.exports = Marionette.ItemView.extend({
 
     onRender: function () {
         if (this.model.get('finished_at')) {
-            var formatedDate = dateHelper.dateWithTimezone(this.model.get('finished_at'));
-            if (dateHelper.getDateTimeDiff(formatedDate) >= 0) {
+            // if current date > vote finished date
+            if (dateHelper.getDateTimeDiff(this.model.get('finished_at')) >= 0) {
                 Radio.channel('votesChannel').trigger('showVoteResult');
             }
         }
