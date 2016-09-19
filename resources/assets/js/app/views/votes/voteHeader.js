@@ -35,6 +35,7 @@ module.exports = Marionette.ItemView.extend({
         };
         if (tempmeta) {
             var id = this.model.get('id');
+
             meta = {
                 user: tempmeta[id].user,
                 likes: tempmeta[id].likes,
@@ -43,8 +44,8 @@ module.exports = Marionette.ItemView.extend({
                 tags: tempmeta[id].tags,
                 numberOfUniqueViews: tempmeta[id].numberOfUniqueViews,
                 usersWhoSaw: tempmeta[id].usersWhoSaw,
-                isFinished: dateHelper.getDateTimeDiff(this.model.get('finished_at')) >= 0,
-                finishedDate: dateHelper.middleDate(this.model.get('finished_at')),
+                isFinished: ((this.model.get('finished_at') == null) || (dateHelper.getDateTimeDiff(this.model.get('finished_at')) < 0)),
+                finishedDate: (this.model.get('finished_at') != null) ? dateHelper.middleDate(this.model.get('finished_at')) : '',
                 showUsers: currentUser.isAdmin() || (currentUser.get('id') === this.model.get('user_id'))
             }
         }
