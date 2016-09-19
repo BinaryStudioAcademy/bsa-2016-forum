@@ -4,6 +4,7 @@ var currentUser = require('../../initializers/currentUser');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'navigationLayout',
+    className: 'subnavbar-inner',
 
     regions: {
         menuContainer: '#navig-menu'
@@ -17,9 +18,5 @@ module.exports = Marionette.LayoutView.extend({
         this.getRegion('menuContainer').show(new NavigationCollectionView({
             collection: this.collection
         }));
-    },
-
-    initialize: function (options) {
-
     }
 });

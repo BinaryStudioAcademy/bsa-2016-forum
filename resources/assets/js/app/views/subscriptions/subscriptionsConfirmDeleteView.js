@@ -23,7 +23,7 @@ module.exports = Marionette.ItemView.extend({
     },
     
     initialize: function () {
-        
+
     },
 
     unSubscribe: function () {

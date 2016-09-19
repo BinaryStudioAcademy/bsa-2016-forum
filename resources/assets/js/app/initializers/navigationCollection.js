@@ -3,13 +3,13 @@ var navigCollection = require('../collections/navigationCollection');
 module.exports = new navigCollection([
     {
         href: '#dashboard',
-        icon: '',
+        icon: 'tachometer',
         name: 'dashboard',
         label: 'Dashboard',
     },
     {
         href: '#topicCategories',
-        icon: '',
+        icon: 'comments',
         name: 'topics',
         label: 'Topics',
     },
@@ -27,7 +27,7 @@ module.exports = new navigCollection([
     // },
     {
         href: '#votes',
-        icon: '',
+        icon: 'asl-interpreting',
         name: 'votes',
         label: 'Votes',
     },
@@ -40,16 +40,15 @@ module.exports = new navigCollection([
     //This navObject MUST BE last in The list
     {
         href: '#users',
-        icon: '',
+        icon: 'users',
         name: 'users',
         label: 'Users'
     },
-    // {
-    //     href: '#messages',
-    //     icon: '',
-    //     name: 'messages',
-    //     label: 'Messages'
-    // },
+    {href: '#messages',
+        icon: 'comments-o',
+        name: 'messages',
+        label: 'Messages'
+    },
     // {
     //     href: '#subscriptions',
     //     icon: '',
