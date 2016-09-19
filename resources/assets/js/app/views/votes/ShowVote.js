@@ -31,12 +31,20 @@ module.exports = Marionette.LayoutView.extend({
     },
 
 
-    initialize: function () {
-        this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.model.id, function (n) {
-            this.ui.c_count.text(n);
-        });
+    modelEvents: {
+        'change:id': function () {
+            if (this.model.id && parseInt(this.model.id)) {
+                this.bindEvents();
+            }
+        }
+    },
 
-        socketCommentClient.bind('VoteComments', this.model.id);
+    initialize: function () {
+        //this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.model.id, function (n) {
+        //    this.ui.c_count.text(n);
+        //});
+        //
+        //socketCommentClient.bind('VoteComments', this.model.id);
     },
 
     onBeforeDestroy: function () {
@@ -44,13 +52,20 @@ module.exports = Marionette.LayoutView.extend({
         socketCommentClient.unbind('VoteComments', this.model.id);
     },
 
-    onShow: function () {
+    bindEvents: function () {
+        socketCommentClient.bind('VoteComments', this.model.id);
+
+        this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.model.id, function (n) {
+            this.ui.c_count.text(n);
+        });
+
         this.addedCommentsCollection = new CommentsCollection([], {parentUrl: ''});
 
         var self = this;
         this.collection.listenTo(Radio.channel('VoteComments'), 'newComment', function (comment) {
             self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
             var count = self.addedCommentsCollection.length + self.collection.length;
+
             Radio.trigger('votesChannel', 'setCommentsCount' + self.model.id, count);
 
             if (comment.user_id != currentUser.id) {
