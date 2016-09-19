@@ -24,14 +24,16 @@ class TopicController extends ApiController
      */
     private function getMetaDataForModel(Topic $topic)
     {
-        return [$topic->id => [
-            'subscription' => $topic->subscription(Auth::user()->id),
-            'category' => $topic->category,
-            'user' => $topic->user()->first(),
-            'likes' => $topic->likes()->count(),
-            'comments' => $topic->comments()->count(),
-            'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first()
-        ]];
+        return [
+            $topic->id => [
+                'subscription' => $topic->subscription(Auth::user()->id),
+                'category' => $topic->category,
+                'user' => $topic->user()->first(),
+                'likes' => $topic->likes()->count(),
+                'comments' => $topic->comments()->count(),
+                'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first()
+            ]
+        ];
     }
 
 
@@ -49,6 +51,12 @@ class TopicController extends ApiController
 
         return $data;
 
+    }
+
+    public function getTopicSubscribers(Topic $topic)
+    {
+        $subscribers = $topic->subscribers;
+        return $this->setStatusCode(200)->respond($subscribers);
     }
 
     /**
@@ -160,7 +168,7 @@ class TopicController extends ApiController
         $topic->update($request->all());
 
         TagService::TagsHandler($topic, $request->tags);
-        
+
         $topic->generated_description = MarkdownService::baseConvert($topic->description);
         $topic->save();
         $topic->tags = $topic->tags()->get();

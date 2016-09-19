@@ -65,7 +65,6 @@ module.exports = Marionette.Object.extend({
         });
 
 
-
         app.render(view);
 
     },
@@ -96,6 +95,51 @@ module.exports = Marionette.Object.extend({
         app.render(view);
     },
 
+    createPrivateVoteBasedOnTopicSubscribers: function (id) {
+        var usersCollectionFetched = false;
+        var accessedUsersCollectionFetched = false;
+        var VoteAnswers = new VoteAICollection([{name: ''}], {parentUrl: ''});
+        var UsersCollection = new usersCollection();
+        var accessedUsers = new usersCollection();
+        accessedUsers.url = '/topics/' + id + '/subscribers';
+        accessedUsers.fetch({
+            success: function () {
+                accessedUsersCollectionFetched = true;
+                if (usersCollectionFetched){
+                    UsersCollection.remove(accessedUsers.toJSON());
+                }
+            }
+        });
+        UsersCollection.fetch({
+            success: function () {
+                usersCollectionFetched = true;
+                if(accessedUsersCollectionFetched){
+                    UsersCollection.remove(accessedUsers.toJSON());
+                }
+            }
+        });
+
+        UsersCollection.opposite = accessedUsers;
+        UsersCollection.glyph = 'plus';
+        accessedUsers.opposite = UsersCollection;
+        accessedUsers.glyph = 'minus';
+
+        var model = new VoteModel({user_id: currentUser.get('id'), is_public: 0, is_saved: 0});
+        var view = new CreateVote({
+            model: model,
+            collection: VoteAnswers,
+            users: UsersCollection,
+            accessedUsers: accessedUsers
+        });
+
+        view.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {
+            col.add(new VoteAImodel());
+        });
+
+        app.render(view);
+
+    },
+
     showUserVotes: function () {
         var parentUrl = '/users/' + currentUser.id;
         var usersVotes = new voteCollection([], {parentUrl: parentUrl});
@@ -106,10 +150,10 @@ module.exports = Marionette.Object.extend({
             vc: usersVotes
         }));
     },
-    
+
     editVote: function (slug) {
         var VoteAnswers = new VoteAICollection([], {parentUrl: '/votes/' + slug});
-        
+
         VoteAnswers.fetch();
         var UsersCollection = new usersCollection();
         var accessedUsers = new usersCollection();
@@ -132,9 +176,9 @@ module.exports = Marionette.Object.extend({
             var t = (new VoteAImodel());
             col.add(t);
         });
-        
+
         view.listenTo(Radio.channel('votesChannel'), 'loadAccessedUsers', function (parentView) {
-            var naUsers =  parentView.getOption('users');
+            var naUsers = parentView.getOption('users');
             var aUsers = parentView.getOption('accessedUsers');
             naUsers.remove(naUsers.models);
             aUsers.remove(aUsers.models);
