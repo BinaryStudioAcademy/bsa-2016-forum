@@ -98,14 +98,7 @@ module.exports = Marionette.LayoutView.extend({
 
             }
             else if (validAnswers) {
-                if ($.active > 0) {
-                    $(document).ajaxComplete(function () {
-                        alert(123);
-                        Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
-                    }.bind(this));
-                } else {
-                    Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
-                }
+                Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
             }
         },
         'click @ui.delete': function () {
