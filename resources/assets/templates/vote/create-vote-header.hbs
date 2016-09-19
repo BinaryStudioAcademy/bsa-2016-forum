@@ -1,12 +1,14 @@
 <div class="form-group">
     <label for="question-title">Question:</label>
-    <input type="text" class="form-control" id="question-title" value="{{model.title}}" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>
+    <input type="text" class="form-control" id="question-title" value="{{model.title}}"
+           {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>
     <div class="js-errors js-error-title"></div>
 </div>
 
 <div class="form-group">
     <label for="question-description">Description:</label><br>
-    <textarea rows="5" class ="form-control description" id="question-description" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>{{model.description}}</textarea>
+    <textarea rows="5" class="form-control description" id="question-description"
+              {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>{{model.description}}</textarea>
     <div class="overflow-hidden">
         <a class="pull-left openMarkdownHelp">Open Markdown Help </a>
         <a class="pull-right">Attach</a>
@@ -16,7 +18,8 @@
 
 <div class="form-group">
     <label for="question-slug">Sluggable Url:</label>
-    <input type="text" class="form-control" id="question-slug" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}} value="{{model.slug}}">
+    <input type="text" class="form-control" id="question-slug"
+           {{#ifCond meta.editable '==' false}}disabled{{/ifCond}} value="{{model.slug}}">
     <div class="js-errors js-error-slug"></div>
 </div>
 
@@ -28,7 +31,8 @@
 
 <div class="form-group">
     <label for="finished">Select the date when the vote is over.</label>
-    <input type="datetime" class="form-control" value="{{meta.finished_at}}" id="finished" {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>
+    <input type="datetime" class="form-control" value="{{meta.finished_at}}" id="finished"
+           {{#ifCond meta.editable '==' false}}disabled{{/ifCond}}>
     <div class="js-errors js-error-finished_at"></div>
 </div>
 
@@ -45,31 +49,35 @@
 <div class="form-group">
     <label>Access:</label>
     <div class="radio">
-        <label><input type="radio" class="public-1" disabled name="access" value="1" checked>Public</label>
+        <label><input type="radio" class="public-1" disabled name="access" value="1"
+                      {{#ifCond model.is_public '==' 1}}checked{{/ifCond}}>Public</label>
     </div>
     <div class="radio">
-        <label><input type="radio" class="public-0" disabled name="access" value="0">Private</label>
+        <label><input type="radio" class="public-0" disabled name="access" value="0"
+                      {{#ifCond model.is_public '==' 0}}checked{{/ifCond}}>Private</label>
     </div>
 </div>
 {{else}}
-    <div class="form-group">
-        <label>Count of answers:</label>
-        <div class="radio">
-            <label><input type="radio" class="single-1" name="isSingle" value="1" checked>Single</label>
-        </div>
-        <div class="radio">
-            <label><input type="radio" class="single-0" name="isSingle" value="0">Multiple</label>
-        </div>
+<div class="form-group">
+    <label>Count of answers:</label>
+    <div class="radio">
+        <label><input type="radio" class="single-1" name="isSingle" value="1" checked>Single</label>
     </div>
-    <div class="form-group">
-        <label>Access:</label>
-        <div class="radio">
-            <label><input type="radio" class="public-1" name="access" value="1" checked>Public</label>
-        </div>
-        <div class="radio">
-            <label><input type="radio" class="public-0" name="access" value="0">Private</label>
-        </div>
+    <div class="radio">
+        <label><input type="radio" class="single-0" name="isSingle" value="0">Multiple</label>
     </div>
+</div>
+<div class="form-group">
+    <label>Access:</label>
+    <div class="radio">
+        <label><input type="radio" class="public-1" name="access" value="1"
+                      {{#ifCond model.is_public '==' 1}}checked{{/ifCond}}>Public</label>
+    </div>
+    <div class="radio">
+        <label><input type="radio" class="public-0" name="access" value="0"
+                      {{#ifCond model.is_public '==' 0}}checked{{/ifCond}}>Private</label>
+    </div>
+</div>
 {{/ifCond}}
 
 

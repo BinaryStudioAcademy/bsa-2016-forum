@@ -31,14 +31,11 @@ module.exports = Marionette.LayoutView.extend({
         errors: '.js-errors',
         toAccessed: '.js-to-accessed',
         toNotAccessed: '.js-to-not-accessed',
-        selectAccessedUsersBlock: '.vote-new-access',
-        modal: '#noAnswersModal',
-        modalErrorField: '#modalErrorField'
+        selectAccessedUsersBlock: '.vote-new-access'
     },
     initialize:function(options) {
         this.tags = options.tags;
         this.collection.trigger('update', this.collection);
-
     },
     modelEvents: {
         'change:id': function () {
@@ -53,7 +50,7 @@ module.exports = Marionette.LayoutView.extend({
                     });
             });
 
-            this.ui.delete.toggleClass( 'hidden', !(this.model.get('user_id') == currentUser.id || currentUser.isAdmin()));
+            this.ui.delete.toggleClass('hidden', !(this.model.get('user_id') == currentUser.id || currentUser.isAdmin()));
         },
         'change:is_public': function (model) {
             if (model.get('is_public') == 0 && (!model.get('user_id') || model.get('user_id') == currentUser.id) || currentUser.isAdmin()) {
@@ -81,7 +78,7 @@ module.exports = Marionette.LayoutView.extend({
         'click @ui.toNotAccessed': function () {
             this.moveUsers(this.getOption('accessedUsers'), this.getOption('users'));
         },
-        'click @ui.start': function() {
+        'click @ui.start': function () {
 
             var validAnswers = true;
             this.collection.each(function (model) {
@@ -94,7 +91,6 @@ module.exports = Marionette.LayoutView.extend({
 
                 if (this.collection.length < 2) {
                     this.model.save({is_saved: 0});
-                    this.ui.modal.modal('show');
                 } else if(validAnswers)
                     this.model.trigger('save');
                 else {
@@ -102,7 +98,7 @@ module.exports = Marionette.LayoutView.extend({
                 }
 
             }
-            else if(validAnswers) {
+            else if (validAnswers) {
                 Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
             }
         },
@@ -112,6 +108,12 @@ module.exports = Marionette.LayoutView.extend({
                     Backbone.history.navigate('votes', {trigger: true});
                 }
             });
+        }
+    },
+    onShow: function () {
+        var self = this;
+        if (this.model.get('is_public') == 0) {
+            self.ui.selectAccessedUsersBlock.show();
         }
     },
     onRender: function () {
@@ -149,6 +151,5 @@ module.exports = Marionette.LayoutView.extend({
         } else {
             this.model.set(obj);
         }
-        to.add(models);
     }
 });
