@@ -18,7 +18,7 @@ var mainLayoutView = Marionette.LayoutView.extend({
         if(config.externalHeader){
             var getHeader = function() {
                 var request = new XMLHttpRequest();
-                request.open('GET', 'http://team.binary-studio.com/app/header', true);
+                request.open('GET', config.externalHeaderLink, true);
                 request.send();
                 request.onreadystatechange = function() {
                     if (request.readyState != 4) return;
