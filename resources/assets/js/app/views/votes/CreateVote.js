@@ -30,9 +30,7 @@ module.exports = Marionette.LayoutView.extend({
         errors: '.js-errors',
         toAccessed: '.js-to-accessed',
         toNotAccessed: '.js-to-not-accessed',
-        selectAccessedUsersBlock: '.vote-new-access',
-        modal: '#noAnswersModal',
-        modalErrorField: '#modalErrorField'
+        selectAccessedUsersBlock: '.vote-new-access'
     },
     initialize: function () {
         this.collection.trigger('update', this.collection);
@@ -91,8 +89,7 @@ module.exports = Marionette.LayoutView.extend({
 
                 if (this.collection.length < 2) {
                     this.model.save({is_saved: 0});
-                    this.ui.modal.modal('show');
-                } else if (validAnswers)
+                } else if(validAnswers)
                     this.model.trigger('save');
                 else {
                     this.model.isValid();
@@ -138,7 +135,6 @@ module.exports = Marionette.LayoutView.extend({
             collection: this.getOption('accessedUsers'),
             childView: require('./CreateVoteUserItemExtend')
         }));
-
     },
     moveUsers: function (from, to) {
         var models = from.clone().models;
@@ -153,6 +149,5 @@ module.exports = Marionette.LayoutView.extend({
         } else {
             this.model.set(obj);
         }
-        to.add(models);
     }
 });
