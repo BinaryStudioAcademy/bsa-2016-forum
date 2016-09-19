@@ -22,6 +22,20 @@ class HVoteTableSeeder extends Seeder
 
         $votesList = [
             [
+                'title' => 'Gift choice for Birthday',
+                'desc' => "Please, take part in a gift choice on Birthday for our colleague " . $exceptedUserName,
+                'tags' => ['Gift'],
+                'is_public' => 0,
+                'except' => [$exceptedUser->id],
+                'is_single' => 1,
+                'items' => [
+                    'Keyboard with backlight',
+                    'SSD',
+                    'Gaming mouse',
+                    'Logitech Webcam HD'
+                ]
+            ],
+            [
                 'title' => 'Campaign to the mountains',
                 'desc' => "In 2 weeks we are going in a campaign to the mountains. Who goes?",
                 'tags' => ['campaign', 'mountains'],
@@ -59,20 +73,6 @@ class HVoteTableSeeder extends Seeder
                     'Lviv Art Gallery',
                     'Ivan Franko Lviv Literary and Memorial Museum',
                     'Lviv History Museum'
-                ]
-            ],
-            [
-                'title' => 'Gift choice for Birthday',
-                'desc' => "Please, take part in a gift choice on Birthday for our colleague " . $exceptedUserName,
-                'tags' => ['Gift'],
-                'is_public' => 0,
-                'except' => [$exceptedUser->id],
-                'is_single' => 1,
-                'items' => [
-                    'Keyboard with backlight',
-                    'SSD',
-                    'Gaming mouse',
-                    'Logitech Webcam HD'
                 ]
             ],
 //            [
@@ -118,7 +118,7 @@ class HVoteTableSeeder extends Seeder
             $vote->tags()->saveMany($tagsIds);
             foreach ($item['items'] as $k => $voteItemName) {
                 if (!$item['is_public']) {
-                    if ($k == 0) {
+                    if ($k <= 1) {
                         $randomUser = $users->where('id', 2)->first();
                     } else {
                         $randomUser = $users->except($item['except'])->random();

@@ -82,8 +82,33 @@ Mel Gibson said a lot of things I don't like, and so have a lot of other people 
 
         ];
 
-        $votes = Vote::all();
-        $voteItems = VoteItem::all();
+        $voteComments = [
+            [
+                'cmnt' => 'I propose  to present the keyboard or SSD. I think it will be a good gift for him.',
+                'sub' => []
+            ],
+            [
+                'cmnt' => 'Let\'s think. Maybe it is worth presenting something else?',
+                'sub' => []
+            ],
+            [
+                'cmnt' => 'He likes to play shooters.',
+                'sub' => []
+            ],
+            [
+                'cmnt' => 'Gaming mouse?!',
+                'sub' => []
+            ],
+            [
+                'cmnt' => 'Oh, no! I think the HD webcam will be more useful for him.',
+                'sub' => []
+            ],
+            [
+                'cmnt' => 'If you don\'t accept any variant, please, offer another.',
+                'sub' => []
+            ],
+        ];
+
         $users = User::all();
 
         $topic = Topic::where('id', 1)->first();
@@ -122,6 +147,31 @@ Mel Gibson said a lot of things I don't like, and so have a lot of other people 
             }
         }
 
+        $vote = Vote::where('id', 1)->first();
+        $addMin = 2;
+        $addSec = 0;
+        $time = $vote->created_at;
+        $vote->created_at = $time-> subHours(3);
+
+
+        $usersIds = ($vote->votePermissions)->pluck('user_id')->all();
+        $users = User::whereIn('id', $usersIds)->get();
+
+        foreach ($voteComments as $voteComment) {
+            $comment = factory(Comment::class)->make();
+            $comment->content_origin = $voteComment['cmnt'];
+            $comment->content_generated = MarkdownService::baseConvert($voteComment['cmnt']);
+            $randomUser = $users->random();
+            $comment->user()->associate($randomUser);
+            $comment->created_at = $time->addMinutes($addMin)->addSeconds($addSec);
+            $addMin = rand(1, 15);
+            $addSec = rand(5, 25);
+            $comment->save();
+            $vote->comments()->save($comment);
+            $vote->updated_at = $comment->updated_at;
+            $vote->save();
+        }
+
 
 //        foreach ($topics as $topic) {
 //            $commentCount = rand(1, 5);
@@ -138,37 +188,37 @@ Mel Gibson said a lot of things I don't like, and so have a lot of other people 
 //            $topic->comments()->saveMany($comments);
 //        }
 
-        foreach ($votes as $vote) {
-            $commentCount = rand(1, 5);
-            $comments = factory(Comment::class, $commentCount)
-                ->make();
-            if (!$comments instanceof Collection) {
-                $comments =  new Collection([$comments]);
-            }
-            $comments->each(function ($comment) use ($users) {
-                $randomUser = $users->random();
-                $comment->user()->associate($randomUser);
-                $comment->save();
-            });
+//        foreach ($votes as $vote) {
+//            $commentCount = rand(1, 5);
+//            $comments = factory(Comment::class, $commentCount)
+//                ->make();
+//            if (!$comments instanceof Collection) {
+//                $comments =  new Collection([$comments]);
+//            }
+//            $comments->each(function ($comment) use ($users) {
+//                $randomUser = $users->random();
+//                $comment->user()->associate($randomUser);
+//                $comment->save();
+//            });
+//
+//            $vote->comments()->saveMany($comments);
+//        }
 
-            $vote->comments()->saveMany($comments);
-        }
-
-        foreach ($voteItems as $voteItem) {
-            $commentCount = rand(1, 5);
-            $comments = factory(Comment::class, $commentCount)
-                ->make();
-            if (!$comments instanceof Collection) {
-                $comments =  new Collection([$comments]);
-            }
-            $comments->each(function ($comment) use ($users) {
-                $randomUser = $users->random();
-                $comment->user()->associate($randomUser);
-                $comment->save();
-            });
-
-            $voteItem->comments()->saveMany($comments);
-        }
+//        foreach ($voteItems as $voteItem) {
+//            $commentCount = rand(1, 5);
+//            $comments = factory(Comment::class, $commentCount)
+//                ->make();
+//            if (!$comments instanceof Collection) {
+//                $comments =  new Collection([$comments]);
+//            }
+//            $comments->each(function ($comment) use ($users) {
+//                $randomUser = $users->random();
+//                $comment->user()->associate($randomUser);
+//                $comment->save();
+//            });
+//
+//            $voteItem->comments()->saveMany($comments);
+//        }
 
     }
 }
