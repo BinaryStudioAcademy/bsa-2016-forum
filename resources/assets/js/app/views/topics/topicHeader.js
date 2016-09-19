@@ -24,6 +24,7 @@ module.exports = Marionette.ItemView.extend({
             },
             createdDate: dateHelper.middleDate(this.model.get('created_at'))
         };
+
         return {
             model: this.model.toJSON(),
             meta: {
@@ -31,6 +32,7 @@ module.exports = Marionette.ItemView.extend({
                 likes: meta.likes,
                 comments: meta.comments
             },
+            canDelete: currentUser.isAdmin() || (currentUser.id == this.model.get('user_id')),
             createdDate: dateHelper.middleDate(this.model.get('created_at'))
         };
     },
