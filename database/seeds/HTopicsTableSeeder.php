@@ -144,6 +144,48 @@ class HTopicsTableSeeder extends Seeder
                 'tags' => ['movie', 'favorite', 'character'],
                 'category' => 'Movies',
             ],
+            [
+                'name' => 'Best coffee in the city',
+                'desc' => '',
+                'tags' => ['coffee', 'Lviv'],
+                'category' => 'Miscellaneous',
+            ],
+            [
+                'name' => 'Festivals',
+                'desc' => '',
+                'tags' => ['Festivals'],
+                'category' => 'Miscellaneous',
+            ],
+            [
+                'name' => 'Hobby & Toy Stores in Lviv',
+                'desc' => '',
+                'tags' => ['hobby', 'Lviv', 'toys'],
+                'category' => 'Hobby',
+            ],
+            [
+                'name' => 'Book recommendations',
+                'desc' => '',
+                'tags' => ['books'],
+                'category' => 'Literature',
+            ],
+            [
+                'name' => 'Your favorite football team',
+                'desc' => '',
+                'tags' => ['football',],
+                'category' => 'Sport',
+            ],
+            [
+                'name' => 'Best Museums in the world',
+                'desc' => '',
+                'tags' => ['museums',],
+                'category' => 'Travels',
+            ],
+            [
+                'name' => 'What kind of music are you listening to at work?',
+                'desc' => '',
+                'tags' => ['music',],
+                'category' => 'Music',
+            ],
         ];
 
         $users = User::all();
