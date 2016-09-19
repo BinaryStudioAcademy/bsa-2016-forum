@@ -46,7 +46,8 @@ module.exports = {
                 'votes': 'index',
                 'votes/create': 'createVote',
                 
-                'votes/:id': 'showVote'
+                'votes/:id': 'showVote',
+                'votes/:id/edit': 'editVote'
             },
             navigItemName: 'votes'
         },

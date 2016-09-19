@@ -17,6 +17,16 @@
         <div class="vote-attachments">
             Attachments
         </div>
+
+        <div class="topic-control">
+            <div class="topic-bar hidden-xs"></div>
+            <div class="topic-history">{{ model.created_at }} {{ meta.user.display_name }}</div>
+            <div class="topic-control-btn">
+                <a href="#votes/{{slug}}/edit" class="topic-edit-btn">Edit</a>
+                <a class="topic-answer-btn">Answer</a>
+            </div>
+        </div>
+
         <div class="vote-comments">
             <h4><span class="count">{{ meta.comments }}</span> Comments</h4>
             <div id="add-comment"></div>
