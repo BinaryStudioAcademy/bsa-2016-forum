@@ -72,11 +72,11 @@ module.exports = Marionette.LayoutView.extend({
         this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.model.id, function (n) {
             this.ui.c_count.text(n);
         });
-        this.listenTo(Radio.channel('votesChannel'), 'setButton' + this.options.voteModel.id, function (n) {
-            if (!n) this.muteMoreButton(this.ui.moreButton);
-        });
 
-        this.listenTo(Radio.channel('votesChannel'), 'setButton' + this.options.voteModel.id, function (n) {
+        this.listenTo(Radio.channel('votesChannel'), 'setCommentsCountTotal' + this.model.id, function (n) {
+            this.ui.t_count.text(n);
+        });
+        this.listenTo(Radio.channel('votesChannel'), 'setButton' + this.model.id, function (n) {
             if (!n) this.muteMoreButton(this.ui.moreButton);
         });
 
@@ -84,6 +84,7 @@ module.exports = Marionette.LayoutView.extend({
 
         var self = this;
         // triggered after vote model fetched and if vote is finished
+
         this.listenTo(Radio.channel('votesChannel'), 'showVoteResult', function () {
             // if user has permissions to see vote results
             if (currentUser.isAdmin() || self.model.get('user_id') === currentUser.get('id')) {
@@ -96,9 +97,6 @@ module.exports = Marionette.LayoutView.extend({
                 );
             }
         });
-
-        //socketCommentClient.bind('VoteComments', this.options.voteModel.id);
-
     },
 
     onBeforeDestroy: function () {
@@ -113,14 +111,16 @@ module.exports = Marionette.LayoutView.extend({
         this.collection.listenTo(Radio.channel('VoteComments'), 'newComment', function (comment) {
 
             self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
-            self.collection.pop();
-
+            
             var count = self.addedCommentsCollection.length + self.collection.length;
-            //Radio.trigger('votesChannel', 'setCommentsCount' + self.model.id, count);
             var countTotal = self.addedCommentsCollection.length + self.collection.getMeta().total;
 
-            Radio.trigger('votesChannel', 'setCommentsCount' + self.options.voteModel.id, count);
-            Radio.trigger('votesChannel', 'setCommentsCountTotal' + self.options.voteModel.id, countTotal);
+            if (self.collection.length >= 15) {
+                self.collection.pop();
+            }
+
+            Radio.trigger('votesChannel', 'setCommentsCount' + self.model.id, count);
+            Radio.trigger('votesChannel', 'setCommentsCountTotal' + self.model.id, countTotal);
 
 
             if (comment.user_id != currentUser.id) {
@@ -216,7 +216,7 @@ module.exports = Marionette.LayoutView.extend({
 
         this.getRegion('comments').show(
             new CommentsCollectionView({
-                collection: this.options.collection,
+                collection: this.options.collection
 
             }));
 

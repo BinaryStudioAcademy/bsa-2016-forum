@@ -31,18 +31,19 @@ module.exports = Marionette.Object.extend({
         Votes.fetch({data: {page: 1}});
     },
 
-    showVote: function (slug) {
+    showVote: function (id) {
         var AddCommentView = require('../views/votes/VoteCommentItemAdd');
         var view;
         var model;
-        var parentUrl = '/votes/' + slug;
+        var parentUrl = '/votes/' + id;
         var myCommentsCollection = new CommentsCollection([], {parentUrl: parentUrl});
         var VoteAnswers = new VoteRICollection([], {parentUrl: parentUrl});
+        
         VoteAnswers.fetch();
         myCommentsCollection.fetch({
             success: function (data) {
-               // Radio.trigger('votesChannel', 'setCommentsCount' + slug, data.length);
-            //}
+         //     Radio.trigger('votesChannel', 'setCommentsCount' + slug, data.length);
+         //   }
          //});
 
         //model = new VoteModel({slug: slug});
