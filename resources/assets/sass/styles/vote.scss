@@ -468,6 +468,7 @@ VOTE INDEX
 
 .js-item-click {
   margin-bottom:10px;
+  display: inline-block;
 }
 
 .vote-item-comments-collapse {
@@ -510,8 +511,8 @@ VOTE INDEX
 }
 
 .vote-item-comments-collapse {
-  max-height: 1000px !important;
-  overflow-y: scroll !important;
+  max-height: 1000px;
+  overflow-y: scroll;
 }
 
 .vote-results {

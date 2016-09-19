@@ -66,15 +66,15 @@ module.exports = Marionette.Object.extend({
                     model.parentUrl = _.result(parentView.model, 'getEntityUrl');
                 }
 
-                view.getRegion('newComment').show(new NewVoteCommentView({
-                    model: model,
-                    commentCollection: commentCollection,
-                    parentCommentView: parentView._isVoteView/* || parentView._isVoteItemView*/ ? null : parentView
-                }));
+            app.renderModal(new NewVoteCommentView({
+                model: model,
+                commentCollection: commentCollection,
+                parentCommentView: parentView._isVoteView/* || parentView._isVoteItemView*/ ? null : parentView
+            }));
         });
 
         view.listenTo(Radio.channel('comment'), 'showChildComments', function (commentItemView) {
-            var childs = new CommentsCollection();
+            var childs = commentItemView._childCommentsCollection;
             childs.parentUrl = _.result(commentItemView.model, 'getEntityUrl');
             childs.fetch();
             commentItemView._childUpload = true;
