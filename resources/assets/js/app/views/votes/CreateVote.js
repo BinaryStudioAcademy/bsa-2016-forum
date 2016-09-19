@@ -32,7 +32,7 @@ module.exports = Marionette.LayoutView.extend({
         toNotAccessed: '.js-to-not-accessed',
         selectAccessedUsersBlock: '.vote-new-access'
     },
-    initialize:function() {
+    initialize: function () {
         this.collection.trigger('update', this.collection);
     },
     modelEvents: {
@@ -48,7 +48,7 @@ module.exports = Marionette.LayoutView.extend({
                     });
             });
 
-            this.ui.delete.toggleClass( 'hidden', !(this.model.get('user_id') == currentUser.id || currentUser.isAdmin()));
+            this.ui.delete.toggleClass('hidden', !(this.model.get('user_id') == currentUser.id || currentUser.isAdmin()));
         },
         'change:is_public': function (model) {
             if (model.get('is_public') == 0 && (!model.get('user_id') || model.get('user_id') == currentUser.id) || currentUser.isAdmin()) {
@@ -76,7 +76,8 @@ module.exports = Marionette.LayoutView.extend({
         'click @ui.toNotAccessed': function () {
             this.moveUsers(this.getOption('accessedUsers'), this.getOption('users'));
         },
-        'click @ui.start': function() {
+        'click @ui.start': function () {
+
             var validAnswers = true;
             this.collection.each(function (model) {
                 if (!model.isValid()) {
@@ -105,6 +106,12 @@ module.exports = Marionette.LayoutView.extend({
                     Backbone.history.navigate('votes', {trigger: true});
                 }
             });
+        }
+    },
+    onShow: function () {
+        var self = this;
+        if (this.model.get('is_public') == 0) {
+            self.ui.selectAccessedUsersBlock.show();
         }
     },
     onRender: function () {
