@@ -106,6 +106,7 @@ module.exports = Marionette.ItemView.extend({
                 }
 
                 if (view._deletedFiles.length) {
+                    view.modelChangeMeta(true);
                     view.removeFilesFromServer();
                 }
 
