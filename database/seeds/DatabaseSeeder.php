@@ -23,13 +23,13 @@ class DatabaseSeeder extends Seeder
         $this->call(HTopicsTableSeeder::class);
         $this->call(MessagesTableSeeder::class);
         $this->call(HVoteTableSeeder::class);
-        $this->call(VoteItemSeeder::class);
+//        $this->call(VoteItemSeeder::class);
         //$this->call(VoteResultsSeeder::class);
         $this->call(HCommentsSeeder::class);
 
         $this->call(SubscriptionsSeeder::class);
         $this->call(LikesSeeder::class);
-        $this->call(VoteUniqueViewSeeder::class);
+//        $this->call(VoteUniqueViewSeeder::class);
 
         Model::reguard();
     }
