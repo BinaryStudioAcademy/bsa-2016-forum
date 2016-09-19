@@ -1,31 +1,31 @@
-<div class="votes-item">
-    <div class="votes-item-bar">
-        <div class="votes-item-avatar">
-            <img src="/images/user.png">
-        </div>
+<div class="news-item-date vote-avatar">
+    <img src="images/user.png">
+</div>
+<div class="news-item-detail">
+    <span>{{ meta.user.first_name}} {{ meta.user.last_name }}:</span>
+    <a href="#votes/{{ model.slug }}" class="news-item-title">
+        {{ model.title }}
+        {{#ifCond model.is_saved '==' 0}}<span class="not-saved">(not saved)</span>{{/ifCond}}
+    </a>
+    <div class="vote-item-icons">
+        <span><i class="fa fa-star"></i>&nbsp;{{ meta.likes }}</span>
+        <span><i class="fa fa-commenting"></i>&nbsp;{{ meta.comments }}</span>
+        <span><i class="fa fa-eye"></i>&nbsp;{{ meta.numberOfUniqueViews }}</span>
+
+        <button class="btn-link text-info subscribe-btn">Subscribe</button>
     </div>
-    <div class="votes-item-body">
-        <div class="votes-item-title">
-            <span><a id="label">{{ model.title }}</a></span> {{#ifCond model.is_saved '==' 0}}<span class="not-saved">(not saved)</span>{{/ifCond}} Opened by: <span> {{ meta.user.first_name}} {{ meta.user.last_name }} </span>
-            <button class="text-info subscribe-btn"> Subscribe</button>
-        </div>
-        <div class="votes-item-details">
-            <span>{{ meta.comments}} Comments</span>
-            <span>{{ meta.likes }} likes</span>
-            <span>{{ meta.numberOfUniqueViews }} unique views</span>
-            {{#if model.finished_at}}
-            <span>Finished at {{ finishedDate }}</span>
-            {{else}}
-            <span class="green-text">Currently in process</span>
-            {{/if}}
-            <span>{{model.views}} Views</span>
-        </div>
-        <div class="votes-item-tags">
-            {{#each meta.tags}}
-                <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
-            {{/each}}
-        </div>
-        <!--<span class="votes-item-time">Created at {{ model.created_at }}</span>-->
-    <span class="votes-item-time">Asked {{meta.days_ago}}</span>
+    <div class="vote-deadline">
+        {{#if model.finished_at}}
+            <span><i class="fa fa-clock-o"></i> Deadline {{ finishedDate }}</span>
+        {{else}}
+            <span class="green-text"><i class="fa fa-spinner"></i> Currently in process</span>
+        {{/if}}
     </div>
+    <div class="vote-tags">
+        {{#each meta.tags}}
+            <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
+        {{/each}}
+    </div>
+    <p class="news-item-preview"></p>
+    <span class="votes-item-time pull-right">Asked {{meta.days_ago}}</span>
 </div>
