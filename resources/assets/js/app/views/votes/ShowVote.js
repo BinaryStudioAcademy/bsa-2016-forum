@@ -22,19 +22,62 @@ module.exports = Marionette.LayoutView.extend({
     },
     ui: {
         c_count: '.count',
+        t_count: '.count-total',
         newCommentButton: '.new-comment-notification',
+        moreButton: '.vote-comments-more',
         voteCommit: '.commit-vote'
     },
 
     events: {
         'click @ui.newCommentButton': 'showNewComments',
+        'click @ui.moreButton': 'onClickVoteCommentsMore',
         'click @ui.voteCommit': 'saveVotingOption'
     },
 
+    _pageMore: 2,
+    _allItemsUploaded:false,
+
+    muteMoreButton: function () {
+        this.ui.moreButton.addClass('invisible');
+    },
+
+    onClickVoteCommentsMore: function(e) {
+        self = this;
+
+        if (this._allItemsUploaded) {
+            return;
+        }
+
+        this.collection.fetch({
+            remove: false,
+            data: {page: this._pageMore},
+            error: function (collection, response) {
+                console.log('error');
+                self._allItemsUploaded = true;
+                console.error(response.responseText);
+            },
+            success: function (collection, xhr) {
+                var meta = this.collection.getMeta();
+                if (meta.hasMorePages){
+                    this._pageMore++;
+                } else {
+                    this.muteMoreButton(this.ui.moreButton);
+                    return;
+                }
+            }.bind(this)
+        });
+    },
 
     initialize: function () {
         this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.model.id, function (n) {
             this.ui.c_count.text(n);
+        });
+        this.listenTo(Radio.channel('votesChannel'), 'setButton' + this.options.voteModel.id, function (n) {
+            if (!n) this.muteMoreButton(this.ui.moreButton);
+        });
+
+        this.listenTo(Radio.channel('votesChannel'), 'setButton' + this.options.voteModel.id, function (n) {
+            if (!n) this.muteMoreButton(this.ui.moreButton);
         });
 
         socketCommentClient.bind('VoteComments', this.model.id);
@@ -53,6 +96,9 @@ module.exports = Marionette.LayoutView.extend({
                 );
             }
         });
+
+        //socketCommentClient.bind('VoteComments', this.options.voteModel.id);
+
     },
 
     onBeforeDestroy: function () {
@@ -65,9 +111,17 @@ module.exports = Marionette.LayoutView.extend({
 
         var self = this;
         this.collection.listenTo(Radio.channel('VoteComments'), 'newComment', function (comment) {
+
             self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
+            self.collection.pop();
+
             var count = self.addedCommentsCollection.length + self.collection.length;
-            Radio.trigger('votesChannel', 'setCommentsCount' + self.model.id, count);
+            //Radio.trigger('votesChannel', 'setCommentsCount' + self.model.id, count);
+            var countTotal = self.addedCommentsCollection.length + self.collection.getMeta().total;
+
+            Radio.trigger('votesChannel', 'setCommentsCount' + self.options.voteModel.id, count);
+            Radio.trigger('votesChannel', 'setCommentsCountTotal' + self.options.voteModel.id, countTotal);
+
 
             if (comment.user_id != currentUser.id) {
                 self.ui.newCommentButton.show(300);
@@ -162,7 +216,8 @@ module.exports = Marionette.LayoutView.extend({
 
         this.getRegion('comments').show(
             new CommentsCollectionView({
-                collection: this.options.collection
+                collection: this.options.collection,
+
             }));
 
         this.getRegion('voteheader').show(

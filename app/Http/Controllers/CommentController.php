@@ -16,6 +16,7 @@ use App\Facades\MarkdownService;
 
 class CommentController extends ApiController
 {
+    const PAGINATE_COUNT = 15;
 
     private function getItemMetaData($comment)
     {
@@ -289,7 +290,6 @@ class CommentController extends ApiController
         foreach ($comments as $comment) {
             $meta[$comment->id]['user'] = $comment->user()->first();
         }
-
         return $meta;
     }
 
@@ -299,10 +299,13 @@ class CommentController extends ApiController
      */
     public function getVoteComments(Vote $vote)
     {
-        $comments = $vote->comments()->get();
+        $comments = $vote->comments()->orderBy('id', 'desc')->paginate(self::PAGINATE_COUNT);
         $meta = $this->makeCommentsMeta($comments);
-
-        return $this->setStatusCode(200)->respond($comments, $meta);
+        $meta['hasMorePages'] = $comments->hasMorePages();
+        $meta['total'] = $comments->total();
+        //$meta['lastPage'] = $comments->lastPage();
+        //$meta['currentPage'] = $comments->currentPage();
+        return $this->setStatusCode(200)->respond($comments->all(), $meta);
     }
 
     /**

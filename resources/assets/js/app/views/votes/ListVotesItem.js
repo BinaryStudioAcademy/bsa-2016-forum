@@ -34,7 +34,18 @@ module.exports = Marionette.ItemView.extend({
             isFinished: ((this.model.get('finished_at') == null) || (dateHelper.getDateTimeDiff(this.model.get('finished_at')) < 0)),
             createdDate: dateHelper.fullDate(this.model.get('created_at')),
             finishedDate: (this.model.get('finished_at') != null) ? dateHelper.middleDate(this.model.get('finished_at')) : '',
-            meta: meta
+           // meta: meta
+            meta: {
+                user: tempmeta[id].user,
+                likes: tempmeta[id].likes,
+                comments: tempmeta[id].comments,
+                tags: tempmeta[id].tags,
+                status: tempmeta[id].status,
+                days_ago:tempmeta[id].days_ago,
+                hasMorePages:tempmeta.hasMorePages,
+                numberOfUniqueViews: tempmeta[id].numberOfUniqueViews,
+                usersWhoSaw: tempmeta[id].usersWhoSaw,
+            }
         };
     }
 });

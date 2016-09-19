@@ -6,5 +6,5 @@ module.exports = BaseCollection.extend({
     url: '/comments',
     comparator: function (model) {
         return -model.get("id");
-    }
+        }
 });

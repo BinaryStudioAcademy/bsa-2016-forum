@@ -6,7 +6,6 @@ var config = require('./config');
 
 
 module.exports = function (token, onSuccess) {
-
     var responseData = "";
 
     var options = {

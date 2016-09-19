@@ -447,7 +447,26 @@ VOTE INDEX
 .relative {
   position: relative;
 }
+.vote-comments-btn {
+  background: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  color: #999;
+  display: block;
+  padding: 10px;
+  width: 100%;
+  height: auto;
+  text-align: center;
+  margin-bottom: 20px;
+}
 
+.vote-comments-btn:hover {
+  color: #999;
+  cursor: pointer;
+  text-decoration: none;
+  background: #ddd;
+  animation-duration: 1s;
+}
 .vote-attachments {
   padding-top: 15px;
 }

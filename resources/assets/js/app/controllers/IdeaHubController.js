@@ -41,12 +41,24 @@ module.exports = Marionette.Object.extend({
         VoteAnswers.fetch();
         myCommentsCollection.fetch({
             success: function (data) {
-                Radio.trigger('votesChannel', 'setCommentsCount' + slug, data.length);
+               // Radio.trigger('votesChannel', 'setCommentsCount' + slug, data.length);
+            //}
+         //});
+
+        //model = new VoteModel({slug: slug});
+        // model.fetchBySlag();
+                Radio.trigger('votesChannel', 'setCommentsCount' + id, data.length);
+                Radio.trigger('votesChannel', 'setCommentsCountTotal' + id, data.getMeta().total);
+                Radio.trigger('votesChannel', 'setButton' + id, data.getMeta().hasMorePages);
             }
         });
 
-        model = new VoteModel({slug: slug});
-        model.fetchBySlag();
+        if (Votes.get(id)) {
+            model = Votes.get(id);
+        } else {
+            model = new VoteModel({id: id});
+            model.fetch();
+        }
 
         view = new ShowVote({
             model: model,
