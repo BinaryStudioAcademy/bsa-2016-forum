@@ -56,7 +56,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Validator::extend('is_five_minutes_time', function ($attribute, $value, $parameters, $validator) {
-            return Carbon::parse($value)->gt(Carbon::now('UTC')->addMinutes(5));
+            return Carbon::parse($value, 'UTC')->gt(Carbon::now('UTC')->addMinutes(5));
         });
 
     }
