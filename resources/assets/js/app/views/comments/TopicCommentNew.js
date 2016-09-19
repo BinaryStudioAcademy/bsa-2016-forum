@@ -99,6 +99,8 @@ module.exports = Marionette.ItemView.extend({
                     }
                 }
                 if (view._dropZone && view._dropZone.files.length) {
+                    // show "upload files" message and rerender comment view
+                    view.modelChangeMeta(true);
                     // start upload to server
                     view._dropZone.processQueue();
                 }
@@ -193,10 +195,15 @@ module.exports = Marionette.ItemView.extend({
         }
     },
 
-    modelChangeMeta: function () {
+    modelChangeMeta: function (upload) {
         if (this.options.commentCollection) {
             var model = this.options.commentCollection.findWhere({ id: this.model.get('id') });
             model.setMeta(this.model.getMeta());
+            if (upload) {
+                model.set({ isUploadingAttachs: true });
+            } else {
+                model.set({ isUploadingAttachs: false });
+            }
             return model.trigger('change');
         }
 
