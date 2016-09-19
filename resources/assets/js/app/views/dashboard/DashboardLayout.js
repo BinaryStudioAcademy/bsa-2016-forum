@@ -1,31 +1,48 @@
 var Marionette = require('backbone.marionette');
+var TopicsCollectionView = require('../topics/topicCollection');
+var VotesCollectionView = require('../votes/ListVotesCollection');
+var UsersCollectionView = require('../users/userCollection');
+var BookmarksCollection = require('../bookmarks/bookmarkCollection');
+var SubscriptionsCollections = require('../subscriptions/subscriptionsCollection');
+var MessagesCollection = require('../messages/messageCollection');
 var logger = require('../../instances/logger');
-var _ = require('underscore');
 var CountersCollectionView = require('./CountersCollection');
-var DashBoardProfileView = require('./DashboardProfile');
-var DashBoardMainView = require('./DashboardMain');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'DashboardLayout',
     regions: {
         counters: '.counters',
-        sidebar: '.sidebar',
-        content: '.content'
+        bookmarks: '.bookmarks',
+        messages: '.messages',
+        topics: '.topics',
+        votes: '.votes',
+        users: '.users',
+        subscriptions: '.subscriptions'
     },
 
     onRender: function () {
         this.getRegion('counters').show(new CountersCollectionView({
             collection: this.options.countersCollection
         }));
-        this.getRegion('content').show(new DashBoardMainView({
-            topics: this.options.topics,
-            users: this.options.users,
-            votes: this.options.votes
+        this.getRegion('topics').show(new TopicsCollectionView({
+            paginate: false,
+            collection: this.options.topics
         }));
-        this.getRegion('sidebar').show(new DashBoardProfileView({
-            bookmarks: this.options.bookmarks,
-            subscriptions: this.options.subscriptions,
-            messages: this.options.messages
+        this.getRegion('votes').show(new VotesCollectionView({
+            collection: this.options.votes,
+            paginate: false
+        }));
+        this.getRegion('users').show(new UsersCollectionView({
+            collection: this.options.users
+        }));
+        this.getRegion('messages').show(new MessagesCollection({
+            collection: this.options.messages
+        }));
+        this.getRegion('bookmarks').show(new BookmarksCollection({
+            collection: this.options.bookmarks
+        }));
+        this.getRegion('subscriptions').show(new SubscriptionsCollections({
+            collection: this.options.subscriptions
         }));
     }
 });

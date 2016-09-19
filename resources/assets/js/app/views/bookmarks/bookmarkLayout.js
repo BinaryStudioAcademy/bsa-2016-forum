@@ -1,5 +1,4 @@
 var Marionette = require('backbone.marionette');
-var logger = require('../../instances/logger');
 var bookmarkCollection = require('./bookmarkCollection');
 
 module.exports = Marionette.LayoutView.extend({
