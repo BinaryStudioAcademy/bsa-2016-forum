@@ -302,9 +302,8 @@ class CommentController extends ApiController
         $comments = $vote->comments()->orderBy('id', 'desc')->paginate(self::PAGINATE_COUNT);
         $meta = $this->makeCommentsMeta($comments);
         $meta['hasMorePages'] = $comments->hasMorePages();
+        $meta['paginateCount'] = self::PAGINATE_COUNT;
         $meta['total'] = $comments->total();
-        //$meta['lastPage'] = $comments->lastPage();
-        //$meta['currentPage'] = $comments->currentPage();
         return $this->setStatusCode(200)->respond($comments->all(), $meta);
     }
 

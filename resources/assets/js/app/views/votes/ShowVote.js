@@ -41,6 +41,10 @@ module.exports = Marionette.LayoutView.extend({
         this.ui.moreButton.addClass('invisible');
     },
 
+    showMoreButton: function () {
+        this.ui.moreButton.addClass('visible');
+    },
+
     onClickVoteCommentsMore: function(e) {
         self = this;
 
@@ -111,12 +115,18 @@ module.exports = Marionette.LayoutView.extend({
         this.collection.listenTo(Radio.channel('VoteComments'), 'newComment', function (comment) {
 
             self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
-            
+
             var count = self.addedCommentsCollection.length + self.collection.length;
             var countTotal = self.addedCommentsCollection.length + self.collection.getMeta().total;
 
-            if (self.collection.length >= 15) {
+            console.log(self.addedCommentsCollection.length);
+            console.log(self.collection.getMeta().total);
+
+
+            if (self.collection.length >=  self.collection.getMeta().paginateCount) {
                 self.collection.pop();
+                self.showMoreButton(self.ui.moreButton);
+
             }
 
             Radio.trigger('votesChannel', 'setCommentsCount' + self.model.id, count);
@@ -202,7 +212,7 @@ module.exports = Marionette.LayoutView.extend({
 
     collectionEvents: {
         'update': function () {
-            this.ui.c_count.text(this.collection.length);
+           this.ui.c_count.text(this.collection.length);
         }
     },
 
