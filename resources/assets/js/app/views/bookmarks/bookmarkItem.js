@@ -1,9 +1,10 @@
 var Marionette = require('backbone.marionette');
-var _ = require('underscore');
+var app = require('../../instances/appInstance');
+var ConfirmDeleteView = require('./bookmarkConfirmDeleteView');
 
 module.exports = Marionette.ItemView.extend({
     template: 'bookmarkItem',
-    tagName: 'div',
+    tagName: 'li',
 
     ui: {
         bookmarkDelete: '.delete-bookmark-button'
@@ -27,6 +28,10 @@ module.exports = Marionette.ItemView.extend({
     },
 
     delete: function() {
-        this.model.destroy();
+        app.renderModal(new ConfirmDeleteView({
+            model: this.model,
+            meta: this.model.getMeta().topic[this.model.get('id')],
+            target_type: "Topic"
+        }));
     }
 });

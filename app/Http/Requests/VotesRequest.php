@@ -21,16 +21,41 @@ class VotesRequest extends ApiRequest
      */
     public function rules()
     {
-        return [
-            'user_id' => 'required|integer|is_current_user',
-            'title' => 'required|max:255',
-            'finished_at' => 'date|is_five_minutes_time',
-            'is_single' => 'integer|between:0,1',
-            'is_public' => 'integer|between:0,1',
-            'is_saved' => 'integer|between:0,1',
-            'users' => 'json',
-            'tags' => 'json|tags_validator',
-        ];
+        switch ($this->method()) {
+            case 'POST':
+                return [
+                    'user_id' => 'required|integer|is_current_user',
+                    'title' => 'required|max:255',
+                    'finished_at' => 'date|is_five_minutes_time',
+                    'is_single' => 'integer|between:0,1',
+                    'is_public' => 'integer|between:0,1',
+                    'is_saved' => 'integer|between:0,1',
+                    'users' => 'json',
+                    'tags' => 'json|tags_validator',
+                    'slug' => 'unique:votes,slug|regex:/(?!^\d+$)^[\w\-]+$/',
+                ];
+
+                break;
+            case 'PUT':
+            case 'PATCH':
+                $id = $this->route('votes');
+
+                return [
+                    'user_id' => 'required|integer|is_current_user',
+                    'title' => 'required|max:255',
+                    'finished_at' => 'date|is_five_minutes_time',
+                    'is_single' => 'integer|between:0,1',
+                    'is_public' => 'integer|between:0,1',
+                    'is_saved' => 'integer|between:0,1',
+                    'users' => 'json',
+                    'tags' => 'json|tags_validator',
+                    'slug' => 'regex:/(?!^\d+$)^[\w\-]+$/|unique:votes,slug,' . $id,
+                ];
+
+                break;
+            default:
+                return [];
+        }
     }
 
     public function messages()
@@ -40,7 +65,9 @@ class VotesRequest extends ApiRequest
             'user_id.is_current_user' => 'User not is authorized',
             'title.required' => 'Title is required',
             'tags.tags_validator' => 'Format of field tags is incorrect',
-            'finished_at.is_five_minutes_time' => 'Perhaps, you typed date in the past. Also, minimum time for vote: 5 minutes.'
+            'finished_at.is_five_minutes_time' => 'Perhaps, you typed date in the past. Also, minimum time for vote: 5 minutes.',
+            'slug.unique' => 'Sluggable Url already exist',
+            'slug.regex' => 'Sluggable Url can contain only [a-Z, 0-9, -, _] and not digits only'
         ];
     }
 }

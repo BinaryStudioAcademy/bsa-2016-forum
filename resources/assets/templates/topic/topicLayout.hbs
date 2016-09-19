@@ -1,55 +1,17 @@
-<div>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="create-topic pull-right">
-                <a href="#topic/create/{{ categoryId }}">
-                    <button class="btn btn-warning btn-lg">
-                        <span class="hidden-xs">Create topic</span>
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    </button>
-                </a>
+<div class="row topics">
+    <div class="span12">
+        <div class="widget widget-nopad">
+            <div class="widget-header">
+                <span id="categoryForBreadcrumbs"></span>
+                <div class="create-topic pull-right">
+                    <a class="btn btn-warning btn-lg" href="#topic/create/{{ categoryId }}">
+                        <i class="fa fa-file-o"></i>&nbsp;<span class="hidden-xs">Create topic</span>
+                    </a>
+                </div>
             </div>
-            {{#if isAdmin}}
-            <div class="edit-category pull-right">
-                <a href="#topicCategories/{{ categoryId }}/edit">
-                    <button class="btn btn-warning btn-lg">
-                        <span class="hidden-xs">Edit category</span>
-                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                    </button>
-                </a>
-            </div>
-            {{/if}}
-            <div class="clear"></div>
-            <div id="categoryForBreadcrumbs">
-            </div>
+            <!-- /widget-header -->
+            <div class="widget-content" id="posts"></div>
+            <!-- /widget-content -->
         </div>
-
-    </div>
-    <div class="post-head">
-        <div class="">
-            <div class="row">
-                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    <div>Title</div>
-                </div>
-                <div class="col-sm-1 col-md-1 col-lg-1 hidden-xs">
-                    <div class="text-center">Rating</div>
-                </div>
-                <div class="col-sm-1 col-md-1 col-lg-1 hidden-xs">
-                    <div class="text-center">Views</div>
-                </div>
-                <div class="col-sm-1 col-md-1 col-lg-1 hidden-xs">
-                    <div class="text-center">Active users</div>
-                </div>
-                <div class="col-sm-1 col-md-1 col-lg-1 hidden-xs">
-                    <div class="text-center">Answers</div>
-                </div>
-                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                    <div class="text-center">Date</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="posts" id="posts">
-
     </div>
 </div>

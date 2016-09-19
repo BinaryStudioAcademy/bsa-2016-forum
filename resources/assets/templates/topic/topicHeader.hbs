@@ -1,7 +1,7 @@
 <div class="topic-comment-flex">
     <div class="topic-bar hidden-xs">
         <div class="topic-avatar topic-avatar-border">
-            <img src="/images/user.png">
+            <img src="images/user.png">
         </div>
         <div class="topic-addition">
 
@@ -26,8 +26,9 @@
 </div>
 <div class="topic-control">
     <div class="topic-bar hidden-xs"></div>
-    <div class="topic-history">{{ model.created_at }} {{ meta.user.display_name }}</div>
+    <div class="topic-history">{{ createdDate }} {{ meta.user.display_name }}</div>
     <div class="topic-control-btn">
+        <a href="#votes/createPrivateVoteBasedOnTopicSubscribers/{{model.id}}" class="topic-edit-btn">Create Private Voting Based On Topic Subscribers</a>
         <a class="topic-edit-btn">Edit</a>
         <a class="topic-answer-btn">Reply</a>
         <a class="topic-btn" data-toggle="modal" data-target="#delete-topic-form">Delete</a>

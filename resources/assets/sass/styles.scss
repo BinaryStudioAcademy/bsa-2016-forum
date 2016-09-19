@@ -1,7 +1,15 @@
 body {
   background: #f7f7f7;
 }
+.markdownHelp {
+  margin-left: auto;
+  margin-right: auto;
+  width: 500px;
+}
 
+.markdownHelp-z-index{
+  z-index: 9999 !important;
+}
 .green-text {
   color: green !important;
 }
@@ -74,15 +82,6 @@ body {
   margin: 15px auto;
 }
 
-.spinner {
-  background: rgba(227, 227, 237, 0.4) url("/images/spinner.gif") no-repeat center center fixed;
-  background-size: 200px;
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  left: 0;
-}
 .dropzone {
   border: 2px dashed #0087F7;
   border-radius: 5px;
@@ -97,3 +96,50 @@ body {
 .nav > li > a:hover, .nav > li > a:focus {
   background-color: transparent;
 }
+#nprogress .bar {
+  height: 3px;
+  background: #ffa500;
+}
+#nprogress .peg {
+  box-shadow: 0 0 10px #ffa500, 0 0 5px #ffa500;
+}
+.dz-image img {
+  max-height: 120px;
+  max-width: 120px;
+}
+
+/* start of modal windows fix */
+.modal {
+  bottom: inherit;
+  padding-right: 0 !important;
+}
+
+body.modal-open {
+  overflow: inherit;
+  padding-right: 0 !important;
+}
+
+body {
+  background: #f9f6f1 !important;
+}
+
+.form-padding {
+  padding: 20px;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+textarea {
+  resize: vertical !important;
+}
+
+.fixed-font-13 *{
+  font-size: 13px !important;
+}
+
+.widget-header .fa {
+  margin-left: 13px;
+}
+/* end of modal windows fix */

@@ -37,7 +37,7 @@ module.exports = Marionette.Behavior.extend({
     },
 
     addOkIcon: function () {
-        this.ui.subscribeNotification.html('<i class="glyphicon glyphicon-ok subscribed"></i> Unsubscribe');
+        this.ui.subscribeNotification.html('<i class="fa fa-check subscribed"></i> Unsubscribe');
     },
 
     removeOkIcon: function () {
@@ -54,7 +54,7 @@ module.exports = Marionette.Behavior.extend({
         if (_.isUndefined(model.getMetaById().subscription) || _.isNull(model.getMetaById().subscription)) {
             return undefined;
         } else {
-            return model.getMeta()[model.get('id')].subscription;
+            return model.getMetaById().subscription;
         }
     },
 

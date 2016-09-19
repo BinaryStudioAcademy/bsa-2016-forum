@@ -23,16 +23,20 @@ var appInstance = require('../instances/appInstance');
 
 var logger = require('../instances/logger');
 
+var nProgress = require('nprogress');
+nProgress.configure({ showSpinner: false });
+
 $( document ).ajaxStart(function() {
-    Radio.channel('spinnerChannel').trigger('show');
+    nProgress.start();
 });
 
 $( document ).ajaxStop(function() {
-    Radio.channel('spinnerChannel').trigger('hide');
+    nProgress.done();
 });
 
 var Handlebars = require('handlebars');
 var Templates = require('../templates')(Handlebars);
+var Handlebarshelpers = require('../helpers/handlebarsHelper');
 
 var NavigCollection = require('../initializers/navigationCollection');
 
@@ -73,6 +77,7 @@ var app = Marionette.Application.extend({
     onStart: function (config) {
         this.config = config;
         this.socket = socket;
+        Handlebarshelpers.register();
         currentUser.fetch({url: this.config.baseUrl + '/user', async:false});
         this.templateCashing();
         this.setRootLayout(new mainLayoutView({ collection: NavigCollection }));

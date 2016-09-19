@@ -1,7 +1,7 @@
-.dashboard .sidebar .bookmarks {
+.dashboard .sidebar .bookmarks .subscriptions{
   width: auto;
 }
-.dashboard .bookmarks, .dashboard .messages {
+.dashboard .bookmarks, .dashboard .messages, .dashboard .subscriptions{
   box-shadow: 0 2px 10px rgba(0,0,0,.25);
 }
 .dashboard .messages .messages-msg-avatar {
@@ -13,4 +13,8 @@
 }
 .dashboard .users .users-item-credential {
   overflow: hidden;
+}
+
+.dashboard .widget-header .fa {
+  margin-left: 13px;
 }

@@ -24,6 +24,12 @@ NEW TOPIC VIEW STYLES
   font-size: 18px;
 }
 
+.topic {
+  width: 100%;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
 .topic-new-title input {
   width: 100%;
   padding: 10px 15px;
@@ -116,7 +122,7 @@ TOPIC DETAILS
 .topic-comment-main, .topic-comment {
   background: #FFF;
   border-radius: 3px;
-  box-shadow: 0 1px 2px rgba(0,0,0,.23);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .23);
 }
 
 .topic-comment-included {
@@ -157,6 +163,8 @@ TOPIC DETAILS
 .topic-body {
   width: 100%;
   display: inline-block;
+  overflow: hidden;
+  word-wrap: break-word;
 }
 
 .topic-body textarea {
@@ -293,7 +301,6 @@ TOPIC DETAILS
   margin-bottom: 20px;
 }
 
-
 .topic-head {
   margin-bottom: 20px;
 }
@@ -305,6 +312,7 @@ TOPIC DETAILS
 .new-comment-container .loader img {
   height: 30px;
 }
+
 .topic-count {
   text-decoration: none;
   text-transform: lowercase;
@@ -314,6 +322,10 @@ TOPIC DETAILS
 .category-topic-time {
   font-size: 12px;
   color: #999999;
+}
+
+.post {
+  overflow: hidden;
 }
 
 .posts a:hover {
@@ -333,6 +345,7 @@ TOPIC DETAILS
   padding-top: 10px;
   margin-left: 0 !important;
   margin-bottom: 10px;
+  word-wrap: break-word;
 }
 
 .post-item:nth-child(even) {
@@ -340,19 +353,34 @@ TOPIC DETAILS
 }
 
 .errors {
-  color:red;
+  color: red;
 }
 
 .edit-category {
   margin-right: 20px;
 }
+
 .attachments-container .file-name {
   overflow: hidden;
 }
+
 .topic-control .childs-btn {
   padding: 10px;
 }
+
 .btn-childs {
   border-radius: 0;
 }
 
+.newcomment .comment-modal textarea {
+  resize: vertical;
+}
+
+.topic-item-icons span {
+  margin-right: 15px;
+}
+
+.create-topic {
+  margin-right: 10px;
+  margin-left: 10px;
+}

@@ -1,6 +1,8 @@
 var BaseModel = require('../instances/Model');
 var _ = require('underscore');
 
+var currentUser = require('../initializers/currentUser');
+
 module.exports = BaseModel.extend({
     urlRoot: '/voteitems',
     validate: function (attrs) {
@@ -11,9 +13,12 @@ module.exports = BaseModel.extend({
 
         if (!_.isEmpty(errors)) {
             return errors;
+        } else  {
+            this.trigger('valid');
         }
     },
     defaults: {
-        name: ''
+        name: '',
+        user_id: currentUser.get('id')
     }
 });

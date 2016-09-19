@@ -1,20 +1,39 @@
 <!--<div class="vote-head">-->
     <div class="vote-header">
         <h3>{{ model.title }}  {{meta.status}}</h3>
-        <h5>Opened by: {{ meta.user.first_name }}  {{ meta.user.last_name }}</h5>
-        <span>{{{ model.description_generated }}}</span><br>
-            <select class="vote-tags">
-            <option>{{ meta.numberOfUniqueViews }} users have seen this voting</option>
-                {{#each meta.usersWhoSaw}}
-                    <option>{{ first_name }} {{ last_name }}</option>
-                {{/each}}
-            </select>
-        <button class="btn btn-info btn-xs text-info subscribe-btn">Subscribe</button>
+        <h5>Opened by: {{ meta.user.first_name }} {{ meta.user.last_name }}</h5>
+        <span>
+            {{#if meta.isFinished}}
+                <span class="green-text"><i class="fa fa-spinner"></i> In process
+                    {{#if meta.finishedDate}}
+                        till {{meta.finishedDate}}
+                    {{/if}}
+                </span>
+            {{else}}
+                <span><i class="fa fa-clock-o"></i> Finished {{meta.finishedDate}}</span>
+            {{/if}}
+        </span>
+        <button class="btn btn-info text-info subscribe-btn">Subscribe</button>
+        <div>{{{ model.description_generated }}}</div>
         <div class="vote-tags">
             {{#each meta.tags}}
                 <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
             {{/each}}
         </div>
+        {{#if meta.showUsers}}
+            <div class="vote-users">
+                <span>{{ meta.numberOfUniqueViews }} users have seen this voting</span>
+                <button class="btn btn-default" data-toggle="collapse" data-target=".users-list">Show users</button>
+                <ul class="nav collapse users-list">
+                    {{#each meta.usersWhoSaw}}
+                        <li class="">
+                            <img src="images/user.png" alt="">
+                            <span>{{ first_name }} {{ last_name }}</span>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
     </div>
 
 <!--</div>-->

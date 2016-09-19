@@ -2,6 +2,7 @@ var Marionette = require('backbone.marionette');
 var Radio = require('backbone.radio');
 var headerView = require('../views/headers/Header');
 var navigationLayoutView = require('./headers/navigationLayout');
+var config = require('config');
 
 var mainLayoutView = Marionette.LayoutView.extend({
     el: 'body',
@@ -13,26 +14,36 @@ var mainLayoutView = Marionette.LayoutView.extend({
         breadCrumbs: '#breadcrumbs',
         modalWindow: '#modal-container'
     },
-    ui: {
-        spinner: '#spinner'
+    initExternalHeader: function () {
+        var getHeader = function() {
+            var request = new XMLHttpRequest();
+            request.open('GET', config.externalHeaderLink, true);
+            request.send();
+            request.onreadystatechange = function() {
+                if (request.readyState != 4) return;
+                if (request.status != 200) {
+                    alert(request.status + ': ' + request.statusText);
+                } else {
+                    var headerHtml = request.responseText;
+                    var headerContainer = document.getElementById('header');
+                    headerContainer.innerHTML =headerHtml;
+                    headerFunction();
+                }
+            };
+        };
+        getHeader();
     },
-
-    initialize: function () {
-        this.listenTo(Radio.channel('spinnerChannel'), 'show', function () {
-            this.ui.spinner.fadeIn(100);
-        });
-
-        this.listenTo(Radio.channel('spinnerChannel'), 'hide', function () {
-            this.ui.spinner.fadeOut(100);
-        });
-    },
-
     onRender: function () {
-        //console.log('main layout render');
-    },
+        if(config.externalHeader){
+            this.initExternalHeader();
+        }
 
+    },
     showRegions: function () {
-        this.getRegion('header').show(new headerView());
+        if(!config.externalHeader){
+            this.getRegion('header').show(new headerView());
+        }
+
         this.getRegion('navigationMenu').show(new navigationLayoutView({
             collection: this.collection
         }));

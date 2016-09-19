@@ -1,86 +1,65 @@
-<div class="vote-new">
-    <div class="vote-new-head">
-        <div class="form-group">
-            <label for="usr">Question:</label>
-            <input type="text" class="form-control" id="question-title">
-            <div class="js-errors js-error-title"></div>
-        </div>
-        <div class="form-group">
-            <label>Description:</label><br>
-            <textarea rows="5" class ="form-control description" id="question-description"></textarea>
-            <div class="js-errors js-error-title"></div>
-        </div>
-    </div>
-    <div class="vote-new-answers">
-        <div class="form-group">
-            <label for="usr">Answers:</label>
-            <div id="vote-answers">
+<div class="row new-vote">
+    <div class="span12">
+        <div class="widget widget-nopad">
+            <div class="widget-header">
+                <i class="fa fa-file"></i>
+                <h3>Create vote</h3>
+            </div>
+            <div class="widget-content">
+                <div class="form-padding">
 
+                    <div class="vote-new-head"></div>
+
+                    <div class="vote-new-answers">
+                        <div class="form-group">
+                            <label for="usr">Answers:</label>
+                            <div id="vote-answers"></div>
+                            <button type="button" class="btn btn-default" id="addAnswer">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add Answer
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group vote-new-access overflow-hidden">
+                        <div class="col-lg-6 col-md-6 col-xs-12">
+                            <div class="widget widget-nopad">
+                                <div class="widget-header"> <i class="fa fa-check"></i>
+                                    <h3>Accessed</h3>
+                                    <div class="pull-right">
+                                        <button type="button" class="btn btn-info js-to-accessed">Move all users to accessed</button>
+                                    </div>
+                                </div>
+                                <!-- /widget-header -->
+                                <div class="widget-content" id="vote-access-users"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-xs-12">
+                            <div class="widget widget-nopad">
+                                <div class="widget-header"> <i class="fa fa-ban"></i>
+                                    <h3>Not accessed</h3>
+                                    <div class="pull-right">
+                                        <button type="button" class="btn btn-info js-to-not-accessed">Move all users to not accessed</button>
+                                    </div>
+                                </div>
+                                <!-- /widget-header -->
+                                <div class="widget-content" id="vote-new-addUsers"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overflow-hidden">
+                        <!--<div class="vote-new-notification checkbox">-->
+                        <!--<label><input type="checkbox">Report me when someone leave a comment</label>-->
+                        <!--</div>-->
+                        <div class="pull-right">
+                            <button id="delete" type="button" class="btn btn-danger">Delete Vote</button>
+                            <button id="start" type="button" class="btn btn-success">Start Vote</button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
         </div>
-        <div class="vote-new-addAnswer">
-            <button type="button" class="btn btn-default" id="addAnswer">
-                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add Answer
-            </button>
-        </div>
     </div>
-    <div class="form-group">
-        <label for="usr">Tags(Split them using spaces, no #):</label>
-        <input type="text"  id="tags" class="form-control">
-        <div class=" js-errors js-error-tags"></div>
-    </div>
-    <div class="form-group">
-        <label>Select <span class="underscored">full time</span> when the vote will be finished or leave this field untouched.  </label>
-        <input type="datetime-local" class="form-control" id="finished">
-    </div>
-    <div class="js-errors js-error-finished_at"></div>
-    <!--</div>-->
-    <div class="form-group">
-        <label>Count of answers:</label>
-        <div class="radio">
-            <label><input type="radio" name="isSingle" value="1" checked>Single</label>
-        </div>
-        <div class="radio">
-            <label><input type="radio" name="isSingle" value="0">Multiple</label>
-        </div>
-    </div>
-    <div class="form-group">
-        <label>Access:</label>
-        <div class="radio">
-            <label><input type="radio" name="access" value="1" checked>Public</label>
-        </div>
-        <div class="radio">
-            <label><input type="radio" name="access" value="0">Private</label>
-        </div>
-    </div>
-    <div class="vote-new-attachment">
-        <div id="vote-attachments">
-
-            <!-- Attachments -->
-
-        </div>
-        <a>Attach</a>
-    </div>
-    <div class="vote-new-control">
-        <!--<div class="vote-new-notification checkbox">-->
-            <!--<label><input type="checkbox">Report me when someone leave a comment</label>-->
-        <!--</div>-->
-        <div class="vote-new-submit">
-            <button id="delete" type="button" class="btn btn-md btn-danger">Delete Vote</button>
-            <button id="start" type="button" class="btn btn-md btn-success">Start Vote</button>
-        </div>
-    </div>
-    <div class="vote-new-access">
-        <div class="form-group well">
-            <label for="usr">Accessed:</label>
-            <div id="vote-access-users">
-            </div>
-        </div>
-        <div class="form-group well">
-            <label for="usr">Not accessed:</label>
-            <div id="vote-new-addUsers">
-            </div>
-        </div>
-    </div>
-</div> 
+</div>

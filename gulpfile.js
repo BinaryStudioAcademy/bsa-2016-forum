@@ -46,7 +46,8 @@ gulp.task('sass', function () {
         .pipe(cfg.prod ? util.noop() : sourcemaps.init())
         .pipe(sass({includePaths: [
             'node_modules/bootstrap-sass/assets/stylesheets',
-            'node_modules/dropzone/src'
+            'node_modules/dropzone/src',
+            'node_modules/nprogress'
         ]}))
         .pipe(cfg.prod ? cleanCSS() : util.noop())
         .pipe(rename('styles.css'))
@@ -73,12 +74,13 @@ gulp.task('copy', function() {
     return gulp.src([
         'node_modules/bootstrap-sass/assets/fonts/**/*.woff2',
         'node_modules/bootstrap-sass/assets/fonts/**/*.woff',
-        'node_modules/bootstrap-sass/assets/fonts/**/*.ttf'
+        'node_modules/bootstrap-sass/assets/fonts/**/*.ttf',
+        'node_modules/font-awesome/fonts/**/*'
     ])
         .pipe(gulp.dest('./public/fonts/'));
 });
 
-gulp.task('js', function () {
+function js() {
     var browserifyOpt = {
         entries: './resources/assets/js/app/app.js',
         debug: true
@@ -99,18 +101,31 @@ gulp.task('js', function () {
         .pipe(cfg.prod ? uglify() : util.noop())
         // .pipe(cfg.prod ? util.noop() : sourcemaps.write('.'))
         .pipe(gulp.dest('./public/js'));
-});
+}
 
-gulp.task('watch', function() {
+gulp.task('js:firstrun', ['tmpl'], js);
+
+gulp.task('js', js);
+
+gulp.task('watch', ['js:firstrun'], function() {
     gulp.watch('resources/assets/sass/**/*.scss', ['sass']);
     gulp.watch('resources/assets/templates/**/*.hbs', ['tmpl']);
     gulp.watch('resources/assets/js/**/*.js', ['js']);
 });
 
-var tasks = ['clean', 'tmpl', 'js', 'sass', 'copy'];
+gulp.task('css-concat', ['sass'], function () {
+    return gulp.src(['public/css/styles.css', 'node_modules/bootstrap-datetime-picker/css/bootstrap-datetimepicker.css'])
+        .pipe(concat('styles.css'))
+        .pipe(gulp.dest('public/css'));
+});
+
+var tasks = ['clean', 'js:firstrun', 'sass', 'copy', 'css-concat'];
 if (!cfg.prod) {
     tasks.push('watch');
 }
+
+
+
 
 gulp.task('default', tasks);
 

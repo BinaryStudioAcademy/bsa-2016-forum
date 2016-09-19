@@ -23,6 +23,10 @@ Route::bind('topic', function ($value) {
     return App\Models\Topic::getSluggableModel($value);
 });
 
+Route::bind('vote', function ($value) {
+    return App\Models\Vote::getSluggableModel($value);
+});
+
 Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], function () {
 
     /*Routes for Users*/
@@ -63,6 +67,7 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
             'destroy' => 'topics.destroy',
         ],
     ]);
+    Route::get('topics/{topic}/subscribers', 'TopicController@getTopicSubscribers')->name('getTopicSubscribers');
     Route::get('categories/{category}/topics', 'TopicController@indexInCategory')->name('topicsInCategory');
     /*Routes for Votes*/
     Route::resource('votes', 'VoteController', [

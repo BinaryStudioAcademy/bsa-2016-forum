@@ -6,7 +6,7 @@ var app = require('../../instances/appInstance');
 
 module.exports = Marionette.ItemView.extend({
     template: 'subscriptionItem',
-    tagName: 'div',
+    tagName: 'li',
     ui: {
         delete: '.delete-subscription-button'
     },
@@ -15,6 +15,8 @@ module.exports = Marionette.ItemView.extend({
     },
     serializeData: function () {
         var url = "", title = "";
+        var vote_slug = (this.options.target.slug && this.options.target.slug !== undefined) ? this.options.target.slug : this.options.target.id;
+
         switch (this.model.get('subscription_type')) {
             case 'Topic':
                 title = this.options.target.name;
@@ -22,7 +24,7 @@ module.exports = Marionette.ItemView.extend({
                 break;
             case 'Vote':
                 title = this.options.target.title;
-                url = '#votes/'+this.options.target.id;
+                url = '#votes/'+ vote_slug
                 break;
         }
 
