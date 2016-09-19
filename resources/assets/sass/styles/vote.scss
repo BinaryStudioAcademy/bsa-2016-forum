@@ -472,8 +472,8 @@ VOTE INDEX
 }
 
 .vote-item-comments-collapse {
-  max-height: 1000px;
-  overflow-x: scroll;
+  max-height: 1000px !important;
+  overflow-y: scroll !important;
 }
 
 .widthbutton {
