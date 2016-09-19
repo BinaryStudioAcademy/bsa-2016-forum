@@ -49,7 +49,7 @@ module.exports = Marionette.ItemView.extend({
                 showUsers: currentUser.isAdmin() || (currentUser.get('id') === this.model.get('user_id'))
             }
         }
-        console.log(meta);
+
         return {
             model: this.model.toJSON(),
             meta: meta

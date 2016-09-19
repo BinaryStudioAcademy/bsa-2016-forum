@@ -27,7 +27,6 @@ module.exports = Backbone.Model.extend({
         options.statusCode['400'] = function (xhr, textStatus, errorThrown) {
             if (xhr.responseJSON) {
                 model.validationError = xhr.responseJSON;
-                console.log(xhr.responseJSON);
                 model.trigger('invalid', model, model.validationError);
             }
         };
