@@ -35,7 +35,7 @@ module.exports = {
         {
             controller: new TopicController(),
             appRoutes: {
-                'mytopics': 'myTopics',
+                'mytopics': 'myTopics'
             },
             navigItemName: 'myTopics'
         },

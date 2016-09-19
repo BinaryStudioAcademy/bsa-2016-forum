@@ -26,12 +26,12 @@ class TopicController extends ApiController
     private function getMetaDataForModel(Topic $topic)
     {
         if (!empty($topic->likes()->where('user_id', Auth::user()->id)->get()->first())) {
-            $is_user = true;
-            $like_id = $topic->likes()->where('user_id', Auth::user()->id)->get()->first()->id;
+            $isUser = true;
+            $likeId = $topic->likes()->where('user_id', Auth::user()->id)->get()->first()->id;
             $countOfLikes=$topic->likes()->count();
         } else {
-            $is_user = false;
-            $like_id = null;
+            $isUser = false;
+            $likeId = null;
             $countOfLikes=0;
         }
 
@@ -43,8 +43,8 @@ class TopicController extends ApiController
             'comments' => $topic->comments()->count(),
             'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
             'countOfLikes' => $countOfLikes,
-            'is_user' => $is_user,
-            'like_id' => $like_id
+            'isUser' => $isUser,
+            'likeId' => $likeId
         ]];
 
         return $data;
@@ -194,8 +194,6 @@ class TopicController extends ApiController
      */
     public function addLike(Topic $topic)
     {
-//        $topic = Topic::getSluggableModel($id);
-
         $user=Auth::user();
 
         $like = new Like();
@@ -222,8 +220,6 @@ class TopicController extends ApiController
      */
     public function removeLike($topic,$idLike)
     {
-//        $topic = Topic::getSluggableModel($idTopic);
-
         $like = Like::findOrFail($idLike);
 
         $user=Auth::user();

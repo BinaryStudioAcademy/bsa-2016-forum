@@ -8,7 +8,6 @@
         <link type="text/css" rel="stylesheet" href="css/styles.css?v={{ env('APP_VER') }}">
     @endif
     <title>BSA16: Forum</title>
-    <title>Title</title>
 </head>
 <body>
 
