@@ -62,7 +62,7 @@ module.exports = Backbone.Model.extend({
 
     getMetaById: function () {
         if (this.getMeta())
-            return this.getMeta()[this.get('id')] || null;
+            return this.getMeta()[this.get('id')] || this.getMeta() || null;
     },
 
     initialize: function (data, options) {

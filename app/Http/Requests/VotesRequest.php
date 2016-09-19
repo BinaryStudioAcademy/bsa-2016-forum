@@ -32,7 +32,7 @@ class VotesRequest extends ApiRequest
                     'is_saved' => 'integer|between:0,1',
                     'users' => 'json',
                     'tags' => 'json|tags_validator',
-                    'slug' => 'unique:votes,slug|regex:/(?!^\d+$)^.+$/',
+                    'slug' => 'unique:votes,slug|regex:/(?!^\d+$)^[\w\-]+$/',
                 ];
 
                 break;
@@ -48,7 +48,7 @@ class VotesRequest extends ApiRequest
                     'is_public' => 'integer|between:0,1',
                     'is_saved' => 'integer|between:0,1',
                     'users' => 'json',
-                    'slug' => 'regex:/(?!^\d+$)^.+$/|unique:votes,slug,' . $id,
+                    'slug' => 'regex:/(?!^\d+$)^[\w\-]+$/|unique:votes,slug,' . $id
                 ];
 
                 break;
@@ -65,7 +65,7 @@ class VotesRequest extends ApiRequest
             'title.required' => 'Title is required',
             'finished_at.is_five_minutes_time' => 'Perhaps, you typed date in the past. Also, minimum time for vote: 5 minutes.',
             'slug.unique' => 'Sluggable Url already exist',
-            'slug.regex' => 'Sluggable Url cannot be only digits'
+            'slug.regex' => 'Sluggable Url can contain only [a-Z, 0-9, -, _] and not digits only'
         ];
     }
 }

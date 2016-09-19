@@ -25,6 +25,7 @@ NEW TOPIC VIEW STYLES
 }
 
 .topic {
+  width: 100%;
   overflow: hidden;
   word-wrap: break-word;
 }
@@ -375,3 +376,11 @@ TOPIC DETAILS
   resize: vertical;
 }
 
+.topic-item-icons span {
+  margin-right: 15px;
+}
+
+.create-topic {
+  margin-right: 10px;
+  margin-left: 10px;
+}

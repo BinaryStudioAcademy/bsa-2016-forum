@@ -83,7 +83,7 @@ class VoteController extends ApiController
         return $data;
     }
 
-    private function getMetaDataForModel(Vote $vote)
+    private function getMetaDataForModel(Vote $vote, $access = false)
     {
         $this->authorize('show', $vote);
 
@@ -111,9 +111,10 @@ class VoteController extends ApiController
                 'usersWhoSaw' => $usersWhoSaw
             ];
 
-        if (!$vote->is_saved && $vote->canBeEdited()) {
-            $data[$vote->id]['status'] = ' (Not saved)';
+        if ($access) {
+            $data[$vote->id]['accessedUsers'] = $vote->votePermissions()->get(['user_id']);
         }
+
         return $data;
     }
 
@@ -136,7 +137,8 @@ class VoteController extends ApiController
         }
         $vote->description_generated = MarkdownService::baseConvert($vote->description);
         $vote->save();
-        return $this->setStatusCode(201)->respond($vote);
+
+        return $this->setStatusCode(201)->respond($vote, $this->getMetaDataForModel($vote, true));
     }
 
     /**
@@ -197,7 +199,7 @@ class VoteController extends ApiController
             $voteUniqueView->save();
         }
 
-        $meta = $this->getMetaDataForModel($vote);
+        $meta = $this->getMetaDataForModel($vote, true);
 
         return $this->setStatusCode(200)->respond($vote, $meta);
     }
@@ -219,7 +221,7 @@ class VoteController extends ApiController
         $vote->save();
         TagService::TagsHandler($vote, explode(',', $request->tags));
         if ($vote->is_public) {
-            $vote->votePermissions()->forceDelete();
+            $vote->votePermissions()->delete();
         } elseif ($request->users) {
             $this->VotePermissionsHandler($vote, $request->users);
         }
@@ -233,7 +235,8 @@ class VoteController extends ApiController
         }
         $vote->description_generated = MarkdownService::baseConvert($vote->description);
         $vote->save();
-        return $this->setStatusCode(200)->respond($vote);
+
+        return $this->setStatusCode(200)->respond($vote, $this->getMetaDataForModel($vote, true));
     }
 
     /**
@@ -331,6 +334,15 @@ class VoteController extends ApiController
         }
         $meta['checked'] = [];
         $userVoteResults = $vote->voteResults()->where('user_id', $user->id)->get();
+
+        $meta['users'] = [];
+        $usersAll = 0;
+        foreach ($vote->voteResults()->get() as $res) {
+            $meta['users'][$res->vote_item_id][] = $res->user;
+            $usersAll++;
+        }
+        $meta['users']['count'] = $usersAll;
+
         foreach ($userVoteResults as $res) {
             $temp = $voteItems->where('id', $res->vote_item_id);
             foreach ($temp as $item) {

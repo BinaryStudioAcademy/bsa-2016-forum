@@ -1,0 +1,22 @@
+<div>
+    <div>{{ model.name }}</div>
+    <div class="progress">
+        <div class="progress-bar progress-bar-warning" role="progressbar"
+             aria-valuenow="{{ votePercent }}" aria-valuemin="0" aria-valuemax="100"
+             style="width: {{ votePercent }}%; min-width: 2em">
+            <span>
+                {{ votePercent }}%
+            </span>
+        </div>
+    </div>
+    {{#if isPublic}}
+        <div class="vote-users">
+            <ul class="list-inline list-unstyled">
+                {{#each meta.users}}
+                    {{!-- user avatar --}}
+                    <li><img src="/images/user.png" alt="{{ first_name }}" title="{{ first_name }}"></li>
+                {{/each}}
+            </ul>
+        </div>
+    {{/if}}
+</div>
