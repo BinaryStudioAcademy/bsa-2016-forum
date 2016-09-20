@@ -121,7 +121,8 @@ module.exports = Marionette.ItemView.extend({
                 canReply: !this.model.isChildComment(),
                 canEditDelete: (currentUser.get('id') === meta[id].user.id) && !meta[id].comments
             },
-            createdAt: dateHelper.fullDate(this.model.get('created_at'))
+            createdAt: dateHelper.fullDate(this.model.get('created_at')),
+            isUploadingAttachs: this.model.get('isUploadingAttachs')
         };
     }
 });

@@ -14,10 +14,9 @@
         <div class="attachments-container">
             {{#each meta.attachments}}
                 <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                    <a href="{{ url }}" class="thumbnail" target="_blank">
+                    <a href="{{ url }}" class="thumbnail" target="_blank" title="{{ cloud_public_id }}">
                         <img src="{{ thumb }}" alt="{{ url }}">
                     </a>
-                    <div class="file-name">{{ cloud_public_id }}</div>
                 </div>
             {{/each}}
         </div>
@@ -30,13 +29,17 @@
     <div class="topic-history">{{ meta.user.display_name }}</div>
     <div class="topic-history">Rating {{ model.rating }}</div>
     <div class="topic-control-btn">
-        {{!-- only output if user comment belongs to current user --}}
-        {{#if meta.canEditDelete}}
-            <a class="comment-edit-btn">Edit</a>
-            <a class="comment-remove-btn" data-toggle="modal" data-target="#confirmDialog-{{ model.id }}">Remove</a>
-        {{/if}}
-        {{#if meta.canReply}}
-            <a class="answer-btn">Answer</a>
+        {{#if isUploadingAttachs}}
+            <span>Upload files...</span>
+        {{else}}
+            {{!-- only output if user comment belongs to current user --}}
+            {{#if meta.canEditDelete}}
+                <a class="comment-edit-btn">Edit</a>
+                <a class="comment-remove-btn" data-toggle="modal" data-target="#confirmDialog-{{ model.id }}">Remove</a>
+            {{/if}}
+            {{#if meta.canReply}}
+                <a class="answer-btn">Answer</a>
+            {{/if}}
         {{/if}}
     </div>
     <div class="row">
