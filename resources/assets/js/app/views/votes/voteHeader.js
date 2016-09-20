@@ -3,6 +3,7 @@ var SubscribeBehavior = require('../../behaviors/subscribeBehavior');
 var _ = require('underscore');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
+var Radio = require('backbone.radio');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteHeader',
@@ -34,6 +35,7 @@ module.exports = Marionette.ItemView.extend({
         };
         if (tempmeta) {
             var id = this.model.get('id');
+
             meta = {
                 user: tempmeta[id].user,
                 likes: tempmeta[id].likes,
@@ -42,8 +44,8 @@ module.exports = Marionette.ItemView.extend({
                 tags: tempmeta[id].tags,
                 numberOfUniqueViews: tempmeta[id].numberOfUniqueViews,
                 usersWhoSaw: tempmeta[id].usersWhoSaw,
-                isFinished: dateHelper.getDateTimeDiff(this.model.get('finished_at')) > 0,
-                finishedDate: dateHelper.middleDate(this.model.get('finished_at')),
+                isFinished: ((this.model.get('finished_at') == null) || (dateHelper.getDateTimeDiff(this.model.get('finished_at')) < 0)),
+                finishedDate: (this.model.get('finished_at') != null) ? dateHelper.middleDate(this.model.get('finished_at')) : '',
                 showUsers: currentUser.isAdmin() || (currentUser.get('id') === this.model.get('user_id'))
             }
         }
@@ -52,5 +54,14 @@ module.exports = Marionette.ItemView.extend({
             model: this.model.toJSON(),
             meta: meta
         };
+    },
+
+    onRender: function () {
+        if (this.model.get('finished_at')) {
+            // if current date > vote finished date
+            if (dateHelper.getDateTimeDiff(this.model.get('finished_at')) >= 0) {
+                Radio.channel('votesChannel').trigger('showVoteResult');
+            }
+        }
     }
 });

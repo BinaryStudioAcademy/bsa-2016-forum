@@ -34,21 +34,22 @@ class TopicController extends ApiController
             $likeId = null;
             $countOfLikes = 0;
         }
-
-        return [$topic->id => [
-            'subscription' => $topic->subscription(Auth::user()->id),
-            'category' => $topic->category,
-            'user' => $topic->user()->first(),
-            'likes' => $topic->likes()->count(),
-            'comments' => $topic->comments()->count(),
-            'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
-            'countOfLikes' => $countOfLikes,
-            'isUser' => $isUser,
-            'likeId' => $likeId
-        ]];
-
-        return $data;
+        
+        return [
+            $topic->id => [
+                'subscription' => $topic->subscription(Auth::user()->id),
+                'category' => $topic->category,
+                'user' => $topic->user()->first(),
+                'likes' => $topic->likes()->count(),
+                'comments' => $topic->comments()->count(),
+                'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
+                'countOfLikes' => $countOfLikes,
+                'isUser' => $isUser,
+                'likeId' => $likeId
+            ]
+        ];
     }
+
 
     /**
      * @param Collection $topics
@@ -63,6 +64,12 @@ class TopicController extends ApiController
         }
 
         return $data;
+    }
+
+    public function getTopicSubscribers(Topic $topic)
+    {
+        $subscribers = $topic->subscribers;
+        return $this->setStatusCode(200)->respond($subscribers);
     }
 
     /**
@@ -178,7 +185,7 @@ class TopicController extends ApiController
         $topic->update($request->all());
 
         TagService::TagsHandler($topic, $request->tags);
-        
+
         $topic->generated_description = MarkdownService::baseConvert($topic->description);
         $topic->save();
         $topic->tags = $topic->tags()->get();
