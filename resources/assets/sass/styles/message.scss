@@ -77,10 +77,7 @@ MESSAGE DIALOG
   min-height: 320px;
 }
 
-.message-dialog {
-  padding: 15px;
-  background-color: #ffffff;
-}
+.message-dialog {}
 
 .message-msg-item {
   overflow: hidden;
@@ -186,6 +183,10 @@ MESSAGE DIALOG
   padding: 10px 0;
 }
 
+.message-new form {
+  margin-bottom: 0;
+}
+
 .message-new textarea, .message-edit textarea {
   resize: vertical;
   width: 100%;
@@ -205,25 +206,6 @@ MESSAGE DIALOG
   overflow: hidden;
 }
 
-.message-new-control button {
-  float: right;
-  padding: 5px 15px;
-  border-radius: 0;
-  border: none;
-  color: #555;
-  font-size: 14px;
-  font-weight: 800;
-  background-color: #ffd992;
-  margin-left: 10px;
-}
-
-.message-new-control button:hover {
-  background-color: #f9c172;
-}
-
-.message-new-control button:disabled {
-  background-color: #DDDDDD
-}
 
 .message-edit {
   padding: 15px;
