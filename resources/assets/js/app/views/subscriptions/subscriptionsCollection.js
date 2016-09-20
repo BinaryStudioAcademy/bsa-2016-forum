@@ -5,14 +5,16 @@ module.exports = Marionette.CollectionView.extend({
     childView: require('./subscriptionsItem'),
     tagName: 'ul',
     className: 'news-items',
-    childViewOptions : function (model) {
-        var target = _.findWhere(
-            this.collection.getMeta()[model.get('subscription_type')],
-            {id: parseInt(model.get('subscription_id'))}
-        );
+    emptyView: require('./subscriptionsEmptyItem'),
 
-        return {
-            target: target
-        };
+    childViewOptions : function (model) {
+        if(!_.isUndefined(this.collection.getMeta()))
+        {
+            return {
+                target:  _.findWhere(
+                    this.collection.getMeta()[model.get('subscription_type')],
+                    {id: parseInt(model.get('subscription_id'))})
+            };
+        }
     }
 });
