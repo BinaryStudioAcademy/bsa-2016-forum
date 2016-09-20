@@ -107,7 +107,8 @@ class VoteController extends ApiController
                 'subscription' => $vote->subscription(Auth::user()->id),
                 'days_ago' => $difference,
                 'numberOfUniqueViews' => $vote->voteUniqueViews()->count(),
-                'usersWhoSaw' => $usersWhoSaw
+                'usersWhoSaw' => $usersWhoSaw,
+                'attachments' => $vote->attachments()->get()
             ];
 
         if ($access) {

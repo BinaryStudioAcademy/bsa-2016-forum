@@ -4,6 +4,7 @@ var currentUser = require('../../initializers/currentUser');
 var logger = require('../../instances/logger');
 var Radio = require('backbone.radio');
 var dateHelper = require('../../helpers/dateHelper');
+var helper = require('../../helpers/helper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentHeader',
@@ -95,22 +96,10 @@ module.exports = Marionette.ItemView.extend({
         this.ui.showChilds.toggle(show);
     },
 
-    attachmentThumb: function (attachs) {
-        attachs.forEach(function (attach) {
-            if (attach.type == 'image/jpeg' || attach.type == 'image/png' ||
-                attach.type == 'image/gif') {
-                attach.thumb = attach.url;
-            } else {
-                attach.thumb = '/images/doc.png';
-            }
-
-        });
-    },
-
     serializeData: function () {
         var meta = this.model.getMeta();
         var id = this.model.get('id');
-        this.attachmentThumb(meta[id].attachments);
+        helper.attachmentThumb(meta[id].attachments);
         return {
             model: this.model.toJSON(),
             meta: {

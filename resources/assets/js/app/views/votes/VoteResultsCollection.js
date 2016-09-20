@@ -3,7 +3,7 @@ var childView = require('./VoteResultItem');
 
 module.exports = Marionette.CollectionView.extend({
     tagName: 'div',
-    className: 'vote-results col-xs-6',
+    className: 'vote-results',
     childView: childView,
     childViewOptions: function () {
         return {

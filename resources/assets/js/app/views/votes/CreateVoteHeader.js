@@ -5,9 +5,18 @@ var DateHelper = require('../../helpers/dateHelper');
 var _ = require('underscore');
 var markdownHelp = require('../../views/modalWindows/markdownHelp');
 var currentUser = require('../../initializers/currentUser');
+var Dropzone = require('dropzone');
+var AttachmentModel = require('../../models/AttachmentModel');
+var App = require('../../instances/appInstance');
+var config = require('config');
+Dropzone.autoDiscover = false;
 
 module.exports = Marionette.ItemView.extend({
     template: 'create-vote-header',
+    _dropZone: null,
+    _files: [],
+    _deletedFiles: [],
+
     ui: {
         title: '#question-title',
         errors: '.js-errors',
@@ -17,7 +26,9 @@ module.exports = Marionette.ItemView.extend({
         isSingle: 'input[name=isSingle]',
         description: '#question-description',
         slug: '#question-slug',
-        openMarkdownHelp: '.openMarkdownHelp'
+        openMarkdownHelp: '.openMarkdownHelp',
+        //dropzone: '.dropzone',
+        //attachsError: '.js-error-attachments'
     },
     modelEvents: {
         'change:title':'render',
@@ -77,6 +88,7 @@ module.exports = Marionette.ItemView.extend({
             meta: meta
         };
     },
+
     onRender: function () {
         this.ui.finished.datetimepicker({
             startDate: new Date(),
@@ -87,7 +99,9 @@ module.exports = Marionette.ItemView.extend({
             todayHighlight:true
         });
 
+        //this.initDropZone();
     },
+
     saveModel: function (obj) {
         if (this.model.get('id')) {
             this.model.save(obj);
@@ -121,8 +135,122 @@ module.exports = Marionette.ItemView.extend({
             finished_at: DateHelper.voteDateToSave(this.ui.finished.val())
         }, {
             success: function (data) {
-                Backbone.history.navigate('votes/' + view.model.id, {trigger: true});
+                if (view._dropZone && view._dropZone.files.length) {
+                    // start upload to server
+                    view._dropZone.processQueue();
+                } else if (view._deletedFiles.length) {
+                    view.removeFilesFromServer();
+                } else {
+                    view.navigateTo();
+                }
             }
         });
+    },
+
+    navigateTo: function () {
+        Backbone.history.navigate('votes/' + this.model.id, {trigger: true});
+    },
+
+    initDropZone: function () {
+        var view = this;
+        var attachModel = new AttachmentModel();
+        this._dropZone = new Dropzone(this.ui.dropzone[0], {
+            url: function(file) {
+                return App.getBaseUrl() + _.result(view.model, 'url') + _.result(attachModel, 'url');
+            },
+            method: 'post',
+            // input file name, registered on server
+            paramName: "f",
+            autoProcessQueue : false,
+            parallelUploads : config.parallelFileUploads,
+            maxFilesize: config.maxFileSize,
+            maxFiles: config.maxFiles,
+            //if max files count
+            maxfilesexceeded: function (file) {
+                this.removeFile(file);
+                view.ui.attachsError.text(config.maxFilesMessage);
+            },
+            uploadMultiple: false,
+            addRemoveLinks: true,
+            acceptedFiles: config.acceptedFiles,
+            error: function (file, msg, xhr) {
+                view.ui.attachsError.text(msg);
+                this.removeFile(file);
+            },
+            success: function (file, xhr) {
+                if (xhr.data) {
+                    view._files.push(xhr.data);
+                }
+            },
+            complete: function (file) {
+                view.$('.dz-progress', file.previewElement).hide();
+                view.$('.dz-size', file.previewElement).hide();
+            },
+            //addedfile: function (file) {
+            //
+            //},
+            removedfile: function (file) {
+                //view.ui.attachsError.text('');
+                view.$(file.previewElement).remove();
+                if (file.id) {
+                    view._deletedFiles.push(file);
+                    view.$('.dz-message').hide();
+                    var attachs = view.model.getMeta()[view.model.get('id')].attachments;
+                    // show drop msg only when delete all files from dropzone
+                    if ((view._deletedFiles.length === attachs.length) && !this.files.length) {
+                        view.$('.dz-message').show();
+                    }
+                    this.options.maxFiles++;
+                }
+            },
+            // event triggers when all files has been uploaded
+            queuecomplete: function () {
+                view.navigateTo();
+            }
+        });
+
+        this.showAttachments();
+    },
+
+    removeFilesFromServer: function() {
+        var self = this;
+        this._deletedFiles.forEach(function (file, i) {
+            self.removeAttachmentFromServer(file);
+        });
+
+        this._deletedFiles.splice(0, this._deletedFiles.length);
+        this.navigateTo();
+    },
+
+    removeAttachmentFromServer: function (file) {
+        // remove single file from server
+        var model = new AttachmentModel({ id: file.id });
+        model.parentUrl = _.result(this.model, 'url');
+        model.destroy({
+            wait: true
+        });
+    },
+
+    showAttachments: function () {
+        // if comment already has attachments they will be show
+        var attachs = [];
+        var id = this.model.get('id');
+        // if model is new there is no id
+        if (!id) return;
+        attachs = this.model.getMeta()[id].attachments;
+        var drop = this._dropZone;
+        if (attachs.length) {
+            attachs.forEach(function (file, i) {
+                var mockFile = {
+                    name: file.cloud_public_id,
+                    type: file.type,
+                    id: file.id
+                };
+                drop.emit("addedfile", mockFile);
+                drop.emit("thumbnail", mockFile, file.thumb);
+                drop.emit("complete", mockFile);
+            });
+        }
+        this._dropZone.options.maxFiles = config.maxFiles - attachs.length;
     }
 });

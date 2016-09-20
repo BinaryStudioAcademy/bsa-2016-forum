@@ -4,8 +4,6 @@ var Radio = require('backbone.radio');
 module.exports = Marionette.ItemView.extend({
     template: 'voteResultItem',
 
-    className: 'row',
-
     initialize: function (options) {
         this.vote = this.model.getMeta().vote;
     },
