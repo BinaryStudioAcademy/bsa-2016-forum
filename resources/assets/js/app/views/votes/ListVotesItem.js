@@ -16,7 +16,7 @@ module.exports = Marionette.ItemView.extend({
     },
     
     ui: {
-        subscribeNotification: '.subscribe-btn',
+        subscribeNotification: '.subscribe-btn'
     },
 
     behaviors: {

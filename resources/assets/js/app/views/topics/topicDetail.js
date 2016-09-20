@@ -16,7 +16,7 @@ module.exports = Marionette.LayoutView.extend({
     regions: {
         'newComment': '.newcomment',
         'topicHeader': '.topic-head',
-        'comments': '.topic-comments',
+        'comments': '.topic-comments'
     },
 
     ui: {
