@@ -25,14 +25,14 @@ class TopicController extends ApiController
      */
     private function getMetaDataForModel(Topic $topic)
     {
-        if (!empty($currentUser=$topic->likes()->where('user_id', Auth::user()->id)->get()->first())) {
+        if (!empty($currentUser = $topic->likes()->where('user_id', Auth::user()->id)->get()->first())) {
             $isUser = true;
             $likeId = $currentUser->id;
-            $countOfLikes=$topic->likes()->count();
+            $countOfLikes = $topic->likes()->count();
         } else {
             $isUser = false;
             $likeId = null;
-            $countOfLikes=0;
+            $countOfLikes = 0;
         }
 
         return [$topic->id => [
@@ -194,18 +194,17 @@ class TopicController extends ApiController
      */
     public function addLike(Topic $topic)
     {
-        $user=Auth::user();
+        $user = Auth::user();
 
         $like = new Like();
         $like->user()->associate($user);
 
         //User can't add like to his own topic
-        if($user->id!=$topic->user_id)
-        {
+        if($user->id != $topic->user_id){
             $topic->likes()->save($like);
         }
 
-        $like= $topic->likes()->where('user_id', Auth::user()->id)->where('likeable_id', $topic->id)->get()->first();
+        $like = $topic->likes()->where('user_id', Auth::user()->id)->where('likeable_id', $topic->id)->get()->first();
 
         return $this->setStatusCode(200)->respond($like);
     }
@@ -222,7 +221,7 @@ class TopicController extends ApiController
     {
         $like = Like::findOrFail($idLike);
 
-        $user=Auth::user();
+        $user = Auth::user();
 
         $like->delete();
 
