@@ -98,7 +98,7 @@ module.exports = Marionette.Object.extend({
     createPrivateVoteBasedOnTopicSubscribers: function (id) {
         var usersCollectionFetched = false;
         var accessedUsersCollectionFetched = false;
-        var VoteAnswers = new VoteAICollection([{name: ''}], {parentUrl: ''});
+        var VoteAnswers = new VoteAICollection([{}, {}], {parentUrl: ''});
         var UsersCollection = new usersCollection();
         var accessedUsers = new usersCollection();
         accessedUsers.url = '/topics/' + id + '/subscribers';
