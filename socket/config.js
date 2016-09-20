@@ -4,7 +4,7 @@
 
 module.exports = {
     socketPort: 3000,
-    authUrl: "/api/v1/user/",
-    authHost: "localhost",
-    authPort: 8000
+    authUrl: "/forum/api/v1/user/",
+    authHost: "team.binary-studio.com",
+    authPort: 80
 };
