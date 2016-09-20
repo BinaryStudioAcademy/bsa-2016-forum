@@ -39,7 +39,7 @@
         {{else}}
         <div>
             {{#if model.summary}}
-            <div><hr<h3>{{model.summary}}</h3><hr></div>
+            <div><hr><h3>{{model.summary}}</h3><hr></div>
             {{else}}
             <div><hr><h3>No summary yet</h3><hr></div>
             {{/if}}
@@ -47,7 +47,8 @@
 
         {{#if meta.userIsAdminOrTS}}
         <div>
-            <textarea rows="5" class="form-control description" id="question-description">{{model.summary}}</textarea>
+            <textarea rows="5" class="form-control description" id="summary">{{model.summary}}</textarea>
+            <button class="btn btn-info" id="summary-save-btn">Save summary</button>
         </div>
         {{/if}}
 
