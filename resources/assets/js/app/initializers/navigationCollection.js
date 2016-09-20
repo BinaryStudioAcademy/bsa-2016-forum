@@ -37,17 +37,19 @@ module.exports = new navigCollection([
     //     name: 'myVotes',
     //     label: 'My votes'
     // },
+
+
+    {href: '#messages',
+        icon: 'comments-o',
+        name: 'messages',
+        label: 'Messages'
+    },
     //This navObject MUST BE last in The list
     {
         href: '#users',
         icon: 'users',
         name: 'users',
         label: 'Users'
-    },
-    {href: '#messages',
-        icon: 'comments-o',
-        name: 'messages',
-        label: 'Messages'
     },
     // {
     //     href: '#subscriptions',

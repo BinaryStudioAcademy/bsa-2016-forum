@@ -45,7 +45,7 @@ module.exports = Marionette.Object.extend({
             }
         });
 
-        model = new VoteModel({slug: slug});
+        model = new VoteModel({ slug: slug });
         model.fetchBySlag();
 
         view = new ShowVote({
