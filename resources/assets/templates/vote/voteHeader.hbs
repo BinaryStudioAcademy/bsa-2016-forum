@@ -20,7 +20,7 @@
                 <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
             {{/each}}
         </div>
-        {{#if meta.showUsers}}
+        {{#if meta.userIsAdminOrTS}}
             <div class="vote-users">
                 <span>{{ meta.numberOfUniqueViews }} users have seen this voting</span>
                 <button class="btn btn-default" data-toggle="collapse" data-target=".users-list">Show users</button>
@@ -34,6 +34,26 @@
                 </ul>
             </div>
         {{/if}}
+
+        {{#if meta.isFinished}}
+        {{else}}
+        <div>
+            {{#if model.summary}}
+            <div><hr<h3>{{model.summary}}</h3><hr></div>
+            {{else}}
+            <div><hr><h3>No summary yet</h3><hr></div>
+            {{/if}}
+        </div>
+
+        {{#if meta.userIsAdminOrTS}}
+        <div>
+            <textarea rows="5" class="form-control description" id="question-description">{{model.summary}}</textarea>
+        </div>
+        {{/if}}
+
+        {{/if}}
+
+
     </div>
 
 <!--</div>-->
