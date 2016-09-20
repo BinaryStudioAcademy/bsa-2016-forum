@@ -27,7 +27,13 @@
                 <ul class="nav collapse users-list">
                     {{#each meta.usersWhoSaw}}
                         <li class="">
-                            <img src={{url_avatar}} alt="">
+
+                          {{#if url_avatar}}
+                              <img src={{url_avatar}} alt="">
+                           {{else}}
+                               <img src="images/user.png">
+                            {{/if}}
+
                             <span>{{ first_name }} {{ last_name }}</span>
                         </li>
                     {{/each}}

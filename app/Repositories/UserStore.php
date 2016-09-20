@@ -67,6 +67,7 @@ class UserStore implements UserStoreInterface
                         $r['birthday'] = $userFunc->birthday;
                         $r['local_id'] = $userFunc->id;
                         $r['global_id'] = $userFunc->serverUserId;
+                        //$r['avatar'] = $userFunc->avatar;
                         $userInner = array_shift($userInner);
                         $r['url_avatar'] =$userInner['url_avatar'];
                         $r['id'] = $userInner['id'];

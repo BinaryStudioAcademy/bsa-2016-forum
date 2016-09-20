@@ -1,3 +1,7 @@
     <div class="users-item-avatar">
-        <img src= {{meta.user.url_avatar}} >
-    </div>
+     {{#if meta.user.url_avatar}}
+        <img src={{meta.user.url_avatar}}>
+     {{else}}
+        <img src="images/user.png">
+     {{/if}}
+     </div>
