@@ -39,6 +39,7 @@ class VoteController extends ApiController
                 ->paginate(15);
             $votes = $paginationObject->getCollection();
             $meta['hasMorePages'] = $paginationObject->hasMorePages();
+
         } else {
             $votes = Vote::filterByQuery($this->searchStr)
                 ->filterByTags($this->tagIds)
@@ -48,7 +49,6 @@ class VoteController extends ApiController
         $votes = $votes->filter(function ($vote) {
             return \Gate::allows('show', $vote);
         })->values();
-
         $meta += $this->getMetaDataForCollection($votes);
         return $this->setStatusCode(200)->respond($votes, $meta);
     }

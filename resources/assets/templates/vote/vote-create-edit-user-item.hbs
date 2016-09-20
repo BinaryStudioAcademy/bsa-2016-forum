@@ -1,10 +1,5 @@
 <div class="users-item create-vote-users-item">
-    <div class="users-item-avatar">
-     {{#if model.url_avatar}}
-    <img src={{model.url_avatar}}>
-   {{else}}
-    <img src="images/user.png">
-    {{/if}}
+    <div class="users-item-avatar">{{#if model.url_avatar}}<img src={{model.url_avatar}}>{{else}}<img src="images/user.png">{{/if}}
     </div>
     <div class="users-item-credential">
         <div class="users-item-name">
