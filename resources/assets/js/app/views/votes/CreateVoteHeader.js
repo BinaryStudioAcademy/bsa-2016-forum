@@ -9,6 +9,8 @@ var Dropzone = require('dropzone');
 var AttachmentModel = require('../../models/AttachmentModel');
 var App = require('../../instances/appInstance');
 var config = require('config');
+var helper = require('../../helpers/helper');
+
 Dropzone.autoDiscover = false;
 
 module.exports = Marionette.ItemView.extend({
@@ -27,8 +29,8 @@ module.exports = Marionette.ItemView.extend({
         description: '#question-description',
         slug: '#question-slug',
         openMarkdownHelp: '.openMarkdownHelp',
-        //dropzone: '.dropzone',
-        //attachsError: '.js-error-attachments'
+        dropzone: '.dropzone',
+        attachsError: '.js-error-attachments'
     },
     modelEvents: {
         'change:title':'render',
@@ -99,7 +101,7 @@ module.exports = Marionette.ItemView.extend({
             todayHighlight:true
         });
 
-        //this.initDropZone();
+        this.initDropZone();
     },
 
     saveModel: function (obj) {
@@ -135,20 +137,32 @@ module.exports = Marionette.ItemView.extend({
             finished_at: DateHelper.voteDateToSave(this.ui.finished.val())
         }, {
             success: function (data) {
-                if (view._dropZone && view._dropZone.files.length) {
-                    // start upload to server
-                    view._dropZone.processQueue();
+                if (!view._deletedFiles.length && !view._dropZone.files.length) {
+                    return view.navigateTo();
                 } else if (view._deletedFiles.length) {
                     view.removeFilesFromServer();
-                } else {
-                    view.navigateTo();
                 }
+                if (view._dropZone.files.length) {
+                    // start upload to server
+                    view._dropZone.processQueue();
+                }
+
+                // if there are files for delete or upload to server set time out 3sec before redirect
+                // cause we need to have all attachs in meta on server before we can redirect
+                // and pass this context to navigateTo method
+                setTimeout(view.navigateTo.bind(view), 3000);
             }
         });
     },
 
     navigateTo: function () {
-        Backbone.history.navigate('votes/' + this.model.id, {trigger: true});
+        Backbone.history.navigate('votes/' + this.model.get('id'), {trigger: true});
+    },
+
+    onDestroy: function() {
+        // remove unnessecary elements from dom
+        $('.datetimepicker').remove();
+        $('.dz-hidden-input').remove();
     },
 
     initDropZone: function () {
@@ -186,11 +200,8 @@ module.exports = Marionette.ItemView.extend({
                 view.$('.dz-progress', file.previewElement).hide();
                 view.$('.dz-size', file.previewElement).hide();
             },
-            //addedfile: function (file) {
-            //
-            //},
             removedfile: function (file) {
-                //view.ui.attachsError.text('');
+                view.ui.attachsError.text('');
                 view.$(file.previewElement).remove();
                 if (file.id) {
                     view._deletedFiles.push(file);
@@ -205,7 +216,6 @@ module.exports = Marionette.ItemView.extend({
             },
             // event triggers when all files has been uploaded
             queuecomplete: function () {
-                view.navigateTo();
             }
         });
 
@@ -219,16 +229,13 @@ module.exports = Marionette.ItemView.extend({
         });
 
         this._deletedFiles.splice(0, this._deletedFiles.length);
-        this.navigateTo();
     },
 
     removeAttachmentFromServer: function (file) {
         // remove single file from server
         var model = new AttachmentModel({ id: file.id });
         model.parentUrl = _.result(this.model, 'url');
-        model.destroy({
-            wait: true
-        });
+        model.destroy();
     },
 
     showAttachments: function () {
@@ -238,8 +245,9 @@ module.exports = Marionette.ItemView.extend({
         // if model is new there is no id
         if (!id) return;
         attachs = this.model.getMeta()[id].attachments;
-        var drop = this._dropZone;
+        helper.attachmentThumb(attachs);
         if (attachs.length) {
+            var drop = this._dropZone;
             attachs.forEach(function (file, i) {
                 var mockFile = {
                     name: file.cloud_public_id,
@@ -250,7 +258,7 @@ module.exports = Marionette.ItemView.extend({
                 drop.emit("thumbnail", mockFile, file.thumb);
                 drop.emit("complete", mockFile);
             });
+            this._dropZone.options.maxFiles = config.maxFiles - attachs.length;
         }
-        this._dropZone.options.maxFiles = config.maxFiles - attachs.length;
     }
 });

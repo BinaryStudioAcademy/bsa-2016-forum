@@ -26,18 +26,6 @@ module.exports = Marionette.ItemView.extend({
         }
     },
 
-    attachmentThumb: function (attachs) {
-        attachs.forEach(function (attach) {
-            if (attach.type == 'image/jpeg' || attach.type == 'image/png' ||
-                attach.type == 'image/gif') {
-                attach.thumb = attach.url;
-            } else {
-                attach.thumb = 'images/doc.png';
-            }
-
-        });
-    },
-
     serializeData: function () {
         var tempmeta = this.model.getMeta();
         var meta = {
