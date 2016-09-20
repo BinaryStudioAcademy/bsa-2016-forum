@@ -11,8 +11,6 @@ var App = require('../../instances/appInstance');
 var config = require('config');
 var helper = require('../../helpers/helper');
 
-Dropzone.autoDiscover = false;
-
 module.exports = Marionette.ItemView.extend({
     template: 'create-vote-header',
     _dropZone: null,
