@@ -17,7 +17,7 @@ var VoteRICollection = require('../collections/voteRICollection');
 var ListVotes = require('../views/votes/ListVotes');
 var ShowVote = require('../views/votes/ShowVote');
 var CreateVote = require('../views/votes/CreateVote');
-var NewVoteCommentView = require('../views/comments/TopicCommentNew');
+var NewVoteCommentView = require('../views/comments/VoteCommentNewExtended');
 var CommentsCollectionView = require('../views/comments/TopicCommentsCollection');
 
 var Votes = require('../instances/Votes');
@@ -66,7 +66,7 @@ module.exports = Marionette.Object.extend({
                     model.parentUrl = _.result(parentView.model, 'getEntityUrl');
                 }
 
-            app.renderModal(new NewVoteCommentView({
+            view.getRegion('newComment').show(new NewVoteCommentView({
                 model: model,
                 commentCollection: commentCollection,
                 parentCommentView: parentView._isVoteView/* || parentView._isVoteItemView*/ ? null : parentView
