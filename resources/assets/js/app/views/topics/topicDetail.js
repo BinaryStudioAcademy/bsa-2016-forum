@@ -4,6 +4,7 @@ var CommentsCollectionView = require('../comments/TopicCommentsCollection');
 var logger = require('../../instances/logger');
 var Radio = require('backbone.radio');
 var TopicHeaderView = require('./topicHeader');
+var UserAvatarView = require('../users/userAvatar');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'topicDetail',
@@ -16,7 +17,8 @@ module.exports = Marionette.LayoutView.extend({
     regions: {
         'newComment': '.newcomment',
         'topicHeader': '.topic-head',
-        'comments': '.topic-comments'
+        'comments': '.topic-comments',
+        'avatar': '#avatar-top'
     },
 
     ui: {
@@ -37,6 +39,11 @@ module.exports = Marionette.LayoutView.extend({
         this.getRegion('comments').show(new CommentsCollectionView({
             collection: this.collection,
             reorderOnSort: true
+        }));
+
+
+        this.getRegion('avatar').show(
+            new UserAvatarView({model: this.model
         }));
     }
 

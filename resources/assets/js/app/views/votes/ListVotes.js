@@ -1,6 +1,5 @@
 var Marionette = require('backbone.marionette');
 var VotesCollectionView = require('./ListVotesCollection');
-var UserAvatarView = require('../users/userAvatar');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'voteLayout',

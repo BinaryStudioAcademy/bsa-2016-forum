@@ -10,11 +10,9 @@ var socketCommentClient = require('../../initializers/socketCommentClient');
 var CommentsCollection = require('../../collections/commentCollection');
 var currentUser = require('../../initializers/currentUser');
 var VoteRImodel = require('../../models/VoteRImodel');
-<<<<<<< HEAD
 var UserAvatarView = require('../users/userAvatar');
-=======
 var VoteResultsCollectionView = require('./VoteResultsCollection');
->>>>>>> f7ec0abe6c1d6968b90f1df9d57bbe653bc5e4ad
+
 
 module.exports = Marionette.LayoutView.extend({
     template: 'voteDetail',
@@ -177,17 +175,14 @@ module.exports = Marionette.LayoutView.extend({
         this.getRegion('answers').show(
             new VoteAnswersCollectionView({collection: this.options.answers})
         );
-<<<<<<< HEAD
 
         this.getRegion('avatar').show(
-            new UserAvatarView({model: this.options.voteModel})
+           new UserAvatarView({model: this.model})
         );
-=======
     },
     serializeData: function () {
         return {
             slug: this.model.vote_slug()
         }
->>>>>>> f7ec0abe6c1d6968b90f1df9d57bbe653bc5e4ad
     }
 });
