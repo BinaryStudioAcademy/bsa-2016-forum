@@ -7,7 +7,13 @@ try
     config = require('./config.dev');
 } catch (e){
     console.log("Develop config dos`nt exist");
-    config = require('./config');
+    try {
+        config = require('./config.prod');
+    } catch (e)
+    {
+        console.log("Prod config also dos`nt exist");
+        config = require('./config');
+    }
 }
 
 var http = require('http');
