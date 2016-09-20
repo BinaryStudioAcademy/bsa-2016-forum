@@ -1,14 +1,13 @@
 <div class="topic-comment-flex">
     <div class="topic-bar hidden-xs">
         <div class="topic-avatar topic-avatar-border">
-
-        </div>
-        <div class="topic-addition">
-     {{#if meta.user.url_avatar}}
+           {{#if meta.user.url_avatar}}
             <img src={{meta.user.url_avatar}}>
            {{else}}
             <img src="images/user.png">
             {{/if}}
+        </div>
+        <div class="topic-addition">
         </div>
     </div>
     <div class="topic-body">
