@@ -19,18 +19,20 @@ module.exports = Marionette.ItemView.extend({
     },
 
     events: {
-        'click @ui.saveSummary': 'saveSummary',
-        //'sync': 'render',
-        //'change': 'render',
-        'save': 'render',
+        'click @ui.saveSummary': 'saveSummary'
     },
 
     saveSummary: function () {
-      this.model.set('summary',this.$('#summary').val());
-      this.model.set('user_id',currentUser.get('id'));
-        this.model.save({},{
-            validate: false
+        var self = this;
+        this.model.set('summary', this.$('#summary').val());
+        this.model.set('user_id', currentUser.get('id'));
+        this.model.save({}, {
+            validate: false,
+            success: function () {
+                self.render();
+            }
         });
+
     },
 
     behaviors: {
