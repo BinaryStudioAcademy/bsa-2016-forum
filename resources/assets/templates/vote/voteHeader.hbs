@@ -28,11 +28,7 @@
                     {{#each meta.usersWhoSaw}}
                         <li class="">
 
-                          {{#if url_avatar}}
-                              <img src={{url_avatar}} alt="">
-                           {{else}}
-                               <img src="images/user.png">
-                            {{/if}}
+                          {{#if url_avatar}}<img src={{url_avatar}} alt="">{{else}}<img src="images/user.png">{{/if}}
 
                             <span>{{ first_name }} {{ last_name }}</span>
                         </li>

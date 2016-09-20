@@ -3,11 +3,7 @@
     <div class="message-item-container {{messageDirection}}">
         <div class="message-msg-avatar">
             <!-- message owner avatar -->
-              {{#if user.url_avatar}}
-                  <img src={{user.url_avatar}}>
-              {{else}}
-                 <img src="images/user.png">
-              {{/if}}
+              {{#if user.url_avatar}}<img src={{user.url_avatar}}>{{else}}<img src="images/user.png">{{/if}}
         </div>
         <div class="message-msg-body {{deleted}}">
             <p><b>{{user.first_name}} {{user.last_name}}</b></p>
