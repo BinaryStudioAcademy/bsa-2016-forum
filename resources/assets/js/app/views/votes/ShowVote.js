@@ -34,10 +34,12 @@ module.exports = Marionette.LayoutView.extend({
 
     modelEvents: {
         'change:id': function () {
-            if (this.model.id && parseInt(this.model.id)) {
+            if (this.model.get('id') && parseInt(this.model.get('id'))) {
                 this.bindEvents();
             }
         }
+    },
+
     initialize: function () {
         var self = this;
         // triggered after vote model fetched and if vote is finished
