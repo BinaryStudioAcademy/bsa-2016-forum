@@ -37,8 +37,6 @@ module.exports = Marionette.ItemView.extend({
         };
         if (tempmeta) {
             var id = this.model.get('id');
-            console.log(tempmeta[id].urlBaseAvatar);
-            console.log(tempmeta[id].usersWhoSaw);
 
             meta = {
                 user: tempmeta[id].user,
