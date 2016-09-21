@@ -115,6 +115,7 @@ module.exports = Marionette.ItemView.extend({
             model: this.model.toJSON(),
             meta: {
                 user: meta[id].user,
+                urlBaseAvatar: meta[id].urlBaseAvatar,
                 likes: meta[id].likes,
                 attachments: meta[id].attachments,
                 comments: meta[id].comments,

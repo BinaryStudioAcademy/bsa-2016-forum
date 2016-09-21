@@ -67,7 +67,6 @@ class UserStore implements UserStoreInterface
                         $r['birthday'] = $userFunc->birthday;
                         $r['local_id'] = $userFunc->id;
                         $r['global_id'] = $userFunc->serverUserId;
-                        //$r['avatar'] = $userFunc->avatar;
                         $userInner = array_shift($userInner);
                         $r['url_avatar'] =$userInner['url_avatar'];
                         $r['id'] = $userInner['id'];
@@ -123,5 +122,10 @@ class UserStore implements UserStoreInterface
         $this->searchStr = $request->get('query');
         $this->order = $request->get('order');
         $this->orderType = $request->get('orderType');
+    }
+
+    public static function getUrlAvatar()
+    {
+        return config('authserver.urlBaseAvatar');
     }
 }

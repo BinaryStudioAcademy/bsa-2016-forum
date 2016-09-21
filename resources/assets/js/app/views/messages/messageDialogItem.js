@@ -69,11 +69,13 @@ module.exports = Marionette.ItemView.extend({
             edit = 'Removed at';
         }
 
+        meta = this.model.collection.getMeta();
         return {
             message: helper.formatText(this.model.get('message')),
             messageDirection: direction,
             edit_at: edit,
             user: with_user,
+            urlBaseAvatar: meta.urlBaseAvatar,
             deleted: deleted,
 
             updatedDate: dateHelper.relativeDate(dateHelper.dateWithTimezone(this.model.get('updated_at'))),

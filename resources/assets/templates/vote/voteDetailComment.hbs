@@ -1,6 +1,7 @@
 <!--<div class="vote-comment">-->
     <div class="vote-comment-avatar">
-       {{#if meta.user.url_avatar}}<img src={{meta.user.url_avatar}}{{else}}<img src='images/user.png'>{{/if}}
+
+       {{#if meta.user.url_avatar}}<img src={{meta.urlBaseAvatar}}{{meta.user.url_avatar}}>{{else}}<img src='images/user.png'>{{/if}}
     </div>
     <div class="vote-comment-body">
         <h4>{{ meta.user.first_name }} {{ meta.user.last_name }} <span>{{ createdDate }}</span></h4>

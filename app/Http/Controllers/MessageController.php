@@ -12,6 +12,7 @@ use App\Http\Requests\MessageRequest;
 use Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Database\Eloquent\Collection;
+use App\Repositories\UserStore;
 
 
 class MessageController extends ApiController
@@ -42,7 +43,12 @@ class MessageController extends ApiController
             $withUserId = Input::get('with_user');
             $userTo = User::findOrFail($withUserId);
             $messages = Message::getConversation($userCurrent->id, $userTo->id)->get();
-            return $this->setStatusCode(200)->respond($messages, ['with_user' => $userTo]);
+            return $this->setStatusCode(200)->respond(
+                $messages,
+                ['with_user' => $userTo,
+                'urlBaseAvatar' =>  UserStore::getUrlAvatar()
+                ]
+            );
         }
 
         $messages = Message::getLast($userCurrent->id);
@@ -50,10 +56,11 @@ class MessageController extends ApiController
         if (!$messages) {
             return $this->setStatusCode(200)->respond();
         }
-
         return $this->setStatusCode(200)->respond(
             $messages,
-            ['users' => $this->getMetaDataForCollection($messages)]
+            ['users' => $this->getMetaDataForCollection($messages),
+             'urlBaseAvatar' =>  UserStore::getUrlAvatar()
+            ]
         );
     }
 
@@ -94,9 +101,9 @@ class MessageController extends ApiController
         $user = User::findOrFail($userId);
 
         $this->authorize('show', [$message, $user]);
-
+        $meta['urlBaseAvatar'] =  UserStore::getUrlAvatar();
         return $this->setStatusCode(200)->respond(
-            $message
+            $message, $meta
         );
     }
 
@@ -169,6 +176,7 @@ class MessageController extends ApiController
                 $meta[$index] = $usersArray[$index];
             }
         }
+       // $meta['urlBaseAvatar'] =  UserStore::getUrlAvatar();
 
         return $meta;
     }

@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use App\Facades\TagService;
 use App\Facades\MarkdownService;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\UserStore;
 
 class VoteController extends ApiController
 {
@@ -107,7 +108,8 @@ class VoteController extends ApiController
                 'subscription' => $vote->subscription(Auth::user()->id),
                 'days_ago' => $difference,
                 'numberOfUniqueViews' => $vote->voteUniqueViews()->count(),
-                'usersWhoSaw' => $usersWhoSaw
+                'usersWhoSaw' => $usersWhoSaw,
+                'urlBaseAvatar' => UserStore::getUrlAvatar(),
             ];
 
         if ($access) {

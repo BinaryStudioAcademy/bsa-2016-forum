@@ -18,10 +18,10 @@ module.exports = Marionette.ItemView.extend({
         if (tempmeta) {
             var id = this.model.get('id');
             meta = {
-                user: tempmeta[id].user
+                user: tempmeta[id].user,
+                urlBaseAvatar: tempmeta[id].urlBaseAvatar
             }
         }
-        console.log(meta);
         return {
             model: this.model.toJSON(),
             meta: meta

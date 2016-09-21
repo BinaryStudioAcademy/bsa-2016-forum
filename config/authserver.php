@@ -8,4 +8,5 @@ return [
     "urlUsersInfo" => "http://team.binary-studio.com/profile/api/users/",
     "urlUsersPosition" => "http://team.binary-studio.com/profile/user/filter",
     "urlAuthBase" => "http://team.binary-studio.com",
+    "urlBaseAvatar" => "http://team.binary-studio.com",
 ];

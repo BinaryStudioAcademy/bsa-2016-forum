@@ -13,6 +13,7 @@ use App\Events\NewBroadcastCommentEvent;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Gate;
 use App\Facades\MarkdownService;
+use App\Repositories\UserStore;
 
 class CommentController extends ApiController
 {
@@ -24,7 +25,7 @@ class CommentController extends ApiController
             'likes' => $comment->likes()->count(),
             'attachments' => $comment->attachments()->get(),
             'comments' => $comment->comments()->count(),
-
+            'urlBaseAvatar' => UserStore::getUrlAvatar(),
         ];
     }
 
@@ -36,7 +37,6 @@ class CommentController extends ApiController
                 $data[$comment->id] = $this->getItemMetaData($comment);
             }
         }
-
         return $data;
     }
 
@@ -288,6 +288,7 @@ class CommentController extends ApiController
 
         foreach ($comments as $comment) {
             $meta[$comment->id]['user'] = $comment->user()->first();
+            $meta['urlBaseAvatar'] = UserStore::getUrlAvatar();
         }
 
         return $meta;

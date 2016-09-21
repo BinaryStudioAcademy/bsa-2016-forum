@@ -20,7 +20,8 @@ module.exports = Marionette.ItemView.extend({
             meta: {
                 checked: tempmeta.checked[this.model.get('id')],
                 vote: tempmeta.vote,
-                users: tempmeta.users[this.model.get('id')]
+                users: tempmeta.users[this.model.get('id')],
+                urlBaseAvatar: meta.urlBaseAvatar
             },
             isPublic: this.options.isPublic,
             // percentage

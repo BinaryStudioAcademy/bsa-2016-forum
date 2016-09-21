@@ -30,7 +30,8 @@ module.exports = Marionette.ItemView.extend({
             meta: {
                 user: meta.user,
                 likes: meta.likes,
-                comments: meta.comments
+                comments: meta.comments,
+                urlBaseAvatar: meta.urlBaseAvatar
             },
             createdDate: dateHelper.middleDate(this.model.get('created_at'))
         };
