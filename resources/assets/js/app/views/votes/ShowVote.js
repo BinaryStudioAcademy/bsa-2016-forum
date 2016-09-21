@@ -64,7 +64,6 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onBeforeDestroy: function () {
-        this.stopListening();
         socketCommentClient.unbind('VoteComments', this.model.id);
     },
 
