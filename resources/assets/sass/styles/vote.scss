@@ -519,12 +519,12 @@ VOTE INDEX
   margin: 10px 0;
 }
 
-.vote-item-comments-button {
-  color: green;
-  margin: 0 5px;
-}
-
-.vote-item-comments-button:hover {
-  text-decoration: none;
-  color: darkgreen;
+#answers {
+  .radio, .checkbox {
+    a{
+      color: green;
+      margin: 0 5px;
+      text-decoration: none;
+    }
+  }
 }
