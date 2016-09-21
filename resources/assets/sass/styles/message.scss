@@ -66,6 +66,23 @@ MESSAGES LIST
   margin-left: 5px;
 }
 
+.messages_layout {
+  margin: 1em 0 0;
+}
+
+.messages_layout li{
+  width: 100%;
+  display: table;
+  padding: 0 2em 0 1.5em;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+  border-bottom: 1px dotted #CCC;
+}
+
+.messages_layout li:last-child {
+  padding-bottom: 0; border: none;
+}
+
 /*
 MESSAGE DIALOG
 */
