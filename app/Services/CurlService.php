@@ -5,11 +5,16 @@ use HttpRequest;
 
 class CurlService
 {
-    public function sendRequest($method, $url, array $body = [])
+    public function sendRequest($method, $url, array $body = [], $cookie = null)
     {
         $response = null;
         $cookieName = config('authserver.cookieName');
-        $cookie = 'Cookie: ' . $cookieName . '=' . $_COOKIE[$cookieName];
+        if ($cookie) {
+            $cookie = 'Cookie: ' . $cookieName . '=' . $cookie;
+        } else {
+            $cookie = 'Cookie: ' . $cookieName . '=' . $_COOKIE[$cookieName];
+        }
+
         $opts = array('http' =>
             array(
                 'method' => $method,
@@ -31,7 +36,7 @@ class CurlService
         return $response;
     }
 
-    public function sendUsersRequest($id = null)
+    public function sendUsersRequest($id = null, $cookie = null)
     {
 
         if (!$id) {
@@ -39,7 +44,7 @@ class CurlService
         } else {
             $url = trim(config('authserver.urlUserInfo')) . $id;
         }
-        $response = $this->sendRequest('GET', $url);
+        $response = $this->sendRequest('GET', $url, [], $cookie);
         if (!$response) {
             throw new ServiceUnavailableHttpException;
         }
