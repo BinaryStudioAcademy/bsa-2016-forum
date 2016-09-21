@@ -1,7 +1,22 @@
 /**
- * Created by Степан on 19.08.2016.
+ * Main socket server script
  */
-var config = require('./config');
+
+var config;
+try
+{
+    config = require('./config.dev');
+} catch (e){
+    console.log("Develop config don`t exist");
+    try {
+        config = require('./config.prod');
+    } catch (e)
+    {
+        console.log("Prod config also don`t exist");
+        config = require('./config');
+    }
+}
+
 var http = require('http');
 var io = require('socket.io');
 var Redis = require('ioredis');
