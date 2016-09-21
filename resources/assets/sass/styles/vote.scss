@@ -520,6 +520,7 @@ VOTE INDEX
 }
 
 #answers {
+  padding: 0;
   .radio, .checkbox {
     a{
       color: green;
@@ -527,9 +528,4 @@ VOTE INDEX
       text-decoration: none;
     }
   }
-}
-
-
-#answers {
-  padding: 0;
 }
