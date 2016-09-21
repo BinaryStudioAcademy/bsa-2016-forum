@@ -518,3 +518,13 @@ VOTE INDEX
 .vote-results {
   margin: 10px 0;
 }
+
+#answers {
+  .radio, .checkbox {
+    a{
+      color: green;
+      margin: 0 5px;
+      text-decoration: none;
+    }
+  }
+}

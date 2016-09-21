@@ -11,7 +11,7 @@
             {{ model.name }}
         </label>
 {{/if}}
-    <a class="btn btn-sm btn-default" data-toggle="collapse" href="#collapse-{{model.id}}"><span class="glyphicon glyphicon-comment"></span>   (<span class="js-vote-item-comments-count">{{meta.comments}}</span>)</a>
+    <a class="vote-item-comments-button" data-toggle="collapse" href="#collapse-{{model.id}}"><span class="glyphicon glyphicon-comment"></span>   (<span class="js-vote-item-comments-count">{{meta.comments}}</span>)</a>
     <div id="collapse-{{model.id}}"  class="panel-collapse collapse well vote-item-comments-collapse">
         <button type="button"  class="btn btn-success widthbutton js-comment-vote-item">Comment Vote Item</button>
         <div class="js-vote-item-comments"></div>
