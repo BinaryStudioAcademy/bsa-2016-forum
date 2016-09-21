@@ -73,7 +73,11 @@ var dateHelper = {
 
     minutesToMilliseconds: function (minutes) {
         return minutes * 60 * 1000;
-    }
+    },
+
+    getCurrentDate: function() {
+        return moment.utc().tz(config.timeZone).format('YYYY-MM-DD HH:mm:ss');
+    },
 };
 
 module.exports = dateHelper;

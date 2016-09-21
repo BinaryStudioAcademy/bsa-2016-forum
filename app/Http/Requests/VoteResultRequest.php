@@ -22,7 +22,7 @@ class VoteResultRequest extends ApiRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|integer|is_current_user',//|multi_unique
+            'user_id' => 'required|integer',//|multi_unique
             'vote_id' => 'required|integer|exists:votes,id',
             'vote_item_id' => 'required|integer|exists:vote_items,id|voteitem_exist',
         ];
@@ -32,7 +32,6 @@ class VoteResultRequest extends ApiRequest
     {
         return [
             'user_id.required' => 'User ID is required',
-            'user_id.is_current_user' => 'User is not authorized',
             'vote_id.required'  => 'Vote ID is required',
             'vote_item_id.required'  => 'Vote item ID is required',
             'vote_id.exists'  => 'Vote does not exist',

@@ -13,6 +13,11 @@
                 <span><i class="fa fa-clock-o"></i> Finished {{meta.finishedDate}}</span>
             {{/if}}
         </span>
+        {{#if meta.isFinished}}
+            {{#if meta.isAdmin}}
+                <button class="btn btn-info text-info stop-category-btn">Stop vote</button>
+            {{/if}}
+        {{/if}}
         <button class="btn btn-info text-info subscribe-btn">Subscribe</button>
         <div>{{{ model.description_generated }}}</div>
         <div class="vote-tags">

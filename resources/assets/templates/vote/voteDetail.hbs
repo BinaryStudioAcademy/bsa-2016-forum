@@ -26,7 +26,10 @@
             <div class="topic-bar hidden-xs"></div>
             <div class="topic-history">{{ model.created_at }} {{ meta.user.display_name }}</div>
             <div class="topic-control-btn">
-                <a href="#votes/{{slug}}/edit" class="topic-edit-btn">Edit</a>
+                <a href="#votes/{{slug}}/edit" class="topic-edit-btn">
+                    <i class="fa fa-edit" aria-hidden="true"></i>
+                    <span>Edit</span>
+                </a>
                 <a class="topic-answer-btn">Answer</a>
             </div>
         </div>
