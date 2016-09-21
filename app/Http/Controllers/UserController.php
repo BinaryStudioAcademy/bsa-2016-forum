@@ -19,7 +19,7 @@ class UserController extends ApiController
         $users = $userStore->all(null, $request);
         $usersNew =array();
         foreach ($users as $user) {
-            $user['url_avatar'] = UserStore::getUrlAvatar($user);
+            $user = UserStore::getUrlAvatar($user);
             $usersNew[] = $user;
         };
         return $this->setStatusCode(200)->respond($usersNew);

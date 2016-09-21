@@ -20,10 +20,8 @@ class CommentController extends ApiController
 
     private function getItemMetaData($comment)
     {
-        $user = UserStore::getUrlAvatar($comment->user()->first());
         return [
-            //'user' => $comment->user()->first(),
-            'user' => $user,
+            'user' => UserStore::getUrlAvatar($comment->user()->first()),
             'likes' => $comment->likes()->count(),
             'attachments' => $comment->attachments()->get(),
             'comments' => $comment->comments()->count(),
@@ -274,8 +272,6 @@ class CommentController extends ApiController
      */
     protected function isCommentBelongsToVote(Vote $vote, Comment $comment)
     {
-        //$voteWhichHasThisComment = $comment->commentable()->get()->first();
-        //return ($voteWhichHasThisComment && $voteWhichHasThisComment->id === $vote->id);
         return !!$vote->comments()->find($comment->id);
     }
 
@@ -288,9 +284,7 @@ class CommentController extends ApiController
         $meta = [];
 
         foreach ($comments as $comment) {
-            $user = UserStore::getUrlAvatar($comment->user()->first());
-            //$meta[$comment->id]['user'] = $comment->user()->first();
-            $meta[$comment->id]['user'] = $user;
+            $meta[$comment->id]['user'] = UserStore::getUrlAvatar($comment->user()->first());
         }
 
         return $meta;

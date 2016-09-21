@@ -25,12 +25,11 @@ class TopicController extends ApiController
      */
     private function getMetaDataForModel(Topic $topic)
     {
-        $user = UserStore::getUrlAvatar($topic->user()->first());
         return [
             $topic->id => [
                 'subscription' => $topic->subscription(Auth::user()->id),
                 'category' => $topic->category,
-                'user' => $user,
+                'user' => UserStore::getUrlAvatar($topic->user()->first()),
                 'likes' => $topic->likes()->count(),
                 'comments' => $topic->comments()->count(),
                 'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
@@ -57,7 +56,12 @@ class TopicController extends ApiController
     public function getTopicSubscribers(Topic $topic)
     {
         $subscribers = $topic->subscribers;
-        return $this->setStatusCode(200)->respond($subscribers);
+        $subscribersNew =array();
+        foreach($subscribers as $subscriber)
+        {
+            $subscribersNew[] = UserStore::getUrlAvatar($subscriber);
+        }
+        return $this->setStatusCode(200)->respond($subscribersNew);
     }
 
     /**

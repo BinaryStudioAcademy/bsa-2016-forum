@@ -75,7 +75,6 @@ module.exports = Marionette.ItemView.extend({
             messageDirection: direction,
             edit_at: edit,
             user: with_user,
-            urlBaseAvatar: meta.urlBaseAvatar,
             deleted: deleted,
 
             updatedDate: dateHelper.relativeDate(dateHelper.dateWithTimezone(this.model.get('updated_at'))),
