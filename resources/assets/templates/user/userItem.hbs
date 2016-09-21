@@ -1,6 +1,6 @@
 <div class="users-item">
     <div class="users-item-avatar">
-        <img src="images/user.png" />
+     {{#if model.url_avatar}}<img src={{meta.urlBaseAvatar}}{{model.url_avatar}}>{{else}}<img src="images/user.png">{{/if}}
     </div>
     <div class="users-item-credential">
         <div class="users-item-name">

@@ -14,7 +14,8 @@ module.exports = Marionette.ItemView.extend({
     },
 
     serializeData: function () {
-        var meta = this.model.getMeta();
+        var meta = this.model.getMetaById() || {};
+
         if (!meta) return {
             model: this.model.toJSON(),
             meta: {
@@ -29,7 +30,8 @@ module.exports = Marionette.ItemView.extend({
             meta: {
                 user: meta.user,
                 likes: meta.likes,
-                comments: meta.comments
+                comments: meta.comments,
+                urlBaseAvatar: meta.urlBaseAvatar
             },
             createdDate: dateHelper.middleDate(this.model.get('created_at'))
         };

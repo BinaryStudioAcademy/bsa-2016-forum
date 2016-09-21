@@ -17,20 +17,24 @@ module.exports = Marionette.ItemView.extend({
     serializeData: function () {
         var id = this.model.get('id');
         var meta = this.model.getMeta();
-
-        if (!meta[id]) return {
-            model: this.model.toJSON(),
-            createdDate: dateHelper.fullDate(this.model.get('created_at')),
-            meta: {
-                user: this.model.get('user')
-            }
-        };
+        if (!meta[id])
+        {   console.log(this.model);
+            return {
+                model: this.model.toJSON(),
+                createdDate: dateHelper.fullDate(this.model.get('created_at')),
+                meta: {
+                    user: this.model.get('user'),
+                    urlBaseAvatar:meta.urlBaseAvatar
+                }
+            };
+        }
 
         return {
             model: this.model.toJSON(),
             createdDate: dateHelper.fullDate(this.model.get('created_at')),
             meta: {
-                user: meta[id].user
+                user: meta[id].user,
+                urlBaseAvatar: meta.urlBaseAvatar
             }
         };
     },
