@@ -40,7 +40,6 @@ class VoteItemController extends ApiController
         $data[$item->id] = [
             'comments' => $item->comments()->count(),
             'results' => $item->voteResults()->count(),
-            'urlBaseAvatar' => UserStore::getUrlAvatar()
         ];
         return $data;
     }

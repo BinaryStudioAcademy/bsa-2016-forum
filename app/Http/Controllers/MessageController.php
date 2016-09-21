@@ -44,10 +44,7 @@ class MessageController extends ApiController
             $userTo = User::findOrFail($withUserId);
             $userTo = UserStore::getUrlAvatar($userTo);
             $messages = Message::getConversation($userCurrent->id, $userTo->id)->get();
-            return $this->setStatusCode(200)->respond(
-                $messages,
-                ['with_user' => $userTo]
-            );
+            return $this->setStatusCode(200)->respond($messages, ['with_user' => $userTo]);
         }
 
         $messages = Message::getLast($userCurrent->id);
@@ -55,8 +52,7 @@ class MessageController extends ApiController
         if (!$messages) {
             return $this->setStatusCode(200)->respond();
         }
-        return $this->setStatusCode(200)->respond(
-            $messages,
+        return $this->setStatusCode(200)->respond($messages,
             ['users' => $this->getMetaDataForCollection($messages)]
         );
     }
