@@ -2,7 +2,7 @@ var Marionette = require('backbone.marionette');
 var _ = require('underscore');
 var $ = require('jquery');
 var Radio = require('backbone.radio');
-var CommentsCollectionView = require('../../views/votes/VoteCommentsCollection');
+var CommentsCollectionView = require('../comments/TopicCommentsCollection');
 var VoteHeader = require('../../views/votes/voteHeader');
 var VoteAnswersCollectionView = require('../../views/votes/VoteAnswersCollection');
 var CommentModel = require('../../models/CommentModel');
@@ -14,31 +14,39 @@ var VoteResultsCollectionView = require('./VoteResultsCollection');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'voteDetail',
+    _isVoteView: true,
     regions: {
         comments: '#comments',
-        addcomment: '#add-comment',
+        newComment: '#add-comment',
         voteheader: '#vote-header',
         answers: '#answers'
     },
     ui: {
         c_count: '.count',
         newCommentButton: '.new-comment-notification',
-        voteCommit: '.commit-vote'
+        voteCommit: '.commit-vote',
+        load: '.js-load-main-comments',
+        reply: '.js-reply'
     },
 
     events: {
         'click @ui.newCommentButton': 'showNewComments',
-        'click @ui.voteCommit': 'saveVotingOption'
+        'click @ui.voteCommit': 'saveVotingOption',
+        'click @ui.reply': function () {
+            Radio.trigger('comment', 'addComment', this, null, this.collection);
+        }
     },
 
 
+    modelEvents: {
+        'change:id': function () {
+            if (this.model.get('id') && parseInt(this.model.get('id'))) {
+                this.bindEvents();
+            }
+        }
+    },
+
     initialize: function () {
-        this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.model.id, function (n) {
-            this.ui.c_count.text(n);
-        });
-
-        socketCommentClient.bind('VoteComments', this.model.id);
-
         var self = this;
         // triggered after vote model fetched and if vote is finished
         this.listenTo(Radio.channel('votesChannel'), 'showVoteResult', function () {
@@ -60,13 +68,20 @@ module.exports = Marionette.LayoutView.extend({
         socketCommentClient.unbind('VoteComments', this.model.id);
     },
 
-    onShow: function () {
+    bindEvents: function () {
+        socketCommentClient.bind('VoteComments', this.model.id);
+
+        this.listenTo(Radio.channel('votesChannel'), 'setCommentsCount' + this.model.id, function (n) {
+            this.ui.c_count.text(n);
+        });
+
         this.addedCommentsCollection = new CommentsCollection([], {parentUrl: ''});
 
         var self = this;
         this.collection.listenTo(Radio.channel('VoteComments'), 'newComment', function (comment) {
             self.addedCommentsCollection.add(new CommentModel(comment), {parentUrl: ''});
             var count = self.addedCommentsCollection.length + self.collection.length;
+
             Radio.trigger('votesChannel', 'setCommentsCount' + self.model.id, count);
 
             if (comment.user_id != currentUser.id) {
@@ -158,24 +173,35 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onRender: function () {
-        Radio.trigger('votesChannel', 'showAddCommentView', this);
 
-        this.getRegion('comments').show(
-            new CommentsCollectionView({
-                collection: this.options.collection
-            }));
+         this.getRegion('comments').show(
+             new CommentsCollectionView({
+                 collection: this.options.collection
+             }));
+        
 
         this.getRegion('voteheader').show(
             new VoteHeader({model: this.model})
         );
 
         this.getRegion('answers').show(
-            new VoteAnswersCollectionView({collection: this.options.answers})
+            new VoteAnswersCollectionView({
+                collection: this.options.answers,
+                parent: this
+            })
         );
     },
     serializeData: function () {
         return {
             slug: this.model.vote_slug()
         }
+    },
+    
+    showLoadCommentsButton: function (state) {
+        this.ui.load.toggleClass('hidden', !state);
+    },
+
+    showChildCommentsButton: function (asd) {
+
     }
 });

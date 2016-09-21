@@ -205,30 +205,16 @@ MESSAGE DIALOG
   overflow: hidden;
 }
 
-.message-new-control button {
-  float: right;
-  padding: 5px 15px;
-  border-radius: 0;
-  border: none;
-  color: #555;
-  font-size: 14px;
-  font-weight: 800;
-  background-color: #ffd992;
-  margin-left: 10px;
-}
 
-.message-new-control button:hover {
-  background-color: #f9c172;
-}
-
-.message-new-control button:disabled {
-  background-color: #DDDDDD
-}
 
 .message-edit {
-  padding: 15px;
+  /* padding: 15px; */
   background-color: #ffffff;
   border-radius: 0;
+}
+
+#message-edit-form {
+  margin-bottom: 0;
 }
 
 .hotkey-checkbox-label {
