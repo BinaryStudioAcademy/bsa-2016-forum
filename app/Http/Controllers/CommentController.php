@@ -20,12 +20,13 @@ class CommentController extends ApiController
 
     private function getItemMetaData($comment)
     {
+        $user = UserStore::getUrlAvatar($comment->user()->first());
         return [
-            'user' => $comment->user()->first(),
+            //'user' => $comment->user()->first(),
+            'user' => $user,
             'likes' => $comment->likes()->count(),
             'attachments' => $comment->attachments()->get(),
             'comments' => $comment->comments()->count(),
-            'urlBaseAvatar' => UserStore::getUrlAvatar()
         ];
     }
 
@@ -287,8 +288,9 @@ class CommentController extends ApiController
         $meta = [];
 
         foreach ($comments as $comment) {
-            $meta[$comment->id]['user'] = $comment->user()->first();
-            $meta['urlBaseAvatar'] = UserStore::getUrlAvatar();
+            $user = UserStore::getUrlAvatar($comment->user()->first());
+            //$meta[$comment->id]['user'] = $comment->user()->first();
+            $meta[$comment->id]['user'] = $user;
         }
 
         return $meta;

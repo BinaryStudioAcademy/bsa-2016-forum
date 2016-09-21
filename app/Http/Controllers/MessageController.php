@@ -36,18 +36,18 @@ class MessageController extends ApiController
     public function index($userId)
     {
         $user = User::findOrFail($userId);
+        $user = UserStore::getUrlAvatar($user);
         $userCurrent = Auth::authenticate();
         $this->authorize('viewAll', [new Message(), $user]);
 
         if (Input::has('with_user')) {
             $withUserId = Input::get('with_user');
             $userTo = User::findOrFail($withUserId);
+            $userTo = UserStore::getUrlAvatar($userTo);
             $messages = Message::getConversation($userCurrent->id, $userTo->id)->get();
             return $this->setStatusCode(200)->respond(
                 $messages,
-                ['with_user' => $userTo,
-                'urlBaseAvatar' =>  UserStore::getUrlAvatar()
-                ]
+                ['with_user' => $userTo]
             );
         }
 
@@ -58,9 +58,7 @@ class MessageController extends ApiController
         }
         return $this->setStatusCode(200)->respond(
             $messages,
-            ['users' => $this->getMetaDataForCollection($messages),
-             'urlBaseAvatar' =>  UserStore::getUrlAvatar()
-            ]
+            ['users' => $this->getMetaDataForCollection($messages)]
         );
     }
 
@@ -99,12 +97,10 @@ class MessageController extends ApiController
         }
 
         $user = User::findOrFail($userId);
+        $user = UserStore::getUrlAvatar($user);
 
         $this->authorize('show', [$message, $user]);
-        $meta['urlBaseAvatar'] =  UserStore::getUrlAvatar();
-        return $this->setStatusCode(200)->respond(
-            $message, $meta
-        );
+        return $this->setStatusCode(200)->respond($message);
     }
 
     /**
@@ -165,9 +161,9 @@ class MessageController extends ApiController
         $users = User::whereIn('id', $usersIds)->get();
         $usersArray = [];
         foreach ($users as $user) {
+            $user = UserStore::getUrlAvatar($user);
             $usersArray[$user->id] = $user;
         }
-
         $meta = [];
         $currentUserId = $userCurrent->id;
         foreach ($messages as $message) {

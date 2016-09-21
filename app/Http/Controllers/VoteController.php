@@ -99,9 +99,10 @@ class VoteController extends ApiController
             ? 'today'
             : $created->diffForHumans($now);
 
+        $user = UserStore::getUrlAvatar($vote->user()->first());
         $data[$vote->id] =
             [
-                'user' => $vote->user()->first(),
+                'user' => $user,
                 'likes' => $vote->likes()->count(),
                 'comments' => $vote->comments()->count(),
                 'tags' => $vote->tags()->get(),
@@ -110,14 +111,10 @@ class VoteController extends ApiController
                 'numberOfUniqueViews' => $vote->voteUniqueViews()->count(),
                 'usersWhoSaw' => $usersWhoSaw,
                 'attachments' => $vote->attachments()->get(),
-                'urlBaseAvatar' => UserStore::getUrlAvatar(),
-
             ];
-
         if ($access) {
             $data[$vote->id]['accessedUsers'] = $vote->votePermissions()->get(['user_id']);
         }
-
         return $data;
     }
 

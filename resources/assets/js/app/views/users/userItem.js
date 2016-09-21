@@ -7,7 +7,7 @@ module.exports = Marionette.ItemView.extend({
     serializeData: function () {
         urlBaseAvatar = this.model.collection.getMeta();
         return {
-            meta: urlBaseAvatar,
+            //meta: urlBaseAvatar,
             model: this.model.toJSON()
         };
     }

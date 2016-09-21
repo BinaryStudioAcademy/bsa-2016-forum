@@ -6,7 +6,7 @@ module.exports = userItem.extend({
     modelEvents: {
         'change': 'render'
     },
-
+/*
     serializeData:function() {
         meta = this.model.collection.getMeta();
         metaOpposite = this.model.collection.opposite.getMeta();
@@ -21,6 +21,7 @@ module.exports = userItem.extend({
             urlBaseAvatar : urlBaseAvatar
         }
     },
+    */
     moveModel: function () {
         var opposite = this.model.collection.opposite;
 

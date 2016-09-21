@@ -25,19 +25,18 @@ class TopicController extends ApiController
      */
     private function getMetaDataForModel(Topic $topic)
     {
+        $user = UserStore::getUrlAvatar($topic->user()->first());
         return [
             $topic->id => [
                 'subscription' => $topic->subscription(Auth::user()->id),
                 'category' => $topic->category,
-                'user' => $topic->user()->first(),
+                'user' => $user,
                 'likes' => $topic->likes()->count(),
                 'comments' => $topic->comments()->count(),
                 'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
-                'urlBaseAvatar' => UserStore::getUrlAvatar(),
             ]
         ];
     }
-
 
     /**
      * @param Collection $topics

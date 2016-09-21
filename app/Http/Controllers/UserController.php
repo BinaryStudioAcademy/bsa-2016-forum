@@ -17,8 +17,12 @@ class UserController extends ApiController
     public function index(UserStore $userStore, Request $request)
     {
         $users = $userStore->all(null, $request);
-        $meta['urlBaseAvatar'] = UserStore::getUrlAvatar();
-        return $this->setStatusCode(200)->respond($users, $meta);
+        $usersNew =array();
+        foreach ($users as $user) {
+            $user['url_avatar'] = UserStore::getUrlAvatar($user);
+            $usersNew[] = $user;
+        };
+        return $this->setStatusCode(200)->respond($usersNew);
     }
     /**
      * Display the specified resource.
@@ -29,10 +33,11 @@ class UserController extends ApiController
     public function show(UserStore $userStore, $id)
     {
         $user = User::findOrFail($id);
+        $user = UserStore::getUrlAvatar($user);
         $this->authorize('show', $user);
         $userProfile = $userStore->get($user);
-        $meta['urlBaseAvatar'] = UserStore::getUrlAvatar();
-        return $this->setStatusCode(200)->respond($userProfile, $meta);
+
+        return $this->setStatusCode(200)->respond($userProfile);
     }
     /**
      * @param $userId
@@ -66,11 +71,11 @@ class UserController extends ApiController
     public function getUser(UserStore $userStore)
     {
         $user = Auth::user();
+        $user = UserStore::getUrlAvatar($user);
         if(!$user){
             return $this->setStatusCode(401)->respond();
         }
         $userProfile = $userStore->get($user);
-        $meta['urlBaseAvatar'] = UserStore::getUrlAvatar();
-        return $this->setStatusCode(200)->respond($userProfile, $meta);
+        return $this->setStatusCode(200)->respond($userProfile);
     }
 }
