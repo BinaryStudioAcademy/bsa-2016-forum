@@ -1,7 +1,7 @@
 <div class="topic-comment-flex">
     <div class="topic-bar hidden-xs">
         <div class="topic-avatar">
-            <img src="images/user.png">
+             {{#if meta.user.url_avatar}}<img src={{meta.user.url_avatar}}>{{else}}<img src="images/user.png"{{/if}}
         </div>
         <div class="topic-addition">
 

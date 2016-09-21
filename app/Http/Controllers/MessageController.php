@@ -12,6 +12,7 @@ use App\Http\Requests\MessageRequest;
 use Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Database\Eloquent\Collection;
+use App\Repositories\UserStore;
 
 
 class MessageController extends ApiController
@@ -35,14 +36,19 @@ class MessageController extends ApiController
     public function index($userId)
     {
         $user = User::findOrFail($userId);
+        $user = UserStore::getUrlAvatar($user);
         $userCurrent = Auth::authenticate();
         $this->authorize('viewAll', [new Message(), $user]);
 
         if (Input::has('with_user')) {
             $withUserId = Input::get('with_user');
             $userTo = User::findOrFail($withUserId);
+            $userTo = UserStore::getUrlAvatar($userTo);
             $messages = Message::getConversation($userCurrent->id, $userTo->id)->get();
-            return $this->setStatusCode(200)->respond($messages, ['with_user' => $userTo]);
+            return $this->setStatusCode(200)->respond(
+                $messages,
+                ['with_user' => $userTo]
+            );
         }
 
         $messages = Message::getLast($userCurrent->id);
@@ -50,7 +56,6 @@ class MessageController extends ApiController
         if (!$messages) {
             return $this->setStatusCode(200)->respond();
         }
-
         return $this->setStatusCode(200)->respond(
             $messages,
             ['users' => $this->getMetaDataForCollection($messages)]
@@ -92,12 +97,10 @@ class MessageController extends ApiController
         }
 
         $user = User::findOrFail($userId);
+        $user = UserStore::getUrlAvatar($user);
 
         $this->authorize('show', [$message, $user]);
-
-        return $this->setStatusCode(200)->respond(
-            $message
-        );
+        return $this->setStatusCode(200)->respond($message);
     }
 
     /**
@@ -158,9 +161,9 @@ class MessageController extends ApiController
         $users = User::whereIn('id', $usersIds)->get();
         $usersArray = [];
         foreach ($users as $user) {
+            $user = UserStore::getUrlAvatar($user);
             $usersArray[$user->id] = $user;
         }
-
         $meta = [];
         $currentUserId = $userCurrent->id;
         foreach ($messages as $message) {
@@ -169,7 +172,6 @@ class MessageController extends ApiController
                 $meta[$index] = $usersArray[$index];
             }
         }
-
         return $meta;
     }
 }

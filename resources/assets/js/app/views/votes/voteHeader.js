@@ -31,13 +31,16 @@ module.exports = Marionette.ItemView.extend({
             user: {},
             likes: {},
             comments: {},
-            tags: {}
+            tags: {},
+            urlBaseAvatar:{}
+            
         };
         if (tempmeta) {
             var id = this.model.get('id');
 
             meta = {
                 user: tempmeta[id].user,
+                urlBaseAvatar: tempmeta[id].urlBaseAvatar,
                 likes: tempmeta[id].likes,
                 comments: tempmeta[id].comments,
                 status: tempmeta[id].status,

@@ -10,7 +10,9 @@ var socketCommentClient = require('../../initializers/socketCommentClient');
 var CommentsCollection = require('../../collections/commentCollection');
 var currentUser = require('../../initializers/currentUser');
 var VoteRImodel = require('../../models/VoteRImodel');
+var UserAvatarView = require('../users/userAvatar');
 var VoteResultsCollectionView = require('./VoteResultsCollection');
+
 
 module.exports = Marionette.LayoutView.extend({
     template: 'voteDetail',
@@ -19,7 +21,8 @@ module.exports = Marionette.LayoutView.extend({
         comments: '#comments',
         newComment: '#add-comment',
         voteheader: '#vote-header',
-        answers: '#answers'
+        answers: '#answers',
+        avatar: '#avatar'
     },
     ui: {
         c_count: '.count',
@@ -189,6 +192,10 @@ module.exports = Marionette.LayoutView.extend({
                 collection: this.options.answers,
                 parent: this
             })
+        );
+
+        this.getRegion('avatar').show(
+           new UserAvatarView({model: this.model})
         );
     },
     serializeData: function () {

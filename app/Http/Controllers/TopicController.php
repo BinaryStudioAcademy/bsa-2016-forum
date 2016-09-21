@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Collection;
 use App\Facades\TagService;
 use App\Facades\MarkdownService;
+use App\Repositories\UserStore;
 
 class TopicController extends ApiController
 {
@@ -24,18 +25,18 @@ class TopicController extends ApiController
      */
     private function getMetaDataForModel(Topic $topic)
     {
+        $user = UserStore::getUrlAvatar($topic->user()->first());
         return [
             $topic->id => [
                 'subscription' => $topic->subscription(Auth::user()->id),
                 'category' => $topic->category,
-                'user' => $topic->user()->first(),
+                'user' => $user,
                 'likes' => $topic->likes()->count(),
                 'comments' => $topic->comments()->count(),
-                'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first()
+                'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
             ]
         ];
     }
-
 
     /**
      * @param Collection $topics
