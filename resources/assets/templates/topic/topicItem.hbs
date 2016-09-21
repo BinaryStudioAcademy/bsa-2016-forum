@@ -5,13 +5,12 @@
 <div class="news-item-detail">
     <a href="#topics/{{ model.slug }}" class="news-item-title">{{ model.name }}</a>
     <div class="topic-item-icons">
-        <span><i class="fa fa-star"></i>&nbsp;{{ model.rating }}</span>
         <span><i class="fa fa-commenting"></i>&nbsp;{{ model.answersCount }}</span>
         <span><i class="fa fa-eye"></i>&nbsp;{{ model.reviewed_number }}</span>
         <span><i class="fa fa-user"></i>&nbsp;{{ model.usersCount }}</span>
         <button class="btn-link text-info bookmark-btn">Bookmark</button>
         <button class="btn-link text-info subscribe-btn">Subscribe</button>
-        <span class="btn-link text-info unlike-btn link-like-unlike {{ style }}" aria-hidden="true"><span class="fontOfLikeIcon">Like/Unlike({{ countOfLikes }})</span></span>
+        <span class="btn-link text-info unlike-btn link-like-unlike {{ style }}" aria-hidden="true"><span class="fontOfLikeIcon">{{ likeUnlike }}({{ countOfLikes }})</span></span>
     </div>
     <div class="tags"></div>
     <div class="news-item-preview fixed-font-13">{{{ model.generated_description }}}</div>
