@@ -18,7 +18,8 @@ module.exports = Marionette.LayoutView.extend({
         comments: '#comments',
         addcomment: '#add-comment',
         voteheader: '#vote-header',
-        answers: '#answers'
+        answers: '#answers',
+        summary: 'summary-region'
     },
     ui: {
         c_count: '.count',
