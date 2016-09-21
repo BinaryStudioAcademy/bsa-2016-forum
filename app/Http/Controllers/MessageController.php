@@ -176,8 +176,6 @@ class MessageController extends ApiController
                 $meta[$index] = $usersArray[$index];
             }
         }
-       // $meta['urlBaseAvatar'] =  UserStore::getUrlAvatar();
-
         return $meta;
     }
 }

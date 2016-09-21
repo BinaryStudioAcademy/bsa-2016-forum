@@ -12,6 +12,7 @@ module.exports = Marionette.ItemView.extend({
 
     serializeData: function () {
         var tempmeta = this.model.getMeta();
+        console.log(tempmeta);
         var meta = {
             user: {}
         };

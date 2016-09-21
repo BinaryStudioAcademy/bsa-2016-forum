@@ -25,7 +25,7 @@ class CommentController extends ApiController
             'likes' => $comment->likes()->count(),
             'attachments' => $comment->attachments()->get(),
             'comments' => $comment->comments()->count(),
-            'urlBaseAvatar' => UserStore::getUrlAvatar(),
+            'urlBaseAvatar' => UserStore::getUrlAvatar()
         ];
     }
 
