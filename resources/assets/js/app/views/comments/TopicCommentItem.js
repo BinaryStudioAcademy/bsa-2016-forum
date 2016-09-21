@@ -38,5 +38,5 @@ module.exports = Marionette.LayoutView.extend({
             commentLayout: this,
             parentCommentView: this.getOption('parentCommentView')
         }));
-    },
+    }
 });

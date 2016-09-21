@@ -11,5 +11,5 @@ module.exports = Marionette.CollectionView.extend({
         return {
             parentCommentView: this.options.parentCommentView
         };
-    },
+    }
 });

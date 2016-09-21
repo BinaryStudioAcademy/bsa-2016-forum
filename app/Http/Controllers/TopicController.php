@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Collection;
 use App\Facades\TagService;
 use App\Facades\MarkdownService;
+use App\Repositories\UserStore;
 
 class TopicController extends ApiController
 {
@@ -31,7 +32,8 @@ class TopicController extends ApiController
                 'user' => $topic->user()->first(),
                 'likes' => $topic->likes()->count(),
                 'comments' => $topic->comments()->count(),
-                'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first()
+                'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
+                'urlBaseAvatar' => UserStore::getUrlAvatar(),
             ]
         ];
     }

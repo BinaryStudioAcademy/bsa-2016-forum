@@ -3,7 +3,8 @@
     {{#if isUserFrom}}
         <div class="messages-msg-avatar hidden-xs">
             <!-- from msg avatar -->
-            <img src="images/user.png">
+
+              {{#if user.url_avatar}}<img src={{urlBaseAvatar}}{{user.url_avatar}}>{{else}}<img src="images/user.png">{{/if}}
         </div>
     {{/if}}
         <div class="messages-msg">
@@ -19,7 +20,7 @@
     {{#unless isUserFrom}}
         <div class="messages-msg-avatar hidden-xs">
             <!-- to msg avatar -->
-            <img src="images/user.png">
+        {{#if user.url_avatar}}<img src={{urlBaseAvatar}}{{user.url_avatar}}>{{else}}<img src="images/user.png">{{/if}}
         </div>
     {{/unless}}
     </a>

@@ -5,8 +5,10 @@ use App\Models\User;
 use App\Repositories\UserStore;
 use Auth;
 use Illuminate\Http\Request;
+
 class UserController extends ApiController
 {
+    
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +17,8 @@ class UserController extends ApiController
     public function index(UserStore $userStore, Request $request)
     {
         $users = $userStore->all(null, $request);
-        return $this->setStatusCode(200)->respond($users);
+        $meta['urlBaseAvatar'] = UserStore::getUrlAvatar();
+        return $this->setStatusCode(200)->respond($users, $meta);
     }
     /**
      * Display the specified resource.
@@ -28,7 +31,8 @@ class UserController extends ApiController
         $user = User::findOrFail($id);
         $this->authorize('show', $user);
         $userProfile = $userStore->get($user);
-        return $this->setStatusCode(200)->respond($userProfile);
+        $meta['urlBaseAvatar'] = UserStore::getUrlAvatar();
+        return $this->setStatusCode(200)->respond($userProfile, $meta);
     }
     /**
      * @param $userId
@@ -42,7 +46,7 @@ class UserController extends ApiController
         $role = Role::findOrFail($roleId);
         $user->role()->associate($role);
         $user->save();
-        return $this->setStatusCode(200)->respond(['user' => $user, 'role' => $role] );
+        return $this->setStatusCode(200)->respond(['user' => $user, 'role' => $role]);
     }
     /**
      * @param $userId
@@ -66,6 +70,7 @@ class UserController extends ApiController
             return $this->setStatusCode(401)->respond();
         }
         $userProfile = $userStore->get($user);
-        return $this->setStatusCode(200)->respond($userProfile);
+        $meta['urlBaseAvatar'] = UserStore::getUrlAvatar();
+        return $this->setStatusCode(200)->respond($userProfile, $meta);
     }
 }

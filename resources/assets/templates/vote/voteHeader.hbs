@@ -25,9 +25,12 @@
                 <span>{{ meta.numberOfUniqueViews }} users have seen this voting</span>
                 <button class="btn btn-default" data-toggle="collapse" data-target=".users-list">Show users</button>
                 <ul class="nav collapse users-list">
+
                     {{#each meta.usersWhoSaw}}
                         <li class="">
-                            <img src="images/user.png" alt="">
+
+                          {{#if url_avatar}}<img src={{../meta.urlBaseAvatar}}{{url_avatar}} alt="">{{else}}<img src="images/user.png">{{/if}}
+
                             <span>{{ first_name }} {{ last_name }}</span>
                         </li>
                     {{/each}}
