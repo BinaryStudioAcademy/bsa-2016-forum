@@ -35,8 +35,7 @@
             </div>
         {{/if}}
 
-        {{#if meta.isFinished}}
-        {{else}}
+        {{#unless meta.isFinished}}
         <div>
             {{#if model.summary}}
             <div><hr><h3>{{model.summary}}</h3><hr></div>
@@ -52,7 +51,7 @@
         </div>
         {{/if}}
 
-        {{/if}}
+        {{/unless}}
 
 
     </div>
