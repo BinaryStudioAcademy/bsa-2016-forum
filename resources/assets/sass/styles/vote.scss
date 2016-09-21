@@ -466,9 +466,23 @@ VOTE INDEX
   font-style: italic;
 }
 
+.js-item-click {
+  margin-bottom:10px;
+  display: inline-block;
+}
+
+.vote-item-comments-collapse {
+  max-height: 1000px !important;
+  overflow-y: scroll !important;
+}
+
+.widthbutton {
+  margin: 0 7px;
+  width: 100%;
+}
+
 .corner-button {
   position: absolute;
-  //float:right;
   top:0;
   right:-50px;
 }
@@ -494,6 +508,11 @@ VOTE INDEX
 
 .votes li {
   padding: 0.5em;
+}
+
+.vote-item-comments-collapse {
+  max-height: 1000px;
+  overflow-y: scroll;
 }
 
 .vote-results {
