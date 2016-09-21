@@ -65,4 +65,14 @@ class CommentPolicy
     {
         return $user->owns($comment);
     }
+
+    public function deleteVoteItemsCommentChild(User $user, Comment $comment, Comment $nested)
+    {
+        return ($user->owns($nested) && !!$comment->comments()->find($nested->id));
+    }
+
+    public function updateVoteItemsCommentChild(User $user, Comment $comment, Comment $nested)
+    {
+        return ($user->owns($comment) && !!$comment->comments()->find($nested->id));
+    }
 }

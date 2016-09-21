@@ -1,6 +1,8 @@
 <div class="row">
     <div class="span12">
         <div class="widget-content vote">
+
+
             <div class="vote-bar hidden-xs">
                 <div class="vote-avatar">
                     <img src="images/user.png">
@@ -14,25 +16,27 @@
                 <div id="answers"></div>
                 <button class="btn btn-default disabled commit-vote">Vote</button>
 
-        <div class="topic-control">
-            <div class="topic-bar hidden-xs"></div>
-            <div class="topic-history">{{ model.created_at }} {{ meta.user.display_name }}</div>
-            <div class="topic-control-btn">
-                <a href="#votes/{{slug}}/edit" class="topic-edit-btn">Edit</a>
-                <a class="topic-answer-btn">Answer</a>
-            </div>
-        </div>
+                <div class="vote-attachments">
+                    Attachments
+                </div>
+                <div id="add-comment"></div>
+                <div class="topic-control">
+                    <div class="topic-bar hidden-xs"></div>
+                    <div class="topic-history">{{ model.created_at }} {{ meta.user.display_name }}</div>
+                    <div class="topic-control-btn">
+                        <a href="#votes/{{slug}}/edit" class="topic-edit-btn">Edit</a>
+                        <a class="topic-answer-btn js-reply">Answer</a>
+                    </div>
+                </div>
 
-        <div class="vote-comments">
-            <h4><span class="count">{{ meta.comments }}</span> Comments</h4>
-            <div id="add-comment"></div>
-            <div class="new-comment-notification">new comment was added</div>
+                <div class="vote-comments">
+                    <h4><span class="count">{{ meta.comments }}</span> Comments</h4>
+                    <div class="new-comment-notification">new comment was added</div>
 
                     <div id="comments">
 
 
                     </div>
-                    <div id="add-comment"></div>
                 </div>
             </div>
 
