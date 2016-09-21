@@ -70,9 +70,9 @@ module.exports = Marionette.ItemView.extend({
     }],
     serializeData: function () {
         var meta = this.model.getMetaById() || {
-                tags: ''
+              
             };
-
+        console.log(meta);//
         meta.deletable = !this.model.get('id') ? true : this.model.get('user_id') == currentUser.id || currentUser.isAdmin();
 
         meta.editable = !this.model.get('id') ? true : this.model.get('user_id') == currentUser.id || currentUser.isAdmin();

@@ -17,12 +17,12 @@ module.exports = Marionette.Behavior.extend({
     tagHandler: function (data) {
         var view = this.view;
         if (!data) data = [];
+        var autocompleteTags = _.difference(data, view.ui.tagsInput.val().split(', '));
         view.ui.tagsInput.tokenfield({
             autocomplete: {
-                source: data,
+                source: autocompleteTags,
                 delay: 100
-            },
-            showAutocompleteOnFocus: true
+            }
         });
         view.ui.tagsInput.on('tokenfield:createtoken', function (event) {
             var existingTokens = $(this).tokenfield('getTokens');
@@ -30,6 +30,11 @@ module.exports = Marionette.Behavior.extend({
                 if (token.value === event.attrs.value)
                     event.preventDefault();
             });
+        });
+
+        view.ui.tagsInput.on('change', function (event) {
+            autocompleteTags = _.difference(data, view.ui.tagsInput.val().split(', '));
+            view.ui.tagsInput.data('bs.tokenfield').$input.autocomplete({source: autocompleteTags});
         });
     },
 
