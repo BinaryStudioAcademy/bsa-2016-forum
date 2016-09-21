@@ -4,12 +4,17 @@
             <input type="radio" class="js-select" name="optionsRadios" value="{{model.id}}" {{#if model.checked}} checked {{/if}}>
             {{ model.name }}
         </label>
-    </div>
 {{else}}
     <div class="checkbox">
         <label class="js-item-click">
             <input type="checkbox" class="js-select" name="optionsCheckboxes" value="{{model.id}}" {{#if model.checked}} checked {{/if}}>
             {{ model.name }}
         </label>
-    </div>
 {{/if}}
+    <a class="btn btn-sm btn-default" data-toggle="collapse" href="#collapse-{{model.id}}"><span class="glyphicon glyphicon-comment"></span>   (<span class="js-vote-item-comments-count">{{meta.comments}}</span>)</a>
+    <div id="collapse-{{model.id}}"  class="panel-collapse collapse well vote-item-comments-collapse">
+        <button type="button"  class="btn btn-success widthbutton js-comment-vote-item">Comment Vote Item</button>
+        <div class="js-vote-item-comments"></div>
+    </div>
+
+</div>

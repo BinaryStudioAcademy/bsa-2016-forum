@@ -20,5 +20,9 @@ module.exports = BaseModel.extend({
         if (!_.isEmpty(errors)) {
             return errors;
         }
+    },
+
+    isChildComment: function() {
+        return this.get('commentable_type') === "App\\Models\\Comment";
     }
 });
