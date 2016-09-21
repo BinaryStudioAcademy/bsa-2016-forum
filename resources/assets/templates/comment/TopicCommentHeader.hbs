@@ -32,7 +32,7 @@
         {{#if isUploadingAttachs}}
             <span>Upload files...</span>
         {{else}}
-            {{!-- only output if user comment belongs to current user --}}
+        {{!-- only output if user comment belongs to current user --}}
             {{#if meta.canEditDelete}}
                 <a class="comment-edit-btn">Edit</a>
                 <a class="comment-remove-btn" data-toggle="modal" data-target="#confirmDialog-{{ model.id }}">Remove</a>
@@ -55,18 +55,16 @@
     </div>
 </div>
 <div id="confirmDialog-{{ model.id }}" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Confirm delete</h4>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default remove-modal-btn" data-dismiss="modal">Submit</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Confirm delete</h4>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure?</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary remove-modal-btn" data-dismiss="modal">Submit</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
     </div>
 </div>
