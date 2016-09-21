@@ -34,24 +34,6 @@
                 </ul>
             </div>
         {{/if}}
-
-        {{#unless meta.isFinished}}
-        <div>
-            {{#if model.summary}}
-            <div><hr><h3>{{model.summary}}</h3><hr></div>
-            {{/if}}
-        </div>
-
-        {{#if meta.userIsAdminOrTS}}
-        <div>
-            <textarea rows="5" class="form-control description" id="summary">{{model.summary}}</textarea>
-            <button class="btn btn-info pull-right" id="summary-save-btn">Save summary</button>
-        </div>
-        {{/if}}
-
-        {{/unless}}
-
-
     </div>
 
 <!--</div>-->
