@@ -16,7 +16,6 @@ module.exports = Marionette.LayoutView.extend({
         messages: '.messages',
         topics: '.topics',
         votes: '.votes',
-        users: '.users',
         subscriptions: '.subscriptions'
     },
 
@@ -31,9 +30,6 @@ module.exports = Marionette.LayoutView.extend({
         this.getRegion('votes').show(new VotesCollectionView({
             collection: this.options.votes,
             paginate: false
-        }));
-        this.getRegion('users').show(new UsersCollectionView({
-            collection: this.options.users
         }));
         this.getRegion('messages').show(new MessagesCollection({
             collection: this.options.messages
