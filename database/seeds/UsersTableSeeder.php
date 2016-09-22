@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Models\Status;
 use App\Models\Role;
+use App\Facades\CurlService;
 
 class UsersTableSeeder extends Seeder
 {
@@ -28,34 +29,58 @@ class UsersTableSeeder extends Seeder
         $count_users = 10;
         $statuses = Status::all();
 
-        factory(App\Models\User::class, $count_users)
-            ->make()
-            ->each(function ($user) use ($statuses) {
+        $cookie = env('AUTH_COOKIE', null);
+        if ($cookie) {
+            $response = CurlService::sendUsersRequest(null, $cookie);
+            $roleUser = Role::where('name', 'User')->first();
+            foreach ($response as $companyUser) {
+                $user = factory(App\Models\User::class)->make();
+                $user->first_name = $companyUser->name;
+                $user->last_name = $companyUser->surname;
+                $user->display_name = $companyUser->name .  ' ' . $companyUser->surname;
+                $user->email = $companyUser->email;
+                $user->global_id = $companyUser->serverUserId;
                 $randomStatus = $statuses->random();
                 $user->status()->associate($randomStatus);
+                $user->role()->associate($roleUser);
                 $user->save();
-            });
-        
-        $users = App\Models\User::all();
-        reset($globalIds);
-        $roleUser = Role::where('name', 'User')->first();
-        foreach ($users as $user){
-            $user->role()->associate($roleUser);
-            $user->global_id = current($globalIds);
-            next($globalIds);
+
+            }
+
+            $user = \App\Models\User::first();
+            $roleAdmin = Role::where('name', 'Admin')->first();
+            $user->role()->associate($roleAdmin);
+            $user->save();
+        } else {
+            factory(App\Models\User::class, $count_users)
+                ->make()
+                ->each(function ($user) use ($statuses) {
+                    $randomStatus = $statuses->random();
+                    $user->status()->associate($randomStatus);
+                    $user->save();
+                });
+
+            $users = App\Models\User::all();
+            reset($globalIds);
+            $roleUser = Role::where('name', 'User')->first();
+            foreach ($users as $user) {
+                $user->role()->associate($roleUser);
+                $user->global_id = current($globalIds);
+                next($globalIds);
+                $user->save();
+            }
+            /**
+             * Set right role for required users
+             */
+            $user = \App\Models\User::first();
+            $roleAdmin = Role::where('name', 'Admin')->first();
+            $user->role()->associate($roleAdmin);
+            $user->save();
+
+            $user = \App\Models\User::all()->last();
+            $user->global_id = '577a16659829fe050adb3f5c';
+            $user->email = 'tester_a@example.com';
             $user->save();
         }
-        /**
-         * Set right role for required users
-         */
-        $user = \App\Models\User::first();
-        $roleAdmin = Role::where('name', 'Admin')->first();
-        $user->role()->associate($roleAdmin);
-        $user->save();
-
-        $user = \App\Models\User::all()->last();
-        $user->global_id = '577a16659829fe050adb3f5c';
-        $user->email = 'tester_a@example.com';
-        $user->save();
     }
 }
