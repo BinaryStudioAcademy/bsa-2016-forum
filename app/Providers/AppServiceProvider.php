@@ -39,20 +39,20 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Validator::extend('tags_validator', function ($attribute, $value, $parameters, $validator) {
-//            if ($value) {
-//                $tags = json_decode($value, true);
-//                if (!is_array($tags)) {
-//                    return false;
-//                }
-//                foreach ($tags as $tag) {
-//                    if (empty($tag['id']) && empty($tag['name'])) {
-//                        return false;
-//                    }
-//                }
-//                return true;
-//            } else {
-//                return false;
-//            }
+            if ($value) {
+                $tags = json_decode($value, true);
+                if (!is_array($tags)) {
+                    return false;
+                }
+                foreach ($tags as $tag) {
+                    if (empty($tag['id']) && empty($tag['name'])) {
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
         });
 
         Validator::extend('is_five_minutes_time', function ($attribute, $value, $parameters, $validator) {

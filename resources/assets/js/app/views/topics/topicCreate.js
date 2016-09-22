@@ -6,8 +6,9 @@ var topicCategoryCollectionForSelector = require('../../views/topics/topicCatego
 var topicCategoryItemForSelector = require('../../views/topics/topicCategoryItemForSelector');
 var markdownHelp = require('../../views/modalWindows/markdownHelp');
 var app = require('../../instances/appInstance');
+var TopicCreateHeader = require('../../views/topics/topicCreateHeader');
 
-module.exports = Marionette.ItemView.extend({
+module.exports = Marionette.LayoutView.extend({
     template: 'topicCreateNew',
 
     ui: {
@@ -19,14 +20,19 @@ module.exports = Marionette.ItemView.extend({
         this.model.set({user_id: currentUser.id});
     },
     regions: {
-        categories: '#categories'
+        categories: '#categories',
+        topicCreateHeader: '.topic-new-head'
     },
 
     onBeforeShow: function () {
         this.getRegion('categories').show(new topicCategoryItemForSelector({
             collection: this.collection,
-            topicModel: this.model
+            model: this.model
         }));
+
+        this.getRegion('topicCreateHeader').show(new TopicCreateHeader({
+            model: this.model
+        }))
     },
     
     modelEvents: {
@@ -35,8 +41,7 @@ module.exports = Marionette.ItemView.extend({
             for (var error in errors) {
                 this.$('[name="' + error + '"]').siblings('.errors').html(errors[error]);
             }
-        },
-        'sync': 'render'
+        }
     },
 
     events: {

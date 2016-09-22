@@ -7,6 +7,10 @@ module.exports = Marionette.ItemView.extend({
     collectionEvents: {
         'sync': 'reRender'
     },
+    
+    modelEvents: {
+        'sync': 'reRender'
+    },
 
     serializeData: function () {
         return {
@@ -17,9 +21,8 @@ module.exports = Marionette.ItemView.extend({
     reRender: function () {
         var self = this;
         this.selectOptions = this.collection.toJSON();
-
         this.selectOptions = _.each(this.selectOptions, function (model, key) {
-            if (self.options.topicModel.get('category_id') == model.id) {
+            if (self.model.get('category_id') == model.id) {
                 model.selectedItem = 'selected'
             } else {
                 model.selectedItem = ''

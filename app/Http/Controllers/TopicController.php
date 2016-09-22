@@ -185,12 +185,12 @@ class TopicController extends ApiController
     public function update($id, TopicRequest $request)
     {
         $topic = Topic::getSluggableModel($id);
-//dd(Auth::user());
+
         $this->authorize('update', $topic);
 
         $topic->update($request->all());
 
-      //  TagService::TagsHandler($topic, $request->tags);
+        TagService::TagsHandler($topic, $request->tags);
 
         $topic->generated_description = MarkdownService::baseConvert($topic->description);
         $topic->save();
