@@ -88,17 +88,14 @@ class VoteController extends ApiController
         $this->authorize('show', $vote);
 
         $data = [];
-        $usersWhoSaw = [];
-        foreach ($vote->voteUniqueViews()->get()->load('user') as $view) {
-            $usersWhoSaw[] = UserStore::getUserWithAvatar($view->user);
-        }
+        $voteUniqueViewsWithUsers = $vote->voteUniqueViews()->get()->load('user');
         //find the difference between two days
         $created = new Carbon($vote->created_at);
         $now = Carbon::now();
         $difference = ($created->diff($now)->days < 1)
             ? 'today'
             : $created->diffForHumans($now);
-        
+
         $data[$vote->id] =
             [
                 'user' => UserStore::getUserWithAvatar($vote->user()->first()),
@@ -108,7 +105,7 @@ class VoteController extends ApiController
                 'subscription' => $vote->subscription(Auth::user()->id),
                 'days_ago' => $difference,
                 'numberOfUniqueViews' => $vote->voteUniqueViews()->count(),
-                'usersWhoSaw' => $usersWhoSaw,
+                'voteUniqueViewsWithUsers' => $voteUniqueViewsWithUsers,
                 'attachments' => $vote->attachments()->get(),
             ];
         if ($access) {
@@ -352,7 +349,7 @@ class VoteController extends ApiController
             }
         }
 
-        foreach($voteItems as $item) {
+        foreach ($voteItems as $item) {
             $meta[$item->id] = ['comments' => $item->comments()->count()];
         }
 
@@ -404,6 +401,11 @@ class VoteController extends ApiController
                 $model->delete();
                 $response['checked'] = false;
             }
+        }
+        $voteUniqueView = VoteUniqueView::where(['user_id' => $user->id, 'vote_id' => $vote->id])->first();
+        if ($voteUniqueView && !$voteUniqueView->userHasVoted) {
+            $voteUniqueView->userHasVoted = 1;
+            $voteUniqueView->save();
         }
         return $this->setStatusCode(201)->respond($response);
     }

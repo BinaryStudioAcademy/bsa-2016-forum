@@ -50,7 +50,7 @@ module.exports = Marionette.ItemView.extend({
                 status: tempmeta[id].status,
                 tags: tempmeta[id].tags,
                 numberOfUniqueViews: tempmeta[id].numberOfUniqueViews,
-                usersWhoSaw: tempmeta[id].usersWhoSaw,
+                voteUniqueViewsWithUsers: tempmeta[id].voteUniqueViewsWithUsers,
                 isFinished: ((this.model.get('finished_at') == null) || (dateHelper.getDateTimeDiff(this.model.get('finished_at')) < 0)),
                 finishedDate: (this.model.get('finished_at') != null) ? dateHelper.middleDate(this.model.get('finished_at')) : '',
                 showUsers: currentUser.isAdmin() || (currentUser.get('id') === this.model.get('user_id')),
