@@ -20,7 +20,7 @@
                 <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
             {{/each}}
         </div>
-        {{#if meta.showUsers}}
+        {{#if meta.userIsAdminOrTS}}
             <div class="vote-users">
                 <span>{{ meta.numberOfUniqueViews }} users have seen this voting</span>
                 <button class="btn btn-default" data-toggle="collapse" data-target=".users-list">Show users</button>
