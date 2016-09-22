@@ -6,7 +6,7 @@ var dateHelper = require('../../helpers/dateHelper');
 module.exports = Marionette.ItemView.extend({
     template: 'voteSummary',
     modelEvents: {
-        'change': 'render'
+        'sync': 'render'
     },
 
     ui: {
@@ -22,10 +22,7 @@ module.exports = Marionette.ItemView.extend({
         this.model.set('summary', this.$('#summary').val());
         this.model.set('user_id', currentUser.get('id'));
         this.model.save({}, {
-            validate: false,
-            success: function () {
-                self.render();
-            }
+            validate: false
         });
 
     },
