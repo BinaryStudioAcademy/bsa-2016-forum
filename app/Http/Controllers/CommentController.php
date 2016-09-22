@@ -13,17 +13,33 @@ use App\Events\NewBroadcastCommentEvent;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Gate;
 use App\Facades\MarkdownService;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Like;
 
 class CommentController extends ApiController
 {
 
     private function getItemMetaData($comment)
     {
+        if (!empty($currentUser = $comment->likes()->where('user_id', Auth::user()->id)->get()->first())) {
+            $isUser = true;
+            $likeId = $currentUser->id;
+            $countOfLikes = $comment->likes()->count();
+        } else {
+            $isUser = false;
+            $likeId = null;
+            $countOfLikes = 0;
+        }
+
         return [
             'user' => $comment->user()->first(),
             'likes' => $comment->likes()->count(),
             'attachments' => $comment->attachments()->get(),
-            'comments' => $comment->comments()->count()
+            'comments' => $comment->comments()->count(),
+            'countOfLikes' => $countOfLikes,
+            'isUser' => $isUser,
+            'likeId' => $likeId
         ];
     }
 
@@ -80,7 +96,13 @@ class CommentController extends ApiController
      */
     public function getTopicComments(Topic $topic)
     {
+        $user = Auth::user();
         $comments = $topic->comments()->get();
+
+        foreach ($comments as $comment) {
+            $comment->currentUser = $user->id;
+        }
+
         $meta = $this->getCollectionMetaData($comments);
         return $this->setStatusCode(200)->respond($comments, $meta);
     }
@@ -164,8 +186,13 @@ class CommentController extends ApiController
      */
     public function getTopicCommentChildren(Topic $topic, Comment $comment)
     {
+        $user = Auth::user();
+        
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comments = $comment->comments()->get();
+            foreach ($comments as $comment) {
+                $comment->currentUser = $user->id;
+            }
             $meta = $this->getCollectionMetaData($comments);
             return $this->setStatusCode(200)->respond($comments, $meta);
         } else {
@@ -343,6 +370,53 @@ class CommentController extends ApiController
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
         }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $idTopic
+     * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
+     */
+    public function addLike($id)
+    {
+        $comment = Comment::findOrFail($id);
+
+        $user = Auth::user();
+
+        $like = new Like();
+        $like->user()->associate($user);
+
+        //User can't add like to his own comment
+        if($user->id != $comment->user_id){
+            $comment->likes()->save($like);
+        }
+
+        $like = $comment->likes()->where('user_id', Auth::user()->id)->where('likeable_id', $comment->id)->get()->first();
+
+        return $this->setStatusCode(200)->respond($like);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $idTopic
+     * @param  int $idLike
+     * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
+     */
+    public function removeLike($idComment,$idLike)
+    {
+        $comment=Comment::findOrFail($idComment);
+
+        $like = Like::findOrFail($idLike);
+
+        $user = Auth::user();
+
+        $like->delete();
+
+        return $this->setStatusCode(204)->respond();
     }
 
     /**
