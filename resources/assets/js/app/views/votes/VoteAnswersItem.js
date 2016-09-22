@@ -15,7 +15,8 @@ module.exports = Marionette.LayoutView.extend({
             };
         return {
             model: this.model.toJSON(),
-            meta: meta
+            meta: meta,
+            vote: this.model.getMeta().vote || {}
         };
     },
     ui: {
