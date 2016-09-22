@@ -104,7 +104,7 @@ module.exports = Marionette.ItemView.extend({
                 attach.type == 'image/gif') {
                 attach.thumb = attach.url;
             } else {
-                attach.thumb = '/images/doc.png';
+                attach.thumb = 'images/doc.png';
             }
 
         });
@@ -117,7 +117,24 @@ module.exports = Marionette.ItemView.extend({
         var countOfLikes;
         var meta = this.model.getMeta();
         var id = this.model.get('id');
-        this.attachmentThumb(meta[id].attachments);
+        if (!meta[id]) {
+            return {
+                model: this.model.toJSON(),
+                meta: {
+                    user: {},
+                    likes: 0,
+                    attachments: [],
+                    comments: 0,
+                    canReply: false,
+                    canEditDelete: false
+                },
+                createdAt: '',
+                isUploadingAttachs: false
+            };
+        }
+        if (meta[id] && meta[id].attachments.length) {
+            this.attachmentThumb(meta[id].attachments);
+        }
 
         if(meta[id].isUser == true)
         {
@@ -129,7 +146,7 @@ module.exports = Marionette.ItemView.extend({
             style ='glyphicon  glyphicon-star-empty';
             likeUnlike = 'Like';
         }
-
+        
         return {
             model: this.model.toJSON(),
             style: style,
