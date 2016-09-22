@@ -1,7 +1,8 @@
 <?php
 
 return [
-    "urlAuth" => "http://team.binary-studio.com/auth/",
+    "urlAuth" => "http://team.binary-studio.com/auth",
+    "urlReferer" => "http://team.binary-studio.com/forum",
     "cookieName" => "x-access-token",
     "secretKey" => "superpupersecret",
     "urlUserInfo" => "http://team.binary-studio.com/profile/user/getByCentralId/",
