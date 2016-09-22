@@ -25,8 +25,10 @@ class AuthMain extends AuthService
         } else {
             $userData = $this->checkCookie();
             if  (!$userData){
-                $url = $request->fullUrl();
-                return redirect(config('authserver.urlAuthBase'))->withCookie("referer", $url);
+                return redirect(url(config('authserver.urlAuth')), 302)
+                    ->cookie('referer', url(config('authserver.urlReferer')))
+                    ->header('Referer',url(config('authserver.urlReferer')));
+
             }
             $user = $this->checkUser($userData);
             Auth::login($user);

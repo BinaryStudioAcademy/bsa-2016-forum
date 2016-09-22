@@ -26,5 +26,5 @@ module.exports = Marionette.ItemView.extend({
             // percentage
             votePercent: votePercent
         };
-    },
+    }
 });

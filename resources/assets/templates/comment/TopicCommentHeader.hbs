@@ -1,7 +1,7 @@
 <div class="topic-comment-flex">
     <div class="topic-bar hidden-xs">
         <div class="topic-avatar">
-            <img src="images/user.png">
+             {{#if meta.user.url_avatar}}<img src={{meta.user.url_avatar}}>{{else}}<img src="images/user.png"{{/if}}
         </div>
         <div class="topic-addition">
 
@@ -13,7 +13,7 @@
         </div>
         <div class="attachments-container">
             {{#each meta.attachments}}
-                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                <div class="attachment-preview">
                     <a href="{{ url }}" class="thumbnail" target="_blank" title="{{ cloud_public_id }}">
                         <img src="{{ thumb }}" alt="{{ url }}">
                     </a>
