@@ -111,7 +111,9 @@ module.exports = Marionette.ItemView.extend({
         var meta = this.model.getMeta();
         var id = this.model.get('id');
         if (!id) return;
-        this.attachmentThumb(meta[id].attachments);
+        if (meta[id].attachments.length) {
+            this.attachmentThumb(meta[id].attachments);
+        }
         return {
             model: this.model.toJSON(),
             meta: {
