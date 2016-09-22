@@ -55,6 +55,8 @@ module.exports = Marionette.LayoutView.extend({
         var self = this;
         // triggered after vote model fetched and if vote is finished
         this.listenTo(Radio.channel('votesChannel'), 'showVoteResult', function () {
+            console.log('user is admin - ' + currentUser.isAdmin());
+            console.log('user is vote creator - ' + self.model.get('user_id') === currentUser.get('id'));
             // if user has permissions to see vote results
             if (currentUser.isAdmin() || self.model.get('user_id') === currentUser.get('id')) {
                 self.ui.voteCommit.hide();

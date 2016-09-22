@@ -57,6 +57,9 @@ module.exports = Marionette.ItemView.extend({
     },
 
     onRender: function () {
+        console.log('databaseDate - ' + this.model.get('finished_at'));
+        console.log('databaseDate with current time zone' + dateHelper.dateWithTimezone(this.model.get('finished_at')));
+        console.log('dateDifference - ' + dateHelper.getDateTimeDiff(this.model.get('finished_at')));
         if (this.model.get('finished_at')) {
             // if current date > vote finished date
             if (dateHelper.getDateTimeDiff(this.model.get('finished_at')) >= 0) {
