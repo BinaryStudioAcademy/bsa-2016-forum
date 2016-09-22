@@ -12,8 +12,10 @@ module.exports = Marionette.ItemView.extend({
     serializeData: function () {
         var tempmeta = this.model.getMeta();
         var votePercent = 0;
-        if (tempmeta.users.count && tempmeta.users[this.model.get('id')].length) {
-            votePercent = Math.floor(100 * tempmeta.users[this.model.get('id')].length / tempmeta.users.count);
+        if (tempmeta.users.count) {
+            if (tempmeta.users[this.model.get('id')] && tempmeta.users[this.model.get('id')].length) {
+                votePercent = Math.floor(100 * tempmeta.users[this.model.get('id')].length / tempmeta.users.count);
+            }
         }
         return {
             model: this.model.toJSON(),
