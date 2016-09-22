@@ -14,7 +14,13 @@
             <ul class="list-inline list-unstyled">
                 {{#each meta.users}}
                     {{!-- user avatar --}}
-                    <li><img src="/images/user.png" alt="{{ first_name }}" title="{{ first_name }}"></li>
+
+                 {{#if url_avatar}}
+                       <li><img src={{url_avatar}} alt="{{ first_name }}" title="{{ first_name }}"></li>
+                  {{else}}
+                      <li><img src='images/user.png' alt="" title=""></li>
+                   {{/if}}
+
                 {{/each}}
             </ul>
         </div>

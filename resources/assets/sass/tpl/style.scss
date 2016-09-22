@@ -539,15 +539,16 @@ ul.messages_layout {
 	padding: 0
 }
 ul.messages_layout li {
+    width: 100%;
 	float: left;
 	list-style: none;
 	position: relative
 }
 ul.messages_layout li.left {
-	padding-left: 75px
+	padding-left: 65px
 }
 ul.messages_layout li.right {
-	padding-right: 75px
+	padding-right: 65px
 }
 ul.messages_layout li.right .avatar {
 	right: 0;
@@ -566,17 +567,20 @@ ul.messages_layout li.by_myself .message_wrap {
 ul.messages_layout li.by_myself .message_wrap .info a.name {
 	color: #4a8cf7
 }
-ul.messages_layout li a.avatar {
+ul.messages_layout li div.avatar {
 	position: absolute;
 	left: 0;
 	top: 0
 }
-ul.messages_layout li a.avatar img {
+ul.messages_layout li div.avatar img {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
-	border-radius: 5px
+	border-radius: 5px;
+	height: 50px;
+	width: 50px;
 }
 ul.messages_layout li .message_wrap {
+    width: 100%;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;

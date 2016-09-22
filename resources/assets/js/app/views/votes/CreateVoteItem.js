@@ -12,8 +12,8 @@ module.exports = Marionette.ItemView.extend({
     },
     events: {
         'change @ui.name': function () {
-            var name = this.ui.name.val();
-            if (name.trim().length > 0)
+            var name = this.ui.name.val().trim();
+            if (name.length > 0)
                 this.model.set({name: name}, {validate: true});
             if (this.model.get('vote_id') && this.model.hasChanged('name'))
                 this.model.save();
@@ -56,7 +56,6 @@ module.exports = Marionette.ItemView.extend({
         var self = this;
         this.model.view = this;
         this._deletable = this.model.collection.length > 2;
-        this.model.set({user_id: currentUser.get('id')});
         if(this.getOption('parent').get('id'))
             this.model.set({vote_id: this.getOption('parent').get('id')});
         this.getOption('parent').on('change:id', function (model) {
@@ -64,7 +63,7 @@ module.exports = Marionette.ItemView.extend({
         });
     },
     serializeData: function () {
-        
+
         var meta = this.model.getMetaById() || {};
         meta.deletable = this._deletable && !this.model.get('id')
             ? this._deletable

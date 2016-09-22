@@ -3,6 +3,8 @@ var messageItem = require('./messageItem');
 var _ = require('underscore');
 
 module.exports = Marionette.CollectionView.extend({
+    tagName: 'ul',
+    className: 'messages_layout',
     childView: messageItem,
     childViewOptions : function (model) {
         var user, isUserFrom;

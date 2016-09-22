@@ -1,7 +1,7 @@
 <div class="topic-comment-flex">
     <div class="topic-bar hidden-xs">
         <div class="topic-avatar">
-            <img src="images/user.png">
+             {{#if meta.user.url_avatar}}<img src={{meta.user.url_avatar}}>{{else}}<img src="images/user.png"{{/if}}
         </div>
         <div class="topic-addition">
 
@@ -13,11 +13,10 @@
         </div>
         <div class="attachments-container">
             {{#each meta.attachments}}
-                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                    <a href="{{ url }}" class="thumbnail" target="_blank">
+                <div class="attachment-preview">
+                    <a href="{{ url }}" class="thumbnail" target="_blank" title="{{ cloud_public_id }}">
                         <img src="{{ thumb }}" alt="{{ url }}">
                     </a>
-                    <div class="file-name">{{ cloud_public_id }}</div>
                 </div>
             {{/each}}
         </div>
@@ -30,13 +29,17 @@
     <div class="topic-history">{{ meta.user.display_name }}</div>
     <div class="topic-history">Rating {{ model.rating }}</div>
     <div class="topic-control-btn">
+        {{#if isUploadingAttachs}}
+            <span>Upload files...</span>
+        {{else}}
         {{!-- only output if user comment belongs to current user --}}
-        {{#if meta.canEditDelete}}
-            <a class="comment-edit-btn">Edit</a>
-            <a class="comment-remove-btn" data-toggle="modal" data-target="#confirmDialog-{{ model.id }}">Remove</a>
-        {{/if}}
-        {{#if meta.canReply}}
-            <a class="answer-btn">Answer</a>
+            {{#if meta.canEditDelete}}
+                <a class="comment-edit-btn">Edit</a>
+                <a class="comment-remove-btn" data-toggle="modal" data-target="#confirmDialog-{{ model.id }}">Remove</a>
+            {{/if}}
+            {{#if meta.canReply}}
+                <a class="answer-btn">Answer</a>
+            {{/if}}
         {{/if}}
     </div>
     <div class="row">
@@ -52,18 +55,16 @@
     </div>
 </div>
 <div id="confirmDialog-{{ model.id }}" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Confirm delete</h4>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default remove-modal-btn" data-dismiss="modal">Submit</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Confirm delete</h4>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure?</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary remove-modal-btn" data-dismiss="modal">Submit</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
     </div>
 </div>

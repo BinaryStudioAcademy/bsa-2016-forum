@@ -5,6 +5,7 @@ namespace App\Events;
 use App\Models\Vote;
 use App\Models\Comment;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Auth;
 
 class VoteNewCommentEvent extends NewCommentEvent
 {
@@ -17,7 +18,7 @@ class VoteNewCommentEvent extends NewCommentEvent
      */
     public function __construct(Vote $vote, Comment $comment)
     {
-        $this->users = $vote->subscribers()->pluck('global_id');
+        $this->users = $vote->subscribers()->where('user_id', '<>', Auth::user()->id)->pluck('global_id');
         $this->target = $vote;
         $this->target_type = Vote::$morphTag;
         $this->comment = $comment;

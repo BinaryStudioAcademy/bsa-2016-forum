@@ -78,8 +78,11 @@ class AuthService
                 $user->first_name = $userInfo->name;
                 $user->display_name = $userInfo->name.(string)random_int(1,1000);
                 $user->last_name = $userInfo->surname;
+                $user->reputation = 0;
+                $user->last_visit_at = null;
                 $user->email = $userInfo->email;
                 $user->global_id = $userInfo->serverUserId;
+                $user->url_avatar = $userInfo->avatar->urlAva;
                 $statusUser = Status::where('name', 'online')->value('id');
                 $user->status_id = $statusUser;
                 $user->save();
@@ -94,6 +97,8 @@ class AuthService
                 $user->first_name = $userInfo->name;
                 $user->last_name = $userInfo->surname;
                 $user->global_id = $userInfo->serverUserId;
+                var_dump( $userInfo->avatar->urlAva);
+                $user->url_avatar = $userInfo->avatar->urlAva;
                 $user->save();
             }
         };

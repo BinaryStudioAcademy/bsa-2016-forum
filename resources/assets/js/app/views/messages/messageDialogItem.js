@@ -69,6 +69,7 @@ module.exports = Marionette.ItemView.extend({
             edit = 'Removed at';
         }
 
+        meta = this.model.collection.getMeta();
         return {
             message: helper.formatText(this.model.get('message')),
             messageDirection: direction,
