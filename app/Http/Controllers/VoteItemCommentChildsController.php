@@ -10,6 +10,7 @@ use App\Models\VoteItem;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\CommentsRequest;
+use App\Repositories\UserStore;
 
 use App\Http\Requests;
 
@@ -24,7 +25,7 @@ class VoteItemCommentChildsController extends ApiController
     {
         $data = [];
         $data[$comment->id] = [
-            'user' => $comment->user()->first(),
+            'user' => UserStore::getUserWithAvatar($comment->user()->first()),
             'likes' => $comment->likes()->count(),
             'attachments' => $comment->attachments()->get(),
             'comments' => $comment->comments()->count()

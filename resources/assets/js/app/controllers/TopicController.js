@@ -126,7 +126,8 @@ module.exports = Marionette.Object.extend({
 
     myTopics: function () {
         var parentUrl = '/users/' + currentUser.id;
-        var topicCollection = new UserTopicCollection({parentUrl: parentUrl});
+        var topicCollection = new UserTopicCollection();
+        topicCollection.parentUrl = parentUrl;
         topicCollection.fetch({data: {page: 1}});
         app.render(new topicLayout({collection: topicCollection, blockhide: true}));
     },

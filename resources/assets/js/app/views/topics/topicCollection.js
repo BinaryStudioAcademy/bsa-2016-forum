@@ -1,4 +1,5 @@
 var topicItem = require('./topicItem');
+var Radio = require('backbone.radio');
 var paginateableCollectionView = require('../../instances/paginateableCollectionView');
 module.exports = paginateableCollectionView.extend({
     childView: topicItem,

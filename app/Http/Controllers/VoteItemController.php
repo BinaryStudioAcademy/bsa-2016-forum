@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Http\Requests;
 use Illuminate\Support\Collection;
+use App\Repositories\UserStore;
 
 class VoteItemController extends ApiController
 {
@@ -38,7 +39,7 @@ class VoteItemController extends ApiController
         $data = [];
         $data[$item->id] = [
             'comments' => $item->comments()->count(),
-            'results' => $item->voteResults()->count()
+            'results' => $item->voteResults()->count(),
         ];
         return $data;
     }

@@ -309,7 +309,7 @@ TOPIC DETAILS
   padding: 10px;
 }
 
-.new-comment-container .loader img {
+#commentdlg .loader img {
   height: 30px;
 }
 
@@ -383,4 +383,14 @@ TOPIC DETAILS
 .create-topic {
   margin-right: 10px;
   margin-left: 10px;
+}
+
+.link-like-unlike {
+  cursor: pointer;
+  color:#337ab7;
+}
+
+.fontOfLikeIcon{
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color:#337ab7;
 }

@@ -20,15 +20,18 @@
                 <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
             {{/each}}
         </div>
-        {{#if meta.showUsers}}
+        {{#if meta.userIsAdminOrTS}}
             <div class="vote-users">
                 <span>{{ meta.numberOfUniqueViews }} users have seen this voting</span>
                 <button class="btn btn-default" data-toggle="collapse" data-target=".users-list">Show users</button>
                 <ul class="nav collapse users-list">
-                    {{#each meta.usersWhoSaw}}
+
+                    {{#each meta.voteUniqueViewsWithUsers}}
                         <li class="">
-                            <img src="images/user.png" alt="">
-                            <span>{{ first_name }} {{ last_name }}</span>
+
+                          {{#if user.url_avatar}}<img src={{user.url_avatar}} alt="">{{else}}<img src="images/user.png">{{/if}}
+                            <span>{{ user.first_name }} {{ user.last_name }} </span>
+                            {{#unless userHasVoted}}<span> (Did not vote yet)</span>{{/unless}}
                         </li>
                     {{/each}}
                 </ul>
