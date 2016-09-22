@@ -101,7 +101,7 @@ module.exports = Marionette.ItemView.extend({
                 attach.type == 'image/gif') {
                 attach.thumb = attach.url;
             } else {
-                attach.thumb = '/images/doc.png';
+                attach.thumb = 'images/doc.png';
             }
 
         });
@@ -110,7 +110,21 @@ module.exports = Marionette.ItemView.extend({
     serializeData: function () {
         var meta = this.model.getMeta();
         var id = this.model.get('id');
-        //if (!id) return;
+        if (!meta[id]) {
+            return {
+                model: this.model.toJSON(),
+                meta: {
+                    user: {},
+                    likes: 0,
+                    attachments: [],
+                    comments: 0,
+                    canReply: false,
+                    canEditDelete: false
+                },
+                createdAt: '',
+                isUploadingAttachs: false
+            };
+        }
         if (meta[id] && meta[id].attachments.length) {
             this.attachmentThumb(meta[id].attachments);
         }
