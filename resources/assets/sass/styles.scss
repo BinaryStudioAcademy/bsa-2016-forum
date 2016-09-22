@@ -87,12 +87,16 @@ body {
   border-radius: 5px;
   background: white;
 }
+
 .attachments-container {
-  padding: 15px;
+  padding: 5px;
 }
+
 .attachments-container img {
   max-height: 50px;
+  min-height: 30px;
 }
+
 .nav > li > a:hover, .nav > li > a:focus {
   background-color: transparent;
 }
@@ -106,6 +110,10 @@ body {
 .dz-image img {
   max-height: 120px;
   max-width: 120px;
+}
+
+.attachment-preview {
+  display: inline-block;
 }
 
 /* start of modal windows fix */
