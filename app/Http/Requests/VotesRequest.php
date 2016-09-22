@@ -43,7 +43,7 @@ class VotesRequest extends ApiRequest
                 return [
                     'user_id' => 'required|integer',
                     'title' => 'required|max:255',
-                    'finished_at' => 'date|is_five_minutes_time',
+                    //'finished_at' => 'date|is_five_minutes_time',
                     'is_single' => 'integer|between:0,1',
                     'is_public' => 'integer|between:0,1',
                     'is_saved' => 'integer|between:0,1',

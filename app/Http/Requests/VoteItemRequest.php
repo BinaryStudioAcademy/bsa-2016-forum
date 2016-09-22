@@ -27,6 +27,10 @@ class VoteItemRequest extends ApiRequest
         if($this->vote_id){
             $vote = Vote::find($this->vote_id);
             if($vote){
+                $input = $this->all();
+                $input['name'] = trim($input['name']);
+                $this->merge($input);
+
                 $existedVoteItems = $vote->voteitems()->get()->toArray();
                 foreach ($existedVoteItems as $voteItem){
                     $namesArr[] = $voteItem['name'];

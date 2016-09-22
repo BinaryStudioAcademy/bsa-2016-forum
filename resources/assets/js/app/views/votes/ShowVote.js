@@ -4,13 +4,16 @@ var $ = require('jquery');
 var Radio = require('backbone.radio');
 var CommentsCollectionView = require('../comments/TopicCommentsCollection');
 var VoteHeader = require('../../views/votes/voteHeader');
+var VoteSummary = require('../../views/votes/voteSummary');
 var VoteAnswersCollectionView = require('../../views/votes/VoteAnswersCollection');
 var CommentModel = require('../../models/CommentModel');
 var socketCommentClient = require('../../initializers/socketCommentClient');
 var CommentsCollection = require('../../collections/commentCollection');
 var currentUser = require('../../initializers/currentUser');
 var VoteRImodel = require('../../models/VoteRImodel');
+var UserAvatarView = require('../users/userAvatar');
 var VoteResultsCollectionView = require('./VoteResultsCollection');
+
 
 module.exports = Marionette.LayoutView.extend({
     template: 'voteDetail',
@@ -19,7 +22,9 @@ module.exports = Marionette.LayoutView.extend({
         comments: '#comments',
         newComment: '#add-comment',
         voteheader: '#vote-header',
-        answers: '#answers'
+        answers: '#answers',
+        avatar: '#avatar',
+        summary: '#summary-region'
     },
     ui: {
         c_count: '.count',
@@ -184,11 +189,19 @@ module.exports = Marionette.LayoutView.extend({
             new VoteHeader({model: this.model})
         );
 
+        this.getRegion('summary').show(
+            new VoteSummary({model: this.model})
+        );
+
         this.getRegion('answers').show(
             new VoteAnswersCollectionView({
                 collection: this.options.answers,
                 parent: this
             })
+        );
+
+        this.getRegion('avatar').show(
+           new UserAvatarView({model: this.model})
         );
     },
     serializeData: function () {
