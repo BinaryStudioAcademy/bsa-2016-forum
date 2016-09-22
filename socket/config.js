@@ -1,5 +1,6 @@
 /**
- * Created by Степан on 19.08.2016.
+ * dev config file must named as 'config.dev.js'
+ * prod config file must named as 'config.prod.js'
  */
 
 module.exports = {
