@@ -2,6 +2,10 @@
 USER LIST
 */
 
+.users li {
+  padding: 0;
+}
+
 .users a:hover {
   text-decoration: none;
   cursor: pointer;
@@ -9,10 +13,7 @@ USER LIST
 
 .users-item {
   width: 100%;
-  height: 80px;
   display: flex;
-  margin-bottom: 20px;
-  background-color: #fff;
 }
 
 .users-item > div {
@@ -21,15 +22,13 @@ USER LIST
 
 .users-item-avatar {
   margin: 5px;
-  height: 70px;
-  width: 70px;
-  padding: 5px;
+  padding: 2px;
 }
 
 .users-item-avatar img {
-  height: 60px;
-  width: 60px;
-  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  border-radius: 3px;
 }
 
 .users-item-credential {
@@ -39,12 +38,12 @@ USER LIST
 }
 
 .users-item-name {
-  font-size: 22px;
+  font-size: 16px;
   color: #555555;
 }
 
 .users-item-email a{
-  font-size: 14px;
+  font-size: 12px;
   color: rgba(255, 136, 40, 0.7);
 }
 
@@ -55,28 +54,41 @@ USER LIST
 
 .users-item-msg a{
   height: 100%;
+  font-size: 30px;
+  display: flex;
+}
+
+//
+.users-item-vote{
+  float: right;
+  margin-right: 5px;
+}
+
+.users-item-vote a{
+  height: 100%;
   display: flex;
   padding: 20px 10px;
 }
 
-.users-item-msg a:hover{
+.users-item-vote a:hover{
   background-color: #ffd992;
 }
 
-.users-item-msg a img {
+.users-item-vote a img {
   margin-right: 5px;
   height: 40px;
-  width: 40px;
 }
 
-.users-item-msg a span {
+.users-item-vote a span {
   color: #555555;
   display: table-cell;
   vertical-align: middle;
   height: 40px;
   font-size: 18px;
   font-weight: 800;
+  width:350px;
 }
+//
 
 .users-item-permission {
   padding: 5px 0;

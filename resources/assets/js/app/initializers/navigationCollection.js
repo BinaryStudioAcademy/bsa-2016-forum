@@ -2,40 +2,59 @@ var navigCollection = require('../collections/navigationCollection');
 
 module.exports = new navigCollection([
     {
+        href: '#dashboard',
+        icon: 'tachometer',
+        name: 'dashboard',
+        label: 'Dashboard',
+    },
+    {
         href: '#topicCategories',
-        icon: '',
+        icon: 'comments',
         name: 'topics',
         label: 'Topics',
     },
-    {
-        href: '#mytopics',
-        icon: '',
-        name: 'myTopics',
-        label: 'My topics',
-    },
-    {
-        href: '#users',
-        icon: '',
-        name: 'users',
-        label: 'Users'
-    },
-    {
-        href: '#bookmarks',
-        icon: '',
-        name: 'bookmarks',
-        label: 'Bookmarks',
-    },
+    // {
+    //     href: '#mytopics',
+    //     icon: '',
+    //     name: 'myTopics',
+    //     label: 'My topics',
+    // },
+    // {
+    //     href: '#bookmarks',
+    //     icon: '',
+    //     name: 'bookmarks',
+    //     label: 'Bookmarks',
+    // },
     {
         href: '#votes',
-        icon: '',
+        icon: 'asl-interpreting',
         name: 'votes',
         label: 'Votes',
     },
-    {
-        href: '#messages',
-        icon: '',
+    // {
+    //     href: '#userVotes',
+    //     icon: '',
+    //     name: 'myVotes',
+    //     label: 'My votes'
+    // },
+
+
+    {href: '#messages',
+        icon: 'comments-o',
         name: 'messages',
         label: 'Messages'
-    }
-
+    },
+    //This navObject MUST BE last in The list
+    {
+        href: '#users',
+        icon: 'users',
+        name: 'users',
+        label: 'Users'
+    },
+    // {
+    //     href: '#subscriptions',
+    //     icon: '',
+    //     name: 'subscriptions',
+    //     label: 'Subscriptions'
+    // }
 ]);

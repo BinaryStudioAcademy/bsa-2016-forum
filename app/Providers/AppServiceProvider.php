@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Vote;
 use App\Models\VoteItem;
 use App\Models\VoteResult;
+use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -37,6 +38,27 @@ class AppServiceProvider extends ServiceProvider
             return $voteitem->vote_id == $request['vote_id'];
         });
 
+        Validator::extend('tags_validator', function ($attribute, $value, $parameters, $validator) {
+//            if ($value) {
+//                $tags = json_decode($value, true);
+//                if (!is_array($tags)) {
+//                    return false;
+//                }
+//                foreach ($tags as $tag) {
+//                    if (empty($tag['id']) && empty($tag['name'])) {
+//                        return false;
+//                    }
+//                }
+//                return true;
+//            } else {
+//                return false;
+//            }
+        });
+
+        Validator::extend('is_five_minutes_time', function ($attribute, $value, $parameters, $validator) {
+            return Carbon::parse($value, 'UTC')->gt(Carbon::now('UTC')->addMinutes(5));
+        });
+
     }
 
     /**
@@ -46,6 +68,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(
+            'Repositories\Contracts\UserStoreInterface',
+            'Repositories\UserStore'
+        );
     }
 }

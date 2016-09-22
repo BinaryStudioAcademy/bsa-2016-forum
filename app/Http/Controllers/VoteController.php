@@ -6,11 +6,17 @@ use App\Models\Vote;
 use App\Models\User;
 use App\Http\Requests\VotesRequest;
 use App\Http\Requests\VoteResultRequest;
+use App\Models\VoteItem;
 use App\Models\VoteResult;
+use App\Models\VoteUniqueView;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Carbon\Carbon;
 use App\Facades\TagService;
+use App\Facades\MarkdownService;
+use Illuminate\Support\Facades\Auth;
 
 class VoteController extends ApiController
 {
@@ -18,93 +24,184 @@ class VoteController extends ApiController
     protected $tagIds = [];
 
     /**
-     * @param $votes array
-     * @return array $data array
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    private function getMetaData($votes)
+    public function index(Request $request)
+    {
+        $this->setFiltersParameters($request);
+        $meta = [];
+        if ($request->page) {
+            $paginationObject = Vote::filterByQuery($this->searchStr)
+                ->newOnTop()
+                ->checkOnIsSaved()
+                ->filterByTags($this->tagIds)
+                ->paginate(15);
+            $votes = $paginationObject->getCollection();
+            $meta['hasMorePages'] = $paginationObject->hasMorePages();
+        } else {
+            $votes = Vote::filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)
+                ->filterByLimit($this->limit)->get();
+        }
+
+        $votes = $votes->filter(function ($vote) {
+            return \Gate::allows('show', $vote);
+        })->values();
+
+        $meta += $this->getMetaDataForCollection($votes);
+        return $this->setStatusCode(200)->respond($votes, $meta);
+    }
+
+    /**
+     * @param Request $request
+     */
+    protected function setFiltersParameters(Request $request)
+    {
+        $this->searchStr = $request->get('query');
+        $tagIds = $request->get('tag_ids');
+        $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+        $this->limit = $request->get('limit');
+        $this->order = $request->get('order');
+        $this->orderType = $request->get('orderType');
+    }
+
+    /**
+     * @param Collection $votes
+     * @return array
+     */
+    private function getMetaDataForCollection(Collection $votes)
     {
         $data = [];
-        $i = 0;
 
         foreach ($votes as $vote) {
 
-            if ($vote->is_saved) {
-                $data[$i]['data'] = $vote;
-                $data[$i]['_meta']['user'] = $vote->user()->first();
-                $data[$i]['_meta']['likes'] = $vote->likes()->count();
-                $data[$i]['_meta']['tags'] = $vote->tags()->count();
-                $data[$i]['_meta']['comments'] = $vote->comments()->count();
-                $i++;
-            }
+            $data += $this->getMetaDataForModel($vote);
         }
+
+        return $data;
+    }
+
+    private function getMetaDataForModel(Vote $vote, $access = false)
+    {
+        $this->authorize('show', $vote);
+
+        $data = [];
+        $usersWhoSaw = [];
+        foreach ($vote->voteUniqueViews()->get()->load('user') as $view) {
+            $usersWhoSaw[] = $view->user;
+        }
+        //find the difference between two days
+        $created = new Carbon($vote->created_at);
+        $now = Carbon::now();
+        $difference = ($created->diff($now)->days < 1)
+            ? 'today'
+            : $created->diffForHumans($now);
+
+        $data[$vote->id] =
+            [
+                'user' => $vote->user()->first(),
+                'likes' => $vote->likes()->count(),
+                'comments' => $vote->comments()->count(),
+                'tags' => $vote->tags()->get(),
+                'subscription' => $vote->subscription(Auth::user()->id),
+                'days_ago' => $difference,
+                'numberOfUniqueViews' => $vote->voteUniqueViews()->count(),
+                'usersWhoSaw' => $usersWhoSaw,
+                'attachments' => $vote->attachments()->get()
+            ];
+
+        if ($access) {
+            $data[$vote->id]['accessedUsers'] = $vote->votePermissions()->get(['user_id']);
+        }
+
         return $data;
     }
 
     /**
-     * Display a listing of the resource.
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-        $vote = new Vote();
-        if (!(Auth::user()->allowed('view.votes', $vote))) {
-            throw new PermissionDeniedException('index');
-        }
-
-        $this->setFiltersParameters($request);
-
-        $votes = Vote::filterByQuery($this->searchStr)->filterByTags($this->tagIds)->get();
-        $data = $this->getMetaData($votes);
-        return $this->setStatusCode(200)->respond($data);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param VotesRequest|Request $request
-     * @return \Illuminate\Http\Response
+     * @param VotesRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(VotesRequest $request)
     {
-        $vote = new Vote();
-        if (!(Auth::user()->allowed('create.votes', $vote))) {
-            throw new PermissionDeniedException('create');
-        }
-
         $vote = Vote::create($request->all());
+
         if ($request->tags) {
             TagService::TagsHandler($vote, $request->tags);
         }
-        $vote->tags = $vote->tags()->get();
-        return $this->setStatusCode(201)->respond($vote);
+
+        if ($vote->is_public) {
+            $vote->votePermissions()->delete();
+        } elseif ($request->users) {
+            $this->VotePermissionsHandler($vote, $request->users);
+        }
+        $vote->description_generated = MarkdownService::baseConvert($vote->description);
+        $vote->save();
+
+        return $this->setStatusCode(201)->respond($vote, $this->getMetaDataForModel($vote, true));
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * Subscribe selected users to new vote
+     * @param $vote
+     * @param $users
+     * @return boolean
+     */
+    protected function subscribeUsers($users, $vote)
+    {
+        if ($vote && $users) {
+            return $vote->subscribers()->sync($users);
+        }
+        return false;
+    }
+
+    /**
+     * @param $vote
+     * @param $users
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function VotePermissionsHandler($vote, $users)
+    {
+        $users = json_decode($users);
+
+        $vote->votePermissions()->whereNotIn('user_id', $users)->delete();
+
+        $permissions = $vote->votePermissions()->get();
+
+        foreach ($users as $user_id) {
+            if (!$permissions->contains('user_id', $user_id)) {
+                $vote->votePermissions()->create(['user_id' => $user_id]);
+            }
+        }
+    }
+
+    /**
+     * @param $vote
+     * @return bool
+     */
+    protected function isUniqueViewExist($vote)
+    {
+        return !!VoteUniqueView::where(['vote_id' => $vote->id, 'user_id' => Auth::user()->id])->first();
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
-        $vote = Vote::findOrFail($id);
-
-        if (!(Auth::user()->allowed('view.votes', $vote))) {
-            throw new PermissionDeniedException('view');
+        $vote = Vote::getSluggableModel($id);
+        $this->authorize('show', $vote);
+        if (Auth::user()->id &&
+            !$this->isUniqueViewExist($vote)
+        ) {
+            $voteUniqueView = VoteUniqueView::create(['vote_id' => $vote->id, 'user_id' => Auth::user()->id]);
+            $voteUniqueView->save();
         }
 
-        $user = $vote->user()->first();
-        $likeCount = $vote->likes()->count();
-        $tagCount = $vote->tags()->count();
-        $commentCount = $vote->comments()->count();
+        $meta = $this->getMetaDataForModel($vote, true);
 
-        return $this->setStatusCode(200)->respond($vote, [
-            'user' => $user,
-            'likes' => $likeCount,
-            'tags' => $tagCount,
-            'comments' => $commentCount
-        ]);
+        return $this->setStatusCode(200)->respond($vote, $meta);
     }
 
     /**
@@ -117,17 +214,32 @@ class VoteController extends ApiController
      */
     public function update(VotesRequest $request, $id)
     {
-        $vote = Vote::findOrFail($id);
+        $vote = Vote::getSluggableModel($id);
 
         $this->authorize('update', $vote);
 
         $vote->update($request->all());
-        $vote = Vote::findOrfail($id);
-        if ($request->tags) {
-            TagService::TagsHandler($vote, $request->tags);
+        $vote->save();
+
+        TagService::TagsHandler($vote, $request->tags);
+
+        if ($vote->is_public) {
+            $vote->votePermissions()->delete();
+        } elseif ($request->users) {
+            $this->VotePermissionsHandler($vote, $request->users);
         }
-        $vote->tags = $vote->tags()->get();
-        return $this->setStatusCode(200)->respond($vote);
+        if ($request->is_saved) {
+            $users = json_decode($request->users);
+            if ($users && count($users)) {
+                $this->subscribeUsers($users, $vote);
+            } else {
+                $this->subscribeUsers(User::all()->values('id'), $vote);
+            }
+        }
+        $vote->description_generated = MarkdownService::baseConvert($vote->description);
+        $vote->save();
+
+        return $this->setStatusCode(200)->respond($vote, $this->getMetaDataForModel($vote, true));
     }
 
     /**
@@ -139,7 +251,7 @@ class VoteController extends ApiController
      */
     public function destroy($id)
     {
-        $vote = Vote::findOrFail($id);
+        $vote = Vote::getSluggableModel($id);
 
         $this->authorize('delete', $vote);
 
@@ -162,18 +274,32 @@ class VoteController extends ApiController
     {
         $user = User::findOrFail($userId);
 
+        $votes = null;
         $this->setFiltersParameters($request);
-        $votes = $user->votes()
-            ->getQuery()
-            ->filterByQuery($this->searchStr)
-            ->filterByTags($this->tagIds)
-            ->get();
+        if ($request->with_draft && $request->with_draft == 1 && Auth::user()->id == $user->id) {
+            $votes = $user->votes()
+                ->getQuery()
+                ->newOnTop()
+                ->filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)
+                ->get();
+        } else {
+            $votes = $user->votes()
+                ->getQuery()
+                ->onlySaved()
+                ->newOnTop()
+                ->filterByQuery($this->searchStr)
+                ->filterByTags($this->tagIds)
+                ->get();
+        }
 
         if (!$votes) {
             return $this->setStatusCode(200)->respond();
         }
 
-        return $this->setStatusCode(200)->respond($votes, ['user' => $user]);
+        $data = $this->getMetaDataForCollection($votes);
+
+        return $this->setStatusCode(200)->respond($votes, $data);
     }
 
     /**
@@ -194,38 +320,92 @@ class VoteController extends ApiController
         return $this->setStatusCode(200)->respond($vote, ['user' => $user]);
     }
 
-    //set filter's parameters from request
-    protected function setFiltersParameters(Request $request)
-    {
-        $this->searchStr = $request->get('query');
-        $tagIds = $request->get('tag_ids');
-        $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
-    }
-
     /**
      * Display the specific vote all results
      * @param $voteId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getUserVoteResult($voteId)
+    public function getUserVoteResult(Vote $vote)
     {
-        $vote = Vote::findOrFail($voteId);
-        $voteResults = $vote->voteResults()->get();
+        $user = Auth::user();
 
-        if (!$voteResults) {
-            throw (new ModelNotFoundException)->setModel(VoteResult::class);
+        $this->authorize('show', $vote);
+
+        $voteItems = $vote->voteItems()->get();
+        if (!$voteItems) {
+            throw (new ModelNotFoundException)->setModel(VoteItem::class);
+        }
+        $meta = [];
+        $userVoteResults = $vote->voteResults()->where('user_id', $user->id)->get();
+
+        $meta['users'] = [];
+        $usersAll = 0;
+        foreach ($vote->voteResults()->get() as $res) {
+            $meta['users'][$res->vote_item_id][] = $res->user;
+            $usersAll++;
+        }
+        $meta['users']['count'] = $usersAll;
+
+        foreach ($userVoteResults as $res) {
+            $temp = $voteItems->where('id', $res->vote_item_id);
+            foreach ($temp as $item) {
+                $item->checked = 1;
+            }
         }
 
-        return $this->setStatusCode(200)->respond($voteResults, ['vote' => $vote]);
+        foreach($voteItems as $item) {
+            $meta[$item->id] = ['comments' => $item->comments()->count()];
+        }
+
+        $meta['vote'] = $vote;
+        return $this->setStatusCode(200)->respond($voteItems, $meta);
+
     }
 
     /**
      * Display the specific vote all results
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createUserVoteResult(VoteResultRequest $request)
+    public function createUserVoteResult($id, VoteResultRequest $request)
     {
-        $voteresult = VoteResult::create($request->all());
-        return $this->setStatusCode(201)->respond($voteresult);
+        $model = null;
+        $vote = Vote::getSluggableModel($request->vote_id);
+
+        $this->authorize('show', $vote);
+
+        $user = Auth::user();
+        $voteItem = VoteItem::findOrFail($request->vote_item_id);
+        $response = ['checked' => true];
+        if ($vote->is_single) {
+            $results = $vote->voteResults()->where('user_id', $user->id)->get();
+            if (count($results) > 1) {
+                $vote->voteResults()->where('user_id', $user->id)->delete();
+            }
+            if (count($results) == 1) {
+                $model = $results->first();
+                $model->voteItem()->associate($voteItem);
+                $model->save();
+            } elseif (count($results) == 0) {
+                $model = new VoteResult();
+                $model->user()->associate($user);
+                $model->vote()->associate($vote);
+                $model->vote_item_id = $request->vote_item_id;
+                $model->save();
+            }
+        } else {
+            $model = $vote->voteResults()->where('user_id', $user->id)->where('vote_item_id',
+                $request->vote_item_id)->first();
+            if (!$model && ($request->vote_item_value == 1)) {
+                $model = new VoteResult();
+                $model->user()->associate($user);
+                $model->vote()->associate($vote);
+                $model->vote_item_id = $request->vote_item_id;
+                $model->save();
+            } elseif ($model && ($request->vote_item_value == 0)) {
+                $model->delete();
+                $response['checked'] = false;
+            }
+        }
+        return $this->setStatusCode(201)->respond($response);
     }
 }

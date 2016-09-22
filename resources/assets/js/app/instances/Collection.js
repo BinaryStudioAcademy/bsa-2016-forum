@@ -12,7 +12,11 @@ module.exports = Backbone.Collection.extend({
     _getRequestUrl: function () {
         return App.getBaseUrl() + this.getEntityUrl();
     },
-    
+
+    getIdBySlug: function(slug) {
+        return this.findWhere({ slug: slug });
+    },
+
     getMeta: function () {
         return (_.result(this, '_meta'));
     },
@@ -24,9 +28,15 @@ module.exports = Backbone.Collection.extend({
         return Backbone.sync(method, collection, options);
     },
 
-    parse: function (response) {
-        this._meta = response._meta;
+    parse: function (response, options) {
+        if (options.remove == false) {  this._meta = _.extend(this._meta, response._meta) }
+        else  { this._meta = response._meta; }
         return response.data;
+    },
+    initialize: function (models, options) {
+        if (options && options.parentUrl) {
+            this.parentUrl = options.parentUrl;
+        }
     }
 
 });

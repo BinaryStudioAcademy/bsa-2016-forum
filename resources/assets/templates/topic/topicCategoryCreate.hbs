@@ -1,0 +1,32 @@
+<div class="row new-category">
+    <div class="span1">&nbsp;</div>
+    <div class="span10">
+        <div class="widget widget-nopad">
+            <div class="widget-header"> <i class="fa fa-file"></i>
+                <h3>Create New Category</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <form class="topic-form">
+                    <div class="form-group">
+                        <label for="category-name">Name:</label>
+                        <input class="form-control" id="category-name" type="text" placeholder="Enter Category Title" name="name" value="{{ name }}">
+                        <div class="errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="category-slug">Sluggable Url:</label>
+                        <input class="form-control" id="category-slug" type="text" placeholder="Enter your Sluggable Url or leave it empty for autogeneration" name="slug" value="{{ slug }}">
+                        <div class="errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <!--<div class="topic-new-notification checkbox">
+                            <label><input  class="form-control" type="checkbox" name="report_me">Report me when someone post a reply</label>
+                        </div>-->
+                    </div>
+                    <button class="btn btn-default pull-right" type="submit">Create category</button>
+                </form>
+            </div>
+        </div>
+        <!-- /widget-content -->
+    </div>
+</div>

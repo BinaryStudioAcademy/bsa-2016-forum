@@ -1,4 +1,5 @@
 var Marionette = require('backbone.marionette');
+require('corejs-typeahead');
 var logger = require('../../instances/logger');
 var messageCollection = require('./messageCollection');
 
@@ -7,10 +8,49 @@ module.exports = Marionette.LayoutView.extend({
     regions: {
         container: '#users-messages'
     },
+    ui: {
+        userSearch: '#typeahead'
+    },
     onRender: function () {
+        this.ui.userSearch.typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+            },
+            {
+                source: this.searchUsers(this),
+                templates: {
+                    suggestion: Marionette.TemplateCache.get('userSelect')
+                },
+                displayKey: function (obj) {
+                    // console.log('obj', obj);
+                    return obj.first_name + ' ' + obj.last_name;
+                }
+            });
         this.container.show(new messageCollection({
             collection: this.collection
         }));
+    },
+    searchUsers: function(view) {
+        return function (q, sync, async) {
+            var currentUserId = view.options.currentUser.get('id');
+            view.options.users.fetch({
+                data: {
+                    query: q,
+                    limit: 5
+                },
+                success: function (collection) {
+                    var usersList = [];
+                    collection.each(function (model) {
+                        if (model.get('id') != currentUserId) {
+                            usersList.push(model.toJSON());
+                        }
+                    });
+                    async(usersList);
+                }
+            });
+        }
     }
+
 });
 

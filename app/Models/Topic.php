@@ -5,17 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\SluggableModel;
 
 class Topic extends Model
 {
+    public static $morphTag = 'Topic';
+    protected $morphClass = 'Topic';
     use SoftDeletes;
+    use SluggableModel;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['name', 'description', 'user_id', 'category_id'];
+    protected $fillable = ['name', 'description', 'user_id', 'category_id', 'slug'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -59,9 +63,12 @@ class Topic extends Model
         return $this->morphToMany(Attachment::class, 'attachmenttable');
     }
 
+    /**
+     * Get all of the topic's likes
+     */
     public function likes()
     {
-        return $this->morphToMany(Like::class, 'likeable');
+        return $this->morphMany(Like::class, 'likeable');
     }
 
     public function tags()
@@ -122,4 +129,18 @@ class Topic extends Model
         return $query;
     }
 
+    public function subscribers()
+    {
+        return $this->morphToMany(User::class, Subscription::$name)->withTimestamps();
+    }
+
+    public function subscription($userId)
+    {
+        return $this->morphMany(Subscription::class, Subscription::$name)->where('user_id', $userId)->first();
+    }
+
+    public function scopeFilterByLimit(Builder $query, $limit)
+    {
+        return $limit ? $query->limit($limit) : $query;
+    }
 }

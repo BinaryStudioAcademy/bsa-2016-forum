@@ -1,75 +1,66 @@
 <?php
-
 namespace App\Services;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
-
+use HttpRequest;
 
 class CurlService
 {
-    protected $curl_params;
-    
-    public function __construct()
-    {
-        $this->curl_params = [
-            CURLOPT_URL => null,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_MAXREDIRS => 5,
-            CURLOPT_USERAGENT => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0",
-            CURLOPT_HTTPHEADER => [
-                "Cache-control: no-cache",
-                "Accept: text/html,application/xhtml+xml,application/xml",
-                "Content-type: application/x-www-form-urlencoded",
-            ],
-        ];
-    }
-
-    public function  sendRequest($method, $url, $cookie)
+    public function sendRequest($method, $url, array $body = [])
     {
         $response = null;
-        
-        $this->curl_params[CURLOPT_URL] = $url;
-        $this->curl_params[CURLOPT_CUSTOMREQUEST] = $method;
-        array_push($this->curl_params[CURLOPT_HTTPHEADER], $cookie);
-        $curl = curl_init();
-        curl_setopt_array($curl, $this->curl_params);
-        $result = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
+        $cookieName = config('authserver.cookieName');
+        $cookie = 'Cookie: ' . $cookieName . '=' . $_COOKIE[$cookieName];
+        $opts = array('http' =>
+            array(
+                'method' => $method,
+                'header' => [$cookie]
+            )
+        );
 
-        if ($err) {
-            throw new ServiceUnavailableHttpException;
+        if(empty($body)) {
+            $opts['http']['header'][] = 'Content-type: application/x-www-form-urlencoded';
         } else {
-            $response = json_decode($result, true);
+            $opts['http']['header'][] = 'Content-type: application/json';
+            $opts['http']['content'] = json_encode($body);
         }
+
+        $context = stream_context_create($opts);
+        $stream = fopen($url, 'r', false, $context);
+        $response = stream_get_contents($stream);
+        fclose($stream);
         return $response;
     }
-    
-    
-    public function sendUserRequest($id)
+
+    public function sendUsersRequest($id = null)
     {
-        $cookieName = config('authserver.cookieName');
-        $url = config('authserver.urlUserInfo').$id;
-        $cookie = 'Cookie: '.$cookieName.'='.$_COOKIE[$cookieName];
 
-        $response = $this->sendRequest('GET', $url, $cookie);
-        
-        if (!$response){
-            throw new NotFoundHttpException;
+        if (!$id) {
+            $url = trim(config('authserver.urlUsersInfo'));
+        } else {
+            $url = trim(config('authserver.urlUserInfo')) . $id;
         }
+        $response = $this->sendRequest('GET', $url);
+        if (!$response) {
+            throw new ServiceUnavailableHttpException;
+        }
+        return json_decode($response);
+    }
 
-        $response = array_shift($response);
-
-        $userProfile = [
-            'first_name' => $response['name'],
-            'last_name' => $response['surname'],
-            'email' => $response['email'],
-            'city' => $response['city'],
-            'country' => $response['country'],
-            'birthday' => $response['birthday'],
-            'global_id' => $response['serverUserId']
+    public function sendNotificationRequest($data)
+    {
+        $request = [
+            'title' => $data['title'],
+            'text' => $data['text'],
+            'url' => $data['url'],
+            'sound' => config('notification.sound'),
+            'serviceType' => config('notification.serviceType'),
+            'users' => $data['users'],
         ];
-        return $userProfile;
+
+        if (strtolower(env('APP_ENV')) == 'local') {
+            return true;
+        } else {
+            return $this->sendRequest('POST', config('notification.url'), $request);
+        }
     }
 }

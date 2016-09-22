@@ -1,4 +1,7 @@
-@import 'bootstrap';
+@import "bootstrap";
+@import 'dropzone';
+@import 'nprogress';
+@import "node_modules/font-awesome/scss/font-awesome.scss";
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 @import 'header';
 @import 'styles';
@@ -7,3 +10,9 @@
 @import 'styles/bars';
 @import 'styles/users';
 @import 'styles/message';
+@import 'styles/livemessages';
+@import 'styles/dashboard';
+@import 'tpl/dashboard';
+@import 'tpl/style';
+@import 'tpl/bootstrap.min';
+@import 'tpl/bootstrap-responsive';

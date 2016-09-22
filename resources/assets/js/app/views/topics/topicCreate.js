@@ -4,12 +4,15 @@ var TopicModel = require('../../models/TopicModel');
 var currentUser = require('../../initializers/currentUser');
 var topicCategoryCollectionForSelector = require('../../views/topics/topicCategoryCollectionForSelector');
 var topicCategoryItemForSelector = require('../../views/topics/topicCategoryItemForSelector');
+var markdownHelp = require('../../views/modalWindows/markdownHelp');
+var app = require('../../instances/appInstance');
 
-module.exports = Marionette.LayoutView.extend({
+module.exports = Marionette.ItemView.extend({
     template: 'topicCreateNew',
 
     ui: {
-        createForm: '.topic-form'
+        createForm: '.topic-form',
+        openMarkdownHelp: '.openMarkdownHelp'
     },
 
     initialize: function () {
@@ -20,21 +23,20 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     onBeforeShow: function () {
-        this.categories.show(new topicCategoryItemForSelector({
-            collection: this.collection
-        }))
+        this.getRegion('categories').show(new topicCategoryItemForSelector({
+            collection: this.collection,
+            topicModel: this.model
+        }));
     },
-
-    onRender: function () {
-    },
-
+    
     modelEvents: {
         'invalid': function (model, errors, options) {
             this.$('.errors').empty();
             for (var error in errors) {
                 this.$('[name="' + error + '"]').siblings('.errors').html(errors[error]);
             }
-        }
+        },
+        'sync': 'render'
     },
 
     events: {
@@ -45,11 +47,14 @@ module.exports = Marionette.LayoutView.extend({
             updateModel[attr] = value;
             this.model.set(updateModel);
         },
+        'click @ui.openMarkdownHelp': function () {
+            app.renderModal(new markdownHelp());
+        },
         'submit @ui.createForm': function (e) {
             e.preventDefault();
             this.model.save({}, {
                 success: function (model, response) {
-                    Backbone.history.navigate('topics/' + model.get('id'), {trigger: true});
+                    Backbone.history.navigate('topics/' + model.get('slug'), {trigger: true});
                 }
             });
         }

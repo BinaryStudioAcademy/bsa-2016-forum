@@ -1,7 +1,14 @@
-var Backbone = require('backbone');
-var Marionette = require('backbone.marionette');
 var topicItem = require('./topicItem');
+var paginateableCollectionView = require('../../instances/paginateableCollectionView');
+module.exports = paginateableCollectionView.extend({
+    childView: topicItem,
+    tagName: 'ul',
+    className: 'news-items topics',
 
-module.exports = Marionette.CollectionView.extend({
-  childView: topicItem
+    serializeData: function () {
+        var meta = this.collection.getMeta();
+        return {
+            meta: meta
+        }
+    }
 });

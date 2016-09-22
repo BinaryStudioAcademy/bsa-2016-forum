@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\Topic;
 
 use App\Http\Requests\CategoryRequest;
 
@@ -16,19 +17,26 @@ class CategoryController extends ApiController
      */
     public function index()
     {
+        $data = [];
         $categories = Category::all();
-        return $this->setStatusCode(200)->respond($categories);
+        if($categories){
+            foreach ($categories as $category){
+                $data[$category->id]['topicCount'] = $category->topics()->count();
+                $data[$category->id]['lastThreeTopics'] = $category->topics()->orderBy('updated_at', 'DESC')->limit(3)->get(['name','slug','updated_at']);
+            }
+        }
+        return $this->setStatusCode(200)->respond($categories,$data);
     }
 
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\CategoryRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param CategoryRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(CategoryRequest $request)
     {
+        $this->authorize('storeCategory', new Category());
+
         $category = Category::create($request->all());
         return $this->setStatusCode(201)->respond($category);
     }
@@ -41,20 +49,21 @@ class CategoryController extends ApiController
      */
     public function show($id)
     {
-        $category = Category::findOrFail($id);
+        $category = Category::getSluggableModel($id);
         return $this->setStatusCode(200)->respond($category);
     }
 
+
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\CategoryRequest  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param CategoryRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(CategoryRequest $request, $id)
     {
-        $category = Category::findOrFail($id);
+        $category = Category::getSluggableModel($id);
+        $this->authorize('updateCategory', $category);
+
         $category->update($request->all());
         return $this->setStatusCode(200)->respond($category);
     }
@@ -67,7 +76,16 @@ class CategoryController extends ApiController
      */
     public function destroy($id)
     {
-        $category = Category::findOrFail($id);
+        $category = Category::getSluggableModel($id);
+
+        $this->authorize('destroyCategory', $category);
+
+        $topics = Topic::where('category_id', $category->id)->get();
+
+        foreach ($topics as $topic) {
+            $topic->delete();
+        }
+
         $category->delete();
         return $this->setStatusCode(204)->respond();
     }

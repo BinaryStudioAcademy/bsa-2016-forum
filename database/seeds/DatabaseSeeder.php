@@ -16,13 +16,20 @@ class DatabaseSeeder extends Seeder
 
         $this->call(DropTables::class);
         $this->call(RoleTableSeeder::class);
+//        $this->call(TagsSeeder::class);
         $this->call(UserStatusesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
-        $this->call(CategoriesTableSeeder::class);
-        $this->call(TopicsTableSeeder::class);
+        $this->call(HCategoriesTableSeeder::class);
+        $this->call(HTopicsTableSeeder::class);
         $this->call(MessagesTableSeeder::class);
-        $this->call(VoteTableSeeder::class);
-        $this->call(VoteItemSeeder::class);
+        $this->call(HVoteTableSeeder::class);
+//        $this->call(VoteItemSeeder::class);
+        //$this->call(VoteResultsSeeder::class);
+        $this->call(HCommentsSeeder::class);
+
+        $this->call(SubscriptionsSeeder::class);
+        $this->call(LikesSeeder::class);
+//        $this->call(VoteUniqueViewSeeder::class);
 
         Model::reguard();
     }

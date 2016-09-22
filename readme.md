@@ -53,36 +53,39 @@ http://localhost:8000/
 
 1) install all javascript packages
 ```
+npm install bower -g
 npm install
 ```
 
-2) install Ruby (for sass dependency)
+2) install Gulp globally
 
 *Ubuntu*
 ```
-sudo apt-get install ruby-full
-```
-
-*Windows*
-Go to http://rubyinstaller.org/downloads/ and download stable version
-
-3) install sass package from rubygems.org
-
-*Ubuntu*
-```
-sudo gem install sass
+sudo npm i -g gulp
 ```
 
 *Windows*
 ```
-gem install sass
+npm i -g gulp
+```
+
+3) you can set your own config's values in the /resources/assets/js/app/config/config.custom.js like that
+```
+module.exports = {
+    socketUrl: 'you.own.value:3000'
+};
 ```
 
 4) compile all resources
-```
-grunt dev
-```
 
+*Development:*
+```
+gulp
+```
+*Production:*
+```
+gulp --prod
+```
 ### Socket server part
 
 1) install all javascript packages

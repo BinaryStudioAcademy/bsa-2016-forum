@@ -9,7 +9,7 @@ class Like extends Model
 {
     use SoftDeletes;
     
-    protected $fillable = ['user_id'];
+    protected $fillable = ['user_id','likeable_id','likeable_type'];
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -17,28 +17,16 @@ class Like extends Model
      */
     protected $hidden = ['deleted_at'];
 
-    public function topics()
+    /**
+     * Get all of the owning likeable models.
+     */
+    public function likeable()
     {
-        return $this->morphedByMany(Topic::class, 'likeable');
-    }
-
-    public function votes()
-    {
-        return $this->morphedByMany(Vote::class, 'likeable');
-    }
-    
-    public function comments()
-    {
-        return $this->morphedByMany(Comment::class, 'likeable');
+        return $this->morphTo();
     }
     
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function notifications()
-    {
-        return $this->morphToMany(Notification::class, 'notificationable');
     }
 }

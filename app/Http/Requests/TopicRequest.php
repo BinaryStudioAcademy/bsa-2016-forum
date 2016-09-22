@@ -28,6 +28,8 @@ class TopicRequest extends ApiRequest
                     'description' => 'required',
                     'user_id' => 'required|integer|is_current_user',
                     'category_id' => 'required|exists:categories,id|integer',
+                    'slug' => 'unique:topics,slug|regex:/(?!^\d+$)^[\w\-]+$/',
+                    'tags' => 'json|tags_validator',
                 ];
 
                 break;
@@ -36,8 +38,10 @@ class TopicRequest extends ApiRequest
                 return [
                     'name' => 'required|unique:topics,name,' . $this->topics,
                     'description' => 'required',
-                    'user_id' => 'required|integer|is_current_user',
+                    'user_id' => 'required|integer',
                     'category_id' => 'required|exists:categories,id|integer',
+                    'slug' => 'unique:topics,slug|regex:/(?!^\d+$)^[\w\-]+$/',
+
                 ];
 
                 break;
@@ -53,7 +57,10 @@ class TopicRequest extends ApiRequest
             'description.required' => 'Description is required',
             'user_id.required' => 'User ID is required',
             'user_id.is_current_user' => 'User not is authorized',
-            'category_id.required' => 'Category is required'
+            'category_id.required' => 'Category is required',
+            'slug.unique' => 'Sluggable Url already exist',
+            'tags.tags_validator' => 'Format of field tags is incorrect',
+            'slug.regex' => 'Sluggable Url can contain only [a-Z, 0-9, -, _] and not digits only'
         ];
     }
 }

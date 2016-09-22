@@ -50,20 +50,16 @@ class Comment extends Model
     }
 
     /**
-     * Get all of the likes that are assigned this comment.
+     * Get all of the comment's likes.
      */
     public function likes()
     {
-        return $this->morphToMany(Like::class, 'likeable');
+        return $this->morphMany(Like::class, 'likeable');
     }
 
     /**
      * Get all of the notifications that are assigned this comment.
      */
-    public function notifications()
-    {
-        return $this->morphToMany(Notification::class, 'notificationable');
-    }
 
     public function hasChildComments()
     {

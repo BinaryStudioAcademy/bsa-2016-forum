@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 
 class VoteItem extends Model
@@ -46,9 +47,12 @@ class VoteItem extends Model
         return $this->morphToMany(Attachment::class, 'attachmenttable');
     }
 
+    /**
+     * Get all of the voteItem's likes
+     */
     public function likes()
     {
-        return $this->morphToMany(Like::class, 'likeable');
+        return $this->morphMany(Like::class, 'likeable');
     }
 
     /**
@@ -59,9 +63,5 @@ class VoteItem extends Model
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    public function notifications()
-    {
-        return $this->morphToMany(Notification::class, 'notificationable');
-    }
-    
+
 }

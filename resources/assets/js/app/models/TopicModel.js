@@ -1,3 +1,4 @@
+var Backbone = require('backbone');
 var baseModel = require('../instances/Model');
 var _ = require('underscore');
 
@@ -12,5 +13,18 @@ module.exports = baseModel.extend({
         if (!_.isEmpty(errors)) {
             return errors;
         }
+    },
+
+    fetchBySlag: function () {
+        var url = _.result(this, '_getRequestUrl') + '/' + this.get('slug');
+        return this.fetch({url: url});
+    },
+
+    initialize: function() {
+        this.bind('notFound', this.notFound)
+    },
+
+    notFound: function () {
+        Backbone.history.navigate('topics', {trigger: true});
     }
 });

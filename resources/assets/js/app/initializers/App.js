@@ -23,8 +23,20 @@ var appInstance = require('../instances/appInstance');
 
 var logger = require('../instances/logger');
 
+var nProgress = require('nprogress');
+nProgress.configure({ showSpinner: false });
+
+$( document ).ajaxStart(function() {
+    nProgress.start();
+});
+
+$( document ).ajaxStop(function() {
+    nProgress.done();
+});
+
 var Handlebars = require('handlebars');
 var Templates = require('../templates')(Handlebars);
+var Handlebarshelpers = require('../helpers/handlebarsHelper');
 
 var NavigCollection = require('../initializers/navigationCollection');
 
@@ -65,6 +77,7 @@ var app = Marionette.Application.extend({
     onStart: function (config) {
         this.config = config;
         this.socket = socket;
+        Handlebarshelpers.register();
         currentUser.fetch({url: this.config.baseUrl + '/user', async:false});
         this.templateCashing();
         this.setRootLayout(new mainLayoutView({ collection: NavigCollection }));
@@ -72,7 +85,6 @@ var app = Marionette.Application.extend({
         socket.Login();
         this.showRootLayout();
         this.setRouting();
-        require('../instances/Helper');
         logger('start application');
 
         if (Backbone.history) {

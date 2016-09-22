@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 class VoteResult extends Model
 
 {
-    use SoftDeletes;
 
     protected $fillable = ['vote_id', 'vote_item_id', 'user_id'];
     protected $dates = ['deleted_at'];
