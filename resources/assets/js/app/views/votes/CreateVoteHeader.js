@@ -11,11 +11,14 @@ var App = require('../../instances/appInstance');
 var config = require('config');
 var helper = require('../../helpers/helper');
 
+Dropzone.autoDiscover = false;
+
 module.exports = Marionette.ItemView.extend({
     template: 'create-vote-header',
     _dropZone: null,
     _files: [],
     _deletedFiles: [],
+    _filesCounter: 0,
 
     ui: {
         title: '#question-title',
@@ -144,11 +147,6 @@ module.exports = Marionette.ItemView.extend({
                     // start upload to server
                     view._dropZone.processQueue();
                 }
-
-                // if there are files for delete or upload to server set time out 3sec before redirect
-                // cause we need to have all attachs in meta on server before we can redirect
-                // and pass this context to navigateTo method
-                setTimeout(view.navigateTo.bind(view), 3000);
             }
         });
     },
@@ -214,6 +212,8 @@ module.exports = Marionette.ItemView.extend({
             },
             // event triggers when all files has been uploaded
             queuecomplete: function () {
+                if (!this.files.length) return;
+                return view.navigateTo();
             }
         });
 
@@ -225,15 +225,22 @@ module.exports = Marionette.ItemView.extend({
         this._deletedFiles.forEach(function (file, i) {
             self.removeAttachmentFromServer(file);
         });
-
-        this._deletedFiles.splice(0, this._deletedFiles.length);
     },
 
     removeAttachmentFromServer: function (file) {
         // remove single file from server
         var model = new AttachmentModel({ id: file.id });
         model.parentUrl = _.result(this.model, 'url');
-        model.destroy();
+        model.destroy({
+            success: function () {
+                // if all attachs has been deleted from server
+                this._filesCounter++;
+                if (!this._files.length &&
+                    this._filesCounter == this._deletedFiles.length) {
+                    return this.navigateTo();
+                }
+            }.bind(this)
+        });
     },
 
     showAttachments: function () {
