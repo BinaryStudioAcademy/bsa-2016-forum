@@ -13,7 +13,7 @@ class AddUserHasVotedToVoteUniqueViewsTable extends Migration
     public function up()
     {
         Schema::table('vote_unique_views', function (Blueprint $table) {
-            $table->string('userHasVoted')->default(0);
+            $table->string('userHasVoted')->nullable();
         });
     }
 
