@@ -4,6 +4,8 @@ var _ = require('underscore');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
 var Radio = require('backbone.radio');
+var ConfirmStopView = require('./voteConfirmStopView');
+var app = require('../../instances/appInstance');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteHeader',
@@ -14,7 +16,12 @@ module.exports = Marionette.ItemView.extend({
     },
 
     ui: {
-        subscribeNotification: '.subscribe-btn'
+        subscribeNotification: '.subscribe-btn',
+        stopButton: '.stop-category-btn'
+    },
+
+    events: {
+        'click @ui.stopButton': 'showStopConfirmation'
     },
 
     behaviors: {
@@ -46,6 +53,7 @@ module.exports = Marionette.ItemView.extend({
                 voteUniqueViewsWithUsers: tempmeta[id].voteUniqueViewsWithUsers,
                 isFinished: ((this.model.get('finished_at') == null) || (dateHelper.getDateTimeDiff(this.model.get('finished_at')) < 0)),
                 finishedDate: (this.model.get('finished_at') != null) ? dateHelper.middleDate(this.model.get('finished_at')) : '',
+                showUsers: currentUser.isAdmin() || (currentUser.get('id') === this.model.get('user_id')),
                 userIsAdminOrTS: currentUser.isAdmin() || (currentUser.get('id') === this.model.get('user_id'))
             }
         }
@@ -63,5 +71,11 @@ module.exports = Marionette.ItemView.extend({
                 Radio.channel('votesChannel').trigger('showVoteResult');
             }
         }
+    },
+
+    showStopConfirmation: function () {
+        app.renderModal(new ConfirmStopView({
+            model: this.model
+        }));
     }
 });
