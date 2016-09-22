@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use App\Facades\TagService;
 use App\Facades\MarkdownService;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\UserStore;
 
 class VoteController extends ApiController
 {
@@ -40,6 +41,7 @@ class VoteController extends ApiController
                 ->paginate(15);
             $votes = $paginationObject->getCollection();
             $meta['hasMorePages'] = $paginationObject->hasMorePages();
+
         } else {
             $votes = Vote::filterByQuery($this->searchStr)
                 ->filterByTags($this->tagIds)
@@ -49,7 +51,6 @@ class VoteController extends ApiController
         $votes = $votes->filter(function ($vote) {
             return \Gate::allows('show', $vote);
         })->values();
-
         $meta += $this->getMetaDataForCollection($votes);
         return $this->setStatusCode(200)->respond($votes, $meta);
     }
@@ -88,10 +89,7 @@ class VoteController extends ApiController
         $this->authorize('show', $vote);
 
         $data = [];
-        $usersWhoSaw = [];
-        foreach ($vote->voteUniqueViews()->get()->load('user') as $view) {
-            $usersWhoSaw[] = $view->user;
-        }
+        $voteUniqueViewsWithUsers = $vote->voteUniqueViews()->get()->load('user');
         //find the difference between two days
         $created = new Carbon($vote->created_at);
         $now = Carbon::now();
@@ -101,20 +99,19 @@ class VoteController extends ApiController
 
         $data[$vote->id] =
             [
-                'user' => $vote->user()->first(),
+                'user' => UserStore::getUserWithAvatar($vote->user()->first()),
                 'likes' => $vote->likes()->count(),
                 'comments' => $vote->comments()->count(),
                 'tags' => $vote->tags()->get(),
                 'subscription' => $vote->subscription(Auth::user()->id),
                 'days_ago' => $difference,
                 'numberOfUniqueViews' => $vote->voteUniqueViews()->count(),
-                'usersWhoSaw' => $usersWhoSaw
+                'voteUniqueViewsWithUsers' => $voteUniqueViewsWithUsers,
+                'attachments' => $vote->attachments()->get(),
             ];
-
         if ($access) {
             $data[$vote->id]['accessedUsers'] = $vote->votePermissions()->get(['user_id']);
         }
-
         return $data;
     }
 
@@ -332,7 +329,7 @@ class VoteController extends ApiController
         if (!$voteItems) {
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
-        $meta['checked'] = [];
+        $meta = [];
         $userVoteResults = $vote->voteResults()->where('user_id', $user->id)->get();
 
         $meta['users'] = [];
@@ -349,6 +346,11 @@ class VoteController extends ApiController
                 $item->checked = 1;
             }
         }
+
+        foreach ($voteItems as $item) {
+            $meta[$item->id] = ['comments' => $item->comments()->count()];
+        }
+
         $meta['vote'] = $vote;
         return $this->setStatusCode(200)->respond($voteItems, $meta);
 
@@ -397,6 +399,11 @@ class VoteController extends ApiController
                 $model->delete();
                 $response['checked'] = false;
             }
+        }
+        $voteUniqueView = VoteUniqueView::where(['user_id' => $user->id, 'vote_id' => $vote->id])->first();
+        if ($voteUniqueView && !$voteUniqueView->userHasVoted) {
+            $voteUniqueView->userHasVoted = 1;
+            $voteUniqueView->save();
         }
         return $this->setStatusCode(201)->respond($response);
     }

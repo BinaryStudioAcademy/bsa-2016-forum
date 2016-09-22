@@ -26,7 +26,7 @@ class TopicRequest extends ApiRequest
                 return [
                     'name' => 'required|unique:topics,name',
                     'description' => 'required',
-                    'user_id' => 'required|integer|is_current_user',
+                    'user_id' => 'required|integer',
                     'category_id' => 'required|exists:categories,id|integer',
                     'slug' => 'unique:topics,slug|regex:/(?!^\d+$)^[\w\-]+$/'
                 ];
@@ -37,7 +37,7 @@ class TopicRequest extends ApiRequest
                 return [
                     'name' => 'required|unique:topics,name,' . $this->topics,
                     'description' => 'required',
-                    'user_id' => 'required|integer|is_current_user',
+                    'user_id' => 'required|integer',
                     'category_id' => 'required|exists:categories,id|integer',
                     'slug' => 'unique:topics,slug|regex:/(?!^\d+$)^[\w\-]+$/'
                 ];
@@ -54,7 +54,6 @@ class TopicRequest extends ApiRequest
             'name.required' => 'Name is required',
             'description.required' => 'Description is required',
             'user_id.required' => 'User ID is required',
-            'user_id.is_current_user' => 'User not is authorized',
             'category_id.required' => 'Category is required',
             'slug.unique' => 'Sluggable Url already exist',
             'slug.regex' => 'Sluggable Url can contain only [a-Z, 0-9, -, _] and not digits only'

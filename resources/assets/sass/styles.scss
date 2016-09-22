@@ -89,11 +89,12 @@ body {
 }
 
 .attachments-container {
-  padding: 15px;
+  padding: 5px;
 }
 
 .attachments-container img {
   max-height: 50px;
+  min-height: 30px;
 }
 
 .nav > li > a:hover, .nav > li > a:focus {
@@ -122,6 +123,10 @@ body {
 .dz-image img {
   max-height: 120px;
   max-width: 120px;
+}
+
+.attachment-preview {
+  display: inline-block;
 }
 
 /* start of modal windows fix */
@@ -159,3 +164,20 @@ textarea {
   margin-left: 13px;
 }
 /* end of modal windows fix */
+
+.gi-2x{font-size: 2em;}
+.gi-3x{font-size: 3em;}
+.gi-4x{font-size: 4em;}
+.gi-5x{font-size: 5em;}
+
+.right-margin-10 {
+  margin-right: 10px;
+}
+
+.right-margin-10 .fa {
+  margin-right: 5px;
+}
+
+.widget-header a:hover {
+  text-decoration: none;
+}

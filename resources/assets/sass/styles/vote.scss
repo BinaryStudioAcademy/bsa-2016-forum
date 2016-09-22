@@ -46,7 +46,7 @@ VOTE DETAIL
   font-size: 12px;
   padding: 2px;
   border-radius: 4px;
-  margin-right: 3px;
+  margin: 3px;
   display: inline-block;
 }
 
@@ -56,7 +56,6 @@ VOTE DETAIL
 
 .vote-tags {
   color: #333;
-  padding: 5px 0;
 }
 
 .vote-users li img {
@@ -466,9 +465,23 @@ VOTE INDEX
   font-style: italic;
 }
 
+.js-item-click {
+  margin-bottom:10px;
+  display: inline-block;
+}
+
+.vote-item-comments-collapse {
+  max-height: 1000px !important;
+  overflow-y: scroll !important;
+}
+
+.widthbutton {
+  margin: 0 7px;
+  width: 100%;
+}
+
 .corner-button {
   position: absolute;
-  //float:right;
   top:0;
   right:-50px;
 }
@@ -482,7 +495,6 @@ VOTE INDEX
 }
 
 .vote-avatar img {
-  margin-right: 5px;
   width: 60px;
   height: 60px;
   border-radius: 3px;
@@ -496,6 +508,23 @@ VOTE INDEX
   padding: 0.5em;
 }
 
+.vote-item-comments-collapse {
+  max-height: 1000px;
+  overflow-y: scroll;
+}
+
 .vote-results {
   margin: 10px 0;
+  width: 50%;
+}
+
+#answers {
+  padding: 0;
+  .radio, .checkbox {
+    a{
+      color: green;
+      margin: 0 5px;
+      text-decoration: none;
+    }
+  }
 }

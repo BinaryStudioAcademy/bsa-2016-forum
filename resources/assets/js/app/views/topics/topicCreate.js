@@ -65,10 +65,6 @@ module.exports = Marionette.LayoutView.extend({
 
     behaviors: [{
         behaviorClass: TagBehavior
-    }],
-
-    onBeforeDestroy: function() {
-        this.ui.tagsInput.tokenfield('destroy');
-    }
+    }]
 
 });

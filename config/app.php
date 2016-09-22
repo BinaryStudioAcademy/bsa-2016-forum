@@ -215,6 +215,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Topic' => App\Models\Topic::class,
+        'Vote' => App\Models\Vote::class
 
     ],
 

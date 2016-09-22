@@ -1,16 +1,29 @@
 <div class="row message-dialog">
     <div class="span12">
-        <div class="message-msg-container" id="dialog-messages"></div>
-        <div class="message-new">
-            <form id="message-new-form">
-                <textarea required class="form-control" id="messages-new-text" placeholder="Message..." name="message"></textarea>
-                <div class="message-new-control">
-                    <a>Attach</a>
-                    <input class="hotkey-checkbox" type="checkbox" name="hotkey" id="hotkey-checkbox" />
-                    <label class="hotkey-checkbox-label" for="hotkey-checkbox">Use Enter-key to send</label>
-                    <button type="submit" class="send" id="messages-new-submit">Send</button>
+        <div class="widget">
+            <div class="widget-header"> <i class="fa fa-comments-o"></i>
+                <h3> Messages history</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <!-- /widget-content -->
+                <div  id="dialog-messages" class="message-msg-container"></div>
+
+                <div class="message-new">
+                    <form id="message-new-form">
+                        <textarea required class="form-control" id="messages-new-text" placeholder="Message..." name="message"></textarea>
+                        <div class="message-new-control">
+                            <a class="pull-left">Attach</a><br>
+                            <div class="checkbox pull-left">
+                                <input class="hotkey-checkbox" type="checkbox" name="hotkey" id="hotkey-checkbox" />
+                                <label class="hotkey-checkbox-label" for="hotkey-checkbox">Use Enter-key to send</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary pull-right" id="messages-new-submit">Send</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+
+            </div>
         </div>
     </div>
 </div>

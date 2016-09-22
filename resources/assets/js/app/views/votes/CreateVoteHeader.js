@@ -70,15 +70,14 @@ module.exports = Marionette.ItemView.extend({
     }],
     serializeData: function () {
         var meta = this.model.getMetaById() || {
-              
-            };
-        console.log(meta);//
+            tags: ''
+        };
         meta.deletable = !this.model.get('id') ? true : this.model.get('user_id') == currentUser.id || currentUser.isAdmin();
 
         meta.editable = !this.model.get('id') ? true : this.model.get('user_id') == currentUser.id || currentUser.isAdmin();
 
         meta.tags = (_.pluck(meta.tags, 'name')).join(',');
-        
+
         meta.finished_at = DateHelper.dateWithTimezone(this.model.get('finished_at'));
         return {
             model: this.model.toJSON(),
@@ -114,7 +113,7 @@ module.exports = Marionette.ItemView.extend({
             if (_.indexOf(users, currentUser.id) == -1)
                 users.push(currentUser.id);
         }
-        
+
         view.model.save({
             users: JSON.stringify(users),
             tags: this.ui.tagsInput.val(),

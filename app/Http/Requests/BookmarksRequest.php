@@ -22,7 +22,7 @@ class BookmarksRequest extends ApiRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|integer|is_current_user',
+            'user_id' => 'required|integer',
             'topic_id' => 'required|integer|exists:topics,id|unique_with:bookmarks,user_id,deleted_at',
         ];
     }
@@ -32,7 +32,6 @@ class BookmarksRequest extends ApiRequest
         return [
             'user_id.required' => 'User ID is required',
             'user_id.integer' => 'User ID must be integer',
-            'user_id.is_current_user' => 'User is not authorized',
             'topic_id.required' => 'Topic ID is required',
             'topic_id.integer' => 'Topic ID must be integer',
             'topic_id.unique_with' => 'This topic has already been added to the bookmarks',
