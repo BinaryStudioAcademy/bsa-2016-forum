@@ -4,6 +4,7 @@ var $ = require('jquery');
 var Radio = require('backbone.radio');
 var CommentsCollectionView = require('../comments/TopicCommentsCollection');
 var VoteHeader = require('../../views/votes/voteHeader');
+var VoteSummary = require('../../views/votes/voteSummary');
 var VoteAnswersCollectionView = require('../../views/votes/VoteAnswersCollection');
 var CommentModel = require('../../models/CommentModel');
 var socketCommentClient = require('../../initializers/socketCommentClient');
@@ -19,7 +20,8 @@ module.exports = Marionette.LayoutView.extend({
         comments: '#comments',
         newComment: '#add-comment',
         voteheader: '#vote-header',
-        answers: '#answers'
+        answers: '#answers',
+        summary: '#summary-region'
     },
     ui: {
         c_count: '.count',
@@ -182,6 +184,10 @@ module.exports = Marionette.LayoutView.extend({
 
         this.getRegion('voteheader').show(
             new VoteHeader({model: this.model})
+        );
+
+        this.getRegion('summary').show(
+            new VoteSummary({model: this.model})
         );
 
         this.getRegion('answers').show(
