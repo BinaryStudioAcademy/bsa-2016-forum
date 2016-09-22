@@ -1,6 +1,6 @@
 
         <div class="avatar">
-            <img src="images/user.png">
+            {{#if user.url_avatar}}<img src={{user.url_avatar}}>{{else}}<img src="images/user.png">{{/if}}
         </div>
     <a class="{{directClass}}" href="#messages/user/{{user.id}}">
         <div class="message_wrap">
