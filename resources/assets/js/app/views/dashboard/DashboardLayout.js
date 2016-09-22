@@ -1,7 +1,6 @@
 var Marionette = require('backbone.marionette');
 var TopicsCollectionView = require('../topics/topicCollection');
 var VotesCollectionView = require('../votes/ListVotesCollection');
-var UsersCollectionView = require('../users/userCollection');
 var BookmarksCollection = require('../bookmarks/bookmarkCollection');
 var SubscriptionsCollections = require('../subscriptions/subscriptionsCollection');
 var MessagesCollection = require('../messages/messageCollection');
