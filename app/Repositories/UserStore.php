@@ -3,6 +3,7 @@ namespace App\Repositories;
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\UserStoreInterface;
 use App\Facades\CurlService;
+use App\Facades\AvatarService;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Status;
@@ -124,20 +125,28 @@ class UserStore implements UserStoreInterface
         $this->orderType = $request->get('orderType');
     }
 
-    public function checkAvatarFile($nameFile){
-
-
-        return file_exists(config('avatar.localAvatarBaseUrl').$nameFile);
+    public function getFileName($urlAvatar){
+        $fileName = '';
+        // return just name
+        //checkempty
+        return $fileName;
     }
 
 
     public static function getUserWithAvatar($user)
     {
+        $_this = new self;
+
         if ($user instanceof User){
-            if ($user->url_avatar){
-                $exists = Storage::exists('file.jpg');
-                $urlAvatar = config('avatar.urlBaseAvatar') . $user->url_avatar;
-                $user->url_avatar = $urlAvatar;
+            $fileName = $_this->getFileName($user->url_avatar);
+
+            if ($fileName){
+                if (AvatarService::checkAvatarFile($fileName)){
+                    $urlAvatar = config("localAvatarBaseUrl") . $fileName;
+                    $user->url_avatar = $urlAvatar;
+                } else {
+                    //try upload, resize, save
+                }
             }
         } else {
             $urlAvatar = config('avatar.urlBaseAvatar') . $user['url_avatar'];
