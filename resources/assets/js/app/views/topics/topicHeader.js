@@ -25,7 +25,6 @@ module.exports = Marionette.ItemView.extend({
             },
             createdDate: dateHelper.middleDate(this.model.get('created_at'))
         };
-
         return {
             model: this.model.toJSON(),
             meta: {

@@ -22,6 +22,7 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     ui: {
+        'answer': '.topic-answer-btn',
         'topic_delete': '.topic-delete-btn'
     },
 
