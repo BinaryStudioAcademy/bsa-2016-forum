@@ -14,7 +14,8 @@ module.exports = Marionette.ItemView.extend({
     },
 
     serializeData: function () {
-        var meta = this.model.getMeta();
+        var meta = this.model.getMetaById() || {};
+
         if (!meta) return {
             model: this.model.toJSON(),
             meta: {

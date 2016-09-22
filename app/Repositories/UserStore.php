@@ -67,8 +67,8 @@ class UserStore implements UserStoreInterface
                         $r['birthday'] = $userFunc->birthday;
                         $r['local_id'] = $userFunc->id;
                         $r['global_id'] = $userFunc->serverUserId;
-                        $r['avatar'] = $userFunc->avatar;
                         $userInner = array_shift($userInner);
+                        $r['url_avatar'] =$userInner['url_avatar'];
                         $r['id'] = $userInner['id'];
                         $r['display_name'] = $userInner['display_name'];
                         $r['reputation'] = $userInner['reputation'];
@@ -91,8 +91,6 @@ class UserStore implements UserStoreInterface
                     $item['country'] = '';
                     $item['birthday'] = '';
                     $item['local_id'] = '';
-                    $item['avatar']['urlAva'] = '';
-                    $item['avatar']['thumbnailUrlAva'] = '';
                     $role = Role::where('id', $item['role_id'])->value('name');
                     $status = Status::where('id', $item['status_id'])->value('name');
                     $item['role'] = $role;
@@ -124,5 +122,17 @@ class UserStore implements UserStoreInterface
         $this->searchStr = $request->get('query');
         $this->order = $request->get('order');
         $this->orderType = $request->get('orderType');
+    }
+
+    public static function getUrlAvatar($user)
+    {
+        if ($user instanceof User){
+            $urlAvatar = config('authserver.urlBaseAvatar') . $user->url_avatar;
+            $user->url_avatar = $urlAvatar;
+        } else {
+            $urlAvatar = config('authserver.urlBaseAvatar') . $user['url_avatar'];
+            $user['url_avatar'] = $urlAvatar;
+        }
+        return $user;
     }
 }

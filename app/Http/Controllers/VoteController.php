@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use App\Facades\TagService;
 use App\Facades\MarkdownService;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\UserStore;
 
 class VoteController extends ApiController
 {
@@ -39,6 +40,7 @@ class VoteController extends ApiController
                 ->paginate(15);
             $votes = $paginationObject->getCollection();
             $meta['hasMorePages'] = $paginationObject->hasMorePages();
+
         } else {
             $votes = Vote::filterByQuery($this->searchStr)
                 ->filterByTags($this->tagIds)
@@ -48,7 +50,6 @@ class VoteController extends ApiController
         $votes = $votes->filter(function ($vote) {
             return \Gate::allows('show', $vote);
         })->values();
-
         $meta += $this->getMetaDataForCollection($votes);
         return $this->setStatusCode(200)->respond($votes, $meta);
     }
@@ -89,7 +90,7 @@ class VoteController extends ApiController
         $data = [];
         $usersWhoSaw = [];
         foreach ($vote->voteUniqueViews()->get()->load('user') as $view) {
-            $usersWhoSaw[] = $view->user;
+            $usersWhoSaw[] = UserStore::getUrlAvatar($view->user);
         }
         //find the difference between two days
         $created = new Carbon($vote->created_at);
@@ -97,10 +98,10 @@ class VoteController extends ApiController
         $difference = ($created->diff($now)->days < 1)
             ? 'today'
             : $created->diffForHumans($now);
-
+        
         $data[$vote->id] =
             [
-                'user' => $vote->user()->first(),
+                'user' => UserStore::getUrlAvatar($vote->user()->first()),
                 'likes' => $vote->likes()->count(),
                 'comments' => $vote->comments()->count(),
                 'tags' => $vote->tags()->get(),
@@ -108,13 +109,11 @@ class VoteController extends ApiController
                 'days_ago' => $difference,
                 'numberOfUniqueViews' => $vote->voteUniqueViews()->count(),
                 'usersWhoSaw' => $usersWhoSaw,
-                'attachments' => $vote->attachments()->get()
+                'attachments' => $vote->attachments()->get(),
             ];
-
         if ($access) {
             $data[$vote->id]['accessedUsers'] = $vote->votePermissions()->get(['user_id']);
         }
-
         return $data;
     }
 

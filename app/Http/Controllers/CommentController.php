@@ -13,6 +13,7 @@ use App\Events\NewBroadcastCommentEvent;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Gate;
 use App\Facades\MarkdownService;
+use App\Repositories\UserStore;
 
 class CommentController extends ApiController
 {
@@ -20,10 +21,10 @@ class CommentController extends ApiController
     private function getItemMetaData($comment)
     {
         return [
-            'user' => $comment->user()->first(),
+            'user' => UserStore::getUrlAvatar($comment->user()->first()),
             'likes' => $comment->likes()->count(),
             'attachments' => $comment->attachments()->get(),
-            'comments' => $comment->comments()->count()
+            'comments' => $comment->comments()->count(),
         ];
     }
 
@@ -35,7 +36,6 @@ class CommentController extends ApiController
                 $data[$comment->id] = $this->getItemMetaData($comment);
             }
         }
-
         return $data;
     }
 
@@ -273,6 +273,21 @@ class CommentController extends ApiController
     protected function isCommentBelongsToVote(Vote $vote, Comment $comment)
     {
         return !!$vote->comments()->find($comment->id);
+    }
+
+    /**
+     * @param $comments
+     * @return array
+     */
+    protected function makeCommentsMeta($comments)
+    {
+        $meta = [];
+
+        foreach ($comments as $comment) {
+            $meta[$comment->id]['user'] = UserStore::getUrlAvatar($comment->user()->first());
+        }
+
+        return $meta;
     }
 
     /**
