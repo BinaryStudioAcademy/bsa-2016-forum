@@ -65,4 +65,20 @@ class Comment extends Model
     {
         return $this->comments()->exists();
     }
+
+    public function touchParent()
+    {
+        if($this->commentable_type === 'Topic'){
+            $topic = $this->commentable()->get()->first();
+            $topic->touch();
+        }elseif ($this->commentable_type === 'Vote'){
+            $vote = $this->commentable()->get()->first();
+            $vote->touch();
+        }elseif ($this->commentable_type === 'App\Models\Comment'){
+            $parentComment = $this->commentable()->get()->first();
+            $commentableModel = $parentComment->commentable()->get()->first();
+            $commentableModel->touch();
+        }
+        return $this;
+    }
 }
