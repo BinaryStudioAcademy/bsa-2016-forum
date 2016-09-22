@@ -20,6 +20,17 @@
                 <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
             {{/each}}
         </div>
+        <div class="container-fluid">
+            <div class="row">
+                {{#each meta.attachments}}
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <a href="{{ url }}" class="thumbnail" target="_blank" title="{{ cloud_public_id }}">
+                            <img src="{{ thumb }}" alt="{{ url }}">
+                        </a>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
         {{#if meta.userIsAdminOrTS}}
             <div class="vote-users">
                 <span>{{ meta.numberOfUniqueViews }} users have seen this voting</span>

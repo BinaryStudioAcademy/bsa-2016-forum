@@ -4,6 +4,7 @@ var _ = require('underscore');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
 var Radio = require('backbone.radio');
+var helper = require('../../helpers/helper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteHeader',
@@ -35,7 +36,7 @@ module.exports = Marionette.ItemView.extend({
         };
         if (tempmeta) {
             var id = this.model.get('id');
-
+            helper.attachmentThumb(tempmeta[id].attachments);
             meta = {
                 user: tempmeta[id].user,
                 likes: tempmeta[id].likes,
@@ -46,7 +47,8 @@ module.exports = Marionette.ItemView.extend({
                 usersWhoSaw: tempmeta[id].usersWhoSaw,
                 isFinished: ((this.model.get('finished_at') == null) || (dateHelper.getDateTimeDiff(this.model.get('finished_at')) < 0)),
                 finishedDate: (this.model.get('finished_at') != null) ? dateHelper.middleDate(this.model.get('finished_at')) : '',
-                userIsAdminOrTS: currentUser.isAdmin() || (currentUser.get('id') === this.model.get('user_id'))
+                userIsAdminOrTS: currentUser.isAdmin() || (currentUser.get('id') === this.model.get('user_id')),
+                attachments: tempmeta[id].attachments
             }
         }
 
