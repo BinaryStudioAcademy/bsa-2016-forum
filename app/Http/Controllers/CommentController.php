@@ -324,8 +324,13 @@ class CommentController extends ApiController
      */
     public function getVoteComments(Vote $vote)
     {
+        $user = Auth::user();
         $comments = $vote->comments()->get();
         $meta = $this->getCollectionMetaData($comments);
+
+        foreach ($comments as $comment) {
+            $comment->currentUser = $user->id;
+        }
 
         return $this->setStatusCode(200)->respond($comments, $meta);
     }
@@ -474,6 +479,13 @@ class CommentController extends ApiController
     public function getVoteItemComments(Vote $vote, VoteItem $voteItem)
     {
         $comments = $voteItem->comments()->get();
+
+        $user = Auth::user();
+
+        foreach ($comments as $comment) {
+            $comment->currentUser = $user->id;
+        }
+
         return $this->setStatusCode(200)->respond($comments, $this->getCollectionMetaData($comments));
     }
 
