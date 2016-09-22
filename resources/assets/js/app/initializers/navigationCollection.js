@@ -29,34 +29,34 @@ module.exports = new navigCollection([
         name: 'messages',
         label: 'Messages'
     },
-    // my topics
-    {
-        href: '#mytopics',
-        icon: 'comments',
-        name: 'myTopics',
-        label: 'My topics'
-    },
-    // my votes
-    {
-        href: '#userVotes',
-        icon: 'asl-interpreting',
-        name: 'myVotes',
-        label: 'My votes'
-    },
-    // bookmarks
-    {
-        href: '#bookmarks',
-        icon: 'bookmark',
-        name: 'bookmarks',
-        label: 'Bookmarks'
-    },
-    // subscriptions
-    {
-        href: '#subscriptions',
-        icon: 'bell',
-        name: 'subscriptions',
-        label: 'Subscriptions'
-    },
+    // // my topics
+    // {
+    //     href: '#mytopics',
+    //     icon: 'comments',
+    //     name: 'myTopics',
+    //     label: 'My topics'
+    // },
+    // // my votes
+    // {
+    //     href: '#userVotes',
+    //     icon: 'asl-interpreting',
+    //     name: 'myVotes',
+    //     label: 'My votes'
+    // },
+    // // bookmarks
+    // {
+    //     href: '#bookmarks',
+    //     icon: 'bookmark',
+    //     name: 'bookmarks',
+    //     label: 'Bookmarks'
+    // },
+    // // subscriptions
+    // {
+    //     href: '#subscriptions',
+    //     icon: 'bell',
+    //     name: 'subscriptions',
+    //     label: 'Subscriptions'
+    // },
     
     // This navObject MUST BE last in The list
     // user list
