@@ -19,7 +19,7 @@ class UserController extends ApiController
         $users = $userStore->all(null, $request);
         $usersNew =array();
         foreach ($users as $user) {
-            $user = UserStore::getUrlAvatar($user);
+            $user = UserStore::getUserWithAvatar($user);
             $usersNew[] = $user;
         };
         return $this->setStatusCode(200)->respond($usersNew);
@@ -33,7 +33,7 @@ class UserController extends ApiController
     public function show(UserStore $userStore, $id)
     {
         $user = User::findOrFail($id);
-        $user = UserStore::getUrlAvatar($user);
+        $user = UserStore::getUserWithAvatar($user);
         $this->authorize('show', $user);
         $userProfile = $userStore->get($user);
 
@@ -71,7 +71,7 @@ class UserController extends ApiController
     public function getUser(UserStore $userStore)
     {
         $user = Auth::user();
-        $user = UserStore::getUrlAvatar($user);
+        $user = UserStore::getUserWithAvatar($user);
         if(!$user){
             return $this->setStatusCode(401)->respond();
         }

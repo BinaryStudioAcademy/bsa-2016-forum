@@ -41,7 +41,7 @@ class TopicController extends ApiController
             $topic->id => [
                 'subscription' => $topic->subscription(Auth::user()->id),
                 'category' => $topic->category,
-                'user' => UserStore::getUrlAvatar($topic->user()->first()),
+                'user' => UserStore::getUserWithAvatar($topic->user()->first()),
                 'likes' => $topic->likes()->count(),
                 'comments' => $topic->comments()->count(),
                 'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
@@ -73,7 +73,7 @@ class TopicController extends ApiController
         $subscribersNew =array();
         foreach($subscribers as $subscriber)
         {
-            $subscribersNew[] = UserStore::getUrlAvatar($subscriber);
+            $subscribersNew[] = UserStore::getUserWithAvatar($subscriber);
         }
         return $this->setStatusCode(200)->respond($subscribersNew);
     }

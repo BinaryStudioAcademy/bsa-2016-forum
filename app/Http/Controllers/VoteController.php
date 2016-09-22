@@ -90,7 +90,7 @@ class VoteController extends ApiController
         $data = [];
         $usersWhoSaw = [];
         foreach ($vote->voteUniqueViews()->get()->load('user') as $view) {
-            $usersWhoSaw[] = UserStore::getUrlAvatar($view->user);
+            $usersWhoSaw[] = UserStore::getUserWithAvatar($view->user);
         }
         //find the difference between two days
         $created = new Carbon($vote->created_at);
@@ -101,7 +101,7 @@ class VoteController extends ApiController
         
         $data[$vote->id] =
             [
-                'user' => UserStore::getUrlAvatar($vote->user()->first()),
+                'user' => UserStore::getUserWithAvatar($vote->user()->first()),
                 'likes' => $vote->likes()->count(),
                 'comments' => $vote->comments()->count(),
                 'tags' => $vote->tags()->get(),

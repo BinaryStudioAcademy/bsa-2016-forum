@@ -25,7 +25,7 @@ class VoteItemCommentChildsController extends ApiController
     {
         $data = [];
         $data[$comment->id] = [
-            'user' => UserStore::getUrlAvatar($comment->user()->first()),
+            'user' => UserStore::getUserWithAvatar($comment->user()->first()),
             'likes' => $comment->likes()->count(),
             'attachments' => $comment->attachments()->get(),
             'comments' => $comment->comments()->count()

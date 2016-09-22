@@ -124,7 +124,7 @@ class UserStore implements UserStoreInterface
         $this->orderType = $request->get('orderType');
     }
 
-    public static function getUrlAvatar($user)
+    public static function getUserWithAvatar($user)
     {
         if ($user instanceof User){
             $urlAvatar = config('authserver.urlBaseAvatar') . $user->url_avatar;

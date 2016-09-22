@@ -37,12 +37,12 @@ class MessageController extends ApiController
     {
         $user = User::findOrFail($userId);
         $userCurrent = Auth::authenticate();
-        $this->authorize('viewAll', [new Message(), UserStore::getUrlAvatar($user)]);
+        $this->authorize('viewAll', [new Message(), UserStore::getUserWithAvatar($user)]);
 
         if (Input::has('with_user')) {
             $withUserId = Input::get('with_user');
             $userTo = User::findOrFail($withUserId);
-            $userTo = UserStore::getUrlAvatar($userTo);
+            $userTo = UserStore::getUserWithAvatar($userTo);
             $messages = Message::getConversation($userCurrent->id, $userTo->id)->get();
             return $this->setStatusCode(200)->respond($messages, ['with_user' => $userTo]);
         }
@@ -93,7 +93,7 @@ class MessageController extends ApiController
 
         $user = User::findOrFail($userId);
 
-        $this->authorize('show', [$message, UserStore::getUrlAvatar($user)]);
+        $this->authorize('show', [$message, UserStore::getUserWithAvatar($user)]);
         return $this->setStatusCode(200)->respond($message);
     }
 
@@ -155,7 +155,7 @@ class MessageController extends ApiController
         $users = User::whereIn('id', $usersIds)->get();
         $usersArray = [];
         foreach ($users as $user) {
-            $usersArray[$user->id] = UserStore::getUrlAvatar($user);
+            $usersArray[$user->id] = UserStore::getUserWithAvatar($user);
         }
         $meta = [];
         $currentUserId = $userCurrent->id;
