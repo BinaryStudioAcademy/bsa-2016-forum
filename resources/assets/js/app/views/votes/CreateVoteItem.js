@@ -12,8 +12,8 @@ module.exports = Marionette.ItemView.extend({
     },
     events: {
         'change @ui.name': function () {
-            var name = this.ui.name.val();
-            if (name.trim().length > 0)
+            var name = this.ui.name.val().trim();
+            if (name.length > 0)
                 this.model.set({name: name}, {validate: true});
             if (this.model.get('vote_id') && this.model.hasChanged('name'))
                 this.model.save();

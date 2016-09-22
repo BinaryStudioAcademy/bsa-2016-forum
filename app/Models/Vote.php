@@ -18,7 +18,7 @@ class Vote extends Model
     use SoftDeletes;
     use SluggableModel;
 
-    protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at', 'is_saved', 'description', 'description_generated', 'slug'];
+    protected $fillable = ['title', 'user_id', 'is_single', 'is_public', 'finished_at', 'is_saved', 'description', 'description_generated', 'slug', 'summary'];
 
     protected $dates = ['deleted_at'];
 
