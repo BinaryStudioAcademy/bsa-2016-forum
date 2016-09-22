@@ -18,7 +18,7 @@ module.exports = Marionette.ItemView.extend({
         return {
             model: this.model.toJSON(),
             meta: {
-                checked: tempmeta.checked[this.model.get('id')],
+                checked: (tempmeta.checked) ? tempmeta.checked[this.model.get('id')] : tempmeta[this.model.get('id')],
                 vote: tempmeta.vote,
                 users: tempmeta.users[this.model.get('id')]
             },

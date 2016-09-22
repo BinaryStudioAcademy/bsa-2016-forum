@@ -26,7 +26,8 @@ module.exports = Marionette.ItemView.extend({
     stopVote: function () {
         var view = this;
         this.model.save({
-            finished_at: dateHelper.getCurrentDate,
+            back_date: true,
+            finished_at: dateHelper.getCurrentDate(),
             summary: this.ui.summary.val(),
         }, {
             wait: true,

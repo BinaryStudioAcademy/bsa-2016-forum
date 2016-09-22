@@ -76,7 +76,7 @@ var dateHelper = {
     },
 
     getCurrentDate: function() {
-        return moment.utc().tz(config.timeZone).format('YYYY-MM-DD HH:mm:ss');
+        return moment.utc().format('YYYY-MM-DD HH:mm:ss');
     },
 };
 
