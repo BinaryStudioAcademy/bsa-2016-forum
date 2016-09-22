@@ -124,13 +124,23 @@ class UserStore implements UserStoreInterface
         $this->orderType = $request->get('orderType');
     }
 
+    public function checkAvatarFile($nameFile){
+
+
+        return file_exists(config('avatar.localAvatarBaseUrl').$nameFile);
+    }
+
+
     public static function getUserWithAvatar($user)
     {
         if ($user instanceof User){
-            $urlAvatar = config('authserver.urlBaseAvatar') . $user->url_avatar;
-            $user->url_avatar = $urlAvatar;
+            if ($user->url_avatar){
+                $exists = Storage::exists('file.jpg');
+                $urlAvatar = config('avatar.urlBaseAvatar') . $user->url_avatar;
+                $user->url_avatar = $urlAvatar;
+            }
         } else {
-            $urlAvatar = config('authserver.urlBaseAvatar') . $user['url_avatar'];
+            $urlAvatar = config('avatar.urlBaseAvatar') . $user['url_avatar'];
             $user['url_avatar'] = $urlAvatar;
         }
         return $user;
