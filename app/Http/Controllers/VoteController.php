@@ -23,7 +23,7 @@ use App\Repositories\UserStore;
 class VoteController extends ApiController
 {
     protected $searchStr = null;
-    protected $tagIds = [];
+    protected $tags= [];
 
     /**
      * @param Request $request
@@ -37,14 +37,14 @@ class VoteController extends ApiController
             $paginationObject = Vote::filterByQuery($this->searchStr)
                 ->newOnTop()
                 ->checkOnIsSaved()
-                ->filterByTags($this->tagIds)
+                ->filterByTags($this->tags)
                 ->paginate(15);
             $votes = $paginationObject->getCollection();
             $meta['hasMorePages'] = $paginationObject->hasMorePages();
 
         } else {
             $votes = Vote::filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)
+                ->filterByTags($this->tags)
                 ->filterByLimit($this->limit)->get();
         }
 
@@ -61,8 +61,8 @@ class VoteController extends ApiController
     protected function setFiltersParameters(Request $request)
     {
         $this->searchStr = $request->get('query');
-        $tagIds = $request->get('tag_ids');
-        $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+        $tags = $request->get('tags');
+        $this->tags = ($tags) ? explode(',', $tags) : [];
         $this->limit = $request->get('limit');
         $this->order = $request->get('order');
         $this->orderType = $request->get('orderType');
@@ -275,7 +275,7 @@ class VoteController extends ApiController
                 ->getQuery()
                 ->newOnTop()
                 ->filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)
+                ->filterByTags($this->tags)
                 ->get();
         } else {
             $votes = $user->votes()
@@ -283,7 +283,7 @@ class VoteController extends ApiController
                 ->onlySaved()
                 ->newOnTop()
                 ->filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)
+                ->filterByTags($this->tags)
                 ->get();
         }
 

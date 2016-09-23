@@ -43,7 +43,7 @@ module.exports = {
         {
             controller: new IdeaHubController(),
             appRoutes: {
-                'votes': 'index',
+                'votes(/tags/:id)': 'index',
                 'votes/create': 'createVote',
                 'votes/createPrivateVoteBasedOnTopicSubscribers/:id': 'createPrivateVoteBasedOnTopicSubscribers',                
                 'votes/:id': 'showVote',
