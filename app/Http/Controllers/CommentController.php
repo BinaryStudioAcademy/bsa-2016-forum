@@ -14,17 +14,30 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Gate;
 use App\Facades\MarkdownService;
 use App\Repositories\UserStore;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Like;
+use App\Services\CommentService;
 
 class CommentController extends ApiController
 {
 
     private function getItemMetaData($comment)
     {
+        $user = Auth::user();
+
+        $commentMeta = CommentService::commentMeta($user->id, $comment);
+
         return [
             'user' => UserStore::getUserWithAvatar($comment->user()->first()),
             'likes' => $comment->likes()->count(),
             'attachments' => $comment->attachments()->get(),
             'comments' => $comment->comments()->count(),
+            'comments' => $comment->comments()->count(),
+            'countOfLikes' => $commentMeta['countOfLikes'],
+            'isUser' => $commentMeta['isUser'],
+            'likeId' => $commentMeta['likeId'],
+            'currentUser' => $user->id
         ];
     }
 
@@ -81,6 +94,7 @@ class CommentController extends ApiController
     public function getTopicComments(Topic $topic)
     {
         $comments = $topic->comments()->get();
+
         $meta = $this->getCollectionMetaData($comments);
         return $this->setStatusCode(200)->respond($comments, $meta);
     }
@@ -361,6 +375,53 @@ class CommentController extends ApiController
     }
 
     /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $idTopic
+     * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
+     */
+    public function addLike($id)
+    {
+        $comment = Comment::findOrFail($id);
+
+        $user = Auth::user();
+
+        $like = new Like();
+        $like->user()->associate($user);
+
+        //User can't add like to his own comment
+        if($user->id != $comment->user_id){
+            $comment->likes()->save($like);
+        }
+
+        $like = $comment->likes()->where('user_id', Auth::user()->id)->where('likeable_id', $comment->id)->get()->first();
+
+        return $this->setStatusCode(200)->respond($like);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $idTopic
+     * @param  int $idLike
+     * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
+     */
+    public function removeLike($idComment,$idLike)
+    {
+        $comment=Comment::findOrFail($idComment);
+
+        $like = Like::findOrFail($idLike);
+
+        $user = Auth::user();
+
+        $like->delete();
+
+        return $this->setStatusCode(204)->respond();
+    }
+
+    /**
      * @param Vote $vote
      * @param Comment $comment
      * @return \Illuminate\Http\JsonResponse
@@ -399,6 +460,7 @@ class CommentController extends ApiController
     public function getVoteItemComments(Vote $vote, VoteItem $voteItem)
     {
         $comments = $voteItem->comments()->get();
+
         return $this->setStatusCode(200)->respond($comments, $this->getCollectionMetaData($comments));
     }
 

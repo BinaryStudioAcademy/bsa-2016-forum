@@ -66,5 +66,5 @@ module.exports = Marionette.LayoutView.extend({
     behaviors: [{
         behaviorClass: TagBehavior
     }]
-
+    
 });

@@ -4,6 +4,7 @@ var currentUser = require('../../initializers/currentUser');
 var logger = require('../../instances/logger');
 var Radio = require('backbone.radio');
 var dateHelper = require('../../helpers/dateHelper');
+var CommentLikeModel = require('../../models/CommentLikeModel')
 
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentHeader',
@@ -18,7 +19,8 @@ module.exports = Marionette.ItemView.extend({
         'answer': '.answer-btn',
         'edit': '.comment-edit-btn',
         'remove': '.comment-remove-btn',
-        'removeConfirmation': '.remove-modal-btn'
+        'removeConfirmation': '.remove-modal-btn',
+        'likeUnlikeTopic': '.link-like-unlike'
     },
 
     events: {
@@ -81,6 +83,7 @@ module.exports = Marionette.ItemView.extend({
             });
         },
 
+        'click @ui.likeUnlikeTopic': 'likeUnlikeTopic'
     },
 
     isChildsOpened: function () {
@@ -109,6 +112,9 @@ module.exports = Marionette.ItemView.extend({
     },
 
     serializeData: function () {
+        var style;
+        var likeUnlike;
+        var countOfLikes;
         var meta = this.model.getMeta();
         var id = this.model.get('id');
         if (!meta[id]) {
@@ -129,9 +135,28 @@ module.exports = Marionette.ItemView.extend({
         if (meta[id] && meta[id].attachments.length) {
             this.attachmentThumb(meta[id].attachments);
         }
+
+        if(meta[id].isUser == true) {
+            style = 'glyphicon glyphicon-star';
+            likeUnlike = 'Unlike';
+        } else {
+            style ='glyphicon  glyphicon-star-empty';
+            likeUnlike = 'Like';
+        }
+        
         return {
             model: this.model.toJSON(),
+            style: style,
+            likeUnlike: likeUnlike,
+            countOfLikes: meta[id].likes,
+            isUser: meta[id].isUser,
             meta: {
+                currentUser: meta[id].currentUser,
+                isUser: meta[id].isUser,
+                likeId: meta[id].likeId,
+                countOfLikes: meta[id].countOfLikes,
+                category: meta[id].category,
+                subscription: meta[id].subscription,
                 user: meta[id].user,
                 likes: meta[id].likes,
                 attachments: meta[id].attachments,
@@ -142,5 +167,54 @@ module.exports = Marionette.ItemView.extend({
             createdAt: dateHelper.fullDate(this.model.get('created_at')),
             isUploadingAttachs: this.model.get('isUploadingAttachs')
         };
+    },
+
+    likeUnlikeTopic: function(e){
+        e.preventDefault();
+        var meta = this.model.getMeta();
+        var id = this.model.id;
+        var that = this;
+        if(meta[id].user.id != meta[id].currentUser) {
+            if(meta[id].isUser == true) {
+                var parentUrl = '/comments/'+this.model.id+'/likes/'+meta[id].likeId;
+                var commentLikeModel = new CommentLikeModel({parentUrl: parentUrl,id:meta[id].likeId});
+                commentLikeModel.destroy({
+                    success: function(model, response) {
+                        meta[id].isUser = false;
+                        meta[id].likes = meta[id].likes-1;
+                        that.model.setMeta(meta);
+                        console.log(that.model);
+                        that.model.trigger('change');
+                    },
+                    error: function (response, xhr) {
+                        var errorMsg = '';
+                        $.each(xhr.responseJSON, function(index, value) {
+                            errorMsg += index + ': ' + value;
+                        });
+                        logger(errorMsg);
+                    }
+                });
+            } else {
+                var parentUrl = '/comments/'+this.model.id+'/likes';
+                var commentLikeModel = new CommentLikeModel({parentUrl: parentUrl});
+                commentLikeModel.save(null,{
+                    success: function (response) {
+                        meta[id].isUser = true;
+                        meta[id].likes = meta[id].likes+1;
+                        meta[id].likeId = response.id;
+                        that.model.setMeta(meta);
+                        console.log(that.model);
+                        that.model.trigger('change');
+                    },
+                    error: function (response, xhr) {
+                        var errorMsg = '';
+                        $.each(xhr.responseJSON, function(index, value) {
+                            errorMsg += index + ': ' + value;
+                        });
+                        logger(errorMsg);
+                    }
+                });
+            }
+        }
     }
 });
