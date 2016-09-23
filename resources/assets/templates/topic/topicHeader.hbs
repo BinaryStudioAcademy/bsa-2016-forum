@@ -1,7 +1,7 @@
 <div class="topic-comment-flex">
     <div class="topic-bar hidden-xs">
         <div class="topic-avatar topic-avatar-border">
-           {{#if meta.user.url_avatar}}<img src={{meta.user.url_avatar}}>{{else}}<img src="images/user.png">{{/if}}
+            {{#if meta.user.url_avatar}}<img src={{meta.user.url_avatar}}>{{else}}<img src="images/user.png">{{/if}}
         </div>
         <div class="topic-addition">
         </div>
@@ -20,7 +20,7 @@
             {{#each model.tags}}
                 <a href="#topics/tags/{{name}}">
                     <div class="tag">
-                       <span>{{name}}</span>
+                        <span>{{name}}</span>
                     </div>
                 </a>
             {{/each}}
@@ -39,5 +39,10 @@
         <a class="topic-answer-btn">Answer</a>
         <button class="bookmark-btn text-info">Bookmark</button>
         <button class="subscribe-btn text-info">Subscribe</button>
-    </div>
+        {{#ifCond meta.user.id '!=' meta.currentUser}}
+            <span class="link-like-unlike fontOfLikeIcon"><i class="{{ style }}"></i>{{ likeUnlike }}({{ countOfLikes }})</span>
+        {{else}}
+            <span class="link-like-unlike-simple fontOfLikeIcon"><i class="{{ style }}"></i>Likes({{ countOfLikes }})</span>
+        {{/ifCond}}
+        </div>
 </div>

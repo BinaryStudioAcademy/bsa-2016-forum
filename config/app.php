@@ -159,6 +159,7 @@ return [
         App\Providers\TagServiceProvider::class,
         App\Providers\MarkdownServiceProvider::class,
         App\Providers\CurlServiceProvider::class,
+        App\Providers\CommentServiceProvider::class,
         App\Providers\AvatarServiceProvider::class,
 
         Cviebrock\EloquentSluggable\ServiceProvider::class,

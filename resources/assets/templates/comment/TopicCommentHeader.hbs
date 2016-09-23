@@ -40,6 +40,11 @@
             {{#if meta.canReply}}
                 <a class="answer-btn">Answer</a>
             {{/if}}
+            {{#ifCond meta.user.id '!=' meta.currentUser}}
+                <a class=" topic-control-btn link-like-unlike fontOfLikeCommentsIcon"><i class="{{ style }}"></i>{{ likeUnlike }}({{ countOfLikes }})</a>
+            {{else}}
+                <a class=" topic-control-btn link-like-unlike-simple fontOfLikeCommentsIcon"><i class="{{ style }}"></i>Likes({{ countOfLikes }})</a>
+            {{/ifCond}}
         {{/if}}
     </div>
     <div class="row">

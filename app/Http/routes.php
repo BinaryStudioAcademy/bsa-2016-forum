@@ -162,6 +162,10 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::put('{comment}/comments/{commentChild}', 'CommentController@updateTopicCommentChild')->name('updateTopicCommentChild');
         Route::delete('{comment}/comments/{commentChild}', 'CommentController@destroyTopicCommentChild')->name('deleteTopicCommentChild');
     });
+
+    Route::post('comments/{comment}/likes', 'CommentController@addLike')->name('addLikeToComment');
+    Route::delete('comments/{comment}/likes/{like}', 'CommentController@removeLike')->name('removeLikeFromComment');
+
     /*Routes for Vote comments*/
     Route::group(['prefix' => 'votes/{vote}/comments'], function () {
         Route::get('', 'CommentController@getVoteComments')->name('voteComments');
