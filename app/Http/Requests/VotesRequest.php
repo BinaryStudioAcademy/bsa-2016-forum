@@ -48,8 +48,7 @@ class VotesRequest extends ApiRequest
                     'is_public' => 'integer|between:0,1',
                     'is_saved' => 'integer|between:0,1',
                     'users' => 'json',
-                    'tags' => 'json|tags_validator',
-                    'slug' => 'regex:/(?!^\d+$)^[\w\-]+$/|unique:votes,slug,' . $id,
+                    'slug' => 'regex:/(?!^\d+$)^[\w\-]+$/|unique:votes,slug,' . $id
                 ];
 
                 break;
@@ -63,7 +62,6 @@ class VotesRequest extends ApiRequest
         return [
             'user_id.required' => 'User ID is required',
             'title.required' => 'Title is required',
-            'tags.tags_validator' => 'Format of field tags is incorrect',
             'finished_at.is_five_minutes_time' => 'Perhaps, you typed date in the past. Also, minimum time for vote: 5 minutes.',
             'slug.unique' => 'Sluggable Url already exist',
             'slug.regex' => 'Sluggable Url can contain only [a-Z, 0-9, -, _] and not digits only'

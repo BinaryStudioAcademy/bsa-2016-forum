@@ -18,7 +18,11 @@
         </span>
         <div class="topic-tags">
             {{#each model.tags}}
-                <span>#{{ name }}</span>
+                <a href="#topics/tags/{{name}}">
+                    <div class="tag">
+                       <span>{{name}}</span>
+                    </div>
+                </a>
             {{/each}}
         </div>
     </div>

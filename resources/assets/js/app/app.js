@@ -1,5 +1,7 @@
 $ = require('jquery');
 jQuery = $;
+
+require('jquery-migrate');
 require('bootstrap-sass');
 
 var config = require('config');
