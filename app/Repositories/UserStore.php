@@ -158,7 +158,7 @@ class UserStore implements UserStoreInterface
             $urlAvatar = config('avatar.defaultAvatar');
         }
 
-        $user = self::setUrlAvatar($user, url('/') . ($urlAvatar));
+        $user = self::setUrlAvatar($user, env('APP_ENV') == 'local' ? url('/') : env('APP_URL') . ($urlAvatar));
 
         return $user;
     }
