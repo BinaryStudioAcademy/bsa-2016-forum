@@ -58,6 +58,7 @@ module.exports = Marionette.ItemView.extend({
                 countOfLikes: meta.countOfLikes,
                 currentUser: meta.currentUser
             },
+            canDelete: currentUser.isAdmin() || (currentUser.id == this.model.get('user_id')),
             createdDate: dateHelper.middleDate(this.model.get('created_at'))
         };
     },
