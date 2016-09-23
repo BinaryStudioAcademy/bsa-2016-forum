@@ -100,13 +100,26 @@ body {
 .nav > li > a:hover, .nav > li > a:focus {
   background-color: transparent;
 }
+
 #nprogress .bar {
   height: 3px;
   background: #ffa500;
 }
+
 #nprogress .peg {
   box-shadow: 0 0 10px #ffa500, 0 0 5px #ffa500;
 }
+
+.topic-body {
+  overflow: hidden;
+}
+
+.ui-autocomplete {
+  height: 150px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .dz-image img {
   max-height: 120px;
   max-width: 120px;

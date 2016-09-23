@@ -4,6 +4,7 @@ var TopicModel = require('../../models/TopicModel');
 var currentUser = require('../../initializers/currentUser');
 var topicCategoryCollectionForSelector = require('../../views/topics/topicCategoryCollectionForSelector');
 var topicCategoryItemForSelector = require('../../views/topics/topicCategoryItemForSelector');
+var TagBehavior = require('../../behaviors/tagBehavior');
 var markdownHelp = require('../../views/modalWindows/markdownHelp');
 var app = require('../../instances/appInstance');
 
@@ -12,12 +13,15 @@ module.exports = Marionette.LayoutView.extend({
 
     ui: {
         createForm: '.topic-form',
+        tagsInput: '.tags',
         openMarkdownHelp: '.openMarkdownHelp'
     },
 
-    initialize: function () {
+    initialize: function (options) {
+        this.tags = options.tags;
         this.model.set({user_id: currentUser.id});
     },
+
     regions: {
         categories: '#categories'
     },
@@ -26,12 +30,9 @@ module.exports = Marionette.LayoutView.extend({
         this.categories.show(new topicCategoryItemForSelector({
             collection: this.collection,
             topicModel: this.model
-        }))
+        }));
     },
-
-    onRender: function () {
-    },
-
+    
     modelEvents: {
         'invalid': function (model, errors, options) {
             this.$('.errors').empty();
@@ -60,6 +61,10 @@ module.exports = Marionette.LayoutView.extend({
                 }
             });
         }
-    }
+    },
+
+    behaviors: [{
+        behaviorClass: TagBehavior
+    }]
 
 });

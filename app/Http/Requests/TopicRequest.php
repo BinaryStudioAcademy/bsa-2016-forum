@@ -28,8 +28,7 @@ class TopicRequest extends ApiRequest
                     'description' => 'required',
                     'user_id' => 'required|integer',
                     'category_id' => 'required|exists:categories,id|integer',
-                    'slug' => 'unique:topics,slug|regex:/(?!^\d+$)^[\w\-]+$/',
-                    'tags' => 'json|tags_validator',
+                    'slug' => 'unique:topics,slug|regex:/(?!^\d+$)^[\w\-]+$/'
                 ];
 
                 break;
@@ -40,8 +39,7 @@ class TopicRequest extends ApiRequest
                     'description' => 'required',
                     'user_id' => 'required|integer',
                     'category_id' => 'required|exists:categories,id|integer',
-                    'slug' => 'unique:topics,slug|regex:/(?!^\d+$)^[\w\-]+$/',
-                    'tags' => 'json|tags_validator',
+                    'slug' => 'unique:topics,slug|regex:/(?!^\d+$)^[\w\-]+$/'
                 ];
 
                 break;
@@ -58,7 +56,6 @@ class TopicRequest extends ApiRequest
             'user_id.required' => 'User ID is required',
             'category_id.required' => 'Category is required',
             'slug.unique' => 'Sluggable Url already exist',
-            'tags.tags_validator' => 'Format of field tags is incorrect',
             'slug.regex' => 'Sluggable Url can contain only [a-Z, 0-9, -, _] and not digits only'
         ];
     }

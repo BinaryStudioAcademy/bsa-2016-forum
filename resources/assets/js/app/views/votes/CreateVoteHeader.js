@@ -5,23 +5,24 @@ var DateHelper = require('../../helpers/dateHelper');
 var _ = require('underscore');
 var markdownHelp = require('../../views/modalWindows/markdownHelp');
 var currentUser = require('../../initializers/currentUser');
+var TagBehavior = require('../../behaviors/tagBehavior');
 
 module.exports = Marionette.ItemView.extend({
     template: 'create-vote-header',
     ui: {
         title: '#question-title',
         errors: '.js-errors',
-        tags: '#tags',
         isPublic: 'input[name=access]',
         finished: '#finished',
         isSingle: 'input[name=isSingle]',
         description: '#question-description',
         slug: '#question-slug',
-        openMarkdownHelp: '.openMarkdownHelp'
+        openMarkdownHelp: '.openMarkdownHelp',
+        tagsInput: '.tags'
     },
     modelEvents: {
-        'change:title':'render',
-        'save':'saveVote',
+        'change:title': 'render',
+        'save': 'saveVote',
         'invalid': function (model, errors) {
             this.ui.errors.empty();
             var self = this;
@@ -59,18 +60,24 @@ module.exports = Marionette.ItemView.extend({
         },
         'click @ui.openMarkdownHelp': function () {
             app.renderModal(new markdownHelp());
+        },
+        'change @ui.tagsInput': function () {
+            this.model.save({tags: this.ui.tagsInput.val()});
         }
     },
+    behaviors: [{
+        behaviorClass: TagBehavior
+    }],
     serializeData: function () {
         var meta = this.model.getMetaById() || {
-                tags:''
-            };
+            tags: ''
+        };
+        meta.deletable = !this.model.get('id') ? true : this.model.get('user_id') == currentUser.id || currentUser.isAdmin();
 
-        meta.deletable = !this.model.get('id') ? true :  this.model.get('user_id') == currentUser.id || currentUser.isAdmin();
+        meta.editable = !this.model.get('id') ? true : this.model.get('user_id') == currentUser.id || currentUser.isAdmin();
 
-        meta.editable = !this.model.get('id') ? true :  this.model.get('user_id') == currentUser.id || currentUser.isAdmin();
+        meta.tags = (_.pluck(meta.tags, 'name')).join(',');
 
-        meta.tags = (_.pluck(meta.tags, 'name')).join(' ');
         meta.finished_at = DateHelper.dateWithTimezone(this.model.get('finished_at'));
         return {
             model: this.model.toJSON(),
@@ -78,13 +85,14 @@ module.exports = Marionette.ItemView.extend({
         };
     },
     onRender: function () {
+
         this.ui.finished.datetimepicker({
             startDate: new Date(),
             todayBtn: true,
             minuteStep: 5,
             autoclose: true,
             clearBtn: true,
-            todayHighlight:true
+            todayHighlight: true
         });
 
     },
@@ -98,25 +106,17 @@ module.exports = Marionette.ItemView.extend({
     saveVote: function () {
         var view = this;
         var users = [];
-        var tags = [];
         if (view.model.get('is_public') == 0) {
             view.getOption('parent').getOption('accessedUsers').each(function (model, index) {
                 users.push(model.get('id'));
             });
-            if(_.indexOf(users, currentUser.id) == -1)
+            if (_.indexOf(users, currentUser.id) == -1)
                 users.push(currentUser.id);
-        }
-
-        if (view.ui.tags.val().trim().length > 0) {
-            var splitted = view.ui.tags.val().split(' ');
-            _.each(splitted, function (value, index) {
-                tags.push({name: value});
-            });
         }
 
         view.model.save({
             users: JSON.stringify(users),
-            tags: JSON.stringify(tags),
+            tags: this.ui.tagsInput.val(),
             is_saved: 1,
             finished_at: DateHelper.voteDateToSave(this.ui.finished.val())
         }, {
@@ -124,5 +124,8 @@ module.exports = Marionette.ItemView.extend({
                 Backbone.history.navigate('votes/' + view.model.id, {trigger: true});
             }
         });
+    },
+    initialize: function (options) {
+        this.tags = options.parent.tags;
     }
 });

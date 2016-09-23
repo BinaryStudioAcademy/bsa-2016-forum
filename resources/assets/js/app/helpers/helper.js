@@ -5,6 +5,10 @@ var Helper = {
     
     formatText: function (text) {
         return text.replace(/\n/g, '<br>');
+    },
+
+    nl2br: function (text) {
+        return text.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
     }
 };
 

@@ -14,7 +14,7 @@ var gulp = require('gulp'),
     buffer = require('vinyl-buffer'),
     util = require('gulp-util'),
     del = require('del'),
-    // debug = require('gulp-debug'),
+// debug = require('gulp-debug'),
     concat = require('gulp-concat');
 
 var appNamespace = 'APP';
@@ -44,18 +44,20 @@ gulp.task('clean', function () {
 gulp.task('sass', function () {
     return gulp.src('resources/assets/sass/index.scss')
         .pipe(cfg.prod ? util.noop() : sourcemaps.init())
-        .pipe(sass({includePaths: [
-            'node_modules/bootstrap-sass/assets/stylesheets',
-            'node_modules/dropzone/src',
-            'node_modules/nprogress'
-        ]}))
+        .pipe(sass({
+            includePaths: [
+                'node_modules/bootstrap-sass/assets/stylesheets',
+                'node_modules/dropzone/src',
+                'node_modules/nprogress'
+            ]
+        }))
         .pipe(cfg.prod ? cleanCSS() : util.noop())
         .pipe(rename('styles.css'))
         .pipe(cfg.prod ? util.noop() : sourcemaps.write('.'))
         .pipe(gulp.dest('public/css'));
 });
 
-gulp.task('tmpl', function(){
+gulp.task('tmpl', function () {
     return gulp.src('resources/assets/templates/**/*.hbs')
         .pipe(handlebars({
             handlebars: require('handlebars')
@@ -66,11 +68,11 @@ gulp.task('tmpl', function(){
             noRedeclare: true
         }))
         .pipe(concat('templates.js'))
-        .pipe(wrap('module.exports = function(Handlebars) { <%= contents %> return this["' + appNamespace +'"];};'))
+        .pipe(wrap('module.exports = function(Handlebars) { <%= contents %> return this["' + appNamespace + '"];};'))
         .pipe(gulp.dest('resources/assets/js/app'));
 });
 
-gulp.task('copy', function() {
+gulp.task('copy', function () {
     return gulp.src([
         'node_modules/bootstrap-sass/assets/fonts/**/*.woff2',
         'node_modules/bootstrap-sass/assets/fonts/**/*.woff',
@@ -108,13 +110,13 @@ gulp.task('js:firstrun', ['tmpl'], js);
 gulp.task('js', js);
 
 gulp.task('watch', ['js:firstrun'], function() {
-    gulp.watch('resources/assets/sass/**/*.scss', ['sass']);
+    gulp.watch('resources/assets/sass/**/*.scss', ['sass', 'css-concat']);
     gulp.watch('resources/assets/templates/**/*.hbs', ['tmpl']);
     gulp.watch('resources/assets/js/**/*.js', ['js']);
 });
 
 gulp.task('css-concat', ['sass'], function () {
-    return gulp.src(['public/css/styles.css', 'node_modules/bootstrap-datetime-picker/css/bootstrap-datetimepicker.css'])
+    return gulp.src(['public/css/styles.css', 'node_modules/bootstrap-datetime-picker/css/bootstrap-datetimepicker.css', 'node_modules/bootstrap-tokenfield/dist/css/bootstrap-typeahead.css', 'node_modules/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css', 'node_modules/jquery-ui-browserify/themes/base/*.css'])
         .pipe(concat('styles.css'))
         .pipe(gulp.dest('public/css'));
 });
@@ -123,9 +125,6 @@ var tasks = ['clean', 'js:firstrun', 'sass', 'copy', 'css-concat'];
 if (!cfg.prod) {
     tasks.push('watch');
 }
-
-
-
 
 gulp.task('default', tasks);
 
