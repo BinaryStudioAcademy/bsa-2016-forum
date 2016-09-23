@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Status;
 use App\Models\Role;
 use App\Facades\CurlService;
+use App\Facades\AvatarService;
 
 class UsersTableSeeder extends Seeder
 {
@@ -76,6 +77,7 @@ class UsersTableSeeder extends Seeder
 
             $users = App\Models\User::all();
             reset($globalIds);
+            reset($urlAvatars);
             $roleUser = Role::where('name', 'User')->first();
 
             foreach ($users as $user) {
@@ -99,6 +101,8 @@ class UsersTableSeeder extends Seeder
         $user->email = 'tester_a@example.com';
         $user->url_avatar = '/profile/api/files/get/2b3b1100-e747-47cc-969d-1060ea426853';
         $user->save();
+
         }
+        
     }
 }

@@ -2,6 +2,7 @@
 namespace App\Services;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use HttpRequest;
+use Request;
 
 class CurlService
 {
@@ -12,6 +13,9 @@ class CurlService
         if ($cookie) {
             $cookie = 'Cookie: ' . $cookieName . '=' . $cookie;
         } else {
+            if (!isset($_COOKIE[$cookieName])) {
+                throw new ServiceUnavailableHttpException;
+            }
             $cookie = 'Cookie: ' . $cookieName . '=' . $_COOKIE[$cookieName];
         }
 
@@ -38,7 +42,6 @@ class CurlService
 
     public function sendUsersRequest($id = null, $cookie = null)
     {
-
         if (!$id) {
             $url = trim(config('authserver.urlUsersInfo'));
         } else {
@@ -67,5 +70,24 @@ class CurlService
         } else {
             return $this->sendRequest('POST', config('notification.url'), $request);
         }
+    }
+
+    public static function sendAvatarRequest($urlAvatar)
+    {
+        $_this = new self();
+        $url = trim(config('authserver.urlAuthBase')) . $urlAvatar;
+
+        $cookie = env('AUTH_COOKIE', null);
+        try {
+            if (strtolower(env('APP_ENV')) == 'local' && $cookie) {
+                $response = $_this->sendRequest('GET', $url, [], $cookie);
+            } else {
+                $response = $_this->sendRequest('GET', $url);
+            }
+        } catch(ServiceUnavailableHttpException $e) {
+            return false;
+        }
+
+        return $response;
     }
 }
