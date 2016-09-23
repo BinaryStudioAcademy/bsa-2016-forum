@@ -1,16 +1,33 @@
-<div class="topic-comment-flex">
-    <div class="topic-bar hidden-xs">
-        <div class="topic-avatar">
-             {{#if meta.user.url_avatar}}<img src={{meta.user.url_avatar}}>{{else}}<img src="images/user.png"{{/if}}
-        </div>
-        <div class="topic-addition">
+<div class="avatar">
+    {{#if meta.user.url_avatar}}<img src={{meta.user.url_avatar}}>{{else}}<img src="images/user.png">{{/if}}
+</div>
+<div class="message_wrap">
+    <div class="info">
+        <a class="name">{{ meta.user.first_name }} {{ meta.user.last_name }}</a>
+        <span class="time">{{ createdAt }}</span>
 
+        <div class="pull-right">
+            {{#if isUploadingAttachs}}
+                <span>Upload files...</span>
+            {{else}}
+            {{!-- only output if user comment belongs to current user --}}
+                {{#if meta.canEditDelete}}
+                    <a class="comment-edit-btn btn-link right-margin-10"><i class="fa fa-edit"></i> Edit</a>
+                    <a class="comment-remove-btn btn-link right-margin-10" data-toggle="modal" data-target="#confirmDialog-{{ model.id }}">
+                        <i class="fa fa-trash"></i> Remove
+                    </a>
+                {{/if}}
+
+            {{/if}}
         </div>
     </div>
-    <div class="topic-body">
+
+    <div class="text">
+
         <div class="topic-msg">
             {{{ model.content_generated }}}
         </div>
+
         <div class="attachments-container">
             {{#each meta.attachments}}
                 <div class="attachment-preview">
@@ -20,44 +37,31 @@
                 </div>
             {{/each}}
         </div>
-        <div class="attachs"></div>
-    </div>
-</div>
-<div class="topic-control">
-    <div class="topic-bar hidden-xs"></div>
-    <div class="topic-history">{{ createdAt }}</div>
-    <div class="topic-history">{{ meta.user.display_name }}</div>
-    <div class="topic-history">Rating {{ model.rating }}</div>
-    <div class="topic-control-btn">
-        {{#if isUploadingAttachs}}
-            <span>Upload files...</span>
-        {{else}}
-        {{!-- only output if user comment belongs to current user --}}
-            {{#if meta.canEditDelete}}
-                <a class="comment-edit-btn">Edit</a>
-                <a class="comment-remove-btn" data-toggle="modal" data-target="#confirmDialog-{{ model.id }}">Remove</a>
-            {{/if}}
-            {{#if meta.canReply}}
-                <a class="answer-btn">Answer</a>
-            {{/if}}
-            {{#ifCond meta.user.id '!=' meta.currentUser}}
-                <a class=" topic-control-btn link-like-unlike fontOfLikeCommentsIcon"><i class="{{ style }}"></i>{{ likeUnlike }}({{ countOfLikes }})</a>
+
+        <div class="overflow-hidden pull-right">
+
+            {{#if meta.comments}}
+                <a class="btn-childs btn-link right-margin-10">
+                    <b><i class="fa fa-arrow-down"></i> View answers</b>
+                </a>
             {{else}}
-                <a class=" topic-control-btn link-like-unlike-simple fontOfLikeCommentsIcon"><i class="{{ style }}"></i>Likes({{ countOfLikes }})</a>
+                <a class="btn-childs btn-link collapse right-margin-10">
+                    <b><i class="fa fa-arrow-down"></i> View answers</b>
+                </a>
+            {{/if}}
+
+            {{#if meta.canReply}}
+                <a class="answer-btn btn-link right-margin-10">New Answer</a>
+            {{/if}}
+
+            {{#ifCond meta.user.id '!=' meta.currentUser}}
+                <a class=" topic-control-btn link-like-unlike fontOfLikeCommentsIcon btn-link right-margin-10"><i class="{{ style }}"></i>{{ likeUnlike }} ({{ countOfLikes }})</a>
+            {{else}}
+                <a class=" topic-control-btn link-like-unlike-simple fontOfLikeCommentsIcon btn-link right-margin-10"><i class="{{ style }}"></i>Likes ({{ countOfLikes }})</a>
             {{/ifCond}}
-        {{/if}}
+        </div>
     </div>
-    <div class="row">
-        {{#if meta.comments}}
-            <button class="btn-childs btn btn-default col-xs-12">
-                <span class="glyphicon glyphicon-chevron-down"></span>
-            </button>
-        {{else}}
-            <button class="btn-childs btn btn-default col-xs-12 collapse">
-                <span class="glyphicon glyphicon-chevron-down"></span>
-            </button>
-        {{/if}}
-    </div>
+
 </div>
 <div id="confirmDialog-{{ model.id }}" class="modal" tabindex="-1" role="dialog">
     <div class="modal-content">

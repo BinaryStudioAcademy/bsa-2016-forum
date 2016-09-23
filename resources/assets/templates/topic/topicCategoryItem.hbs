@@ -4,13 +4,13 @@
         <h3>{{ model.name }}</h3>&nbsp;
         <span class="topic-count">(Total : {{meta.topicCount}} topics)</span>
     </a>
-    <div class="create-topic pull-right">
+    <div class="create-topic pull-right right-margin-10">
         <a class="btn btn-warning btn-lg" href="#topic/create/{{ model.slug }}">
             <i class="fa fa-file-o"></i>&nbsp;<span class="hidden-xs">Create topic</span>
         </a>
     </div>
     {{#if isAdmin}}
-        <div class="edit-category pull-right">
+        <div class="edit-category pull-right right-margin-10">
             <a class="btn-link" href="#topicCategories/{{ model.slug }}/edit">
                 <i class="fa fa-edit" aria-hidden="true"></i>
                 <span class="hidden-xs">Edit category</span>

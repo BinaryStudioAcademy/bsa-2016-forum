@@ -8,6 +8,7 @@ var CommentLikeModel = require('../../models/CommentLikeModel')
 
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentHeader',
+    className: 'from_user left',
 
     modelEvents: {
         'change': 'render'
