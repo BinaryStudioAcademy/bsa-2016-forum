@@ -150,14 +150,14 @@ class UserStore implements UserStoreInterface
         
         if ($fileName) {
             if (AvatarService::checkAvatarFile($fileName)) {
-                $urlAvatar = config('avatar.urlLocalAvatar') . $fileName;
+                $urlAvatar = url(config('avatar.urlLocalAvatar') . $fileName);
                 $user = $_this->setUrlAvatar($user, $urlAvatar);
             } else {
-                $urlAvatar = AvatarService::getAvatar($_this->getUrlAvatar($user), $fileName);
+                $urlAvatar = url(AvatarService::getAvatar($_this->getUrlAvatar($user), $fileName));
                 $user = $_this->setUrlAvatar($user, $urlAvatar, $fileName);
             }
         } else {
-            $urlAvatar = config('avatar.urlLocalAvatar') . config('avatar.defaultAvatar');
+            $urlAvatar = url(config('avatar.urlLocalAvatar') . config('avatar.defaultAvatar'));
             $user = $_this->setUrlAvatar($user, $urlAvatar);
         }
         if (!$urlAvatar){
