@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Repositories\UserStore;
 use Auth;
 use Illuminate\Http\Request;
+use App\Facades\AvatarService;
 
 class UserController extends ApiController
 {

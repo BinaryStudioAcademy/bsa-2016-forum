@@ -42,7 +42,7 @@ class VoteItemRequest extends ApiRequest
         $rules = [
             'vote_id' => 'required|exists:votes,id|integer',
             'name' => 'required',
-            'user_id' => 'required|integer|is_current_user',
+            'user_id' => 'required|integer',
         ];
         if($stringOfVoteItemsNames){
             $rules['name'] .= '|not_in:' . $stringOfVoteItemsNames;
@@ -57,7 +57,6 @@ class VoteItemRequest extends ApiRequest
             'name.required' => 'Title is required',
             'name.not_in' => 'This voteItem is already exist in the voting',
             'user_id.required' => 'User ID is required',
-            'user_id.is_current_user' => 'User is not authenticated',
         ];
     }
 }
