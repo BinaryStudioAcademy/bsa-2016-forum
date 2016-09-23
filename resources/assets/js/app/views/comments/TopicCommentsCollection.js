@@ -6,6 +6,8 @@ var Radio = require('backbone.radio');
 
 module.exports = Marionette.CollectionView.extend({
     childView: CommentItem,
+    tagName: 'ul',
+    className: 'messages_layout comments_collection',
 
     childViewOptions: function() {
         return {

@@ -7,6 +7,7 @@ var dateHelper = require('../../helpers/dateHelper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'TopicCommentHeader',
+    className: 'from_user left',
 
     modelEvents: {
         'change': 'render'
@@ -17,7 +18,7 @@ module.exports = Marionette.ItemView.extend({
         'answer': '.answer-btn',
         'edit': '.comment-edit-btn',
         'remove': '.comment-remove-btn',
-        'removeConfirmation': '.remove-modal-btn',
+        'removeConfirmation': '.remove-modal-btn'
     },
 
     events: {
