@@ -343,7 +343,7 @@ class VoteController extends ApiController
         foreach ($userVoteResults as $res) {
             $temp = $voteItems->where('id', $res->vote_item_id);
             foreach ($temp as $item) {
-                $item->checked = 1;
+                $item->checked = true;
             }
         }
 

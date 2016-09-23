@@ -3,10 +3,13 @@ namespace App\Repositories;
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\UserStoreInterface;
 use App\Facades\CurlService;
+use App\Facades\AvatarService;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Status;
+use Psy\Exception\ErrorException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserStore implements UserStoreInterface
 {
@@ -123,16 +126,40 @@ class UserStore implements UserStoreInterface
         $this->order = $request->get('order');
         $this->orderType = $request->get('orderType');
     }
-
-    public static function getUserWithAvatar($user)
-    {
-        if ($user instanceof User){
-            $urlAvatar = config('authserver.urlBaseAvatar') . $user->url_avatar;
+    
+    private static function setUrlAvatar($user, $urlAvatar){
+        if ($user instanceof User) {
             $user->url_avatar = $urlAvatar;
         } else {
-            $urlAvatar = config('authserver.urlBaseAvatar') . $user['url_avatar'];
             $user['url_avatar'] = $urlAvatar;
         }
+        return $user;
+    }
+
+    private static function getUrlAvatar($user){
+        if ($user instanceof User) {
+            return $user->url_avatar;
+        } else {
+            return isset($user['url_avatar']) ? $user['url_avatar'] : null;
+        }
+    }
+    
+    public static function getUserWithAvatar($user)
+    {
+        $fileName = AvatarService::getFileName($user);
+        
+        if ($fileName) {
+            if (AvatarService::checkAvatarFile($fileName)) {
+                $urlAvatar = config('avatar.urlLocalAvatar') . $fileName;
+            } else {
+                $urlAvatar = AvatarService::getAvatar(self::getUrlAvatar($user), $fileName);
+            }
+        } else {
+            $urlAvatar = config('avatar.defaultAvatar');
+        }
+
+        $user = self::setUrlAvatar($user, env('APP_ENV') == 'local' ? url('/') : env('APP_URL') . ($urlAvatar));
+
         return $user;
     }
 }
