@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Requests\CommentsRequest;
 use App\Repositories\UserStore;
+use Illuminate\Support\Facades\Auth;
+use App\Services\CommentService;
 
 use App\Http\Requests;
 
@@ -24,11 +26,20 @@ class VoteItemCommentChildsController extends ApiController
     private function getItemMetaData($comment)
     {
         $data = [];
+
+        $user = Auth::user();
+
+        $commentMeta = CommentService::commentMeta($user->id, $comment);
+        
         $data[$comment->id] = [
             'user' => UserStore::getUserWithAvatar($comment->user()->first()),
             'likes' => $comment->likes()->count(),
             'attachments' => $comment->attachments()->get(),
-            'comments' => $comment->comments()->count()
+            'comments' => $comment->comments()->count(),
+            'countOfLikes' => $commentMeta['countOfLikes'],
+            'isUser' => $commentMeta['isUser'],
+            'likeId' => $commentMeta['likeId'],
+            'currentUser' => $user->id
         ];
 
         return $data;
@@ -55,6 +66,7 @@ class VoteItemCommentChildsController extends ApiController
     {
         if ($this->isCommentBelongsToCommentable($voteItem, $comment)) {
             $comments = $comment->comments()->orderBy('id', 'asc')->get();
+
             return $this->setStatusCode(200)->respond($comments, $this->getCollectionMetaData($comments));
         } else {
             throw (new ModelNotFoundException)->setModel(Comment::class);
