@@ -1,7 +1,9 @@
 {{#unless meta.isFinished}}
 <div>
     {{#if model.summary}}
+    {{#unless meta.userIsAdminOrTS}}
     <div><hr><h3>{{model.summary}}</h3><hr></div>
+    {{/unless}}
     {{/if}}
 </div>
 
