@@ -13,6 +13,9 @@ class CurlService
         if ($cookie) {
             $cookie = 'Cookie: ' . $cookieName . '=' . $cookie;
         } else {
+            if (!isset($_COOKIE[$cookieName])) {
+                throw new ServiceUnavailableHttpException;
+            }
             $cookie = 'Cookie: ' . $cookieName . '=' . $_COOKIE[$cookieName];
         }
 
@@ -69,14 +72,22 @@ class CurlService
         }
     }
 
-    public static function sendAvatarRequest($urlAvatar, $cookie = null)
-    { $_this = new self();
+    public static function sendAvatarRequest($urlAvatar)
+    {
+        $_this = new self();
         $url = trim(config('authserver.urlAuthBase')) . $urlAvatar;
-        $response = $_this->sendRequest('GET', $url);
-        if (!$response) {
-            throw new ServiceUnavailableHttpException;
-        }
-        return $response;
 
+        $cookie = env('AUTH_COOKIE', null);
+        try {
+            if (strtolower(env('APP_ENV')) == 'local' && $cookie) {
+                $response = $_this->sendRequest('GET', $url, [], $cookie);
+            } else {
+                $response = $_this->sendRequest('GET', $url);
+            }
+        } catch(ServiceUnavailableHttpException $e) {
+            return false;
+        }
+
+        return $response;
     }
 }

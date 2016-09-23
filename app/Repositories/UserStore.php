@@ -7,6 +7,7 @@ use App\Facades\AvatarService;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Status;
+use Psy\Exception\ErrorException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -126,7 +127,7 @@ class UserStore implements UserStoreInterface
         $this->orderType = $request->get('orderType');
     }
     
-    private function setUrlAvatar($user, $urlAvatar){
+    private static function setUrlAvatar($user, $urlAvatar){
         if ($user instanceof User) {
             $user->url_avatar = $urlAvatar;
         } else {
@@ -135,34 +136,30 @@ class UserStore implements UserStoreInterface
         return $user;
     }
 
-    private function getUrlAvatar($user){
+    private static function getUrlAvatar($user){
         if ($user instanceof User) {
             return $user->url_avatar;
         } else {
-            return $user['url_avatar'];
+            return isset($user['url_avatar']) ? $user['url_avatar'] : null;
         }
     }
     
     public static function getUserWithAvatar($user)
     {
-        $_this = new self();
         $fileName = AvatarService::getFileName($user);
         
         if ($fileName) {
             if (AvatarService::checkAvatarFile($fileName)) {
-                $urlAvatar = url(config('avatar.urlLocalAvatar') . $fileName);
-                $user = $_this->setUrlAvatar($user, $urlAvatar);
+                $urlAvatar = config('avatar.urlLocalAvatar') . $fileName;
             } else {
-                $urlAvatar = url(AvatarService::getAvatar($_this->getUrlAvatar($user), $fileName));
-                $user = $_this->setUrlAvatar($user, $urlAvatar, $fileName);
+                $urlAvatar = AvatarService::getAvatar(self::getUrlAvatar($user), $fileName);
             }
         } else {
-            $urlAvatar = url(config('avatar.urlLocalAvatar') . config('avatar.defaultAvatar'));
-            $user = $_this->setUrlAvatar($user, $urlAvatar);
+            $urlAvatar = config('avatar.defaultAvatar');
         }
-        if (!$urlAvatar){
-            throw new NotFoundHttpException;
-        }
+
+        $user = self::setUrlAvatar($user, url('/') . ($urlAvatar));
+
         return $user;
     }
 }

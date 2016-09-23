@@ -26,7 +26,7 @@ class AvatarService
         };
 
         $response = CurlService::sendAvatarRequest($urlAvatar, $cookie = null);
-        if (file_put_contents(getcwd().config('avatar.urlLocalAvatarSrc').$fileName, $response)) {
+        if ($response && file_put_contents(getcwd().config('avatar.urlLocalAvatarSrc').$fileName, $response)) {
             if ($this->resizeAvatar($fileName, config('avatar.size'))) {
                 return config('avatar.urlLocalAvatar') . $fileName;
             } else {
