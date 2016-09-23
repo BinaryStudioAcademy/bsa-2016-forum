@@ -21,10 +21,14 @@ var TagCollection = require('../collections/tagCollection');
 
 module.exports = Marionette.Object.extend({
 
-    index: function () {
+    index: function (tags) {
         var topicCollection = new TopicCollection();
+        var data = {
+            'tags': tags
+        };
+        //
         topicCollection.url = '/topics';
-        topicCollection.fetch();
+        topicCollection.fetch({data: data});
         app.render(new topicLayout({collection: topicCollection}));
     },
 

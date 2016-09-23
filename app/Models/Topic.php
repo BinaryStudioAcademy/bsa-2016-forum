@@ -118,7 +118,7 @@ class Topic extends Model
      * @param array $tagIds
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeFilterByTags(Builder $query, array $tagIds)
+    public function scopeFilterByTags(Builder $query, array $tags)
     {
         if (!empty($tagIds)) {
             $query = $query->whereHas('tags', function($q) use ($tagIds){
