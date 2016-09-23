@@ -146,7 +146,6 @@ class UserStore implements UserStoreInterface
     public static function getUserWithAvatar($user)
     {
         $_this = new self();
-        
         $fileName = AvatarService::getFileName($user);
         
         if ($fileName) {

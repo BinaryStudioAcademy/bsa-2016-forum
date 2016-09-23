@@ -3,16 +3,13 @@ namespace App\Services;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use HttpRequest;
 use App\Models\User;
-use App\Facades\CurlService;
 
 
 class AvatarService
 {
-
     public function getAvatar($urlAvatar, $fileName)
     {
         $response = CurlService::sendAvatarRequest($urlAvatar, $cookie = null);
-        
         if (file_put_contents(getcwd().config('avatar.urlLocalAvatarSrc').$fileName, $response)) {
             if ($this->resizeAvatar($fileName, config('avatar.size'))) {
                 return config('avatar.urlLocalAvatar') . $fileName;
@@ -28,7 +25,8 @@ class AvatarService
         return file_exists(getcwd().config('avatar.urlLocalAvatar').$nameFile);
     }
 
-    public function getFileName($user){
+    public function getFileName($user)
+    {
         if ($user instanceof User){
             $urlAvatar = $user->url_avatar;
         } else {

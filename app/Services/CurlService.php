@@ -69,10 +69,10 @@ class CurlService
         }
     }
 
-    public function sendAvatarRequest($urlAvatar, $cookie = null)
-    {
+    public static function sendAvatarRequest($urlAvatar, $cookie = null)
+    { $_this = new self();
         $url = trim(config('authserver.urlAuthBase')) . $urlAvatar;
-        $response = $this->sendRequest('GET', $url);
+        $response = $_this->sendRequest('GET', $url);
         if (!$response) {
             throw new ServiceUnavailableHttpException;
         }
