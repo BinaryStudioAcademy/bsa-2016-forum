@@ -39,7 +39,19 @@
         </div>
 
         <div class="overflow-hidden pull-right">
-            <div class="topic-history">Rating {{ model.rating }}</div>
+
+            <span class="topic-history">Rating {{ model.rating }}</span>
+
+            {{#if meta.comments}}
+                <a class="btn-childs">
+                    <b><i class="fa fa-arrow-down"></i> View answers</b>
+                </a>
+            {{else}}
+                <a class="btn-childs collapse">
+                    <i class="fa fa-arrow-down"></i>
+                </a>
+            {{/if}}
+
             {{#unless isUploadingAttachs}}
                 {{#if meta.canReply}}
                     <a class="answer-btn">
@@ -47,15 +59,7 @@
                     </a>
                 {{/if}}
             {{/unless}}
-            {{#if meta.comments}}
-                <button class="btn-childs btn btn-default col-xs-12">
-                    <span class="glyphicon glyphicon-chevron-down"></span>
-                </button>
-            {{else}}
-                <button class="btn-childs btn btn-default col-xs-12 collapse">
-                    <span class="glyphicon glyphicon-chevron-down"></span>
-                </button>
-            {{/if}}
+
         </div>
 
     </div>
