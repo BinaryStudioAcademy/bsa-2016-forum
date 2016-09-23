@@ -20,14 +20,14 @@ module.exports = {
         {
             controller: new TopicController(),
             appRoutes: {
-                'topics': 'index',
+                'topics(/tags/:id)': 'index',
                 'topics/:id': 'show',
                 'topic/create/:categoryId': 'create',
                 'topic/create/': 'create',
                 'categories/:catId/topics': 'indexInCategory',
                 'topicCategories': 'indexCategories',
                 'topicCategories/create': 'createCategory',
-                'topicCategories/:catId/edit': 'editCategory',
+                'topicCategories/:catId/edit': 'editCategory'
             },
             navigItemName: 'topics'
         },
@@ -43,7 +43,7 @@ module.exports = {
         {
             controller: new IdeaHubController(),
             appRoutes: {
-                'votes': 'index',
+                'votes(/tags/:id)': 'index',
                 'votes/create': 'createVote',
                 'votes/createPrivateVoteBasedOnTopicSubscribers/:id': 'createPrivateVoteBasedOnTopicSubscribers',                
                 'votes/:id': 'showVote',

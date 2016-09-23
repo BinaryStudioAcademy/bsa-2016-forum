@@ -11,6 +11,7 @@ var CreateVoteItemCollection = require('./CreateVoteItemCollection');
 var userCollectionView = require('../users/userCollection');
 var CreateVoteHeader = require('./CreateVoteHeader');
 
+
 require('bootstrap-datetime-picker');
 
 module.exports = Marionette.LayoutView.extend({
@@ -32,7 +33,8 @@ module.exports = Marionette.LayoutView.extend({
         toNotAccessed: '.js-to-not-accessed',
         selectAccessedUsersBlock: '.vote-new-access'
     },
-    initialize: function () {
+    initialize:function(options) {
+        this.tags = options.tags;
         this.collection.trigger('update', this.collection);
     },
     modelEvents: {

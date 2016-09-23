@@ -2,6 +2,7 @@ var Marionette = require('backbone.marionette');
 var _ = require('underscore');
 var currentUser = require('../../initializers/currentUser');
 var dateHelper = require('../../helpers/dateHelper');
+var Helper = require('../../helpers/helper');
 
 module.exports = Marionette.ItemView.extend({
     template: 'voteSummary',
@@ -41,7 +42,8 @@ module.exports = Marionette.ItemView.extend({
             meta = {
                 isFinished: ((this.model.get('finished_at') == null) || (dateHelper.getDateTimeDiff(this.model.get('finished_at')) < 0)),
                 finishedDate: (this.model.get('finished_at') != null) ? dateHelper.middleDate(this.model.get('finished_at')) : '',
-                userIsAdminOrTS: currentUser.isAdmin() || (currentUser.get('id') === this.model.get('user_id'))
+                userIsAdminOrTS: currentUser.isAdmin() || (currentUser.get('id') === this.model.get('user_id')),
+                summaryFormatted: Helper.nl2br(this.model.get('summary'))
             }
         }
 
