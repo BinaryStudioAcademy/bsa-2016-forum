@@ -1,8 +1,10 @@
 {{#unless meta.isFinished}}
 <div>
-    {{#if model.summary}}
+    {{#if meta.summaryFormatted}}
     {{#unless meta.userIsAdminOrTS}}
-    <div><hr><h3>{{model.summary}}</h3><hr></div>
+    <div><br>
+        <h4>Voting summary:</h4>
+        <hr>{{{meta.summaryFormatted}}}<hr></div>
     {{/unless}}
     {{/if}}
 </div>
