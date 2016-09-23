@@ -15,6 +15,11 @@
         <span><i class="fa fa-eye"></i>&nbsp;{{ meta.numberOfUniqueViews }}</span>
 
         <button class="btn-link text-info subscribe-btn">Subscribe</button>
+        {{#ifCond meta.user.id '!=' meta.currentUser}}
+            <span class="link-like-unlike fontOfLikeIcon"><i class="{{ style }}"></i>{{ likeUnlike }}({{ countOfLikes }})</span>
+        {{else}}
+            <span class="link-like-unlike-simple fontOfLikeIcon"><i class="{{ style }}"></i>Likes({{ countOfLikes }})</span>
+        {{/ifCond}}
     </div>
     <div class="vote-deadline">
         {{#if isFinished}}

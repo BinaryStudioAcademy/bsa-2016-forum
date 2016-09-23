@@ -132,6 +132,10 @@ Route::group(['middleware' => ['api','auth-api'], 'prefix' => 'api/v1'], functio
         Route::get('', 'VoteController@getUserVotes')->name('userVotes');
         Route::get('{vote}', 'VoteController@getUserVote')->name('userVote');
     });
+
+    Route::post('votes/{comment}/likes', 'VoteController@addLike')->name('addLikeToVote');
+    Route::delete('votes/{comment}/likes/{like}', 'VoteController@removeLike')->name('removeLikeFromVote');
+
     /*Routes for users results vote*/
     Route::group(['prefix' => 'votes/{vote}/voteresult'], function () {
         Route::get('', 'VoteController@getUserVoteResult')->name('userVoteResult');
