@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vote;
 use App\Models\User;
+use App\Models\Tag;
 use App\Http\Requests\VotesRequest;
 use App\Http\Requests\VoteResultRequest;
 use App\Models\VoteItem;
@@ -22,7 +23,7 @@ use App\Repositories\UserStore;
 class VoteController extends ApiController
 {
     protected $searchStr = null;
-    protected $tagIds = [];
+    protected $tags= [];
 
     /**
      * @param Request $request
@@ -36,14 +37,14 @@ class VoteController extends ApiController
             $paginationObject = Vote::filterByQuery($this->searchStr)
                 ->newOnTop()
                 ->checkOnIsSaved()
-                ->filterByTags($this->tagIds)
+                ->filterByTags($this->tags)
                 ->paginate(15);
             $votes = $paginationObject->getCollection();
             $meta['hasMorePages'] = $paginationObject->hasMorePages();
 
         } else {
             $votes = Vote::filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)
+                ->filterByTags($this->tags)
                 ->filterByLimit($this->limit)->get();
         }
 
@@ -60,8 +61,8 @@ class VoteController extends ApiController
     protected function setFiltersParameters(Request $request)
     {
         $this->searchStr = $request->get('query');
-        $tagIds = $request->get('tag_ids');
-        $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+        $tags = $request->get('tags');
+        $this->tags = ($tags) ? explode(',', $tags) : [];
         $this->limit = $request->get('limit');
         $this->order = $request->get('order');
         $this->orderType = $request->get('orderType');
@@ -123,7 +124,7 @@ class VoteController extends ApiController
         $vote = Vote::create($request->all());
 
         if ($request->tags) {
-            TagService::TagsHandler($vote, $request->tags);
+            TagService::TagsHandler($vote, explode(',', $request->tags));
         }
 
         if ($vote->is_public) {
@@ -213,12 +214,9 @@ class VoteController extends ApiController
         $vote = Vote::getSluggableModel($id);
 
         $this->authorize('update', $vote);
-
         $vote->update($request->all());
         $vote->save();
-
-        TagService::TagsHandler($vote, $request->tags);
-
+        TagService::TagsHandler($vote, explode(',', $request->tags));
         if ($vote->is_public) {
             $vote->votePermissions()->delete();
         } elseif ($request->users) {
@@ -277,7 +275,7 @@ class VoteController extends ApiController
                 ->getQuery()
                 ->newOnTop()
                 ->filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)
+                ->filterByTags($this->tags)
                 ->get();
         } else {
             $votes = $user->votes()
@@ -285,7 +283,7 @@ class VoteController extends ApiController
                 ->onlySaved()
                 ->newOnTop()
                 ->filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)
+                ->filterByTags($this->tags)
                 ->get();
         }
 
