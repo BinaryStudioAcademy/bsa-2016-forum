@@ -27,6 +27,8 @@
     <ul class="news-items">
         {{#if meta.topicCount}}
             <li>Last topics:</li>
+        {{else}}
+            <li><i>No last topics yet</i></li>
         {{/if}}
         {{#each meta.lastThreeTopics}}
             <li>
