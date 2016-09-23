@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests\CommentsRequest;
 use App\Repositories\UserStore;
 use Illuminate\Support\Facades\Auth;
+use App\Services\CommentService;
 
 use App\Http\Requests;
 
@@ -26,26 +27,18 @@ class VoteCommentChildsController extends ApiController
     {
         $data = [];
 
-        if (!empty($currentUser = $comment->likes()->where('user_id', Auth::user()->id)->get()->first())) {
-            $isUser = true;
-            $likeId = $currentUser->id;
-            $countOfLikes = $comment->likes()->count();
-        } else {
-            $isUser = false;
-            $likeId = null;
-            $countOfLikes = 0;
-        }
-
         $user = Auth::user();
+
+        $commentMeta = CommentService::commentMeta($user->id, $comment);
 
         $data[$comment->id] = [
             'user' => UserStore::getUserWithAvatar($comment->user()->first()),
             'likes' => $comment->likes()->count(),
             'attachments' => $comment->attachments()->get(),
             'comments' => $comment->comments()->count(),
-            'countOfLikes' => $countOfLikes,
-            'isUser' => $isUser,
-            'likeId' => $likeId,
+            'countOfLikes' => $commentMeta['countOfLikes'],
+            'isUser' => $commentMeta['isUser'],
+            'likeId' => $commentMeta['likeId'],
             'currentUser' => $user->id
         ];
 

@@ -17,23 +17,16 @@ use App\Repositories\UserStore;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Like;
+use App\Services\CommentService;
 
 class CommentController extends ApiController
 {
 
     private function getItemMetaData($comment)
     {
-        if (!empty($currentUser = $comment->likes()->where('user_id', Auth::user()->id)->get()->first())) {
-            $isUser = true;
-            $likeId = $currentUser->id;
-            $countOfLikes = $comment->likes()->count();
-        } else {
-            $isUser = false;
-            $likeId = null;
-            $countOfLikes = 0;
-        }
-
         $user = Auth::user();
+
+        $commentMeta = CommentService::commentMeta($user->id, $comment);
 
         return [
             'user' => UserStore::getUserWithAvatar($comment->user()->first()),
@@ -41,9 +34,9 @@ class CommentController extends ApiController
             'attachments' => $comment->attachments()->get(),
             'comments' => $comment->comments()->count(),
             'comments' => $comment->comments()->count(),
-            'countOfLikes' => $countOfLikes,
-            'isUser' => $isUser,
-            'likeId' => $likeId,
+            'countOfLikes' => $commentMeta['countOfLikes'],
+            'isUser' => $commentMeta['isUser'],
+            'likeId' => $commentMeta['likeId'],
             'currentUser' => $user->id
         ];
     }
