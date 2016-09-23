@@ -198,10 +198,21 @@ textarea {
   }
 }
 
+/* --- fix --- */
+.comments_collection {
+  margin-top: 10px !important;
+}
+
 .comments_collection li {
   border-bottom: none !important;
   padding-right: 0 !important;
+  padding-bottom: 0 !important;
 }
+
+.comments_collection .message_wrap {
+  margin-bottom: 5px !important;
+}
+/* --- fix end --- */
 
 .btn-link:hover {
   cursor: pointer;
