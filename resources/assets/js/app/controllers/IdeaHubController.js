@@ -139,8 +139,12 @@ module.exports = Marionette.Object.extend({
     createPrivateVoteBasedOnTopicSubscribers: function (id) {
         var usersCollectionFetched = false;
         var accessedUsersCollectionFetched = false;
+        var tagCollection = new TagCollection();
         var VoteAnswers = new VoteAICollection([{}, {}], {parentUrl: ''});
         var UsersCollection = new usersCollection();
+
+        tagCollection.fetch();
+
         var accessedUsers = new usersCollection();
         accessedUsers.url = '/topics/' + id + '/subscribers';
         accessedUsers.fetch({
@@ -170,7 +174,8 @@ module.exports = Marionette.Object.extend({
             model: model,
             collection: VoteAnswers,
             users: UsersCollection,
-            accessedUsers: accessedUsers
+            accessedUsers: accessedUsers,
+            tags: tagCollection
         });
 
         view.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {
