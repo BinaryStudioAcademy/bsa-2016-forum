@@ -38,6 +38,8 @@
         <button class="subscribe-btn text-info">Subscribe</button>
         {{#ifCond meta.user.id '!=' meta.currentUser}}
             <span class="link-like-unlike fontOfLikeIcon"><i class="{{ style }}"></i>{{ likeUnlike }}({{ countOfLikes }})</span>
+        {{else}}
+            <span class="link-like-unlike-simple fontOfLikeIcon"><i class="{{ style }}"></i>Likes({{ countOfLikes }})</span>
         {{/ifCond}}
         </div>
 </div>
