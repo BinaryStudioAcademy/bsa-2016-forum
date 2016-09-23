@@ -34,7 +34,7 @@ module.exports = Marionette.LayoutView.extend({
             model: this.model
         }))
     },
-    
+
     modelEvents: {
         'invalid': function (model, errors, options) {
             this.$('.errors').empty();
@@ -64,5 +64,4 @@ module.exports = Marionette.LayoutView.extend({
             });
         }
     }
-
 });
