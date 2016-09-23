@@ -84,8 +84,21 @@ module.exports = Marionette.LayoutView.extend({
 
 
         this.listenTo(Radio.channel('votesChannel'), 'saveUserChoice', function () {
-            self.ui.voteCommit.removeClass('disabled btn-default');
-            self.ui.voteCommit.addClass('btn-primary');
+            var i = 0;
+            this.getRegion('answers').currentView.children.each(function(value){
+                if(value.ui.select.prop('checked')) {
+                    i++;
+                }
+            });
+
+            if(i > 0) {
+                debugger;
+                self.ui.voteCommit.removeClass('disabled btn-default');
+                self.ui.voteCommit.addClass('btn-primary');
+            } else {
+                self.ui.voteCommit.addClass('disabled btn-default');
+                self.ui.voteCommit.removeClass('btn-primary');
+            }
         });
 
         // triggered after vote model fetched and if vote is finished
