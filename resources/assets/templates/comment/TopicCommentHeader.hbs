@@ -20,8 +20,8 @@
 
             {{/if}}
         </div>
-
     </div>
+
     <div class="text">
 
         <div class="topic-msg">
@@ -40,8 +40,6 @@
 
         <div class="overflow-hidden pull-right">
 
-            <span class="topic-history right-margin-10">Rating: {{ model.rating }}</span>
-
             {{#if meta.comments}}
                 <a class="btn-childs btn-link right-margin-10">
                     <b><i class="fa fa-arrow-down"></i> View answers</b>
@@ -51,27 +49,19 @@
                     <b><i class="fa fa-arrow-down"></i> View answers</b>
                 </a>
             {{/if}}
+
             {{#if meta.canReply}}
-                <a class="answer-btn">Answer</a>
+                <a class="answer-btn btn-link right-margin-10">New Answer</a>
             {{/if}}
+
             {{#ifCond meta.user.id '!=' meta.currentUser}}
-                <a class=" topic-control-btn link-like-unlike fontOfLikeCommentsIcon"><i class="{{ style }}"></i>{{ likeUnlike }}({{ countOfLikes }})</a>
+                <a class=" topic-control-btn link-like-unlike fontOfLikeCommentsIcon btn-link right-margin-10"><i class="{{ style }}"></i>{{ likeUnlike }} ({{ countOfLikes }})</a>
             {{else}}
-                <a class=" topic-control-btn link-like-unlike-simple fontOfLikeCommentsIcon"><i class="{{ style }}"></i>Likes({{ countOfLikes }})</a>
+                <a class=" topic-control-btn link-like-unlike-simple fontOfLikeCommentsIcon btn-link right-margin-10"><i class="{{ style }}"></i>Likes ({{ countOfLikes }})</a>
             {{/ifCond}}
-        {{/if}}
+        </div>
     </div>
-    <div class="row">
-        {{#if meta.comments}}
-            <button class="btn-childs btn btn-default col-xs-12">
-                <span class="glyphicon glyphicon-chevron-down"></span>
-            </button>
-        {{else}}
-            <button class="btn-childs btn btn-default col-xs-12 collapse">
-                <span class="glyphicon glyphicon-chevron-down"></span>
-            </button>
-        {{/if}}
-    </div>
+
 </div>
 <div id="confirmDialog-{{ model.id }}" class="modal" tabindex="-1" role="dialog">
     <div class="modal-content">
