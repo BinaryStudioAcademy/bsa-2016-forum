@@ -14,7 +14,13 @@
             {{/if}}
         </span>
 
-        <button class="btn btn-info text-info subscribe-btn">Subscribe</button>
+        <button class="btn-link text-info subscribe-btn">Subscribe</button>
+        {{#ifCond meta.user.id '!=' meta.currentUser}}
+            <span class="link-like-unlike fontOfLikeIcon"><i class="{{ style }}"></i>{{ likeUnlike }}({{ countOfLikes }})</span>
+        {{else}}
+            <span class="link-like-unlike-simple fontOfLikeIcon"><i class="{{ style }}"></i>Likes({{ countOfLikes }})</span>
+        {{/ifCond}}
+
         {{#if meta.isFinished}}
             {{#if meta.showUsers}}
                 <button class="btn btn-danger stop-category-btn">Stop vote</button>

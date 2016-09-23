@@ -19,6 +19,7 @@ use App\Facades\TagService;
 use App\Facades\MarkdownService;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\UserStore;
+use App\Models\Like;
 
 class VoteController extends ApiController
 {
@@ -88,6 +89,16 @@ class VoteController extends ApiController
     {
         $this->authorize('show', $vote);
 
+        if (!empty($currentUser = $vote->likes()->where('user_id', Auth::user()->id)->get()->first())) {
+            $isUser = true;
+            $likeId = $currentUser->id;
+            $countOfLikes = $vote->likes()->count();
+        } else {
+            $isUser = false;
+            $likeId = null;
+            $countOfLikes = 0;
+        }
+
         $data = [];
         $voteUniqueViewsWithUsers = $vote->voteUniqueViews()->get()->load('user');
         //find the difference between two days
@@ -108,11 +119,59 @@ class VoteController extends ApiController
                 'numberOfUniqueViews' => $vote->voteUniqueViews()->count(),
                 'voteUniqueViewsWithUsers' => $voteUniqueViewsWithUsers,
                 'attachments' => $vote->attachments()->get(),
+                'countOfLikes' => $countOfLikes,
+                'isUser' => $isUser,
+                'likeId' => $likeId,
+                'currentUser' => Auth::user()->id
             ];
         if ($access) {
             $data[$vote->id]['accessedUsers'] = $vote->votePermissions()->get(['user_id']);
         }
         return $data;
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $idTopic
+     * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
+     */
+    public function addLike($voteId)
+    {
+        $vote = Vote::findOrfail($voteId);
+        $user = Auth::user();
+
+        $like = new Like();
+        $like->user()->associate($user);
+
+        //User can't add like to his own topic
+        if($user->id != $vote->user_id){
+            $vote->likes()->save($like);
+        }
+
+        $like = $vote->likes()->where('user_id', Auth::user()->id)->where('likeable_id', $vote->id)->get()->first();
+
+        return $this->setStatusCode(200)->respond($like);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $idTopic
+     * @param  int $idLike
+     * @return \Illuminate\Http\Response
+     * @throws AuthorizationException
+     */
+    public function removeLike($vote,$idLike)
+    {
+        $like = Like::findOrFail($idLike);
+
+        $user = Auth::user();
+
+        $like->delete();
+
+        return $this->setStatusCode(204)->respond();
     }
 
     /**
