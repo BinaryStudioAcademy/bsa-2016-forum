@@ -189,11 +189,12 @@ class TopicController extends ApiController
 
         $topic->update($request->all());
 
-        TagService::TagsHandler($topic, $request->tags);
+        TagService::TagsHandler($topic, explode(',', $request->tags));
 
         $topic->generated_description = MarkdownService::baseConvert($topic->description);
         $topic->save();
-        $topic->tags = $topic->tags()->get();
+        $topic->tags = $topic->tags();
+        
         return $this->setStatusCode(200)->respond($topic);
     }
 

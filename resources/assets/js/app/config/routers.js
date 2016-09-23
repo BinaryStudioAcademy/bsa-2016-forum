@@ -27,7 +27,8 @@ module.exports = {
                 'categories/:catId/topics': 'indexInCategory',
                 'topicCategories': 'indexCategories',
                 'topicCategories/create': 'createCategory',
-                'topicCategories/:catId/edit': 'editCategory'
+                'topicCategories/:catId/edit': 'editCategory',
+                'topic/:slug/edit': 'editTopic'
             },
             navigItemName: 'topics'
         },

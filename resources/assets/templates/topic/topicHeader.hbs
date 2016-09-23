@@ -32,7 +32,9 @@
     <div class="topic-history">{{ createdDate }} {{ meta.user.display_name }}</div>
     <div class="topic-control-btn">
         <a href="#votes/createPrivateVoteBasedOnTopicSubscribers/{{model.id}}" class="topic-edit-btn">Create Private Voting Based On Topic Subscribers</a>
-        <a class="topic-edit-btn">Edit</a>
+        {{#if isEditable}}
+            <a href="#topic/{{ model.slug}}/edit" class="topic-edit-btn">Edit</a>
+        {{/if}}
         <a class="topic-answer-btn">Answer</a>
         <button class="bookmark-btn text-info">Bookmark</button>
         <button class="subscribe-btn text-info">Subscribe</button>

@@ -31,7 +31,6 @@ class VotesRequest extends ApiRequest
                     'is_public' => 'integer|between:0,1',
                     'is_saved' => 'integer|between:0,1',
                     'users' => 'json',
-                    'tags' => 'json|tags_validator',
                     'slug' => 'unique:votes,slug|regex:/(?!^\d+$)^[\w\-]+$/',
                 ];
 

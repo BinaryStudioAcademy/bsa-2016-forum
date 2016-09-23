@@ -141,5 +141,18 @@ module.exports = Marionette.Object.extend({
         topicCollection.parentUrl = parentUrl;
         topicCollection.fetch({data: {page: 1}});
         app.render(new topicLayout({collection: topicCollection, blockhide: true}));
+    },
+    
+    editTopic: function (slug) {
+        var topicCategoryCollection = new TopicCategoryCollection();
+        var tagCollection = new TagCollection();
+
+        topicCategoryCollection.fetch();
+        tagCollection.fetch();
+
+        var topicModel = new TopicModel({slug: slug, user_id: currentUser.get('id')});
+        topicModel.fetchBySlag();
+        app.render(new TopicCreate({model: topicModel, collection: topicCategoryCollection, tags: tagCollection}));
+
     }
 });

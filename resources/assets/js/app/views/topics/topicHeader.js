@@ -25,6 +25,7 @@ module.exports = Marionette.ItemView.extend({
             },
             createdDate: dateHelper.middleDate(this.model.get('created_at'))
         };
+        
         return {
             model: this.model.toJSON(),
             meta: {
@@ -32,7 +33,8 @@ module.exports = Marionette.ItemView.extend({
                 likes: meta.likes,
                 comments: meta.comments
             },
-            createdDate: dateHelper.middleDate(this.model.get('created_at'))
+            createdDate: dateHelper.middleDate(this.model.get('created_at')),
+            isEditable: this.model.get('user_id') == currentUser.get('id') || currentUser.isAdmin()
         };
     },
 
@@ -54,5 +56,4 @@ module.exports = Marionette.ItemView.extend({
             target_type: 'Topic'
         }
     }
-
 });

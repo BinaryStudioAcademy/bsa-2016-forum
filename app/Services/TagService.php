@@ -14,11 +14,11 @@ class TagService
      * @param $taggableModel
      * @param $tags
      */
-    public function TagsHandler($taggableModel, $tags){
-        
+    public function TagsHandler($taggableModel, $tags)
+    {
         $taggableModel->tags()->detach();
         foreach ($tags as $tag) {
-            $tagEntity =  Tag::firstOrCreate(['name' => $tag]);
+            $tagEntity = Tag::firstOrCreate(['name' => $tag]);
             $taggableModel->tags()->save($tagEntity);
         }
     }

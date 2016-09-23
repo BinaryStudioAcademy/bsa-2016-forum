@@ -4,9 +4,9 @@ var TopicModel = require('../../models/TopicModel');
 var currentUser = require('../../initializers/currentUser');
 var topicCategoryCollectionForSelector = require('../../views/topics/topicCategoryCollectionForSelector');
 var topicCategoryItemForSelector = require('../../views/topics/topicCategoryItemForSelector');
-var TagBehavior = require('../../behaviors/tagBehavior');
 var markdownHelp = require('../../views/modalWindows/markdownHelp');
 var app = require('../../instances/appInstance');
+var TopicCreateHeader = require('../../views/topics/topicCreateHeader');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'topicCreateNew',
@@ -23,14 +23,20 @@ module.exports = Marionette.LayoutView.extend({
     },
 
     regions: {
-        categories: '#categories'
+        categories: '#categories',
+        topicCreateHeader: '.topic-new-head'
     },
 
     onBeforeShow: function () {
-        this.categories.show(new topicCategoryItemForSelector({
+        this.getRegion('categories').show(new topicCategoryItemForSelector({
             collection: this.collection,
-            topicModel: this.model
+            model: this.model
         }));
+
+        this.getRegion('topicCreateHeader').show(new TopicCreateHeader({
+            model: this.model,
+            tags: this.tags
+        }))
     },
     
     modelEvents: {
@@ -61,10 +67,5 @@ module.exports = Marionette.LayoutView.extend({
                 }
             });
         }
-    },
-
-    behaviors: [{
-        behaviorClass: TagBehavior
-    }]
-
+    }
 });

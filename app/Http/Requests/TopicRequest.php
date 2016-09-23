@@ -34,12 +34,13 @@ class TopicRequest extends ApiRequest
                 break;
             case 'PUT':
             case 'PATCH':
+                $id = $this->route('topics');
                 return [
                     'name' => 'required|unique:topics,name,' . $this->topics,
                     'description' => 'required',
                     'user_id' => 'required|integer',
                     'category_id' => 'required|exists:categories,id|integer',
-                    'slug' => 'unique:topics,slug|regex:/(?!^\d+$)^[\w\-]+$/'
+                    'slug' => 'regex:/(?!^\d+$)^[\w\-]+$/|unique:topics,slug,' . $id
                 ];
 
                 break;
