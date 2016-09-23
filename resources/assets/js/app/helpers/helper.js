@@ -8,7 +8,8 @@ var Helper = {
     },
 
     nl2br: function (text) {
-        return text.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
+        if (text != null)
+            return text.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
     }
 };
 

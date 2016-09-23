@@ -239,9 +239,13 @@ TOPIC DETAILS
 }
 
 .topic-history {
-  margin: 1px 0;
+  /*margin: 1px 0;*/
   display: inline-block;
   color: #AAA;
+}
+
+.topic-history-creator {
+  padding-top: 8px;
 }
 
 .topic-control-btn {

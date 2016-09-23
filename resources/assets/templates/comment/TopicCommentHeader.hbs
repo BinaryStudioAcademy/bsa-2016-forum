@@ -6,14 +6,14 @@
         <a class="name">{{ meta.user.first_name }} {{ meta.user.last_name }}</a>
         <span class="time">{{ createdAt }}</span>
 
-        <div class="pull-right right-margin-10">
+        <div class="pull-right">
             {{#if isUploadingAttachs}}
                 <span>Upload files...</span>
             {{else}}
             {{!-- only output if user comment belongs to current user --}}
                 {{#if meta.canEditDelete}}
-                    <a class="comment-edit-btn"><i class="fa fa-edit"></i> Edit</a>
-                    <a class="comment-remove-btn" data-toggle="modal" data-target="#confirmDialog-{{ model.id }}">
+                    <a class="comment-edit-btn btn-link right-margin-10"><i class="fa fa-edit"></i> Edit</a>
+                    <a class="comment-remove-btn btn-link right-margin-10" data-toggle="modal" data-target="#confirmDialog-{{ model.id }}">
                         <i class="fa fa-trash"></i> Remove
                     </a>
                 {{/if}}
@@ -40,21 +40,21 @@
 
         <div class="overflow-hidden pull-right">
 
-            <span class="topic-history">Rating {{ model.rating }}</span>
+            <span class="topic-history right-margin-10">Rating: {{ model.rating }}</span>
 
             {{#if meta.comments}}
-                <a class="btn-childs">
+                <a class="btn-childs btn-link right-margin-10">
                     <b><i class="fa fa-arrow-down"></i> View answers</b>
                 </a>
             {{else}}
-                <a class="btn-childs collapse">
-                    <i class="fa fa-arrow-down"></i>
+                <a class="btn-childs btn-link collapse right-margin-10">
+                    <i class="fa fa-arrow-down"> View answers</i>
                 </a>
             {{/if}}
 
             {{#unless isUploadingAttachs}}
                 {{#if meta.canReply}}
-                    <a class="answer-btn">
+                    <a class="answer-btn btn-link right-margin-10">
                         <i class="fa fa-reply"></i> Answer
                     </a>
                 {{/if}}
