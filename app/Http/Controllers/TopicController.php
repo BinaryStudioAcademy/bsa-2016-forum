@@ -193,7 +193,8 @@ class TopicController extends ApiController
 
         $topic->generated_description = MarkdownService::baseConvert($topic->description);
         $topic->save();
-        $topic->tags = $topic->tags()->get();
+        $topic->tags = $topic->tags();
+        
         return $this->setStatusCode(200)->respond($topic);
     }
 
