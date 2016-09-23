@@ -2,64 +2,74 @@
 namespace App\Services;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use HttpRequest;
+use App\Models\User;
+use App\Facades\CurlService;
+
 
 class AvatarService
 {
-    private $imageDir;
 
-    public function getAvatar()
+    public function getAvatar($urlAvatar, $fileName)
     {
-
-        var_dump('getAvatar');
-    }
-
-
-    public function uploadAvatar($urlGlobalAvatar){
-        var_dump('upload');
-    }
-
-    public function checkAvatarFile($nameFile){
-        return file_exists(config('avatar.localAvatarBaseUrl').$nameFile);
-    }
-
-    public function resizeAvatar($imageFile, $width, $height)
-    {
-        switch (strtolower(strrchr($imageFile, '.'))) {
-            case ".jpg":
-                $image = @ImageCreateFromJPEG($this->imageDir . $imageFile);
-                break;
-            case ".png":
-                $image = @ImageCreateFromPNG($this->imageDir . $imageFile);
-                break;
-            default:
-                return false;
-        }
-        if ($image) {
-            $imageWidth = @ImageSX($image);
-            $imageHeight = @ImageSY($image);
-            $ratioWidth = $imageWidth / $width;
-            $ratioHeight = $imageHeight / $height;
-            if ($ratioWidth < $ratioHeight) {
-                $destWidth = intval($imageWidth / $ratioHeight);
-                $destHeight = $height;
+        $response = CurlService::sendAvatarRequest($urlAvatar, $cookie = null);
+        
+        if (file_put_contents(getcwd().config('avatar.urlLocalAvatarSrc').$fileName, $response)) {
+            if ($this->resizeAvatar($fileName, config('avatar.size'))) {
+                return config('avatar.urlLocalAvatar') . $fileName;
             } else {
-                $destWidth = $width;
-                $destHeight = intval($imageHeight / $ratioWidth);
-            }
-            $resImage = @ImageCreateTrueColor($destWidth, $destHeight);
-            if ((!@ImageCopyResampled($resImage, $image, 0, 0, 0, 0, $destWidth, $destHeight, $imageWidth, $imageHeight)))
                 return false;
-            switch (strtolower(strrchr($imageFile, '.'))) {
-                case ".jpg":
-                    @imagejpeg($resImage, $this->imageDir . '/' . $width . 'x' . $height . '/' . $imageFile);
-                    break;
-                case ".png":
-                    @imagepng($resImage, $this->imageDir . '/' . $width . 'x' . $height . '/' . $imageFile);
-                    break;
-                default:
-                    return false;
             }
+        } else {
+            return false;
+        }
+    }
+    
+    public function checkAvatarFile($nameFile){
+        return file_exists(getcwd().config('avatar.urlLocalAvatar').$nameFile);
+    }
+
+    public function getFileName($user){
+        if ($user instanceof User){
+            $urlAvatar = $user->url_avatar;
+        } else {
+            $urlAvatar = $user['url_avatar'];
+        }
+        $arrItems = explode('/', $urlAvatar);
+        return  $arrItems[count($arrItems)-1];
+    }
+
+    public function resizeAvatar($imageFile, $size)
+    {
+        $types = array("", "gif", "jpeg", "png");
+        list($width, $height, $type) = getimagesize(getcwd() . config('avatar.urlLocalAvatarSrc') . $imageFile);
+        $ext = $types[$type];
+
+        if ($ext) {
+            $func = 'imagecreatefrom'.$ext;
+            $source= $func(getcwd() . config('avatar.urlLocalAvatarSrc') . $imageFile);
+        } else {
+            return false;
+        }
+
+        if ($source) {
+
+            $thumbs = imagecreatetruecolor($size, $size);
+            
+            if ($width > $height && $width > $size) {
+                imagecopyresampled($thumbs, $source, 0, 0, (($width-$height)/2), 0, $size, $size, $height, $height);
+            } elseif ($height > $width && $height > $size) {
+                imagecopyresampled($thumbs, $source, 0, 0, 0, 0, $size, $size, $width, $width);
+            } elseif ($height == $width && $height > $size) {
+                imagecopyresampled($thumbs, $source, 0, 0, 0, 0, $size, $size, $width, $width);
+            } else {
+                $thumbs = $source;
+            }
+
+            $func = 'image'.$ext;
+            $func($thumbs, getcwd() . config('avatar.urlLocalAvatar') . $imageFile);
+
             return true;
         }
     }
+
 }

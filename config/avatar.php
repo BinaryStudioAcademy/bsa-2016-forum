@@ -1,6 +1,9 @@
 <?php
 
 return [
-    "urlBaseAvatar" => "http://team.binary-studio.com",
-    "localAvatarBaseUrl" => "/images/avatar"
+    "urlGlobalAvatar" => "http://team.binary-studio.com",
+    "urlLocalAvatarSrc" => "/images/avatar/",
+    "urlLocalAvatar" => "/images/avatar/resize/",
+    "defaultAvatar" => "image.png",
+    "size" => 200,
 ];

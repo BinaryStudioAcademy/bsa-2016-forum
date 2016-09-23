@@ -2,6 +2,7 @@
 namespace App\Services;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use HttpRequest;
+use Request;
 
 class CurlService
 {
@@ -38,7 +39,6 @@ class CurlService
 
     public function sendUsersRequest($id = null, $cookie = null)
     {
-
         if (!$id) {
             $url = trim(config('authserver.urlUsersInfo'));
         } else {
@@ -67,5 +67,16 @@ class CurlService
         } else {
             return $this->sendRequest('POST', config('notification.url'), $request);
         }
+    }
+
+    public function sendAvatarRequest($urlAvatar, $cookie = null)
+    {
+        $url = trim(config('authserver.urlAuthBase')) . $urlAvatar;
+        $response = $this->sendRequest('GET', $url);
+        if (!$response) {
+            throw new ServiceUnavailableHttpException;
+        }
+        return $response;
+
     }
 }
