@@ -1,14 +1,30 @@
 <?php
 namespace App\Services;
-use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use HttpRequest;
 use App\Models\User;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 class AvatarService
 {
+    public function checkDir()
+    {
+        $res = true;
+        if (!file_exists(getcwd() . config('avatar.urlLocalAvatarSrc'))) {
+            $res = mkdir(getcwd() . config('avatar.urlLocalAvatarSrc'));
+        }
+        if (!file_exists(getcwd() . config('avatar.urlLocalAvatar'))) {
+            $res = mkdir(getcwd() . config('avatar.urlLocalAvatar'));
+        }
+        return $res;
+    }
+
     public function getAvatar($urlAvatar, $fileName)
     {
+        if (!$this->checkDir()) {
+            throw new NotFoundHttpException;
+        };
+
         $response = CurlService::sendAvatarRequest($urlAvatar, $cookie = null);
         if (file_put_contents(getcwd().config('avatar.urlLocalAvatarSrc').$fileName, $response)) {
             if ($this->resizeAvatar($fileName, config('avatar.size'))) {
@@ -62,6 +78,10 @@ class AvatarService
             } else {
                 $thumbs = $source;
             }
+
+            if (!$this->checkDir()) {
+                throw new NotFoundHttpException;
+            };
 
             $func = 'image'.$ext;
             $func($thumbs, getcwd() . config('avatar.urlLocalAvatar') . $imageFile);
