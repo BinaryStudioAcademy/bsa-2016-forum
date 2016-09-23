@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vote;
 use App\Models\User;
+use App\Models\Tag;
 use App\Http\Requests\VotesRequest;
 use App\Http\Requests\VoteResultRequest;
 use App\Models\VoteItem;
@@ -22,7 +23,7 @@ use App\Repositories\UserStore;
 class VoteController extends ApiController
 {
     protected $searchStr = null;
-    protected $tagIds = [];
+    protected $tags= [];
 
     /**
      * @param Request $request
@@ -36,14 +37,14 @@ class VoteController extends ApiController
             $paginationObject = Vote::filterByQuery($this->searchStr)
                 ->newOnTop()
                 ->checkOnIsSaved()
-                ->filterByTags($this->tagIds)
+                ->filterByTags($this->tags)
                 ->paginate(15);
             $votes = $paginationObject->getCollection();
             $meta['hasMorePages'] = $paginationObject->hasMorePages();
 
         } else {
             $votes = Vote::filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)
+                ->filterByTags($this->tags)
                 ->filterByLimit($this->limit)->get();
         }
 
@@ -60,8 +61,8 @@ class VoteController extends ApiController
     protected function setFiltersParameters(Request $request)
     {
         $this->searchStr = $request->get('query');
-        $tagIds = $request->get('tag_ids');
-        $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+        $tags = $request->get('tags');
+        $this->tags = ($tags) ? explode(',', $tags) : [];
         $this->limit = $request->get('limit');
         $this->order = $request->get('order');
         $this->orderType = $request->get('orderType');
@@ -88,17 +89,14 @@ class VoteController extends ApiController
         $this->authorize('show', $vote);
 
         $data = [];
-        $usersWhoSaw = [];
-        foreach ($vote->voteUniqueViews()->get()->load('user') as $view) {
-            $usersWhoSaw[] = UserStore::getUserWithAvatar($view->user);
-        }
+        $voteUniqueViewsWithUsers = $vote->voteUniqueViews()->get()->load('user');
         //find the difference between two days
         $created = new Carbon($vote->created_at);
         $now = Carbon::now();
         $difference = ($created->diff($now)->days < 1)
             ? 'today'
             : $created->diffForHumans($now);
-        
+
         $data[$vote->id] =
             [
                 'user' => UserStore::getUserWithAvatar($vote->user()->first()),
@@ -108,7 +106,7 @@ class VoteController extends ApiController
                 'subscription' => $vote->subscription(Auth::user()->id),
                 'days_ago' => $difference,
                 'numberOfUniqueViews' => $vote->voteUniqueViews()->count(),
-                'usersWhoSaw' => $usersWhoSaw,
+                'voteUniqueViewsWithUsers' => $voteUniqueViewsWithUsers,
                 'attachments' => $vote->attachments()->get(),
             ];
         if ($access) {
@@ -126,7 +124,7 @@ class VoteController extends ApiController
         $vote = Vote::create($request->all());
 
         if ($request->tags) {
-            TagService::TagsHandler($vote, $request->tags);
+            TagService::TagsHandler($vote, explode(',', $request->tags));
         }
 
         if ($vote->is_public) {
@@ -216,12 +214,9 @@ class VoteController extends ApiController
         $vote = Vote::getSluggableModel($id);
 
         $this->authorize('update', $vote);
-
         $vote->update($request->all());
         $vote->save();
-
-        TagService::TagsHandler($vote, $request->tags);
-
+        TagService::TagsHandler($vote, explode(',', $request->tags));
         if ($vote->is_public) {
             $vote->votePermissions()->delete();
         } elseif ($request->users) {
@@ -280,7 +275,7 @@ class VoteController extends ApiController
                 ->getQuery()
                 ->newOnTop()
                 ->filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)
+                ->filterByTags($this->tags)
                 ->get();
         } else {
             $votes = $user->votes()
@@ -288,7 +283,7 @@ class VoteController extends ApiController
                 ->onlySaved()
                 ->newOnTop()
                 ->filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)
+                ->filterByTags($this->tags)
                 ->get();
         }
 
@@ -348,11 +343,11 @@ class VoteController extends ApiController
         foreach ($userVoteResults as $res) {
             $temp = $voteItems->where('id', $res->vote_item_id);
             foreach ($temp as $item) {
-                $item->checked = 1;
+                $item->checked = true;
             }
         }
 
-        foreach($voteItems as $item) {
+        foreach ($voteItems as $item) {
             $meta[$item->id] = ['comments' => $item->comments()->count()];
         }
 
@@ -404,6 +399,11 @@ class VoteController extends ApiController
                 $model->delete();
                 $response['checked'] = false;
             }
+        }
+        $voteUniqueView = VoteUniqueView::where(['user_id' => $user->id, 'vote_id' => $vote->id])->first();
+        if ($voteUniqueView && !$voteUniqueView->userHasVoted) {
+            $voteUniqueView->userHasVoted = 1;
+            $voteUniqueView->save();
         }
         return $this->setStatusCode(201)->respond($response);
     }

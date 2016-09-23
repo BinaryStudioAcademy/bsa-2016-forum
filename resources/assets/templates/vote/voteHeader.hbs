@@ -13,11 +13,17 @@
                 <span><i class="fa fa-clock-o"></i> Finished {{meta.finishedDate}}</span>
             {{/if}}
         </span>
+
         <button class="btn btn-info text-info subscribe-btn">Subscribe</button>
+        {{#if meta.isFinished}}
+            {{#if meta.showUsers}}
+                <button class="btn btn-danger stop-category-btn">Stop vote</button>
+            {{/if}}
+        {{/if}}
         <div>{{{ model.description_generated }}}</div>
         <div class="vote-tags">
             {{#each meta.tags}}
-                <a href="#votes/tags/{{name}}"><span>#{{name}}</span></a>
+                <a href="#votes/tags/{{name}}"><span>{{name}}</span></a>
             {{/each}}
         </div>
         {{#if meta.userIsAdminOrTS}}
@@ -26,12 +32,12 @@
                 <button class="btn btn-default" data-toggle="collapse" data-target=".users-list">Show users</button>
                 <ul class="nav collapse users-list">
 
-                    {{#each meta.usersWhoSaw}}
+                    {{#each meta.voteUniqueViewsWithUsers}}
                         <li class="">
 
-                          {{#if url_avatar}}<img src={{url_avatar}} alt="">{{else}}<img src="images/user.png">{{/if}}
-
-                            <span>{{ first_name }} {{ last_name }}</span>
+                          {{#if user.url_avatar}}<img src={{user.url_avatar}} alt="">{{else}}<img src="images/user.png">{{/if}}
+                            <span>{{ user.first_name }} {{ user.last_name }} </span>
+                            {{#unless userHasVoted}}<span> (Did not vote yet)</span>{{/unless}}
                         </li>
                     {{/each}}
                 </ul>

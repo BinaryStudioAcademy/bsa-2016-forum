@@ -21,7 +21,7 @@ module.exports = Marionette.ItemView.extend({
         'click @ui.deleteButton': function (e) {
             e.stopPropagation();
             e.preventDefault();
-            this.model.destroy();
+            this.model.destroy({wait: true});
         }
     },
     modelEvents: {
@@ -61,6 +61,9 @@ module.exports = Marionette.ItemView.extend({
         this.getOption('parent').on('change:id', function (model) {
             self.model.set({vote_id: model.get('id')});
         });
+        this.model.collection.on('sync', function (collection) {
+            this.model.isValid();
+        }.bind(this));
     },
     serializeData: function () {
 

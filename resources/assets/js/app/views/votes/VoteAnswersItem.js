@@ -34,6 +34,7 @@ module.exports = Marionette.LayoutView.extend({
     },
     events: {
         'click @ui.item': function (e) {
+            this.model.set({checked: this.ui.select.prop('checked')}, {silent: true});
             Radio.trigger('votesChannel', 'saveUserChoice', this);
         },
         'click @ui.addComment': function (e) {

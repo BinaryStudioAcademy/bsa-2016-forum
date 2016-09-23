@@ -23,5 +23,6 @@
 @else
     <script src="js/bundle.js?v={{ env('APP_VER') }}"></script>
 @endif
+
 </body>
 </html>
