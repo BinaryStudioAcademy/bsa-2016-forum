@@ -7,6 +7,8 @@ var CommentsCollection = require('../../collections/TopicCommentsCollection');
 
 module.exports = Marionette.LayoutView.extend({
     template: 'TopicCommentItem',
+    tagName: 'li',
+    className: 'from_user left',
     _childUpload: false,
     _childCommentsCollection: null,
 
@@ -21,7 +23,7 @@ module.exports = Marionette.LayoutView.extend({
 
     ui: {
         'errors': '.errors',
-        'childs': '.topic-comment-included',
+        'childs': '.topic-comment-included'
     },
 
     childsVisible: function () {
