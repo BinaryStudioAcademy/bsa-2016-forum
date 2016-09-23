@@ -100,13 +100,26 @@ body {
 .nav > li > a:hover, .nav > li > a:focus {
   background-color: transparent;
 }
+
 #nprogress .bar {
   height: 3px;
   background: #ffa500;
 }
+
 #nprogress .peg {
   box-shadow: 0 0 10px #ffa500, 0 0 5px #ffa500;
 }
+
+.topic-body {
+  overflow: hidden;
+}
+
+.ui-autocomplete {
+  height: 150px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .dz-image img {
   max-height: 120px;
   max-width: 120px;
@@ -156,3 +169,15 @@ textarea {
 .gi-3x{font-size: 3em;}
 .gi-4x{font-size: 4em;}
 .gi-5x{font-size: 5em;}
+
+.right-margin-10 {
+  margin-right: 10px;
+}
+
+.right-margin-10 .fa {
+  margin-right: 5px;
+}
+
+.widget-header a:hover {
+  text-decoration: none;
+}

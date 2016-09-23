@@ -23,7 +23,7 @@ class CommentsRequest extends ApiRequest
     {
         return [
             'content_origin' => 'required',
-            'user_id' => 'required|integer|is_current_user',
+            'user_id' => 'required|integer',
             'rating' => 'integer|between:0,99999999999',
         ];
     }
@@ -33,7 +33,6 @@ class CommentsRequest extends ApiRequest
         return [
             'content_origin.required' => 'Content is required',
             'user_id.required' => 'User ID is required',
-            'user_id.is_current_user' => 'User not is authorized',
             'rating.between' => 'The Ratings length must not be more than 11'
         ];
     }

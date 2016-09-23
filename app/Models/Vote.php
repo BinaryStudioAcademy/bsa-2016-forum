@@ -109,14 +109,14 @@ class Vote extends Model
      * Scope a query to only include votes which have tags with selected IDs
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param array $tagIds
+     * @param array $tags
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeFilterByTags(Builder $query, array $tagIds)
+    public function scopeFilterByTags(Builder $query, array $tags)
     {
-        if (!empty($tagIds)) {
-            $query = $query->whereHas('tags', function ($q) use ($tagIds) {
-                $q->whereIn('tag_id', $tagIds);
+        if (!empty($tags)) {
+            $query = $query->whereHas('tags', function($q) use ($tags){
+                $q->whereIn('name', $tags);
             });
         }
         return $query;
