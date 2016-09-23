@@ -33,6 +33,8 @@ class CommentController extends ApiController
             $countOfLikes = 0;
         }
 
+        $user = Auth::user();
+
         return [
             'user' => UserStore::getUserWithAvatar($comment->user()->first()),
             'likes' => $comment->likes()->count(),
@@ -41,7 +43,8 @@ class CommentController extends ApiController
             'comments' => $comment->comments()->count(),
             'countOfLikes' => $countOfLikes,
             'isUser' => $isUser,
-            'likeId' => $likeId
+            'likeId' => $likeId,
+            'currentUser' => $user->id
         ];
     }
 
@@ -97,12 +100,7 @@ class CommentController extends ApiController
      */
     public function getTopicComments(Topic $topic)
     {
-        $user = Auth::user();
         $comments = $topic->comments()->get();
-
-        foreach ($comments as $comment) {
-            $comment->currentUser = $user->id;
-        }
 
         $meta = $this->getCollectionMetaData($comments);
         return $this->setStatusCode(200)->respond($comments, $meta);
@@ -187,13 +185,8 @@ class CommentController extends ApiController
      */
     public function getTopicCommentChildren(Topic $topic, Comment $comment)
     {
-        $user = Auth::user();
-
         if ($this->isCommentBelongsToTopic($topic, $comment)) {
             $comments = $comment->comments()->get();
-            foreach ($comments as $comment) {
-                $comment->currentUser = $user->id;
-            }
             $meta = $this->getCollectionMetaData($comments);
             return $this->setStatusCode(200)->respond($comments, $meta);
         } else {
@@ -324,13 +317,8 @@ class CommentController extends ApiController
      */
     public function getVoteComments(Vote $vote)
     {
-        $user = Auth::user();
         $comments = $vote->comments()->get();
         $meta = $this->getCollectionMetaData($comments);
-
-        foreach ($comments as $comment) {
-            $comment->currentUser = $user->id;
-        }
 
         return $this->setStatusCode(200)->respond($comments, $meta);
     }
@@ -479,12 +467,6 @@ class CommentController extends ApiController
     public function getVoteItemComments(Vote $vote, VoteItem $voteItem)
     {
         $comments = $voteItem->comments()->get();
-
-        $user = Auth::user();
-
-        foreach ($comments as $comment) {
-            $comment->currentUser = $user->id;
-        }
 
         return $this->setStatusCode(200)->respond($comments, $this->getCollectionMetaData($comments));
     }

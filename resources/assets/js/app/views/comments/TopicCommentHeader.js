@@ -19,7 +19,7 @@ module.exports = Marionette.ItemView.extend({
         'edit': '.comment-edit-btn',
         'remove': '.comment-remove-btn',
         'removeConfirmation': '.remove-modal-btn',
-        likeUnlikeTopic: '.link-like-unlike'
+        'likeUnlikeTopic': '.link-like-unlike'
     },
 
     events: {
@@ -113,7 +113,6 @@ module.exports = Marionette.ItemView.extend({
     serializeData: function () {
         var style;
         var likeUnlike;
-        var href;
         var countOfLikes;
         var meta = this.model.getMeta();
         var id = this.model.get('id');
@@ -136,13 +135,10 @@ module.exports = Marionette.ItemView.extend({
             this.attachmentThumb(meta[id].attachments);
         }
 
-        if(meta[id].isUser == true)
-        {
+        if(meta[id].isUser == true) {
             style = 'glyphicon glyphicon-star';
             likeUnlike = 'Unlike';
-        }
-        else
-        {
+        } else {
             style ='glyphicon  glyphicon-star-empty';
             likeUnlike = 'Like';
         }
@@ -154,6 +150,7 @@ module.exports = Marionette.ItemView.extend({
             countOfLikes: meta[id].likes,
             isUser: meta[id].isUser,
             meta: {
+                currentUser: meta[id].currentUser,
                 isUser: meta[id].isUser,
                 likeId: meta[id].likeId,
                 countOfLikes: meta[id].countOfLikes,
@@ -176,10 +173,10 @@ module.exports = Marionette.ItemView.extend({
         var meta = this.model.getMeta();
         var id = this.model.id;
         var that = this;
-        if(meta[id].user.id != that.model.get('currentUser'))
+        // if(meta[id].user.id != that.model.get('currentUser'))
+        if(meta[id].user.id != meta[id].currentUser)
         {
-            if(meta[id].isUser == true)
-            {
+            if(meta[id].isUser == true) {
                 var parentUrl = '/comments/'+this.model.id+'/likes/'+meta[id].likeId;
                 var commentLikeModel = new CommentLikeModel({parentUrl: parentUrl,id:meta[id].likeId});
                 commentLikeModel.destroy({
@@ -198,9 +195,7 @@ module.exports = Marionette.ItemView.extend({
                         logger(errorMsg);
                     }
                 });
-            }
-            else
-            {
+            } else {
                 var parentUrl = '/comments/'+this.model.id+'/likes';
                 var commentLikeModel = new CommentLikeModel({parentUrl: parentUrl});
                 commentLikeModel.save(null,{

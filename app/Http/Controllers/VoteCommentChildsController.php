@@ -36,6 +36,8 @@ class VoteCommentChildsController extends ApiController
             $countOfLikes = 0;
         }
 
+        $user = Auth::user();
+
         $data[$comment->id] = [
             'user' => UserStore::getUserWithAvatar($comment->user()->first()),
             'likes' => $comment->likes()->count(),
@@ -43,7 +45,8 @@ class VoteCommentChildsController extends ApiController
             'comments' => $comment->comments()->count(),
             'countOfLikes' => $countOfLikes,
             'isUser' => $isUser,
-            'likeId' => $likeId
+            'likeId' => $likeId,
+            'currentUser' => $user->id
         ];
 
         return $data;
@@ -70,12 +73,6 @@ class VoteCommentChildsController extends ApiController
     {
         if ($this->isCommentBelongsToCommentable($vote, $comment)) {
             $comments = $comment->comments()->orderBy('id', 'asc')->get();
-
-            $user = Auth::user();
-
-            foreach ($comments as $comment) {
-                $comment->currentUser = $user->id;
-            }
 
             return $this->setStatusCode(200)->respond($comments, $this->getCollectionMetaData($comments));
         } else {
