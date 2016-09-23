@@ -17,19 +17,25 @@ var CommentsCollection = require('../collections/TopicCommentsCollection');
 var CommentsCollectionView = require('../views/comments/TopicCommentsCollection');
 var currentUser = require('../initializers/currentUser');
 var TopicCategoryCreate = require('../views/topics/topicCategoryCreate');
+var TagCollection = require('../collections/tagCollection');
 
 module.exports = Marionette.Object.extend({
 
-    index: function () {
+    index: function (tags) {
         var topicCollection = new TopicCollection();
+        var data = {
+            'tags': tags,
+            'page': 1
+        };
         topicCollection.url = '/topics';
-        topicCollection.fetch();
+        topicCollection.fetch({data: data});
         app.render(new topicLayout({collection: topicCollection}));
     },
 
     indexInCategory: function (catId) {
         var topicCollection = new TopicCollection();
         topicCollection.parentUrl = '/categories/' + catId;
+
         topicCollection.fetch({data: {page: 1}});
         var topicCategoryModel = new TopicCategoryModel({id:catId});
         topicCategoryModel.fetch();
@@ -48,12 +54,16 @@ module.exports = Marionette.Object.extend({
 
     create: function (categoryId) {
         var topicCategoryCollection = new TopicCategoryCollection();
-
+        var tagCollection = new TagCollection();
         var topicModel = new TopicModel();
+
         app.render(new TopicCreate({
             model: topicModel,
-            collection: topicCategoryCollection
+            collection: topicCategoryCollection,
+            tags: tagCollection
         }));
+
+        tagCollection.fetch();
 
         topicCategoryCollection.fetch({
             success: function(collection){
@@ -63,6 +73,7 @@ module.exports = Marionette.Object.extend({
                     topicModel.set("category_id", category.get("id"));
                 }
         }});
+
     },
 
     createCategory: function () {
@@ -134,11 +145,14 @@ module.exports = Marionette.Object.extend({
     
     editTopic: function (slug) {
         var topicCategoryCollection = new TopicCategoryCollection();
+        var tagCollection = new TagCollection();
+
         topicCategoryCollection.fetch();
+        tagCollection.fetch();
 
         var topicModel = new TopicModel({slug: slug, user_id: currentUser.get('id')});
         topicModel.fetchBySlag();
-        app.render(new TopicCreate({model: topicModel, collection: topicCategoryCollection}));
+        app.render(new TopicCreate({model: topicModel, collection: topicCategoryCollection, tags: tagCollection}));
 
     }
 });

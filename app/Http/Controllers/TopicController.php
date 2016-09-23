@@ -19,7 +19,7 @@ use App\Models\Like;
 class TopicController extends ApiController
 {
     protected $searchStr = null;
-    protected $tagIds = [];
+    protected $tags = [];
 
     /**
      * @param Topic $topic
@@ -88,7 +88,7 @@ class TopicController extends ApiController
     {
         $this->setFiltersData($request);
 
-        $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tagIds)
+        $topics = Topic::filterByQuery($this->searchStr)->filterByTags($this->tags)
             ->filterByLimit($this->limit)->get();
 
         foreach ($topics as $topic) {
@@ -120,7 +120,7 @@ class TopicController extends ApiController
         if ($request->page) {
             $paginationObject = Topic::where('category_id', $catId)
                 ->filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)
+                ->filterByTags($this->tags)
                 ->paginate(15);
             $topics = $paginationObject->getCollection();
             $meta = $this->getMetaDataForCollection($topics);
@@ -128,7 +128,7 @@ class TopicController extends ApiController
         } else {
             $topics = Topic::where('category_id', $catId)
                 ->filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)->get();
+                ->filterByTags($this->tags)->get();
             $meta = $this->getMetaDataForCollection($topics);
         }
 
@@ -150,7 +150,7 @@ class TopicController extends ApiController
     {
         $topic = Topic::create($request->all());
         if ($request->tags) {
-            TagService::TagsHandler($topic, $request->tags);
+            TagService::TagsHandler($topic, explode(',', $request->tags));
         }
         $topic->generated_description = MarkdownService::baseConvert($topic->description);
         $topic->save();
@@ -170,7 +170,6 @@ class TopicController extends ApiController
         $topic->tags = $topic->tags()->get();
 
         $meta = $this->getMetaDataForModel($topic);
-
         return $this->setStatusCode(200)->respond($topic, $meta);
     }
 
@@ -190,7 +189,7 @@ class TopicController extends ApiController
 
         $topic->update($request->all());
 
-        TagService::TagsHandler($topic, $request->tags);
+        TagService::TagsHandler($topic, explode(',', $request->tags));
 
         $topic->generated_description = MarkdownService::baseConvert($topic->description);
         $topic->save();
@@ -274,7 +273,7 @@ class TopicController extends ApiController
             $paginationObject = $user->topics()
                 ->getQuery()
                 ->filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)
+                ->filterByTags($this->tags)
                 ->paginate(15);
             $topics = $paginationObject->getCollection();
             $meta = $this->getMetaDataForCollection($topics);
@@ -283,7 +282,7 @@ class TopicController extends ApiController
             $topics = $user->topics()
                 ->getQuery()
                 ->filterByQuery($this->searchStr)
-                ->filterByTags($this->tagIds)
+                ->filterByTags($this->tags)
                 ->get();
             $meta = $this->getMetaDataForCollection($topics);
         }
@@ -328,8 +327,8 @@ class TopicController extends ApiController
     protected function setFiltersData(TopicRequest $request)
     {
         $this->searchStr = $request->get('query');
-        $tagIds = $request->get('tag_ids');
-        $this->tagIds = ($tagIds) ? explode(',', $tagIds) : [];
+        $tags = $request->get('tags');
+        $this->tags = ($tags) ? explode(',', $tags) : [];
         $this->limit = $request->get('limit');
     }
 }

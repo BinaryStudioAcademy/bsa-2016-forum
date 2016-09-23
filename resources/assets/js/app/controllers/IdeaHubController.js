@@ -23,14 +23,19 @@ var CommentsCollectionView = require('../views/comments/TopicCommentsCollection'
 var Votes = require('../instances/Votes');
 
 var voteCollection = require('../collections/voteCollection');
+var TagCollection = require('../collections/tagCollection');
 
 module.exports = Marionette.Object.extend({
-    index: function () {
+    index: function (tags) {
 
         Votes.reset();
         var view = new ListVotes({vc: Votes});
         app.render(view);
-        Votes.fetch({data: {page: 1}});
+        var data = {
+            'tags': tags,
+            'page': 1
+        };
+        Votes.fetch({data: data});
     },
 
     showVote: function (slug) {
@@ -46,7 +51,7 @@ module.exports = Marionette.Object.extend({
             }
         });
 
-        model = new VoteModel({ slug: slug });
+        model = new VoteModel({slug: slug});
         model.fetchBySlag();
 
         view = new ShowVote({
@@ -56,15 +61,15 @@ module.exports = Marionette.Object.extend({
         });
 
         view.listenTo(Radio.channel('comment'), 'addComment', function (parentView, commentModel, commentCollection) {
-                var model = {}, childComments = {};
-                if (commentModel) {
-                    model = new TopicCommentModel(commentModel.toJSON());
-                    model.setMeta(commentModel.getMeta());
-                    model.parentUrl = _.result(commentModel, 'getParentUrl');
-                } else {
-                    model = new TopicCommentModel();
-                    model.parentUrl = _.result(parentView.model, 'getEntityUrl');
-                }
+            var model = {}, childComments = {};
+            if (commentModel) {
+                model = new TopicCommentModel(commentModel.toJSON());
+                model.setMeta(commentModel.getMeta());
+                model.parentUrl = _.result(commentModel, 'getParentUrl');
+            } else {
+                model = new TopicCommentModel();
+                model.parentUrl = _.result(parentView.model, 'getEntityUrl');
+            }
 
             view.getRegion('newComment').show(new NewVoteCommentView({
                 model: model,
@@ -104,9 +109,11 @@ module.exports = Marionette.Object.extend({
     createVote: function () {
         var VoteAnswers = new VoteAICollection([{}, {}], {parentUrl: ''});
         var UsersCollection = new usersCollection();
+        var tagCollection = new TagCollection();
         var accessedUsers = new usersCollection();
 
         UsersCollection.fetch();
+        tagCollection.fetch();
 
         UsersCollection.opposite = accessedUsers;
         UsersCollection.glyph = 'plus';
@@ -118,7 +125,8 @@ module.exports = Marionette.Object.extend({
             model: model,
             collection: VoteAnswers,
             users: UsersCollection,
-            accessedUsers: accessedUsers
+            accessedUsers: accessedUsers,
+            tags: tagCollection
         });
 
         view.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {
@@ -138,7 +146,7 @@ module.exports = Marionette.Object.extend({
         accessedUsers.fetch({
             success: function () {
                 accessedUsersCollectionFetched = true;
-                if (usersCollectionFetched){
+                if (usersCollectionFetched) {
                     UsersCollection.remove(accessedUsers.toJSON());
                 }
             }
@@ -146,7 +154,7 @@ module.exports = Marionette.Object.extend({
         UsersCollection.fetch({
             success: function () {
                 usersCollectionFetched = true;
-                if(accessedUsersCollectionFetched){
+                if (accessedUsersCollectionFetched) {
                     UsersCollection.remove(accessedUsers.toJSON());
                 }
             }
@@ -186,11 +194,12 @@ module.exports = Marionette.Object.extend({
 
     editVote: function (slug) {
         var VoteAnswers = new VoteAICollection([], {parentUrl: '/votes/' + slug});
+        var tagCollection = new TagCollection();
 
         VoteAnswers.fetch();
         var UsersCollection = new usersCollection();
         var accessedUsers = new usersCollection();
-
+        tagCollection.fetch();
         UsersCollection.opposite = accessedUsers;
         UsersCollection.glyph = 'plus';
         accessedUsers.opposite = UsersCollection;
@@ -202,7 +211,8 @@ module.exports = Marionette.Object.extend({
             model: model,
             collection: VoteAnswers,
             users: UsersCollection,
-            accessedUsers: accessedUsers
+            accessedUsers: accessedUsers,
+            tags: tagCollection
         });
 
         view.listenTo(Radio.channel('votesChannel'), 'createEmptyVoteItem', function (col) {

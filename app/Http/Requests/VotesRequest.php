@@ -24,7 +24,7 @@ class VotesRequest extends ApiRequest
         switch ($this->method()) {
             case 'POST':
                 return [
-                    'user_id' => 'required|integer|is_current_user',
+                    'user_id' => 'required|integer',
                     'title' => 'required|max:255',
                     'finished_at' => 'date|is_five_minutes_time',
                     'is_single' => 'integer|between:0,1',
@@ -40,7 +40,7 @@ class VotesRequest extends ApiRequest
                 $id = $this->route('votes');
 
                 return [
-                    'user_id' => 'required|integer|is_current_user',
+                    'user_id' => 'required|integer',
                     'title' => 'required|max:255',
                     //'finished_at' => 'date|is_five_minutes_time',
                     'is_single' => 'integer|between:0,1',
@@ -60,7 +60,6 @@ class VotesRequest extends ApiRequest
     {
         return [
             'user_id.required' => 'User ID is required',
-            'user_id.is_current_user' => 'User not is authorized',
             'title.required' => 'Title is required',
             'finished_at.is_five_minutes_time' => 'Perhaps, you typed date in the past. Also, minimum time for vote: 5 minutes.',
             'slug.unique' => 'Sluggable Url already exist',

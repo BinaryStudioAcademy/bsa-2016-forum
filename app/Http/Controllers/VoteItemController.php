@@ -134,6 +134,10 @@ class VoteItemController extends ApiController
             throw (new ModelNotFoundException)->setModel(VoteItem::class);
         }
 
+        if($vote->voteItems()->count() <= 2) {
+            return response(['name' => 'You can not delete this vote item because this is one of only two saved vote items'], 400);
+        }
+
         $this->authorize('delete', $voteItem);
 
         $voteItem->delete();

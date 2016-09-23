@@ -55,10 +55,8 @@ class TopicRequest extends ApiRequest
             'name.required' => 'Name is required',
             'description.required' => 'Description is required',
             'user_id.required' => 'User ID is required',
-            'user_id.is_current_user' => 'User not is authorized',
             'category_id.required' => 'Category is required',
             'slug.unique' => 'Sluggable Url already exist',
-            'tags.tags_validator' => 'Format of field tags is incorrect',
             'slug.regex' => 'Sluggable Url can contain only [a-Z, 0-9, -, _] and not digits only'
         ];
     }

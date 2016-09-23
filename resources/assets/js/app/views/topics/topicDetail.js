@@ -9,6 +9,7 @@ module.exports = Marionette.LayoutView.extend({
     template: 'topicDetail',
     _isTopicView: true,
 
+
     initialize: function () {
         this.childCommentsCollection = this.getOption('collection');
     },

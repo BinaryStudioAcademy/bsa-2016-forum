@@ -20,7 +20,7 @@ module.exports = {
         {
             controller: new TopicController(),
             appRoutes: {
-                'topics': 'index',
+                'topics(/tags/:id)': 'index',
                 'topics/:id': 'show',
                 'topic/create/:categoryId': 'create',
                 'topic/create/': 'create',
@@ -44,7 +44,7 @@ module.exports = {
         {
             controller: new IdeaHubController(),
             appRoutes: {
-                'votes': 'index',
+                'votes(/tags/:id)': 'index',
                 'votes/create': 'createVote',
                 'votes/createPrivateVoteBasedOnTopicSubscribers/:id': 'createPrivateVoteBasedOnTopicSubscribers',                
                 'votes/:id': 'showVote',

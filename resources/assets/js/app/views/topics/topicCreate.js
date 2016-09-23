@@ -13,12 +13,15 @@ module.exports = Marionette.LayoutView.extend({
 
     ui: {
         createForm: '.topic-form',
+        tagsInput: '.tags',
         openMarkdownHelp: '.openMarkdownHelp'
     },
 
-    initialize: function () {
+    initialize: function (options) {
+        this.tags = options.tags;
         this.model.set({user_id: currentUser.id});
     },
+
     regions: {
         categories: '#categories',
         topicCreateHeader: '.topic-new-head'
@@ -31,10 +34,11 @@ module.exports = Marionette.LayoutView.extend({
         }));
 
         this.getRegion('topicCreateHeader').show(new TopicCreateHeader({
-            model: this.model
+            model: this.model,
+            tags: this.tags
         }))
     },
-
+    
     modelEvents: {
         'invalid': function (model, errors, options) {
             this.$('.errors').empty();
