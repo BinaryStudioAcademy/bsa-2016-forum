@@ -85,14 +85,15 @@ module.exports = Marionette.LayoutView.extend({
 
         this.listenTo(Radio.channel('votesChannel'), 'saveUserChoice', function () {
             var i = 0;
-            this.getRegion('answers').currentView.children.each(function(value){
-                if(value.ui.select.prop('checked')) {
-                    i++;
-                }
-            });
-
+            if(this.model.get('is_single')) {i = 1;}
+            else {
+                this.getRegion('answers').currentView.children.each(function(value){
+                    if(value.ui.select.prop('checked')) {
+                        i++;
+                    }
+                });
+            }
             if(i > 0) {
-                debugger;
                 self.ui.voteCommit.removeClass('disabled btn-default');
                 self.ui.voteCommit.addClass('btn-primary');
             } else {
