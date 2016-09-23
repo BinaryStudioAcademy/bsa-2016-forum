@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lyudmila
- * Date: 23.09.16
- * Time: 14:42
- */
 
 namespace App\Providers;
 

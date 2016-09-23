@@ -47,7 +47,8 @@ class TopicController extends ApiController
                 'bookmark' => $topic->bookmarks()->where('user_id', Auth::user()->id)->first(),
                 'countOfLikes' => $countOfLikes,
                 'isUser' => $isUser,
-                'likeId' => $likeId
+                'likeId' => $likeId,
+                'currentUser' => Auth::user()->id
             ]
         ];
     }

@@ -173,9 +173,7 @@ module.exports = Marionette.ItemView.extend({
         var meta = this.model.getMeta();
         var id = this.model.id;
         var that = this;
-        // if(meta[id].user.id != that.model.get('currentUser'))
-        if(meta[id].user.id != meta[id].currentUser)
-        {
+        if(meta[id].user.id != meta[id].currentUser) {
             if(meta[id].isUser == true) {
                 var parentUrl = '/comments/'+this.model.id+'/likes/'+meta[id].likeId;
                 var commentLikeModel = new CommentLikeModel({parentUrl: parentUrl,id:meta[id].likeId});
