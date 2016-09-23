@@ -9,9 +9,15 @@ module.exports = BaseModel.extend({
     minTime: 5,
     validate: function (attrs) {
         var errors = {};
+        var back_date_false = true;
+
+        if (attrs.back_date){
+           back_date_false = false;
+        }
+
         if (_.isEmpty(attrs.title) || attrs.title.trim().length == 0)
             errors['title'] = 'Title field is required';
-        if (!_.isEmpty(attrs.finished_at) && DateHelper.getDateTimeDiff(attrs.finished_at) > -this.minTime) {
+        if (back_date_false && (!_.isEmpty(attrs.finished_at) && DateHelper.getDateTimeDiff(attrs.finished_at) > -this.minTime)) {
             errors['finished_at'] = 'Perhaps, you typed date in the past. Also, minimum time for vote: ' + this.minTime + ' minutes.';
         }
 
