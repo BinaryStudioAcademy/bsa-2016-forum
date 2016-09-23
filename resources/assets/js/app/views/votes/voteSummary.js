@@ -43,7 +43,7 @@ module.exports = Marionette.ItemView.extend({
                 isFinished: ((this.model.get('finished_at') == null) || (dateHelper.getDateTimeDiff(this.model.get('finished_at')) < 0)),
                 finishedDate: (this.model.get('finished_at') != null) ? dateHelper.middleDate(this.model.get('finished_at')) : '',
                 userIsAdminOrTS: currentUser.isAdmin() || (currentUser.get('id') === this.model.get('user_id')),
-                summaryFormatted: Helper.formatText2(this.model.get('summary'))
+                summaryFormatted: Helper.nl2br(this.model.get('summary'))
             }
         }
 
