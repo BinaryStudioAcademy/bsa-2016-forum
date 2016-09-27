@@ -32,14 +32,14 @@ module.exports = Marionette.Object.extend({
             }
         });
         messageCollection.listenTo(Radio.channel('messagesChannel'), 'newMessage', function (message) {
-            if(message.user_from_id == id) {
+            if(message.user_from_id == id || (message.user_to_id == id && message.user_from_id == currentUser.get('id'))) {
                 messageCollection.add(new MessageModel(message));
                 Radio.channel('messagesChannel').trigger('newMessageScroll');
             }
         });
 
         messageCollection.listenTo(Radio.channel('messagesChannel'), 'updatedMessage', function (message) {
-            if(message.user_from_id == id) {
+            if(message.user_from_id == id || (message.user_to_id == id && message.user_from_id == currentUser.get('id'))) {
                 messageCollection.set([new MessageModel(message)], {remove: false});
             }
         });

@@ -1,5 +1,4 @@
 /**
- * Created by Степан on 22.08.2016.
  */
 var http = require('http');
 var config = require('./config');

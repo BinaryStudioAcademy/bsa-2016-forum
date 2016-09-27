@@ -2,21 +2,7 @@
  * Main socket server script
  */
 
-var config;
-try
-{
-    config = require('./config.dev');
-} catch (e){
-    console.log("Develop config don`t exist");
-    try {
-        config = require('./config.prod');
-    } catch (e)
-    {
-        console.log("Prod config also don`t exist");
-        config = require('./config');
-    }
-}
-
+var config = require('./config');
 var http = require('http');
 var io = require('socket.io');
 var Redis = require('ioredis');
@@ -65,12 +51,14 @@ redis.on('message', function(channel, eventData) {
 
     function messagesLoad () {
         var message = JSON.parse(eventData.data.message);
-        var socketId = users.getSocketId(message.user_to_id);
-
-        if (io.sockets.sockets[socketId]) {
-            io.sockets.sockets[socketId].emit(eventData.data.socketEvent, message);
-            console.log("Message for user id: " + message.user_to_id);
-        }
+        users.doWithSocketIds(
+            [message.user_to_id, message.user_from_id],
+            function (socketId, userId) {
+                if (io.sockets.sockets[socketId]) {
+                    io.sockets.sockets[socketId].emit(eventData.data.socketEvent, message);
+                    console.log("Message emitted to user id: " + userId);
+                }
+            });
     }
 });
 
